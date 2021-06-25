@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 /* eslint-disable max-len */
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+
+import * as React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Typography, Avatar, Grid, makeStyles, TextField, Button } from '@material-ui/core';
 import Poll from '@material-ui/icons/Poll';

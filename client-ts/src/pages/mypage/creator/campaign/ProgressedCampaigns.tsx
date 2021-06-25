@@ -1,5 +1,5 @@
 import { Button, Typography } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';

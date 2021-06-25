@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/core/styles';

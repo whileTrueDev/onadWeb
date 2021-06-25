@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Slider, { SliderProps } from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import { Grid, Button, Typography } from '@material-ui/core';
 import useStyles from './style/HowToUseMarketer.style';
@@ -21,7 +21,7 @@ interface Props {
 function HowToUsemarketer({ source }: Props): JSX.Element {
   const classes = useStyles();
   const InquireDialog = useDialog();
-  const [imgStep, setImgStep] = React.useState('banner');
+  const [imgStep, setImgStep] = useState('banner');
   const UseStep = useDialog();
 
   return (

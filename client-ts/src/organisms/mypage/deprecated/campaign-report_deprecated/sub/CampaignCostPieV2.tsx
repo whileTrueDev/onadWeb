@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DonutSmall from '@material-ui/icons/DonutSmall';

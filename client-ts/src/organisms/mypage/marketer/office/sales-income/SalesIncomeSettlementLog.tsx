@@ -1,5 +1,6 @@
 import { makeStyles, Paper, Tab, Tabs } from '@material-ui/core';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import parseParams from '../../../../../utils/parseParams';
 import MonthlySettlement from './sub/MonthlySettlement';

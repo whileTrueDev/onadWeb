@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
+import * as React from 'react';
 import { Switch, SwitchProps, Tooltip } from '@material-ui/core';
 import { CampaignInterface } from '../../organisms/mypage/marketer/dashboard/interfaces';
 import handleCampaignOnOff from '../../utils/func/handleCampaignOnOff';

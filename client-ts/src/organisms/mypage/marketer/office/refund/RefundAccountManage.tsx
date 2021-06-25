@@ -1,5 +1,3 @@
-import React from 'react';
-// core
 import Typography from '@material-ui/core/Typography';
 // own components
 import { Paper, Button, makeStyles } from '@material-ui/core';

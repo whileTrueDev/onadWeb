@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -28,7 +28,7 @@ export default function IncomeManage(): JSX.Element {
   const descAnchor = useAnchorEl();
 
   // 출금 신청 다이얼로그
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleDialogOpen = (): void => {
     if (incomeCashGet.data && !(incomeCashGet.data.settlementState === 2)) {
       alert('정산등록 신청이 승인되지 않았습니다. 내 수익 관리 탭에서 정산 등록을 진행해주세요.');

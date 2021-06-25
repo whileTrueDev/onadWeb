@@ -1,4 +1,3 @@
-import React from 'react';
 import { Grid } from '@material-ui/core';
 import shortid from 'shortid';
 import useStyles from '../style/Reference.style';

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 import { MarketerInfo } from '../organisms/mypage/marketer/office/interface';
 import { useGetRequest } from '../utils/hooks';
 

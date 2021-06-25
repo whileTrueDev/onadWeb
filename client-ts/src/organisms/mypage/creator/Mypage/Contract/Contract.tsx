@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import { Typography, Grid } from '@material-ui/core';
 import Button from '../../../../../atoms/CustomButtons/Button';

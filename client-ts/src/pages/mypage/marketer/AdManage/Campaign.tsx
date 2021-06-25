@@ -1,4 +1,3 @@
-import React from 'react';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import CampaignManage from '../../../../organisms/mypage/marketer/adManage/CampaignManage';

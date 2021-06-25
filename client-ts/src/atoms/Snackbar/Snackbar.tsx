@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // @material-ui/core components
 import Snack, { SnackbarProps as MuiSnackbarProps } from '@material-ui/core/Snackbar';
 import Alert, { AlertProps } from '@material-ui/lab/Alert';

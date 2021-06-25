@@ -1,5 +1,5 @@
 import { Button, Divider, makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CampaignInterface } from '../../../dashboard/interfaces';
 import { CONFIRM_STATE_CONFIRMED } from '../../../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignDetail from './CampaignDetail';

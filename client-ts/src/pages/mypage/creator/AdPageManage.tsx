@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 // core ../../../atoms
 import { Skeleton, Alert } from '@material-ui/lab';

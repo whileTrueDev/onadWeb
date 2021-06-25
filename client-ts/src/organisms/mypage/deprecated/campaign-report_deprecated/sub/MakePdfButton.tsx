@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Button, CircularProgress, Tooltip } from '@material-ui/core';
 import jsPdfGenerate from '../../../../../utils/PdfGenerator';
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function MakePdfButton(): JSX.Element {
   const classes = useStyles();
-  const [inProgress, setInProgress] = React.useState<boolean>(false);
+  const [inProgress, setInProgress] = useState<boolean>(false);
 
   return (
     <div data-html2canvas-ignore="true">

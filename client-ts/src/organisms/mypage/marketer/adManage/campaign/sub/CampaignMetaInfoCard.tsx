@@ -1,6 +1,7 @@
 import { Chip, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import * as React from 'react';
 import OnadBanner from '../../../../../../atoms/Banner/OnadBanner';
 import renderOptionType from '../../../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../../../utils/render_funcs/renderPriorityType';

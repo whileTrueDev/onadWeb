@@ -1,5 +1,4 @@
 import { Fade, Menu, MenuItem, Typography } from '@material-ui/core';
-import React from 'react';
 import { Build, Delete } from '@material-ui/icons';
 
 export interface CampaignInventoryMenuPopoverProps {

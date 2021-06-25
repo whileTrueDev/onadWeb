@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography, Button, Divider } from '@material-ui/core';
 import classNames from 'classnames';
 import useStyles from './style/IntroduceMiddle.style';

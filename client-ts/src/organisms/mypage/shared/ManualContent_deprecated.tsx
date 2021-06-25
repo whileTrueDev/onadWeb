@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 
 import Markdown from 'react-markdown/with-html';
@@ -58,7 +58,7 @@ interface ManualContentProps {
 }
 const ManualContent = ({ source }: ManualContentProps): JSX.Element => {
   const dialog = useDialog();
-  const [imageSrc, setImageSrc] = React.useState<string>('');
+  const [imageSrc, setImageSrc] = useState<string>('');
 
   function handleImageChange(src: string): void {
     setImageSrc(src);

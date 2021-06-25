@@ -1,5 +1,5 @@
 import { CircularProgress, Paper, Typography } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
 export interface CpsMetaInfoRes {

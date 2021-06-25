@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';

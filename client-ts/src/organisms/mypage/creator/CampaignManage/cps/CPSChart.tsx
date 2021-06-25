@@ -1,6 +1,7 @@
 import { CircularProgress, makeStyles, Paper, Typography, useTheme } from '@material-ui/core';
 import classnames from 'classnames';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import * as React from 'react';
 import {
   CartesianGrid,
   Legend,

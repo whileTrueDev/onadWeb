@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { Grid, TextField, Avatar, Typography, Paper } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import Button from '../../../../atoms/CustomButtons/Button';

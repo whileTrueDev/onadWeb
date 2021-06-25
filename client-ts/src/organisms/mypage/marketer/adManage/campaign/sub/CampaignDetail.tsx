@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Avatar, ButtonBase, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
+import * as React from 'react';
 import { CheckCircle, HighlightOff, OpenInNew } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import TimeSelector from '../../../../../../atoms/Selector/TimeSelector';

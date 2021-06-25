@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';

@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { Box, Link } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
-import React from 'react';
+import * as React from 'react';
 import { Link as ReactRouterLink, useHistory } from 'react-router-dom';
 import { SalesIncomeSettlement } from '../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
 import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';

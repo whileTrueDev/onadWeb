@@ -1,6 +1,5 @@
 import { Button, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import React from 'react';
 import { REACT_HOST } from '../../../../../config';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import StyledTooltip from '../../../../../atoms/Tooltip/StyledTooltip';

@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography, CircularProgress, Grid } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import SalesIncomeSettlementLogByOrderTable, {
   PaymentMethods,

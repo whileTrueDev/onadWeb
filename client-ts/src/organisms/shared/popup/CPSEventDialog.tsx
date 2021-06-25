@@ -1,4 +1,3 @@
-import React from 'react';
 import EventPopup from '../../../atoms/Dialog/EventPopup';
 
 export interface RenewalDialogProps {

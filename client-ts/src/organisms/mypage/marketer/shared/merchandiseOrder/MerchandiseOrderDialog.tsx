@@ -8,7 +8,8 @@ import {
 } from '@material-ui/core';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import classnames from 'classnames';
-import React, { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
+import * as React from 'react';
 import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import DataText from '../../../../../atoms/DataText/DataText';

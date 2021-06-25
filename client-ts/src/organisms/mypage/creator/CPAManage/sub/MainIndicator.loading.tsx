@@ -1,4 +1,3 @@
-import React from 'react';
 import Skeleton, { SkeletonProps } from '@material-ui/lab/Skeleton';
 import Hidden from '@material-ui/core/Hidden';
 import GridContainer from '../../../../../atoms/Grid/GridContainer';

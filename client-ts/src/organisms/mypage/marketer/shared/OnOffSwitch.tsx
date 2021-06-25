@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Paper, Typography, FormControlLabel, Switch } from '@material-ui/core';
 // import usePostRequest from '../../../../utils/hooks/usePostRequest';

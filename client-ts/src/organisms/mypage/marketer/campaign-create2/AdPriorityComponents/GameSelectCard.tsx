@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, ButtonBase, Grid, Typography } from '@material-ui/core';
 

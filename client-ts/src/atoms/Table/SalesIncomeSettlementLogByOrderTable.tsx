@@ -1,7 +1,8 @@
 /* eslint-disable react/display-name */
 import { Box, Typography } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import * as React from 'react';
 import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
 import CustomDataGridExportable from './CustomDataGridExportable';
 

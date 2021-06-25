@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
 import { AccountInterface } from '../../../organisms/mypage/marketer/office/interface';
 import { useGetRequest } from '../../../utils/hooks';

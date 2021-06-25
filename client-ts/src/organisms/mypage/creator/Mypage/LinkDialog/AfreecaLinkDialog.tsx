@@ -1,6 +1,7 @@
 import { Button, TextField, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { OpenInNew, Refresh } from '@material-ui/icons';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';

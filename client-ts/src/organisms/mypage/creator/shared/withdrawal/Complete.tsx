@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Grid, Typography, Divider } from '@material-ui/core';
 import useWithdrawalCompleteStyles from './Complete.style';

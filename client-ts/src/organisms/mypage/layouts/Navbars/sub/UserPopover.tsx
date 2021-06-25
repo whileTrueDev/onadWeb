@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import Badge from '@material-ui/core/Badge';

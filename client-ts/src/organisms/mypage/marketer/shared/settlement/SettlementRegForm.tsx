@@ -10,7 +10,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import banks, { Bank } from '../../../../../constants/banks';

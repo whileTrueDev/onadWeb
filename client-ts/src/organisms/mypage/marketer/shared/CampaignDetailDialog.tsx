@@ -1,6 +1,6 @@
 import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React from 'react';
+import * as React from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import { useGetRequest } from '../../../../utils/hooks';

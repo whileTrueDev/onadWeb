@@ -1,5 +1,4 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import MySalesIncome from '../../../../organisms/mypage/marketer/office/sales-income/MySalesIncome';

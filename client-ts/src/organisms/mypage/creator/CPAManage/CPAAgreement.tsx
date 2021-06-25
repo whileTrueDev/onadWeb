@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // components
 import {
   Grid,
@@ -22,8 +22,8 @@ interface CPAAgreementProps {
 }
 const CPAAgreement = ({ callback }: CPAAgreementProps): JSX.Element => {
   const classes = useStyle();
-  const [check, setCheck] = React.useState(false);
-  const [checkConfirm, setCheckConfirm] = React.useState(false);
+  const [check, setCheck] = useState(false);
+  const [checkConfirm, setCheckConfirm] = useState(false);
   const CAPAgreementPatch = usePatchRequest('/creator', () => {
     // 동의하기 누를시에 다시 리렌더링 되도록 로직 추가
     callback();

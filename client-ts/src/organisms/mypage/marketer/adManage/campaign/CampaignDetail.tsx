@@ -1,5 +1,5 @@
 import { Hidden, makeStyles, Paper } from '@material-ui/core';
-import React from 'react';
+import { useEffect } from 'react';
 import { CampaignInterface } from '../../dashboard/interfaces';
 import CampaignInformation from './sub/CampaignInformation';
 import CampaignMetaInfoCard from './sub/CampaignMetaInfoCard';
@@ -38,7 +38,7 @@ export default function CampaignDetail({ selectedCampaign }: CampaignDetailProps
   const classes = useStyles();
 
   const analysisToggle = useToggle();
-  React.useEffect(() => {
+  useEffect(() => {
     if (analysisToggle.toggle) analysisToggle.handleToggle();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCampaign]);

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { Avatar, Button, CircularProgress, makeStyles, Typography } from '@material-ui/core';
 import { CameraAlt } from '@material-ui/icons';

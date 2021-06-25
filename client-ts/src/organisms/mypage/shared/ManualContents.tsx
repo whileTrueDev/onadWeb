@@ -1,6 +1,6 @@
 import { Chip, CircularProgress, makeStyles, Paper, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import React, { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown/with-html';
 import { UseGetRequestObject } from '../../../utils/hooks/useGetRequest';
 
@@ -30,7 +30,7 @@ export interface ManualProps {
 export default function ManualContents({ manualGet }: ManualProps): JSX.Element {
   const classes = useStyles();
 
-  const [tabValue, setTabValue] = React.useState<string>();
+  const [tabValue, setTabValue] = useState<string>();
   function handleTabChange(newValue: string): void {
     setTabValue(newValue);
   }

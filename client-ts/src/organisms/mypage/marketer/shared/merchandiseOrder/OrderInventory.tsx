@@ -2,7 +2,8 @@
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import moment from 'moment';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';

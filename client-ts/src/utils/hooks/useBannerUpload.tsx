@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 const MB = 1024 * 1024; // 1Mbytes
 const IMAGE_SIZE_LIMIT = 5 * MB;

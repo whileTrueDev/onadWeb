@@ -1,5 +1,4 @@
 import moment from 'moment';
-import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import Heatmap from 'react-calendar-heatmap';
 import getMeanStd from './getMeanStd';

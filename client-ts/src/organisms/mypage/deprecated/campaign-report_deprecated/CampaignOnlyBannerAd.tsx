@@ -1,4 +1,3 @@
-import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid, Divider, Typography } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, Divider } from '@material-ui/core';
 import BarChart from '@material-ui/icons/BarChart';

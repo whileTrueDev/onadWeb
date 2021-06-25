@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import { Avatar, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
-import React from 'react';
+import * as React from 'react';
 import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
 import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
 import { CreatorDataCPSInterface } from '../../../../dashboard/interfaces';

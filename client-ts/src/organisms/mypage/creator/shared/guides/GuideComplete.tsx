@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import { Done } from '@material-ui/icons';
-import React from 'react';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: 'bold' },

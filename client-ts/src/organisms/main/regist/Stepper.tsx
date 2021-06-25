@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import useStyles from './style/Stepper.style';
 import axios from '../../../utils/axios';

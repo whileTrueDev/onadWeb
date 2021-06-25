@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import useStyles from '../style/ProductHeroLayout.style';
 
 interface ProductHeroLayoutProps {

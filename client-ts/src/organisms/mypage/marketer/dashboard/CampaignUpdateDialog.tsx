@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';

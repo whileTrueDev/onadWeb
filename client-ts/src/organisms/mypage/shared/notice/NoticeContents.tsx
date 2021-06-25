@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import { Paper, Typography, Divider, makeStyles, Chip } from '@material-ui/core';
 import Markdown from 'react-markdown/with-html';

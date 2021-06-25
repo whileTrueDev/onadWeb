@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // atoms
 import { Hidden } from '@material-ui/core';
 import GridContainer from '../../../atoms/Grid/GridContainer';
@@ -69,7 +69,7 @@ const Dashboard = (): JSX.Element => {
   const snack = useDialog();
 
   // 출금 신청 다이얼로그
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = (): void => {
     if (incomeCashGet.data && !(incomeCashGet.data.settlementState === 2)) {
       alert('정산등록 신청이 승인되지 않았습니다. 내 수익 관리 탭에서 정산 등록을 진행해주세요.');

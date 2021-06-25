@@ -1,4 +1,3 @@
-import React from 'react';
 import Countup from 'react-countup';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Grid, Paper, Divider, Typography } from '@material-ui/core';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -26,7 +26,7 @@ interface ProductHeroProps {
 function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps): JSX.Element {
   const classes = styles();
 
-  const [loginValue, setLoginValue] = React.useState('');
+  const [loginValue, setLoginValue] = useState('');
 
   function handleDialogOpenClick(newValue: string): void {
     setLoginValue(newValue);

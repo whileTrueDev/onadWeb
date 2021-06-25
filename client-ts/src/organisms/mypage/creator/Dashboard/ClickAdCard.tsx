@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import { Grid, Typography, Divider, Paper, makeStyles } from '@material-ui/core';
 // components

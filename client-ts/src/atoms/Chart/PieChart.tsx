@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pie, ChartComponentProps } from 'react-chartjs-2';
 import chartTheme from './chartTheme';
 

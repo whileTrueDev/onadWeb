@@ -1,6 +1,5 @@
 import { Button, CircularProgress, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import React from 'react';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
 import history from '../../../../history';

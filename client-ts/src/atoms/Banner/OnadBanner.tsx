@@ -1,5 +1,5 @@
 import { ButtonBase } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import isVideo from '../../utils/isVideo';
 
 export interface OnadBannerProps {

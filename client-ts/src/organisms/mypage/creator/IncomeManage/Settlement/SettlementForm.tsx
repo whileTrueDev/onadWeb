@@ -2,7 +2,8 @@
 import { Checkbox, Dialog, FormControlLabel, Grid, TextField } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';

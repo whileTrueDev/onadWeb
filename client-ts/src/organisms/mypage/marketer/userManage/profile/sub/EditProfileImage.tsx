@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
+import * as React from 'react';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import { FiberNew } from '@material-ui/icons';
 import EditableAvatar from '../../../../../../atoms/Avatar/EditableAvatar';

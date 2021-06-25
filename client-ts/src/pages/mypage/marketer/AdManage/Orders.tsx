@@ -1,5 +1,5 @@
 import { Paper } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import OrderInventory from '../../../../organisms/mypage/marketer/shared/merchandiseOrder/OrderInventory';

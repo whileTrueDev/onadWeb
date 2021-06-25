@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { makeStyles, Typography } from '@material-ui/core';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import React from 'react';
+import * as React from 'react';
 
 const useStyles = makeStyles(theme => ({
   dataText: {

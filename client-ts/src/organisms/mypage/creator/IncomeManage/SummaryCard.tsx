@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Chip, Grid, Paper, Typography } from '@material-ui/core';
 import moment from 'moment';
 import { Help } from '@material-ui/icons';

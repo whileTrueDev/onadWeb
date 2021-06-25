@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';

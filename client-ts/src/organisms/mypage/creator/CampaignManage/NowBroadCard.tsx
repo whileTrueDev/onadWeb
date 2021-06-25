@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
-import React from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';

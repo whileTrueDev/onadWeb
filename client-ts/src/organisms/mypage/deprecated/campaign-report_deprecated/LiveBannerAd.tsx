@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Grid, Divider, Typography, Tabs, Tab } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';

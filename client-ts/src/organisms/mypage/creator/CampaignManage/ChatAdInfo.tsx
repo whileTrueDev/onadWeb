@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import React from 'react';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';

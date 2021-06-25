@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Chip, Collapse, Typography } from '@material-ui/core';
 import CampaignCreateStepLayout from './shared/StepLayout';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 /**
  * deprecated
@@ -9,7 +9,7 @@ export default function useOpenValue(): {
   handleOpen: () => void;
   handleClose: () => void;
 } {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   function handleOpen(): void {
     setOpen(true);
   }

@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React from 'react';
+import { useEffect } from 'react';
 import moment from 'moment';
 import {
   Button,
@@ -51,7 +51,7 @@ export default function ReferralCodeManage(): JSX.Element {
   // 크리에이터 로그인창
   // 리뉴얼 알림 창
   const eventDialog = useDialog();
-  React.useEffect(() => {
+  useEffect(() => {
     const now = new Date();
     const noShowDateString = localStorage.getItem('renewal-popup-no-show');
     if (noShowDateString) {

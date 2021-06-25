@@ -1,5 +1,6 @@
 import { Button, makeStyles, TextField } from '@material-ui/core';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import * as React from 'react';
 import { AddressData } from 'react-daum-postcode';
 import { useDialog } from '../../../../../utils/hooks';
 import DaumPostCodeDialog from '../DaumPostCodeDialog';

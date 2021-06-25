@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // @material-ui/core
 import { Button, makeStyles, TextField, TextFieldProps, Typography } from '@material-ui/core';
 import { useEventTargetValue, useToggle } from '../../../../../../utils/hooks';

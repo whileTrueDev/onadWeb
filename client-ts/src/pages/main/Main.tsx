@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { Button, Hidden } from '@material-ui/core';
 // layout 계열 컴포넌트
 import makeStyles from '@material-ui/core/styles/makeStyles';

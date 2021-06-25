@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // core ../../../atoms
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -17,7 +17,7 @@ interface ManualProgramSelectorProps {
   source: ManualContentSources;
 }
 function ManualProgramSelector({ source }: ManualProgramSelectorProps): JSX.Element {
-  const [type, setType] = React.useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
   function handleTypeChange(programType: 'XSplit Broadcaster' | 'OBS Studio'): void {
     setType(programType);
   }

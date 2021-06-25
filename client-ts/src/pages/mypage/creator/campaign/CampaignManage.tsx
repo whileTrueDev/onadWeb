@@ -1,5 +1,3 @@
-import React from 'react';
-// components
 import { Typography } from '@material-ui/core';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';

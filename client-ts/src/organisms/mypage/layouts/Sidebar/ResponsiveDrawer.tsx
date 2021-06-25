@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -84,7 +84,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
     }
   }
 
-  const [subRouteOpenList, setSubRouteOpenList] = React.useState<string[]>([]);
+  const [subRouteOpenList, setSubRouteOpenList] = useState<string[]>([]);
 
   const handleClick = (routeName: string): void => {
     setSubRouteOpenList(prev => {

@@ -1,6 +1,7 @@
 import { Chip, makeStyles } from '@material-ui/core';
 import classnames from 'classnames';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
+import * as React from 'react';
 import renderOrderStatus, {
   주문상태_상품준비,
   주문상태_출고준비,

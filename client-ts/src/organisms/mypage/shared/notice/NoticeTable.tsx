@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import Typography from '@material-ui/core/Typography';

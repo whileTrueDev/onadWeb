@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import shortid from 'shortid';
 import { Typography, withStyles } from '@material-ui/core';
 import MuiAccordion from '@material-ui/core/Accordion';

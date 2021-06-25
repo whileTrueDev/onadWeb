@@ -1,4 +1,5 @@
-import React, { useReducer, MouseEvent } from 'react';
+import { useReducer, MouseEvent } from 'react';
+import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Paper, Collapse, useMediaQuery, Button } from '@material-ui/core';

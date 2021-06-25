@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import { Grid, Button, Typography, Dialog } from '@material-ui/core';
 import useStyles from './style/HowToUseCreator.style';
@@ -16,7 +16,7 @@ interface Source {
 
 function HowToUseCreator({ source }: Source): JSX.Element {
   const classes = useStyles();
-  const [imgStep, setImgStep] = React.useState('contract');
+  const [imgStep, setImgStep] = useState('contract');
   const UseStep = useDialog();
 
   return (

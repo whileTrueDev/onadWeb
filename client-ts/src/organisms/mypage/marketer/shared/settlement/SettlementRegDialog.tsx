@@ -1,6 +1,6 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import { Alert, AlertProps } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import { useDialog, usePatchRequest, usePostRequest } from '../../../../../utils/hooks';

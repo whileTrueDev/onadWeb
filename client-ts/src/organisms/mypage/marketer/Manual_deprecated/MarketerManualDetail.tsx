@@ -1,5 +1,3 @@
-import React from 'react';
-// core ../../../atoms
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 // custom component

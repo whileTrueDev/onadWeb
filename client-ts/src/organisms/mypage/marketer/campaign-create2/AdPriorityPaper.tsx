@@ -1,5 +1,7 @@
 /* eslint-disable react/display-name */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+
+import * as React from 'react';
 import { Collapse, Chip } from '@material-ui/core';
 import SelectPaper from './shared/SelectPaper';
 import CampaignCreateStepLayout from './shared/StepLayout';

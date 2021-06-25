@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 import { Paper, TablePagination, Typography } from '@material-ui/core';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
@@ -8,7 +8,7 @@ interface WithdrawalCardProps {
   withdrawalData: WithdrawalDataType[];
 }
 function Mypage({ withdrawalData }: WithdrawalCardProps): JSX.Element {
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
   return (
     <Paper style={{ padding: 32, minHeight: 400, marginTop: 8 }}>
       <Typography style={{ fontWeight: 'bold' }}>출금 신청 내역</Typography>

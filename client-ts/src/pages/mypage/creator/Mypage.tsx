@@ -1,4 +1,3 @@
-import React from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import ProfileCard from '../../../organisms/mypage/creator/Mypage/ProfileCard';

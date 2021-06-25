@@ -1,5 +1,7 @@
 /* eslint-disable react/display-name */
-import React, { useState } from 'react';
+import { useState } from 'react';
+
+import * as React from 'react';
 import moment from 'moment';
 import { Badge, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { MoreVert, OpenInNew } from '@material-ui/icons';

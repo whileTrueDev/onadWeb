@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import OrderInventory from '../shared/merchandiseOrder/OrderInventory';

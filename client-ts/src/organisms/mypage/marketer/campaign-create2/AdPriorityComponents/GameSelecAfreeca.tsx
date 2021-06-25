@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {

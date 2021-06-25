@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Typography, Button } from '@material-ui/core';
 import shortid from 'shortid';
 import styles from './style/Introduction.style';
@@ -26,7 +26,7 @@ export default function Introduction({ match }: Props): JSX.Element {
   const classes = styles();
   const { userType } = match.params;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const glassElement = document.getElementById('glass');
     document.addEventListener('mousemove', e => {
       glassElement!.style.left = `${e.offsetX}px`;

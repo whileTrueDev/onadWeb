@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import { Grid, Button, Typography } from '@material-ui/core';
 import useStyles from './style/IdentityVerification.style';

@@ -1,4 +1,3 @@
-import React from 'react';
 import shortid from 'shortid';
 import useStyles from './style/PolicyCreator.style';
 import terms from './source/PolicySource';

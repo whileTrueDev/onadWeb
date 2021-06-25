@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 /**
  * anchor Element를 사용할 수 있도록 도와주는 hook

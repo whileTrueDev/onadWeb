@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import { Button, Grid, Paper, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { OnadTheme } from '../../../theme';

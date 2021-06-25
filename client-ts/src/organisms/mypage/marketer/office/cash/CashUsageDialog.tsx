@@ -1,4 +1,3 @@
-import React from 'react';
 import { CircularProgress, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../../atoms/Dialog/Dialog';

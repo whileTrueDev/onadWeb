@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Divider } from '@material-ui/core';

@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
+import * as React from 'react';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Slide, Collapse, Typography } from '@material-ui/core';

@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import * as React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import MoreIcon from '@material-ui/icons/MoreVert';

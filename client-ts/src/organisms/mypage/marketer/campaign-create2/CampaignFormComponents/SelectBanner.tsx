@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Grid, CircularProgress, Typography } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import BannerCarousel from '../../../../../atoms/BannerCarousel';

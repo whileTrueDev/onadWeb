@@ -1,4 +1,3 @@
-import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import NavTop from '../../organisms/main/layouts/NavTop';

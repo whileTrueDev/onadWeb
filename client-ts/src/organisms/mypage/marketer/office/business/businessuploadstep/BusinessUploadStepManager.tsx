@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -44,8 +44,8 @@ export default function BuisnessUploadStepManager(
   const { handleClose, businessRegiImage, request, step } = props;
   const steps = getSteps();
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(step.currStep);
-  const [isBusiness, setIsBusiness] = React.useState(step.isBusiness);
+  const [activeStep, setActiveStep] = useState(step.currStep);
+  const [isBusiness, setIsBusiness] = useState(step.isBusiness);
 
   const handleBack = (): void => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);

@@ -1,5 +1,4 @@
 import Assignment from '@material-ui/icons/Assignment';
-import React from 'react';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import CardTemplate from './CardTemplate';
 

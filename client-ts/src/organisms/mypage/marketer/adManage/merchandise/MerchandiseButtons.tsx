@@ -1,5 +1,4 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React from 'react';
 import MerchandiseUploadDialog from '../../shared/MerchandiseUploadDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';

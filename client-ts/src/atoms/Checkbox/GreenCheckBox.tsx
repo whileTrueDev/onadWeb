@@ -1,4 +1,3 @@
-import React from 'react';
 import { Checkbox, CheckboxProps } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 // icons

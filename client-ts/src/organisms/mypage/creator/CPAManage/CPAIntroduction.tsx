@@ -1,5 +1,3 @@
-import React from 'react';
-// components
 import { Grid, Typography } from '@material-ui/core';
 import Filter1Icon from '@material-ui/icons/Filter1';
 import Filter2Icon from '@material-ui/icons/Filter2';

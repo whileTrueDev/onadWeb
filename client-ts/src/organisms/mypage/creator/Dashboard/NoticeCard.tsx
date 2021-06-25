@@ -1,6 +1,5 @@
 import moment from 'moment';
 import classnames from 'classnames';
-import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
 import { usePatchRequest } from '../../../../utils/hooks';

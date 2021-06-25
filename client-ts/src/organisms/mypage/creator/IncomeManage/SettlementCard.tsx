@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // @material-ui/core components
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Chip, Grid, Paper, Typography } from '@material-ui/core';
@@ -62,7 +62,7 @@ const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
       break;
   }
   // 0일 경우 개인(대한민국국민), 1일경우 개인사업자
-  const [CreatorType, setCreatorType] = React.useState(0);
+  const [CreatorType, setCreatorType] = useState(0);
 
   function handleClick(type: string): void {
     if (type === 'normal') {

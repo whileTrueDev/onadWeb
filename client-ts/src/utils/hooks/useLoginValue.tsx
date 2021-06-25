@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import axios from '../axios';
 import HOST from '../../config';
 import history from '../../history';

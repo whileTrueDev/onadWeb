@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from 'react';
+import * as React from 'react';
 import MuiMaterialTable, { MaterialTableProps, Column } from 'material-table';
 import ArrowUpward from '@material-ui/icons/ArrowUpwardRounded';
 import Check from '@material-ui/icons/CheckRounded';

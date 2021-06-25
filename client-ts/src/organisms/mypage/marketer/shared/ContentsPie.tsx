@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReChartPie from '../../../../atoms/Chart/ReChartPie';
 
@@ -11,7 +11,7 @@ interface ContentsPieProps {
 export default function ContentsPie(props: ContentsPieProps): JSX.Element {
   const { selectedChartData } = props;
   // 마우스오버 핸들러
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (d: any, index: number): void => {
     setActiveIndex(index);

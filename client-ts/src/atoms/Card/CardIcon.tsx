@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 import useCardIconStyle from './CardIcon.style';

@@ -13,7 +13,6 @@ import {
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import { OpenInNew } from '@material-ui/icons';
-import React from 'react';
 import shortid from 'shortid';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';

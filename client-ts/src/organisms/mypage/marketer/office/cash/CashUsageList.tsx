@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // custom
 import { Paper, Typography } from '@material-ui/core';

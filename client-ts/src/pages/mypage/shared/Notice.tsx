@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useMediaQuery } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
@@ -30,7 +30,7 @@ export default function PublicNotification(): JSX.Element {
   const location = useLocation<{ selectedNotice: string }>();
 
   const mainPanel = document.getElementById('onad-main-panel');
-  React.useEffect(() => {
+  useEffect(() => {
     if (mainPanel) {
       mainPanel.scroll({ top: 0, behavior: 'smooth' });
     }

@@ -1,6 +1,5 @@
 import { Button, makeStyles, Paper, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import React from 'react';
 import openKakaoChat from '../../../../utils/openKakaoChat';
 
 const useStyles = makeStyles(() => ({

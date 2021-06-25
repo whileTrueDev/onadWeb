@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Divider, Badge, Popover, List, ListItem } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';

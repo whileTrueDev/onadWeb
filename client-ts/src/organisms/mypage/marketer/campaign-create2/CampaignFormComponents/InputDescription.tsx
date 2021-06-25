@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import StyledInput from '../../../../../atoms/StyledInput';

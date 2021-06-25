@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography, FormControlLabel, Checkbox, Divider, Grid } from '@material-ui/core';
 import shortid from 'shortid';

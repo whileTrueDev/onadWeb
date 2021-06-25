@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // material-ui components
 import Button, { ButtonProps } from '@material-ui/core/Button';
 // Styles

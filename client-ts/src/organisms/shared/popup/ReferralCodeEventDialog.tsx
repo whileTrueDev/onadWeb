@@ -1,5 +1,4 @@
 import { Typography } from '@material-ui/core';
-import React from 'react';
 import EventPopup from '../../../atoms/Dialog/EventPopup';
 
 export interface ReferralCodeEventDialogProps {

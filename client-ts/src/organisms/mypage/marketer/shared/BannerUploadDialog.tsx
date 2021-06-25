@@ -2,7 +2,7 @@ import { Button, Collapse, Step, StepContent, StepLabel, Stepper } from '@materi
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
-import React, { useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';

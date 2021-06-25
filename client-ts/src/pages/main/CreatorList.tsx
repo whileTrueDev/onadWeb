@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Typography, TablePagination, useMediaQuery } from '@material-ui/core';
 import shortid from 'shortid';
 import useStyles from './style/CreatorList.style';
@@ -31,7 +31,7 @@ export default function CreatorList(): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
   const [LiveCreator, setLiveCreator] =
-    React.useState<null | ContractedCreatorListData<string>[]>();
+    useState<null | ContractedCreatorListData<string>[]>();
   const ContractedCreatorList =
     useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
   const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');

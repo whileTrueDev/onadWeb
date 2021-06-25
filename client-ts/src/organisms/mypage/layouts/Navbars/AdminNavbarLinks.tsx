@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 // @material-ui/core components
 import Tooltip from '@material-ui/core/Tooltip';
 import Badge from '@material-ui/core/Badge';
@@ -53,7 +53,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
   }
 
   // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
-  const [isAlreadyRendered, setIsAlreadyRendered] = React.useState(false);
+  const [isAlreadyRendered, setIsAlreadyRendered] = useState(false);
   const notificationRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     function handleUnreadNotificationOpen(): void {

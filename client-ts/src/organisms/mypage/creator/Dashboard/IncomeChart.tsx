@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React from 'react';
+import * as React from 'react';
 // components
 import { Paper } from '@material-ui/core';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';

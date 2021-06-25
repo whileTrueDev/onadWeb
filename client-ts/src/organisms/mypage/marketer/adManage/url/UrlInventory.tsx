@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from 'react';
+import * as React from 'react';
 import moment from 'moment';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';

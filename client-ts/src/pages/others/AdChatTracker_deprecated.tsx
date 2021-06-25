@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Typography, CircularProgress } from '@material-ui/core';
 import axios from '../../utils/axios';
@@ -17,7 +17,7 @@ interface AdChatRes {
 type AdChatProps = RouteComponentProps<{ campaignId: string; creatorTwitchId: string }>;
 export default function AdChat({ match }: AdChatProps): JSX.Element {
   const [error, setError] = useState<string | null>(null);
-  React.useEffect(() => {
+  useEffect(() => {
     const params: AdChatParams = {
       campaignId: match.params.campaignId,
       creatorTwitchId: match.params.creatorTwitchId,

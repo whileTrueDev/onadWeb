@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Hidden, Typography, Button, CircularProgress } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';

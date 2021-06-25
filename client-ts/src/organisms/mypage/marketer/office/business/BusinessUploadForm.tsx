@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 // core
 import { Paper, Typography, Button, makeStyles } from '@material-ui/core';
 // own components
@@ -38,7 +38,7 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
   const imageRex = /data:image\/([a-zA-Z]*);base64,([^\\"]*)/;
   const pdfRex = /data:application\/pdf;base64,([^\\"]*)/;
   const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
-  const [step, setStep] = React.useState({
+  const [step, setStep] = useState({
     currStep: 0,
     isBusiness: false,
   });

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import shortid from 'shortid';
 // @material-ui/core components
 import { Table, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';

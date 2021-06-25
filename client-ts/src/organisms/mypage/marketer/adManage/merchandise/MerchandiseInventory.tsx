@@ -1,7 +1,8 @@
 /* eslint-disable react/display-name */
 import moment from 'moment';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { Delete } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';

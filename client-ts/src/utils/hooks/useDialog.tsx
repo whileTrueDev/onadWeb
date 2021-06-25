@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 /**
  * Boolean state와 핸들러를 반환하는 react hook.
@@ -13,7 +13,7 @@ export default function useDialog(): {
   handleOpen: () => void;
   handleClose: () => void;
 } {
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   function handleOpen(): void {
     setOpen(true);

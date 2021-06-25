@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { DataGrid, DataGridProps } from '@material-ui/data-grid';
 import { dataGridLocale } from './dataGridLocale.kr';
 

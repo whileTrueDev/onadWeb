@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Stepper, Step, StepLabel, StepContent, Button } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';

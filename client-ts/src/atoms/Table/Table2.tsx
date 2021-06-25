@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import shortid from 'shortid';
 import { makeStyles } from '@material-ui/core/styles';
 // @material-ui/core components

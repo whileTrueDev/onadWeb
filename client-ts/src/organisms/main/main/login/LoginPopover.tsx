@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { Button } from '@material-ui/core';
 import useStyles from '../style/LoginPopover.style';
 import MarketerLoginForm from './MarketerLoginForm';
@@ -24,8 +24,8 @@ function LoginPopover({
   mode,
   logout,
 }: LoginPopoverProps): JSX.Element {
-  const [loginValue, setLoginValue] = React.useState('');
-  const [registOpen, setRegistOpen] = React.useState(false);
+  const [loginValue, setLoginValue] = useState('');
+  const [registOpen, setRegistOpen] = useState(false);
 
   function handleDialogOpenClick(newValue: string): void {
     setLoginValue(newValue);

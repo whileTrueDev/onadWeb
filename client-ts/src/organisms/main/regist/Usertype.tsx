@@ -1,4 +1,3 @@
-import React from 'react';
 import { ButtonBase, Typography } from '@material-ui/core';
 import useStyles from './style/Usertype.style';
 

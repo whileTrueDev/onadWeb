@@ -1,4 +1,3 @@
-import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';

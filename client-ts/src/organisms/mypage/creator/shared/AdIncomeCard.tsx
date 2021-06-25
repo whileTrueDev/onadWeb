@@ -10,7 +10,6 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { Help } from '@material-ui/icons';
-import React from 'react';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 

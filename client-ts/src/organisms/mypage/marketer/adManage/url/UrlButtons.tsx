@@ -1,5 +1,4 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React from 'react';
 import { useDialog } from '../../../../../utils/hooks';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import UrlUploadDialog from '../../shared/UrlUploadDialog';

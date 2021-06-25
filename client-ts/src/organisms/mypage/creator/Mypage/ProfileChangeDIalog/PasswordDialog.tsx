@@ -1,7 +1,7 @@
 import { Button, IconButton, InputAdornment, TextField, Typography } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';

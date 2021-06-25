@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useReducer, useEffect, useState } from 'react';
+import { useReducer, useEffect, useState } from 'react';
+
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Slide, Collapse } from '@material-ui/core';
 import axios from '../../../../../utils/axios';

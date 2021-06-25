@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import { CircularProgress, Input, makeStyles, Paper, Typography } from '@material-ui/core';
 import { InsertLinkOutlined } from '@material-ui/icons';

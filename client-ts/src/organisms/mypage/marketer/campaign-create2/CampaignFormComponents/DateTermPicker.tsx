@@ -1,6 +1,7 @@
 import 'date-fns';
 import koLocale from 'date-fns/locale/ko';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';

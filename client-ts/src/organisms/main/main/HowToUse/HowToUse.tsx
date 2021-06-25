@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { Button, Typography, CircularProgress } from '@material-ui/core';
 import shortid from 'shortid';
 import styles from '../style/HowToUse.style';
@@ -14,8 +14,8 @@ interface HowToUseProps {
 function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
   const classes = styles();
 
-  const [loading, setLoading] = React.useState(false);
-  const [iframeLoading, setIframeLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [iframeLoading, setIframeLoading] = useState(false);
 
   function handleClick(): void {
     setLoading(true);

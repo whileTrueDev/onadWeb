@@ -1,5 +1,4 @@
 import { useTheme } from '@material-ui/core';
-import React from 'react';
 
 export interface OnadLogoProps {
   width?: number;

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import shortid from 'shortid';
 import { Typography, Button, makeStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -69,7 +69,7 @@ interface IpToGeoProps {
 // Ip To Geo Map component
 function IpToGeo(props: IpToGeoProps): JSX.Element {
   const { ipToGeoData } = props;
-  const [mapOpen, setMapOpen] = React.useState<boolean>(false);
+  const [mapOpen, setMapOpen] = useState<boolean>(false);
 
   return (
     <div>

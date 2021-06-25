@@ -12,7 +12,7 @@ import {
   Popover,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { useAnchorEl } from '../../../../utils/hooks';
 

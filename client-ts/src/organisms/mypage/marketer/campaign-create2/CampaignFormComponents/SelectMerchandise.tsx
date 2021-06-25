@@ -8,7 +8,7 @@ import {
   makeStyles,
   CircularProgress,
 } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import { Alert } from '@material-ui/lab';
 import GreenRadio from '../../../../../atoms/Radio/GreenRadio';
 import StyledItemText from '../../../../../atoms/StyledItemText';

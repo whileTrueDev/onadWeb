@@ -1,6 +1,6 @@
 import { CircularProgress, Button, Box, Typography, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import React from 'react';
+import * as React from 'react';
 import SalesIncomeSettlementLogMonthlyTable from '../../../../../../atoms/Table/SalesIncomeSettlementLogMonthlyTable';
 import useGetRequest from '../../../../../../utils/hooks/useGetRequest';
 import { SalesIncomeSettlement } from '../MySalesIncome';

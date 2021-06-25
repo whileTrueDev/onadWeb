@@ -1,5 +1,4 @@
 import { makeStyles, Popover, Typography } from '@material-ui/core';
-import React from 'react';
 
 const useStyles = makeStyles(theme => ({
   tooltip: { padding: theme.spacing(4), maxWidth: 300, textAlign: 'center' },

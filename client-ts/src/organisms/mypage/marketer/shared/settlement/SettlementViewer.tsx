@@ -1,5 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
+import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
 import { MarketerSettlement } from '../../office/interface';
@@ -20,7 +20,7 @@ export default function SettlementViewer({ settlement }: SettlementViewerProps):
   const classes = useStyles();
 
   const previewDialog = useDialog();
-  const [selectedType, setSelectedType] = React.useState<'신분증' | '통장사본'>();
+  const [selectedType, setSelectedType] = useState<'신분증' | '통장사본'>();
   function handleTypeSelect(type: '신분증' | '통장사본'): void {
     setSelectedType(type);
   }

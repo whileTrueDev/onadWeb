@@ -1,6 +1,6 @@
 import { Avatar, Button, makeStyles, Typography } from '@material-ui/core';
 import moment from 'moment';
-import React from 'react';
+import * as React from 'react';
 import ImageCarousel from '../../../../../atoms/Carousel/Carousel';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';

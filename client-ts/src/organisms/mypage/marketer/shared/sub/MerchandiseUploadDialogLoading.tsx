@@ -1,5 +1,5 @@
 import { LinearProgress, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 
 const useStyles = makeStyles(() => ({
   backdrop: {

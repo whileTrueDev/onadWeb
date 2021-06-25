@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import { Done, Clear, CheckCircleOutline } from '@material-ui/icons';

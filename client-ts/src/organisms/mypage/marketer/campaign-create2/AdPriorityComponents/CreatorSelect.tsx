@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Chip, Grid, Typography } from '@material-ui/core';
 import CreatorTable from './CreatorSelectTable';

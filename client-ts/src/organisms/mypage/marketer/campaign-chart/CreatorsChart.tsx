@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import moment from 'moment';
-import React from 'react';
+import * as React from 'react';
 import { Grid, Typography, CircularProgress, Avatar } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // import Skeleton from '@material-ui/lab/Skeleton';

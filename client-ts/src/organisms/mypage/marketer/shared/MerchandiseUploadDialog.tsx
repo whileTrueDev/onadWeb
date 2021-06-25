@@ -12,7 +12,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React, { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
+import * as React from 'react';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import {
   useDialog,

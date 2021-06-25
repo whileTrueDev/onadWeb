@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core/styles';
 import dotenv from 'dotenv';
 import 'moment/locale/ko';
-import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, Router, Switch } from 'react-router-dom';
 import history from './history';

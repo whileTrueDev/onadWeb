@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import axios from '../axios';
 import host from '../../config';
 
@@ -9,9 +9,9 @@ import host from '../../config';
  * @author hwasurr
  */
 export default function useUpdateData(url, successCallback = null) {
-  const [success, setSuccess] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState('');
+  const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   /**
    * api 서버에 데이터를 업데이트 요청하는 함수로, 인자로 업데이트를 진행할 데이터(객체형태)를 받는다.

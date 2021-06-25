@@ -1,6 +1,5 @@
 import moment from 'moment';
 import { makeStyles, Paper, Popover, Typography } from '@material-ui/core';
-import React from 'react';
 import { CampaignInterface } from '../../dashboard/interfaces';
 import { BannerDataInterface } from '../interface';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 interface VideoProps
   extends React.DetailedHTMLProps<React.VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement> {

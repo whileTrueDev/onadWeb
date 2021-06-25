@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import axios from '../../../utils/axios';
 import HOST from '../../../config';

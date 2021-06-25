@@ -1,4 +1,3 @@
-import React from 'react';
 import classnames from 'classnames';
 import CountUp from 'react-countup';
 import { makeStyles, Theme } from '@material-ui/core/styles';

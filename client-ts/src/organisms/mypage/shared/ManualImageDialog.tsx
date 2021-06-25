@@ -1,4 +1,3 @@
-import React from 'react';
 import Dialog from '../../../atoms/Dialog/Dialog';
 
 interface ManualImageDialogProps {

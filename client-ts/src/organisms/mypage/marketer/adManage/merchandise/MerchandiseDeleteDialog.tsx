@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';

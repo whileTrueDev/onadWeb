@@ -1,6 +1,7 @@
 import { Button, Divider, makeStyles, TextField, Typography } from '@material-ui/core';
 import { Alert, Autocomplete } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import courierCompanies, { CourierCompany } from '../../../../../constants/courierCompanies';
 import renderOrderStatus, {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import classnames from 'classnames';
 // @material-ui/core
 import { Grid, makeStyles, Paper } from '@material-ui/core';

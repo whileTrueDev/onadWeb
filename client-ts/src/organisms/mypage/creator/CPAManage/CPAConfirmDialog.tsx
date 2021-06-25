@@ -1,4 +1,3 @@
-import React from 'react';
 import shortid from 'shortid';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, FormControlLabel, Checkbox } from '@material-ui/core';

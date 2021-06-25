@@ -1,4 +1,3 @@
-import React from 'react';
 import Flag from '@material-ui/icons/Flag';
 import CardTemplate from './CardTemplate';
 import ClickHeatmap from '../../../../../atoms/Chart/heatmap/ClickHeatmap';

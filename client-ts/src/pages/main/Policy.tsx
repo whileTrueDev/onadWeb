@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
@@ -20,7 +20,7 @@ export default function Policy({ match }: PolicyProps): JSX.Element {
   const { privacy } = match.params;
   const classes = useStyles();
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

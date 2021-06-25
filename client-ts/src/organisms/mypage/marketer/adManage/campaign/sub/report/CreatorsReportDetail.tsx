@@ -1,7 +1,6 @@
 import classnames from 'classnames';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import React from 'react';
 import { OnadTheme } from '../../../../../../../theme';
 import { CreatorDataInterface, CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
 import ContentsPie from '../../../../shared/ContentsPie';

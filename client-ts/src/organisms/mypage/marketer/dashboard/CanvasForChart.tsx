@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Divider, makeStyles, Paper } from '@material-ui/core';
 import 'chartjs-plugin-colorschemes';
-import React from 'react';
+import * as React from 'react';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';

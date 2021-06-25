@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React from 'react';
+import { useState } from 'react';
 import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
 import { Doughnut } from 'react-chartjs-2';
 import { CloseOutlined } from '@material-ui/icons';
@@ -90,7 +90,7 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
     return num;
   }
 
-  const [selectedCreator, setSelectedCreator] = React.useState<CreatorDataInterface>();
+  const [selectedCreator, setSelectedCreator] = useState<CreatorDataInterface>();
   function handleSelectCreator(creator: CreatorDataInterface): void {
     setSelectedCreator(creator);
   }

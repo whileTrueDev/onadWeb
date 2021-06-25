@@ -1,5 +1,5 @@
 import { Button, Dialog, makeStyles, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import history from '../../../history';
 
 const useStyles = makeStyles(theme => ({

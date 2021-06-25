@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Divider } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';

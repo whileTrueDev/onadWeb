@@ -7,7 +7,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import HOST from '../../../../config';

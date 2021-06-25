@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Stepper, Step, StepLabel } from '@material-ui/core';
 import TransparentButton from '@material-ui/core/Button';
@@ -40,7 +40,7 @@ export default function CPAIncomeTable({
   const getAdpageLink = (): string => `${ADPAGE_HOST}/${CPAmainData.creatorTwitchId}`;
 
   // Stepper
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = [
     { icon: Filter1Icon, shortTitle: '패널 등록', title: '트위치 패널에 배너 등록하기' },
     { icon: Filter2Icon, shortTitle: '광고 등록', title: '광고페이지에 참여형 광고 등록하기' },

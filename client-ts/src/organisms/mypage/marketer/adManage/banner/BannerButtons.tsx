@@ -1,6 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
-import React from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';

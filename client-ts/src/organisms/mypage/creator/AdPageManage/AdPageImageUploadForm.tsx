@@ -1,4 +1,3 @@
-import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CustomCard from '../../../../atoms/CustomCard';

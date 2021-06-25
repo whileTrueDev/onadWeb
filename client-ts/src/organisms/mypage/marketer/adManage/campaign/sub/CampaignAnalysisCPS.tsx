@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React from 'react';
+import { useState } from 'react';
 import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
 import { Doughnut } from 'react-chartjs-2';
 import { CloseOutlined } from '@material-ui/icons';
@@ -81,7 +81,7 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
     return num;
   }
 
-  const [selectedCreator, setSelectedCreator] = React.useState<CreatorDataCPSInterface>();
+  const [selectedCreator, setSelectedCreator] = useState<CreatorDataCPSInterface>();
   function handleSelectCreator(creator: CreatorDataCPSInterface): void {
     setSelectedCreator(creator);
     const panel = document.getElementById('onad-main-panel');

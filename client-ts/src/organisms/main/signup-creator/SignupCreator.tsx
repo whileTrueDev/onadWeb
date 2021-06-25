@@ -14,7 +14,8 @@ import {
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Check, HowToReg, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 import axiosInstance from '../../../utils/axios';

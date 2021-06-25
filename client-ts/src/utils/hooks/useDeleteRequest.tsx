@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { AxiosResponse } from 'axios';
 import axios from '../axios';
 import host from '../../config';
@@ -40,10 +40,10 @@ export default function useDeleteRequest<PARAM_TYPE = { [key: string]: any }, RE
   url: string,
   successCallback?: () => void,
 ): UseDeleteRequestObject<PARAM_TYPE, RES_DATA_TYPE> {
-  const [success, setSuccess] = React.useState<true | null>(null);
-  const [data, setData] = React.useState<RES_DATA_TYPE | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState('');
+  const [success, setSuccess] = useState<true | null>(null);
+  const [data, setData] = useState<RES_DATA_TYPE | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState('');
 
   const doDeleteRequest = useCallback(
     async (param?: PARAM_TYPE): Promise<AxiosResponse<RES_DATA_TYPE>> => {

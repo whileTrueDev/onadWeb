@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import Button from '../../../../atoms/CustomButtons/Button';
 import openKakaoChat from '../../../../utils/openKakaoChat';

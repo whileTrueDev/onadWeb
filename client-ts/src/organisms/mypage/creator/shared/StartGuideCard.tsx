@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { Paper, Typography, Stepper, Step, StepLabel, makeStyles, Button } from '@material-ui/core';
 // components
 import Dialog from '../../../../atoms/Dialog/Dialog';

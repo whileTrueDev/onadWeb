@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTheme, Theme } from '@material-ui/core/styles';
 import { Bar, ChartComponentProps } from 'react-chartjs-2';
 import chartFunctions from './chartFunction';

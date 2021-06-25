@@ -1,6 +1,5 @@
 import classnames from 'classnames';
 import moment from 'moment';
-import React from 'react';
 import Markdown from 'react-markdown/with-html';
 
 import List from '@material-ui/core/List';

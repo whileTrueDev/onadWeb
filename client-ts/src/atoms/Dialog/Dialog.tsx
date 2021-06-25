@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import * as React from 'react';
 // material ui style helper, Theme type
 import { withStyles, Theme } from '@material-ui/core/styles';
 // material ui core components

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import moment from 'moment';
 import _ from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { Bar, ChartComponentProps } from 'react-chartjs-2';
 

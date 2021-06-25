@@ -1,4 +1,3 @@
-import React from 'react';
 import shortid from 'shortid';
 // core ../../../atoms
 import { makeStyles } from '@material-ui/core/styles';
