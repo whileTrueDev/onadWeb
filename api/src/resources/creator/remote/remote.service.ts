@@ -28,7 +28,6 @@ export class RemoteService {
   // * remote control 페이지 URL 조회
   public async findRemotePageUrl(creatorId: string): Promise<string> {
     const creator = await this.creatorInfoRepo.findOne({
-      select: ['remoteControllerUrl'],
       where: { creatorId },
     });
     return creator.remoteControllerUrl;

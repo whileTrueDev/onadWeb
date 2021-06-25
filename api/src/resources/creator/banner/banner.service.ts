@@ -82,11 +82,9 @@ export class BannerService {
   public async findBannerOverlay(creatorId: string): Promise<FindBannerOverlayRes> {
     const creator = await this.creatorInfoRepo.findOne({
       where: { creatorId },
-      select: ['advertiseUrl', 'creatorContractionAgreement'],
     });
-    const advertiseUrl = join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl);
     return {
-      advertiseUrl,
+      advertiseUrl: !creator.advertiseUrl ? '' : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
       creatorContractionAgreement: creator.creatorContractionAgreement,
     };
   }
