@@ -76,7 +76,17 @@ function dailyMissionTimer(duration:number) {
       $('#time-hour').text(hours);
       $('#time-min').text(minutes);
       $('#time-sec').text(seconds);
-
+      if (hours === '00' 
+          && Number(minutes) < 5
+          && !$('.bottom-timer').attr('class')?.includes('urgent')
+      ) {
+        $('.bottom-timer').addClass('urgent')
+      } else if (hours === '00' 
+          && Number(minutes) < 10
+          && !$('.bottom-timer').attr('class')?.includes('warning')
+      ) {
+        $('.bottom-timer').addClass('warning')
+      } 
       if (--timer < 0) {
           timer = 0;
           clearInterval(interval);
@@ -84,7 +94,7 @@ function dailyMissionTimer(duration:number) {
   }, 1000);
 }
 
-dailyMissionTimer(60);	// hour base
+dailyMissionTimer(10);	// hour base
 
 // ---------------------------------------- 소켓 ------------------------------------
 const device: string|null = getOS();

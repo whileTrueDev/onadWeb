@@ -1,73 +1,75 @@
 <html>
-  <head>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-    <script src='/lib/bundle.js'></script>
-    <link href='/public/layout.css' rel='stylesheet'>
 
-    <script>
-      const exports = {};
-    </script>
-  </head>
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <script src='/lib/bundle.js'></script>
+  <link href='/public/layout.css' rel='stylesheet'>
 
-  <body>
-    <div class="live-commerce">
-      <div class="left-section">
-        <!--랭킹-->
-        <div class="ranking-area">
-          <div class="ranking-area-inner">
-            <p class="ranking-text-area" id="title">
-              TOP 구매자
-            </p>
-            <p class="ranking-text-area" id="rank-0">
-              <img src="/public/images/crown.png" id="ranking-icon"/>
-              <span class="ranking-text-area-id">
-              </span>
-            </p>
-            <p class="ranking-text-area" id="rank-1">
-              <img src="/public/images/second.png" id="ranking-icon"/>
-              <span class="ranking-text-area-id">
-              </span>
-            </p>
-            <p class="ranking-text-area" id="rank-2">
-              <img src="/public/images/third.png" id="ranking-icon"/>
-              <span class="ranking-text-area-id">
-              </span>
-            </p>
-          </div>
-        </div>
-        <!--세로 배너-->
-        <div class="left-banner-area">
-          <img src="/public/images/vertical-banner.gif" class="left-live-commerce" width="100%" height="100%">
-        </div>
-      </div>
-      <!--우측상단 응원메세지-->
-      <div class="top-right">
-      </div>
-      <!--가상광고 영역-->
-      <div class="virtual-ad">
-      </div>
-      <!--하단 영역-->
-      <div class="bottom-area-wrapper">
-        <div class="bottom-left">
-          <div class="bottom-object">
-            <p>
-              100/300
-            </p>
-          </div>
-          <div class="bottom-timer">
-            <!-- <span id="time-hour"></span> -->
-            <span id="time-min"></span>
-            <span> : </span>
-            <span id="time-sec"></span>
-          </div>
-        </div>
-        <div class="bottom-area">
-          <p class="bottom-area-text">
+  <script>
+    const exports = {};
+  </script>
+</head>
+
+<body>
+  <div class="live-commerce">
+    <div class="left-section">
+      <!--랭킹-->
+      <div class="ranking-area">
+        <div class="ranking-area-inner">
+          <p class="ranking-text-area" id="title">
+            TOP 구매자
+          </p>
+          <p class="ranking-text-area" id="rank-0">
+            <img src="/public/images/crown.png" id="ranking-icon" />
+            <span class="ranking-text-area-id">
+            </span>
+          </p>
+          <p class="ranking-text-area" id="rank-1">
+            <img src="/public/images/second.png" id="ranking-icon" />
+            <span class="ranking-text-area-id">
+            </span>
+          </p>
+          <p class="ranking-text-area" id="rank-2">
+            <img src="/public/images/third.png" id="ranking-icon" />
+            <span class="ranking-text-area-id">
+            </span>
           </p>
         </div>
       </div>
+      <!--세로 배너-->
+      <div class="left-banner-area">
+        <img src="/public/images/vertical-banner.gif" class="left-live-commerce" width="100%" height="100%">
+      </div>
     </div>
-  </body>
+    <!--우측상단 응원메세지-->
+    <div class="top-right">
+    </div>
+    <!--가상광고 영역-->
+    <div class="virtual-ad">
+    </div>
+    <!--하단 영역-->
+    <div class="bottom-area-wrapper">
+      <div class="bottom-left">
+        <div class="bottom-object">
+          <p>
+            100/300
+          </p>
+        </div>
+        <div class="bottom-timer">
+          <!-- <span id="time-hour"></span> -->
+          <span id="time-min"></span>
+          <span> : </span>
+          <span id="time-sec"></span>
+        </div>
+      </div>
+      <div class="bottom-area">
+        <p class="bottom-area-text">
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

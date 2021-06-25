@@ -73,13 +73,22 @@ body {
 
 .bottom-timer {
   width: 50%;
+  margin-right:8%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   font-family: 'DIGITAL';
   font-size: 30px;
   color: #ffffff;
+}
+
+.bottom-timer.warning {
+  color:yellow
+}
+
+.bottom-timer.urgent {
+  color:red
 }
 
 .bottom-timer span {
@@ -227,7 +236,8 @@ body {
   height: 29%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left:10%;
   margin: 1%;
   font-family: 'COOKIE';
   font-size: 25px;
@@ -237,6 +247,8 @@ body {
 
 .ranking-text-area#title {
   height: 15%;
+  justify-content: center;
+  padding-left:0;
   margin-bottom: 0;
   font-size: 30px;
   color: #fcfaad;
