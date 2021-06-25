@@ -224,9 +224,4 @@ function CampaignTable({
   );
 }
 
-CampaignTable.defaultProps = {
-  tableHeaderColor: 'gray',
-  pagination: false,
-};
-
 export default CampaignTable;

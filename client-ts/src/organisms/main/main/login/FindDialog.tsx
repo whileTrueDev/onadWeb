@@ -46,7 +46,8 @@ function FindDialog({
   }
   const CheckId = (event: FormType) => {
     event.preventDefault();
-    const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
+    const emailReg =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
       axios
         .get(`${HOST}/marketer/id`, { params: findContent })
@@ -75,7 +76,8 @@ function FindDialog({
 
   const CheckPasswd = (event: FormType) => {
     event.preventDefault();
-    const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
+    const emailReg =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
       axios.patch(`${HOST}/marketer/tmp-password`, findContent).then(res => {
         console.log(res.data);

@@ -239,8 +239,9 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
                 <article className={classes.article}>
                   <div className={classes.flexCenter}>
                     <Typography className={classes.bold}>
-                      {`${selectedCreator.creatorTwitchName ||
-                        selectedCreator.afreecaName} 방송 정보`}
+                      {`${
+                        selectedCreator.creatorTwitchName || selectedCreator.afreecaName
+                      } 방송 정보`}
                     </Typography>
                     <IconButton size="small" onClick={handleResetSelectedCreator}>
                       <CloseOutlined />

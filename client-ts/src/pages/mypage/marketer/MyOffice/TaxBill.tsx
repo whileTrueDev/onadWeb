@@ -15,9 +15,8 @@ const useStyles = makeStyles(theme => ({
 export default function MyOfficeTaxBill(): JSX.Element {
   const classes = useStyles();
   // 계좌 정보
-  const businessRegistrationData = useGetRequest<null, BusinessInterface | null>(
-    '/marketer/business',
-  );
+  const businessRegistrationData =
+    useGetRequest<null, BusinessInterface | null>('/marketer/business');
   useMypageScrollToTop();
   return (
     <div className={classes.container}>

@@ -25,20 +25,20 @@ export default function useSwapableListItem<T = any>(
    * @returns {void}
    * @author hwasurr
    */
-  const handleChange = (idx: number, key: keyof T) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): void => {
-    e.persist(); // Because of event pooling by React
-    // This is documentations of event pooling
-    // React SyntheticEvent => https://ko.reactjs.org/docs/events.html
-    // React Event Pooling https://ko.reactjs.org/docs/legacy-event-pooling.html
-    setItems(prev => {
-      const tmp = [...prev];
-      const changed = { ...tmp[idx], [key]: e.target.value };
-      tmp[idx] = changed;
-      return tmp;
-    });
-  };
+  const handleChange =
+    (idx: number, key: keyof T) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+      e.persist(); // Because of event pooling by React
+      // This is documentations of event pooling
+      // React SyntheticEvent => https://ko.reactjs.org/docs/events.html
+      // React Event Pooling https://ko.reactjs.org/docs/legacy-event-pooling.html
+      setItems(prev => {
+        const tmp = [...prev];
+        const changed = { ...tmp[idx], [key]: e.target.value };
+        tmp[idx] = changed;
+        return tmp;
+      });
+    };
 
   /**
    * 목록에 아이템을 추가합니다

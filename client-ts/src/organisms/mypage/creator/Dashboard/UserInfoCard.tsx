@@ -147,9 +147,9 @@ const UserInfoCard = ({
               )}
             </Typography>
             <Typography variant="body2">
-              {`${userProfileData.creatorName ||
-                userProfileData.afreecaName ||
-                ''} ${userProfileData.creatorMail || userProfileData.afreecaId || ''}`}
+              {`${userProfileData.creatorName || userProfileData.afreecaName || ''} ${
+                userProfileData.creatorMail || userProfileData.afreecaId || ''
+              }`}
             </Typography>
           </div>
           {/* 상태 칩 섹션 */}

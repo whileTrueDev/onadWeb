@@ -35,9 +35,8 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const classes = useStyles();
   const { open, selectedUrl, handleClose, recallRequest } = props;
 
-  const { loading, doDeleteRequest } = useDeleteRequest<{ linkId: string }, any[]>(
-    '/marketer/landing-url',
-  );
+  const { loading, doDeleteRequest } =
+    useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
 
   const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>(
     '/marketer/landing-url/campaigns',

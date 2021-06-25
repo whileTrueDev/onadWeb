@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   typo: { fontWeight: 600, color: 'red' },
 }));
 
-function useConfirmDialog(
-  handleClose: () => void,
-): {
+function useConfirmDialog(handleClose: () => void): {
   confirmDialogOpen: boolean;
   handleConfirmDialogClose: () => void;
   handleOnlyDialogClose: () => void;
@@ -60,9 +58,7 @@ function useConfirmDialog(
   };
 }
 
-function useValue(
-  defaultValue: number | string,
-): {
+function useValue(defaultValue: number | string): {
   selectValue: string | number;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 } {

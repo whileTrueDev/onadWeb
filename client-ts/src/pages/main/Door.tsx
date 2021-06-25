@@ -1,4 +1,3 @@
-import React from 'react';
 import { Typography, Button } from '@material-ui/core';
 import classNames from 'classnames';
 import shortid from 'shortid';

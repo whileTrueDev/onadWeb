@@ -49,6 +49,7 @@ export default function MerchandiseImageUpload({
   }
 
   // 이미지 업로드 핸들러
+  // eslint-disable-next-line consistent-return
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length !== 0 && event.target.files.length < 5) {
       const uploadedImage = event.target.files[0];

@@ -1,8 +1,6 @@
 import React from 'react';
 
-export default function useEventTargetValue(
-  defaultValue = '',
-): {
+export default function useEventTargetValue(defaultValue = ''): {
   value: string;
   handleChange(e: React.ChangeEvent<HTMLInputElement>): void;
   handleReset(): void;

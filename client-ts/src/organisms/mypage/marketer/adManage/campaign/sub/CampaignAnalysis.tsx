@@ -98,8 +98,6 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
     setSelectedCreator(undefined);
   }
 
-  console.log(chartData);
-
   return (
     <div className={classes.container}>
       <Typography variant="h6" className={classnames(classes.title, classes.bold)}>
@@ -147,7 +145,11 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
                 {chartData.data && chartData.data.length > 0 && (
                   <article className={classes.chartContainer}>
                     <div>
-                      <ReportStackedBar height={250} dataSet={chartData.data[0]} />
+                      <ReportStackedBar
+                        height={250}
+                        dataSet={chartData.data[0]}
+                        labelArray={['CPM', 'CPC']}
+                      />
                       <Typography align="center" variant="body1">
                         일별 광고 비용
                       </Typography>
@@ -250,8 +252,9 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
                 <article className={classes.article}>
                   <div className={classes.flexCenter}>
                     <Typography className={classes.bold}>
-                      {`${selectedCreator.creatorTwitchName ||
-                        selectedCreator.afreecaName} 방송 정보`}
+                      {`${
+                        selectedCreator.creatorTwitchName || selectedCreator.afreecaName
+                      } 방송 정보`}
                     </Typography>
                     <IconButton size="small" onClick={handleResetSelectedCreator}>
                       <CloseOutlined />

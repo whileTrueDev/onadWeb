@@ -45,12 +45,11 @@ export default function SettlementByOrder(): React.ReactElement {
     year: null,
     roundInMonth: null,
   });
-  const handleFilterValueChange = (key: keyof FilterValue) => (
-    e: React.ChangeEvent<{}>,
-    newValue: string | null,
-  ): void => {
-    setFilterValue({ ...filterValue, [key]: newValue });
-  };
+  const handleFilterValueChange =
+    (key: keyof FilterValue) =>
+    (e: React.ChangeEvent<{}>, newValue: string | null): void => {
+      setFilterValue({ ...filterValue, [key]: newValue });
+    };
 
   const location = useLocation();
   const params = useMemo(() => parseParams(location.search), [location.search]);

@@ -10,45 +10,47 @@ interface DefaultDataType {
   type: 'CPC' | 'CPM';
 }
 // 차트 데이터
-const setStackedBarData = (theme: Theme) => <T extends DefaultDataType>(
-  data: T[],
-  labelArray: string[],
-  type = 'day',
-  dateRange = 30,
-): any => {
-  let setupFunc;
-  if (type === 'day') {
-    setupFunc = chartFunctions.createStackBarDataSet;
-  } else {
-    setupFunc = chartFunctions.createStackBarDataSetPerMonth;
-  }
-  const { labels, CPM, CPC } = setupFunc(data, dateRange);
+const setStackedBarData =
+  (theme: Theme) =>
+  <T extends DefaultDataType>(
+    data: T[],
+    labelArray: string[],
+    type = 'day',
+    dateRange = 30,
+  ): any => {
+    let setupFunc;
+    if (type === 'day') {
+      setupFunc = chartFunctions.createStackBarDataSet;
+    } else {
+      setupFunc = chartFunctions.createStackBarDataSetPerMonth;
+    }
+    const { labels, CPM, CPC } = setupFunc(data, dateRange);
 
-  const ChartjsBarData = {
-    labels,
-    datasets: [
-      {
-        stack: '1',
-        label: labelArray[0],
-        borderWidth: 1,
-        data: CPM,
-        backgroundColor: theme.palette.action.disabled,
-        hovkerBackgroundColor: theme.palette.action.hover,
-      },
-      {
-        stack: '1',
-        label: labelArray[1],
-        backgroundColor: chartTheme2.main,
-        borderColor: chartTheme2.main,
-        borderWidth: 1,
-        hoverBackgroundColor: chartTheme2.hover,
-        hoverBorderColor: chartTheme2.hover,
-        data: CPC,
-      },
-    ],
+    const ChartjsBarData = {
+      labels,
+      datasets: [
+        {
+          stack: '1',
+          label: labelArray[0],
+          borderWidth: 1,
+          data: CPM,
+          backgroundColor: theme.palette.action.disabled,
+          hovkerBackgroundColor: theme.palette.action.hover,
+        },
+        {
+          stack: '1',
+          label: labelArray[1],
+          backgroundColor: chartTheme2.main,
+          borderColor: chartTheme2.main,
+          borderWidth: 1,
+          hoverBackgroundColor: chartTheme2.hover,
+          hoverBorderColor: chartTheme2.hover,
+          data: CPC,
+        },
+      ],
+    };
+    return ChartjsBarData;
   };
-  return ChartjsBarData;
-};
 
 interface StackedBarProps<T> extends Omit<ChartComponentProps, 'type' | 'data'> {
   dataSet: T[];

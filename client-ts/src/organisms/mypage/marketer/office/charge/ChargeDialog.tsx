@@ -243,17 +243,28 @@ function TestChargeDialog(): JSX.Element {
     IMP.request_pay(paydata, payCallback);
   }
 
-  const handleNext = (go: number | null) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ): void => {
-    event.preventDefault();
-    setPaperSwitch(false);
-    setStepComplete(false);
+  const handleNext =
+    (go: number | null) =>
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      event.preventDefault();
+      setPaperSwitch(false);
+      setStepComplete(false);
 
-    if (index === 1) {
-      if (parseInt(selectValue, 10) < 10000) {
-        alert('충전 최소 금액은 10000원 입니다');
-        window.close();
+      if (index === 1) {
+        if (parseInt(selectValue, 10) < 10000) {
+          alert('충전 최소 금액은 10000원 입니다');
+          window.close();
+        } else {
+          setTimeout(() => {
+            if (go) {
+              setIndex(go);
+            } else {
+              // setIndex(preIndex => preIndex + 1);
+              setIndex(index + 1);
+            }
+            setPaperSwitch(true);
+          }, 500);
+        }
       } else {
         setTimeout(() => {
           if (go) {
@@ -265,18 +276,7 @@ function TestChargeDialog(): JSX.Element {
           setPaperSwitch(true);
         }, 500);
       }
-    } else {
-      setTimeout(() => {
-        if (go) {
-          setIndex(go);
-        } else {
-          // setIndex(preIndex => preIndex + 1);
-          setIndex(index + 1);
-        }
-        setPaperSwitch(true);
-      }, 500);
-    }
-  };
+    };
 
   const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
@@ -331,7 +331,7 @@ function TestChargeDialog(): JSX.Element {
 
   // 완료 버튼 누를 시
   const finishIndex = (): void => {
-    window.opener.location.reload();
+    window.opener?.location.reload();
     window.close();
   };
 

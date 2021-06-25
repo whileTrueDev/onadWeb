@@ -77,8 +77,9 @@ function Slider({
     setCurrentPage(currentPage + (forward ? 1 : -1));
 
     if (sliderRef.current) {
-      sliderRef.current.style.transform = `translate3D(-${(currentPage + (forward ? 1 : -1)) *
-        scrollSize}px, 0, 0)`;
+      sliderRef.current.style.transform = `translate3D(-${
+        (currentPage + (forward ? 1 : -1)) * scrollSize
+      }px, 0, 0)`;
     }
   };
 

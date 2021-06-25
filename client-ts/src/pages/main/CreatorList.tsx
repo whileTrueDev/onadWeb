@@ -30,12 +30,10 @@ const COLORS = [
 export default function CreatorList(): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
-  const [LiveCreator, setLiveCreator] = React.useState<
-    null | ContractedCreatorListData<string>[]
-  >();
-  const ContractedCreatorList = useGetRequest<null, ContractedCreatorListData<string>[]>(
-    '/creators',
-  );
+  const [LiveCreator, setLiveCreator] =
+    React.useState<null | ContractedCreatorListData<string>[]>();
+  const ContractedCreatorList =
+    useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
   const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');
   const isSmWidth = useMediaQuery('(max-width:960px)');
   const isXsWidth = useMediaQuery('(max-width:600px)');

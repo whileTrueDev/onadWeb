@@ -103,8 +103,8 @@ function BusinessUploadStep(props: StepperInterface & BusinessRegiUploadDialogPr
             )}
             {/* 업로드한 파일이 PDF일 때 */}
             {imageName &&
-            (imageName.indexOf('.pdf') > -1 || // pdf 확장자거나
-              (imageUrl && imageUrl?.indexOf('application/pdf') > -1)) && ( // base64 타입이 pdf 인 경우
+              (imageName.indexOf('.pdf') > -1 || // pdf 확장자거나
+                (imageUrl && imageUrl?.indexOf('application/pdf') > -1)) && ( // base64 타입이 pdf 인 경우
                 <div>
                   <Typography variant="body2">PDF 파일은 미리보기가 지원되지 않습니다.</Typography>
                   <Typography variant="body2" color="primary">

@@ -3,9 +3,7 @@
  * @param {array} dataArray 평균과 표준편차를 구할 리스트
  * @return { mean: float, stddev: float }
  */
-function getMeanStd(
-  dataArray: number[],
-): {
+function getMeanStd(dataArray: number[]): {
   mean: number;
   stddev: number;
 } {

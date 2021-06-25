@@ -90,14 +90,14 @@ export default function MerchandiseUploadDialog({
   };
   const [merchandiseInfo, setMerchandiseInfo] = useState<MerchandiseInfo>(defaultMerchandiseInfo);
 
-  const handleChange = (key: keyof MerchandiseInfo) => (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
-    setMerchandiseInfo({
-      ...merchandiseInfo,
-      [key]: e.target.value,
-    });
-  };
+  const handleChange =
+    (key: keyof MerchandiseInfo) =>
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setMerchandiseInfo({
+        ...merchandiseInfo,
+        [key]: e.target.value,
+      });
+    };
 
   // **********************************************************
   // 상품 픽업 주소
@@ -133,13 +133,8 @@ export default function MerchandiseUploadDialog({
 
   // ***********************************************************
   // 상품 이미지
-  const {
-    images,
-    handleImageUpload,
-    handleImageRemove,
-    uploadToS3,
-    ...imagesHookObj
-  } = useImageListUpload<MerchandiseImage>({ limit: 4 });
+  const { images, handleImageUpload, handleImageRemove, uploadToS3, ...imagesHookObj } =
+    useImageListUpload<MerchandiseImage>({ limit: 4 });
 
   // 상품 상세 설명 이미지
   const descImages = useImageListUpload<MerchandiseImage>({ limit: 4 });
@@ -241,6 +236,7 @@ export default function MerchandiseUploadDialog({
         descImages: descImages.images.map(image => image.imageName),
         options: options.items,
       })
+      // eslint-disable-next-line consistent-return
       .then(({ data }) => {
         if (!data)
           return alert(

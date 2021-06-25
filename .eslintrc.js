@@ -3,8 +3,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
     'airbnb',
-    'plugin:prettier/recommended',
     'plugin:react/recommended',
+    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
@@ -59,11 +59,13 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-curly-newline': 'off',
     'react/prop-types': 'off',
+    'react/destructuring-assignment': 'off',
+    'react/no-unused-prop-types': 'off',
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
     // typescript
     '@typescript-eslint/no-var-requires': 'warn',
     '@typescript-eslint/no-use-before-define': 2,
-    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
-    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   ignorePatterns: ['generated/**/*.tsx'],
   settings: {
@@ -73,10 +75,4 @@ module.exports = {
       },
     },
   },
-  'prettier/prettier': [
-    'error',
-    {
-        endOfLine: 'auto',
-    },
-],
 };

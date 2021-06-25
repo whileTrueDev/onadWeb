@@ -203,18 +203,17 @@ export default function SignupCreator(): JSX.Element {
   // *************************************************************
 
   // 회원가입 정보 변경 핸들러
-  const handleChange = (prop: keyof CreatorSignupInfo) => (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setSignupInfo({ ...signupInfo, [prop]: event.target.value });
-    setUseridHelperText(defaultHelperText);
-    setUseridError(false);
-    setPwdError(false);
-    if (prop === 'referralCode') {
-      setReferredCreator('');
-      setReferredCreatorError('');
-    }
-  };
+  const handleChange =
+    (prop: keyof CreatorSignupInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSignupInfo({ ...signupInfo, [prop]: event.target.value });
+      setUseridHelperText(defaultHelperText);
+      setUseridError(false);
+      setPwdError(false);
+      if (prop === 'referralCode') {
+        setReferredCreator('');
+        setReferredCreatorError('');
+      }
+    };
 
   // 비밀번호 보기 / 보지않기 버튼 핸들러
   const handleClickShowPassword = (): void => {

@@ -87,8 +87,8 @@ export default function CampaignDetail({ campaign }: CampaignDetailProps): React
 
       {/* CPS 캠페인의 상품이 아직 온애드샵에 업로드 되지 않은 경우 */}
       {campaign.merchandiseId &&
-      campaign.merchandiseName &&
-      campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_WAITING && ( // 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
+        campaign.merchandiseName &&
+        campaign.merchandiseUploadState === MERCHANDISE_UPLOAD_WAITING && ( // 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
           <Alert severity="error">
             <Typography variant="body2">
               {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(
@@ -102,8 +102,8 @@ export default function CampaignDetail({ campaign }: CampaignDetailProps): React
 
       {/* CPS 캠페인의 상품이 아직 온애드샵에 업로드 되지 않은 경우 */}
       {campaign.merchandiseId &&
-      campaign.merchandiseName &&
-      campaign.merchandiseUploadState === 0 && ( // 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
+        campaign.merchandiseName &&
+        campaign.merchandiseUploadState === 0 && ( // 캠페인 정보 불러올 때 업로드 상태도 불러오게 변경한 이후 추가.
           <Alert severity="error">
             <Typography variant="body2">
               {`캠페인 ${campaign.campaignName} 의 상품 -> ${withJosa(
@@ -212,8 +212,9 @@ export default function CampaignDetail({ campaign }: CampaignDetailProps): React
                 (남은재고 / 총재고)로 표시됩니다.
               </Typography>
               <Typography>
-                {`${campaign.merchandiseStock -
-                  (campaign.merchandiseSoldCount || 0)} / ${campaign.merchandiseStock || 0}`}
+                {`${campaign.merchandiseStock - (campaign.merchandiseSoldCount || 0)} / ${
+                  campaign.merchandiseStock || 0
+                }`}
               </Typography>
             </article>
           )}

@@ -54,19 +54,29 @@ function WithdrawDialog({
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [activeStep, setActiveStep] = React.useState(0); // 각 step을 정의하는  state
 
-  const handleNext = (targetStep?: number) => (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ): void => {
-    event.preventDefault();
-    setPaperSwitch(false);
-    setStepComplete(false);
+  const handleNext =
+    (targetStep?: number) =>
+    (event: React.MouseEvent<HTMLButtonElement>): void => {
+      event.preventDefault();
+      setPaperSwitch(false);
+      setStepComplete(false);
 
-    if (activeStep === 1) {
-      if (currentCashNumber - Number(selectValue) < 0 || Number(selectValue) < 30000) {
-        alert(
-          '출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.',
-        );
-        history.push('/mypage/creator/main');
+      if (activeStep === 1) {
+        if (currentCashNumber - Number(selectValue) < 0 || Number(selectValue) < 30000) {
+          alert(
+            '출금 신청 금액은 30000원 미만에서는 불가하며 출금 신청 금액이 보유 수익금보다 클 수 없습니다.',
+          );
+          history.push('/mypage/creator/main');
+        } else {
+          setTimeout(() => {
+            if (targetStep) {
+              setActiveStep(targetStep);
+            } else {
+              setActiveStep(preIndex => preIndex + 1);
+            }
+            setPaperSwitch(true);
+          }, 500);
+        }
       } else {
         setTimeout(() => {
           if (targetStep) {
@@ -77,17 +87,7 @@ function WithdrawDialog({
           setPaperSwitch(true);
         }, 500);
       }
-    } else {
-      setTimeout(() => {
-        if (targetStep) {
-          setActiveStep(targetStep);
-        } else {
-          setActiveStep(preIndex => preIndex + 1);
-        }
-        setPaperSwitch(true);
-      }, 500);
-    }
-  };
+    };
 
   // 출금 POST 요청객체 생성
   const withdrawalPost = usePostRequest('/creator/income/withdrawal');

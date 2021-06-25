@@ -90,19 +90,32 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
       });
   }
 
-  const handleNext = (go: number | null) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ): void => {
-    event.preventDefault();
-    setPaperSwitch(false);
-    setStepComplete(false);
+  const handleNext =
+    (go: number | null) =>
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      event.preventDefault();
+      setPaperSwitch(false);
+      setStepComplete(false);
 
-    if (index === 1) {
-      if (currentCashNumber - parseInt(selectValue, 10) < 0 || parseInt(selectValue, 10) <= 1000) {
-        alert(
-          '환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.',
-        );
-        history.push('/mypage/marketer/myoffice/cash');
+      if (index === 1) {
+        if (
+          currentCashNumber - parseInt(selectValue, 10) < 0 ||
+          parseInt(selectValue, 10) <= 1000
+        ) {
+          alert(
+            '환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.',
+          );
+          history.push('/mypage/marketer/myoffice/cash');
+        } else {
+          setTimeout(() => {
+            if (go) {
+              setIndex(go);
+            } else {
+              setIndex(preIndex => preIndex + 1);
+            }
+            setPaperSwitch(true);
+          }, 500);
+        }
       } else {
         setTimeout(() => {
           if (go) {
@@ -113,17 +126,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
           setPaperSwitch(true);
         }, 500);
       }
-    } else {
-      setTimeout(() => {
-        if (go) {
-          setIndex(go);
-        } else {
-          setIndex(preIndex => preIndex + 1);
-        }
-        setPaperSwitch(true);
-      }, 500);
-    }
-  };
+    };
 
   const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();

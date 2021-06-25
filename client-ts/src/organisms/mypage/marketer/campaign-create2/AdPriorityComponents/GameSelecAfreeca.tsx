@@ -250,9 +250,7 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
                                       icon={
                                         state.selectedGames.includes(cate.categoryNameKr) ? (
                                           <CheckCircle />
-                                        ) : (
-                                          undefined
-                                        )
+                                        ) : undefined
                                       }
                                       onClick={(): void => {
                                         handleGameClick(cate.categoryNameKr);

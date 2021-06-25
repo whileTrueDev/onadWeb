@@ -1,5 +1,4 @@
 /* eslint-disable react/display-name */
-import React from 'react';
 // atoms
 import { Typography, Button } from '@material-ui/core';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
@@ -15,12 +14,6 @@ import {
   AdpickCampaignStateEnum,
 } from './AdpickTypes';
 
-// For column width - type error from Materiap-table
-declare module 'material-table' {
-  export interface Column<RowData extends object> {
-    width?: string;
-  }
-}
 interface CPAIncomeTableProps {
   open: boolean;
   handleClose: () => void;

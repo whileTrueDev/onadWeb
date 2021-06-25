@@ -84,6 +84,7 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
    * 이미지 업로드 함수
    * @param event Input change React Event
    */
+  // eslint-disable-next-line consistent-return
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     onReset();
     handleFailedReset();

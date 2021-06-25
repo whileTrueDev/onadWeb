@@ -97,11 +97,10 @@ export default function ReportStackedBar({
     ],
   );
 
-  const preprocessedDataSet = useMemo(() => setStackedBarData(dataSet, labelArray), [
-    dataSet,
-    labelArray,
-    setStackedBarData,
-  ]);
+  const preprocessedDataSet = useMemo(
+    () => setStackedBarData(dataSet, labelArray),
+    [dataSet, labelArray, setStackedBarData],
+  );
 
   return (
     <Bar
@@ -117,8 +116,3 @@ export default function ReportStackedBar({
     />
   );
 }
-
-ReportStackedBar.defaultProps = {
-  labelArray: ['CPM', 'CPC'],
-  dateRange: 30,
-};

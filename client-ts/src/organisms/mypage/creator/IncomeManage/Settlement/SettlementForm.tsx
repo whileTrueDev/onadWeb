@@ -141,9 +141,8 @@ function SettlementForm({ CreatorType }: SettlementFormProps): JSX.Element {
   const [creatorAccountImg, setCreatorAccountImg] = React.useState<string | ArrayBuffer | null>('');
 
   // 사업자 등록증 이미지
-  const [creatorBussinessImg, setCreatorBussinessImg] = React.useState<string | ArrayBuffer | null>(
-    '',
-  );
+  const [creatorBussinessImg, setCreatorBussinessImg] =
+    React.useState<string | ArrayBuffer | null>('');
 
   // image reset
   function handleReset(index: number): void {

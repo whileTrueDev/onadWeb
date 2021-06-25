@@ -51,10 +51,8 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.marketerMail, userData.marketerName, userData.marketerPhoneNum]);
 
-  const { loading, doPatchRequest } = usePatchRequest<
-    { type: string; value: string | number },
-    any[]
-  >('/marketer');
+  const { loading, doPatchRequest } =
+    usePatchRequest<{ type: string; value: string | number }, any[]>('/marketer');
 
   // **************************************************
   // 성공, 실패 알림을 위한 상태값

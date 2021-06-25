@@ -103,15 +103,9 @@ export default function SettlementRegDialog({
 
     handleLoadingStart();
     if (reqType && reqType === 'patch') {
-      return settlementPatch
-        .doPatchRequest(data)
-        .then(onSuccess)
-        .catch(onFail);
+      return settlementPatch.doPatchRequest(data).then(onSuccess).catch(onFail);
     }
-    return settlementPost
-      .doPostRequest(data)
-      .then(onSuccess)
-      .catch(onFail);
+    return settlementPost.doPostRequest(data).then(onSuccess).catch(onFail);
   }
 
   return (

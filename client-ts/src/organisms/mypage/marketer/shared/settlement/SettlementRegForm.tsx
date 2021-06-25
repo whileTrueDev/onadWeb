@@ -95,12 +95,12 @@ export default function SettlementRegForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChange = (field: keyof SettlementRegDTO) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ): void => {
-    e.persist();
-    setDto(prev => ({ ...prev, [field]: e.target.value }));
-  };
+  const handleChange =
+    (field: keyof SettlementRegDTO) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+      e.persist();
+      setDto(prev => ({ ...prev, [field]: e.target.value }));
+    };
 
   // ************************************************************
   // 은행 선택 핸들러

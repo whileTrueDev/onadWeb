@@ -1,8 +1,7 @@
-import React from 'react';
 import Assignment from '@material-ui/icons/Assignment';
-import CardTemplate from './CardTemplate';
-import ReportStackedBar from '../../../../../atoms/Chart/ReportStackedBar';
+import React from 'react';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import CardTemplate from './CardTemplate';
 
 interface CampaignCostBarProps {
   color: string;
@@ -17,9 +16,9 @@ export default function CampaignCostBar(props: CampaignCostBarProps): JSX.Elemen
     <div {...rest}>
       <CardTemplate title="광고 비용 그래프" color={color} IconComponent={Assignment}>
         <div style={{ justifyContent: 'center', display: 'flex' }}>
-          {!chartData.loading && chartData.data && (
+          {/* {!chartData.loading && chartData.data && (
             <ReportStackedBar height={250} dataSet={chartData.data[0]} />
-          )}
+          )} */}
         </div>
       </CardTemplate>
     </div>
