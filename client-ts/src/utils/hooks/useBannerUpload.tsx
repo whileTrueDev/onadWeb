@@ -18,7 +18,7 @@ export interface UseBannerUploadResult {
 }
 
 /**
- * 이미지 업로드를 위한 훅.  
+ * 이미지 업로드를 위한 훅.
  * 10MB이하의 '이미지'파일 데이터만 (image URI scheme) 업로드 가능하다.
  * @param DEFAULT_IMAGE 기본이미지파일
  * @param imageUploadUrl 이미지를 업로드할 API 서버 엔드포인트
@@ -27,9 +27,7 @@ export interface UseBannerUploadResult {
  * iamgeUrl, imageName, handleReset, handleImageChange, readImage, handleUploadClick
  * @reference data_uri_scheme : https://en.wikipedia.org/wiki/Data_URI_scheme
  */
-export default function useBannerUpload(
-  DEFAULT_IMAGE: string,
-): UseBannerUploadResult {
+export default function useBannerUpload(DEFAULT_IMAGE: string): UseBannerUploadResult {
   const [imageUrl, setImageUrl] = React.useState<string | null>(DEFAULT_IMAGE);
   const [imageName, setImageName] = React.useState<string | undefined>('');
 
@@ -47,7 +45,7 @@ export default function useBannerUpload(
 
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
-    const files = (target.files as FileList);
+    const files = target.files as FileList;
     if (files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = files[0];
@@ -61,7 +59,7 @@ export default function useBannerUpload(
           reader.onload = (): void => {
             handleImageChange({
               newImageName: myImage.name,
-              newImageUrl: reader.result as string
+              newImageUrl: reader.result as string,
             });
           };
         } else {

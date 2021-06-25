@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   logo: { borderRadius: 10 },
   large: { width: 100, height: 100 },
-  small: { width: 50, height: 50 }
+  small: { width: 50, height: 50 },
 });
 
 interface CPACampaignIconProps {
@@ -14,7 +14,7 @@ interface CPACampaignIconProps {
 }
 export default function CPACampaignIcon({
   src,
-  size = 'large'
+  size = 'large',
 }: CPACampaignIconProps): JSX.Element {
   const classes = useStyles();
   return (

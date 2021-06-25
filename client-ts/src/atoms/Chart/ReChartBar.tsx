@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
 import makeBarChartData, { KeyMap, ChartDataBase } from '../../utils/chart/makeBarChartData';
-
 
 interface ReChartBarProps {
   data: ChartDataBase[];
@@ -33,7 +38,10 @@ export default function ReChartBar({
   chartWidth = 500,
   xAxisDataKey = 'date',
   tooltipLabelFormatter = (label: string | number): string | number => label,
-  tooltipFormatter = (value: any, name: any): any => [typeof value === 'number' ? value.toLocaleString() : value, labels[name]],
+  tooltipFormatter = (value: any, name: any): any => [
+    typeof value === 'number' ? value.toLocaleString() : value,
+    labels[name],
+  ],
   legendFormatter = (value: any): any => labels[value],
   nopreprocessing = false,
   keyMap,
@@ -65,7 +73,7 @@ export default function ReChartBar({
             contentStyle={{
               backgroundColor: theme.palette.common.white,
               color: theme.palette.common.black,
-              fontWeight: theme.typography.fontWeightBold
+              fontWeight: theme.typography.fontWeightBold,
             }}
             cursor={{ stroke: theme.palette.primary.main, strokeWidth: 1 }}
             labelFormatter={tooltipLabelFormatter}
@@ -75,7 +83,7 @@ export default function ReChartBar({
             <Legend
               iconType="circle"
               wrapperStyle={{
-                fontWeight: theme.typography.fontWeightRegular
+                fontWeight: theme.typography.fontWeightRegular,
               }}
               formatter={legendFormatter}
             />
@@ -87,19 +95,11 @@ export default function ReChartBar({
             fill={theme.palette.primary.main}
           />
           {dataKey instanceof Array && dataKey.length >= 2 ? (
-            <Bar
-              dataKey={dataKey[1]}
-              stackId="a"
-              fill={theme.palette.secondary.main}
-            />
-          ) : (null)}
+            <Bar dataKey={dataKey[1]} stackId="a" fill={theme.palette.secondary.main} />
+          ) : null}
           {dataKey instanceof Array && dataKey.length >= 3 ? (
-            <Bar
-              dataKey={dataKey[2]}
-              stackId="a"
-              fill={theme.palette.success.main}
-            />
-          ) : (null)}
+            <Bar dataKey={dataKey[2]} stackId="a" fill={theme.palette.success.main} />
+          ) : null}
         </BarChart>
       </ResponsiveContainer>
     </div>

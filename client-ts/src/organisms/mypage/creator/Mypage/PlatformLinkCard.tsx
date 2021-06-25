@@ -1,10 +1,8 @@
 import React from 'react';
-import {
-  Grid, Typography, Paper, darken,
-} from '@material-ui/core';
+import { Grid, Typography, Paper, darken } from '@material-ui/core';
 import MuiButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Check, Refresh, } from '@material-ui/icons';
+import { Check, Refresh } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
@@ -47,13 +45,16 @@ export default function PlatformLinkCard({
   // **************************************************
   // 연동 에러 처리
   const location = useLocation();
-  function parseLocationParams(): {[key: string]: string} {
-    const result: {[key: string]: string} = {};
+  function parseLocationParams(): { [key: string]: string } {
+    const result: { [key: string]: string } = {};
     if (location.search) {
-      location.search.substr(1).split('&').forEach((param) => {
-        const [key, value] = param.split('=');
-        Object.assign(result, { [key]: value });
-      });
+      location.search
+        .substr(1)
+        .split('&')
+        .forEach(param => {
+          const [key, value] = param.split('=');
+          Object.assign(result, { [key]: value });
+        });
     }
     return result;
   }
@@ -71,10 +72,11 @@ export default function PlatformLinkCard({
   const afreecaCancelConfirmDialog = useDialog();
   // 아프리카 연동 요청 취소 핸들러
   function handleCancel(): void {
-    axiosInstance.delete(`${HOST}/link/afreeca/cert`, {
-      data: { afreecaId: afreecaId.value }
-    })
-      .then((res) => {
+    axiosInstance
+      .delete(`${HOST}/link/afreeca/cert`, {
+        data: { afreecaId: afreecaId.value },
+      })
+      .then(res => {
         if (res.data) {
           afreecaCancelConfirmDialog.handleClose();
           profileRefetch();
@@ -91,15 +93,16 @@ export default function PlatformLinkCard({
   const linkDeleteFailSnack = useDialog();
   // 아프리카 연동 해제
   function handleDeleteLinkAfreeca(): void {
-    axiosInstance.delete(`${HOST}/link/afreeca`)
-      .then((res) => {
+    axiosInstance
+      .delete(`${HOST}/link/afreeca`)
+      .then(res => {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
           profileRefetch();
           linkDeleteSuccessSnack.handleOpen();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         linkDeleteFailSnack.handleOpen();
         console.error(err);
       });
@@ -109,15 +112,16 @@ export default function PlatformLinkCard({
   // 트위치 연동 해제
   const twitchLinkDeleteDialog = useDialog();
   function handleDeleteLinkTwitch(): void {
-    axiosInstance.delete(`${HOST}/link/twitch`)
-      .then((res) => {
+    axiosInstance
+      .delete(`${HOST}/link/twitch`)
+      .then(res => {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
           profileRefetch();
           linkDeleteSuccessSnack.handleOpen();
         }
       })
-      .catch((err) => {
+      .catch(err => {
         linkDeleteFailSnack.handleOpen();
         console.error(err);
       });
@@ -128,20 +132,28 @@ export default function PlatformLinkCard({
       <Grid container style={{ paddingBottom: 16 }} alignItems="center" spacing={1}>
         <Grid item xs={12}>
           <Typography style={{ fontWeight: 'bold' }}>플랫폼 연동</Typography>
-          <Typography variant="body2" color="textSecondary" style={{ marginBottom: 8 }}>광고시작을 위해 플랫폼 연동은 꼭 필요합니다.</Typography>
+          <Typography variant="body2" color="textSecondary" style={{ marginBottom: 8 }}>
+            광고시작을 위해 플랫폼 연동은 꼭 필요합니다.
+          </Typography>
         </Grid>
 
         {/* 기존 유저로, 해당하는 creatorId가 이미 creatorInfo에 있는 상황 */}
         {location.search && location.search.includes('error=precreator') && (
           <Grid item xs={12}>
             <Alert severity="error">
-              <Typography variant="body2">기존 트위치 로그인 방식으로 온애드를 사용한 기록이 있습니다.</Typography>
-              <Typography variant="body2">꼭! 기존 유저의 새로운 로그인 방식에 따른 새로운 회원가입을 진행하세요!</Typography>
+              <Typography variant="body2">
+                기존 트위치 로그인 방식으로 온애드를 사용한 기록이 있습니다.
+              </Typography>
+              <Typography variant="body2">
+                꼭! 기존 유저의 새로운 로그인 방식에 따른 새로운 회원가입을 진행하세요!
+              </Typography>
               <Button
                 size="small"
                 variant="contained"
                 color="primary"
-                onClick={() => { history.push('/creator/signup/pre-user'); }}
+                onClick={() => {
+                  history.push('/creator/signup/pre-user');
+                }}
               >
                 기존 계정 로그인하기
               </Button>
@@ -154,16 +166,15 @@ export default function PlatformLinkCard({
           <Grid item xs={12}>
             <Alert severity="error">
               <Typography>이미 해당 아이디에 연동된 유저가 있습니다.</Typography>
-              <Typography>혹시 본인의 아이디가 다른 유저에게 잘못 연결되어 있는 경우 문의 부탁드립니다.</Typography>
-              <Typography variant="body2">
-                {`이미 연동된 유저 아이디: ${parseLocationParams().user ? parseLocationParams().user : ''}`}
+              <Typography>
+                혹시 본인의 아이디가 다른 유저에게 잘못 연결되어 있는 경우 문의 부탁드립니다.
               </Typography>
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={openKakaoChat}
-              >
+              <Typography variant="body2">
+                {`이미 연동된 유저 아이디: ${
+                  parseLocationParams().user ? parseLocationParams().user : ''
+                }`}
+              </Typography>
+              <Button size="small" variant="contained" color="primary" onClick={openKakaoChat}>
                 문의하기
               </Button>
             </Alert>
@@ -172,7 +183,12 @@ export default function PlatformLinkCard({
 
         {/* 트위치 */}
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-          <img alt="" height={35} src="/pngs/logo/twitch/TwitchGlitchPurple.png" style={{ marginRight: 16 }} />
+          <img
+            alt=""
+            height={35}
+            src="/pngs/logo/twitch/TwitchGlitchPurple.png"
+            style={{ marginRight: 16 }}
+          />
           {!profileData.creatorTwitchOriginalId ? (
             <Button
               variant="contained"
@@ -184,7 +200,12 @@ export default function PlatformLinkCard({
             </Button>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button variant="contained" size="small" disableElevation style={{ cursor: 'default' }}>
+              <Button
+                variant="contained"
+                size="small"
+                disableElevation
+                style={{ cursor: 'default' }}
+              >
                 트위치 연동완료
                 <Check className={classes.success} />
               </Button>
@@ -204,7 +225,12 @@ export default function PlatformLinkCard({
         </Grid>
         {/* 아프리카티비 */}
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-          <img alt="" height={35} src="/pngs/logo/afreeca/onlyFace.png" style={{ marginRight: 16 }} />
+          <img
+            alt=""
+            height={35}
+            src="/pngs/logo/afreeca/onlyFace.png"
+            style={{ marginRight: 16 }}
+          />
           {!profileData.afreecaId ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button
@@ -215,8 +241,7 @@ export default function PlatformLinkCard({
               >
                 아프리카TV 연동하기
               </Button>
-              {!afreecaLinkData.loading && afreecaLinkData.data
-              && (
+              {!afreecaLinkData.loading && afreecaLinkData.data && (
                 <>
                   <Typography style={{ marginLeft: 8 }}>
                     {`${afreecaLinkData.data.afreecaId} 연동 진행중`}
@@ -224,7 +249,10 @@ export default function PlatformLinkCard({
                   <MuiButton
                     color="primary"
                     size="small"
-                    onClick={(): void => { profileRefetch(); afreecaLinkData.doGetRequest(); }}
+                    onClick={(): void => {
+                      profileRefetch();
+                      afreecaLinkData.doGetRequest();
+                    }}
                   >
                     새로고침
                     <Refresh fontSize="small" />
@@ -241,7 +269,12 @@ export default function PlatformLinkCard({
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button variant="contained" size="small" disableElevation style={{ cursor: 'default' }}>
+              <Button
+                variant="contained"
+                size="small"
+                disableElevation
+                style={{ cursor: 'default' }}
+              >
                 아프리카TV 연동완료
                 <Check className={classes.success} />
               </Button>
@@ -277,58 +310,75 @@ export default function PlatformLinkCard({
         title="아프리카TV 연동 취소 확인"
         maxWidth="xs"
         fullWidth
-        buttons={(
+        buttons={
           <div>
-            <Button size="small" onClick={handleCancel} variant="contained" color="primary">확인</Button>
-            <Button size="small" onClick={afreecaCancelConfirmDialog.handleClose}>취소</Button>
+            <Button size="small" onClick={handleCancel} variant="contained" color="primary">
+              확인
+            </Button>
+            <Button size="small" onClick={afreecaCancelConfirmDialog.handleClose}>
+              취소
+            </Button>
           </div>
-        )}
+        }
       >
         <Typography>정말로 취소하시겠습니까?</Typography>
       </CustomDialog>
 
       {/* 아프리카 연동 해제 확인 다이얼로그 */}
       {profileData && profileData.afreecaId && (
-      <CustomDialog
-        open={afreecaLinkDeleteDialog.open}
-        onClose={afreecaLinkDeleteDialog.handleClose}
-        title="아프리카TV 연동 해제 확인"
-        maxWidth="xs"
-        fullWidth
-        buttons={(
-          <div>
-            <Button size="small" onClick={handleDeleteLinkAfreeca} variant="contained" color="primary">
-              확인
-            </Button>
-            <Button size="small" onClick={afreecaLinkDeleteDialog.handleClose}>취소</Button>
-          </div>
-        )}
-      >
-        <Typography>정말로 아프리카TV연동을 해제하시겠습니까?</Typography>
-      </CustomDialog>
+        <CustomDialog
+          open={afreecaLinkDeleteDialog.open}
+          onClose={afreecaLinkDeleteDialog.handleClose}
+          title="아프리카TV 연동 해제 확인"
+          maxWidth="xs"
+          fullWidth
+          buttons={
+            <div>
+              <Button
+                size="small"
+                onClick={handleDeleteLinkAfreeca}
+                variant="contained"
+                color="primary"
+              >
+                확인
+              </Button>
+              <Button size="small" onClick={afreecaLinkDeleteDialog.handleClose}>
+                취소
+              </Button>
+            </div>
+          }
+        >
+          <Typography>정말로 아프리카TV연동을 해제하시겠습니까?</Typography>
+        </CustomDialog>
       )}
 
       {/* 트위치 연동 해제 확인 다이얼로그 */}
       {profileData && profileData.creatorTwitchOriginalId && (
-      <CustomDialog
-        open={twitchLinkDeleteDialog.open}
-        onClose={twitchLinkDeleteDialog.handleClose}
-        title="Twitch 연동 해제 확인"
-        maxWidth="xs"
-        fullWidth
-        buttons={(
-          <div>
-            <Button size="small" onClick={handleDeleteLinkTwitch} variant="contained" color="primary">
-              확인
-            </Button>
-            <Button size="small" onClick={twitchLinkDeleteDialog.handleClose}>취소</Button>
-          </div>
-        )}
-      >
-        <Typography>정말로 Twitch 연동을 해제하시겠습니까?</Typography>
-      </CustomDialog>
+        <CustomDialog
+          open={twitchLinkDeleteDialog.open}
+          onClose={twitchLinkDeleteDialog.handleClose}
+          title="Twitch 연동 해제 확인"
+          maxWidth="xs"
+          fullWidth
+          buttons={
+            <div>
+              <Button
+                size="small"
+                onClick={handleDeleteLinkTwitch}
+                variant="contained"
+                color="primary"
+              >
+                확인
+              </Button>
+              <Button size="small" onClick={twitchLinkDeleteDialog.handleClose}>
+                취소
+              </Button>
+            </div>
+          }
+        >
+          <Typography>정말로 Twitch 연동을 해제하시겠습니까?</Typography>
+        </CustomDialog>
       )}
-
 
       {/* 플랫폼 연동 해제 성공 스낵바 */}
       <Snackbar

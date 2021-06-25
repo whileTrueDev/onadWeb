@@ -1,8 +1,6 @@
 import React from 'react';
 import shortid from 'shortid';
-import {
-  Grid, Button, Typography
-} from '@material-ui/core';
+import { Grid, Button, Typography } from '@material-ui/core';
 import useStyles from './style/HowToUseMarketer.style';
 // import Typography from '../../Main/components/Typography';
 import useDialog from '../../../utils/hooks/useDialog';
@@ -10,7 +8,6 @@ import useDialog from '../../../utils/hooks/useDialog';
 import Inquire from '../main/Inquiry/Inquiry';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import CustomButtons from '../../../atoms/CustomButtons/Button';
-
 
 interface Props {
   source: {
@@ -32,72 +29,114 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
       <Grid container>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1" className={classes.useNumber}>1</Typography>
+          <Typography variant="h1" className={classes.useNumber}>
+            1
+          </Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             배너등록
           </Typography>
           <div className={classes.Content}>
-            {source.firstContent.split('\n').map((row) => (
+            {source.firstContent.split('\n').map(row => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Typography variant="body2" className={classes.inquiryLink} onClick={() => { InquireDialog.handleOpen(); }}>
+          <Typography
+            variant="body2"
+            className={classes.inquiryLink}
+            onClick={() => {
+              InquireDialog.handleOpen();
+            }}
+          >
             배너가 아직 없으시다면 클릭!
           </Typography>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_1'); UseStep.handleOpen(); }}>
+          <Button
+            className={classes.sampleLink}
+            onClick={() => {
+              setImgStep('marketer_manual_1');
+              UseStep.handleOpen();
+            }}
+          >
             샘플
           </Button>
           <CustomButtons
             load
             className={classes.guideButton}
-            onClick={() => window.open('https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/bannerGuide.pdf', '_blank')}
+            onClick={() =>
+              window.open(
+                'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/bannerGuide.pdf',
+                '_blank',
+              )
+            }
           >
             배너가이드
           </CustomButtons>
-
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1" className={classes.useNumber}>2</Typography>
+          <Typography variant="h1" className={classes.useNumber}>
+            2
+          </Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             캠페인생성
           </Typography>
           <div className={classes.Content}>
-            {source.secondContent.split('\n').map((row) => (
+            {source.secondContent.split('\n').map(row => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_2'); UseStep.handleOpen(); }}>
+          <Button
+            className={classes.sampleLink}
+            onClick={() => {
+              setImgStep('marketer_manual_2');
+              UseStep.handleOpen();
+            }}
+          >
             샘플
           </Button>
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1" className={classes.useNumber}>3</Typography>
+          <Typography variant="h1" className={classes.useNumber}>
+            3
+          </Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             광고송출확인
           </Typography>
           <div className={classes.Content}>
-            {source.thirdContent.split('\n').map((row) => (
+            {source.thirdContent.split('\n').map(row => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_3'); UseStep.handleOpen(); }}>
+          <Button
+            className={classes.sampleLink}
+            onClick={() => {
+              setImgStep('marketer_manual_3');
+              UseStep.handleOpen();
+            }}
+          >
             샘플
           </Button>
         </Grid>
         <Grid item xs={12} md={3} className={classes.marketerUse}>
           <div className={classes.lineDecoration} />
-          <Typography variant="h1" className={classes.useNumber}>4</Typography>
+          <Typography variant="h1" className={classes.useNumber}>
+            4
+          </Typography>
           <Typography variant="h5" className={classes.semiTitle}>
             세금계산서/현금영수증
           </Typography>
           <div className={classes.Content}>
-            {source.fourthContent.split('\n').map((row) => (
+            {source.fourthContent.split('\n').map(row => (
               <Typography variant="body2" key={shortid.generate()}>{`${row}`}</Typography>
             ))}
           </div>
-          <Button className={classes.sampleLink} onClick={() => { setImgStep('marketer_manual_4'); UseStep.handleOpen(); }}>
+          <Button
+            className={classes.sampleLink}
+            onClick={() => {
+              setImgStep('marketer_manual_4');
+              UseStep.handleOpen();
+            }}
+          >
             샘플
           </Button>
         </Grid>
@@ -108,23 +147,20 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
         onClose={InquireDialog.handleClose}
         fullWidth
         maxWidth="md"
-        buttons={(
+        buttons={
           <div>
-            <Button onClick={InquireDialog.handleClose}>
-              취소
-            </Button>
+            <Button onClick={InquireDialog.handleClose}>취소</Button>
           </div>
-        )}
+        }
       >
         <Inquire confirmClose={InquireDialog.handleClose} />
       </Dialog>
-      <Dialog
-        open={Boolean(UseStep.open)}
-        onClose={UseStep.handleClose}
-        fullWidth
-        maxWidth="md"
-      >
-        <img src={`/pngs/introduction/${imgStep}.png`} className={classes.contentImg} alt="sample" />
+      <Dialog open={Boolean(UseStep.open)} onClose={UseStep.handleClose} fullWidth maxWidth="md">
+        <img
+          src={`/pngs/introduction/${imgStep}.png`}
+          className={classes.contentImg}
+          alt="sample"
+        />
       </Dialog>
     </div>
   );

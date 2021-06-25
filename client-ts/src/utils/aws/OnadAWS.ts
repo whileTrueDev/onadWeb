@@ -9,22 +9,26 @@ AWS.config.update({
   credentials: {
     accessKeyId: process.env.REACT_APP_AWS_S3_ACCESS_KEY_ID!,
     secretAccessKey: process.env.REACT_APP_AWS_S3_ACCESS_KEY_SECRET!,
-  }
+  },
 });
 
 export default AWS;
 
 export interface S3UploadImageOptions {
-  key: string; filename: string; file: File;
+  key: string;
+  filename: string;
+  file: File;
 }
 export function s3UploadImage({
-  key, filename, file,
+  key,
+  filename,
+  file,
 }: S3UploadImageOptions): Promise<AWS.S3.ManagedUpload.SendData> {
   return new AWS.S3.ManagedUpload({
     params: {
       Bucket: onadImageBucketName,
       Key: path.join(key, filename),
-      Body: file
+      Body: file,
     },
   }).promise();
 }
@@ -33,7 +37,6 @@ export function s3UploadImage({
 //   const str = data.reduce((a: any, b: any) => a + String.fromCharCode(b), '');
 //   return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
 // }
-
 
 export const sts = new AWS.STS({ apiVersion: '2011-06-15' });
 
@@ -45,21 +48,21 @@ export const stsAuthAndGetObject = async (userId: string) => {
         Sid: 'OnadSTSSecure',
         Effect: 'Allow',
         Action: ['s3:GetObject', 's3:PutObject'],
-        Resource: `arn:aws:s3:::onad-privacy-files/${userId}/*`
-      }
-    ]
+        Resource: `arn:aws:s3:::onad-privacy-files/${userId}/*`,
+      },
+    ],
   };
-  const stsAssumed = await sts.assumeRole({
-    RoleArn: 'arn:aws:iam::803609402610:role/onadClientSTSRole',
-    RoleSessionName: 'onadClientSTSRole',
-    Policy: JSON.stringify(policy),
-    DurationSeconds: 900, // 15minute
-  }).promise();
+  const stsAssumed = await sts
+    .assumeRole({
+      RoleArn: 'arn:aws:iam::803609402610:role/onadClientSTSRole',
+      RoleSessionName: 'onadClientSTSRole',
+      Policy: JSON.stringify(policy),
+      DurationSeconds: 900, // 15minute
+    })
+    .promise();
 
   if (stsAssumed.Credentials) {
-    const {
-      AccessKeyId, SecretAccessKey, SessionToken, Expiration
-    } = stsAssumed.Credentials;
+    const { AccessKeyId, SecretAccessKey, SessionToken, Expiration } = stsAssumed.Credentials;
 
     const s3 = new AWS.S3({
       credentials: {
@@ -67,20 +70,24 @@ export const stsAuthAndGetObject = async (userId: string) => {
         secretAccessKey: SecretAccessKey,
         sessionToken: SessionToken,
         expireTime: Expiration,
-      }
+      },
     });
 
-    const putdata = await s3.putObject({
-      Bucket: 'onad-privacy-files',
-      Key: `${userId}/test.txt`,
-      Body: 'test',
-    }).promise();
+    const putdata = await s3
+      .putObject({
+        Bucket: 'onad-privacy-files',
+        Key: `${userId}/test.txt`,
+        Body: 'test',
+      })
+      .promise();
     console.log(putdata);
 
-    const data = await s3.getObject({
-      Bucket: 'onad-privacy-files',
-      Key: 'hwasurr1/test.txt'
-    }).promise();
+    const data = await s3
+      .getObject({
+        Bucket: 'onad-privacy-files',
+        Key: 'hwasurr1/test.txt',
+      })
+      .promise();
 
     const spanTag = window.document.getElementById('s3-privacy-text') as HTMLSpanElement;
     spanTag.innerText = data.Body as string;

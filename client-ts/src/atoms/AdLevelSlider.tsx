@@ -19,10 +19,6 @@ function ValueLabelComponent(props: ValueLabelComponentProps): JSX.Element {
 
 export default function AdLevelSlider(props: SliderProps): JSX.Element {
   return (
-    <Slider
-      ValueLabelComponent={ValueLabelComponent}
-      aria-label="custom thumb label"
-      {...props}
-    />
+    <Slider ValueLabelComponent={ValueLabelComponent} aria-label="custom thumb label" {...props} />
   );
 }

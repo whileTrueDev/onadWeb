@@ -15,10 +15,8 @@ const StaticInput = withStyles((theme: Theme) => ({
     },
   },
   underline: {
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
-}))((props: InputProps) => (
-  <Input {...props} />
-));
+}))((props: InputProps) => <Input {...props} />);
 
 export default StaticInput;

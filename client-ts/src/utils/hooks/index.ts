@@ -27,5 +27,5 @@ export {
   useOpenValue,
   useToggle,
   useTooltip,
-  useScript
+  useScript,
 };

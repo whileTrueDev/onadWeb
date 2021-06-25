@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import {
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-} from '@material-ui/core';
+import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import useStyles from './style/Stepper.style';
 import axios from '../../../utils/axios';
 import PlatformRegistForm from './PlatformRegistForm';
@@ -14,7 +9,6 @@ import HOST from '../../../config';
 import history from '../../../history';
 import IdentityVerification from './IdentityVerification';
 import { myReducer, initialState } from './Stepper.reducer';
-
 
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();
@@ -48,11 +42,12 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
       ...user,
-      platformType
+      platformType,
     };
     if (platform === undefined) {
-      axios.post(`${HOST}/marketer`, user)
-        .then((res) => {
+      axios
+        .post(`${HOST}/marketer`, user)
+        .then(res => {
           const { error } = res.data;
           if (!error) {
             alert('회원가입이 완료되었습니다. 다시 로그인 해주세요.');
@@ -70,8 +65,9 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           history.push('/');
         });
     } else {
-      axios.post(`${HOST}/marketer/platform`, returnUser)
-        .then((res) => {
+      axios
+        .post(`${HOST}/marketer/platform`, returnUser)
+        .then(res => {
           const { error } = res.data;
           if (!error) {
             alert('회원가입이 완료되었습니다. 다시 로그인 하세요.');
@@ -117,9 +113,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
   }
 
   return (
-
     <div className={classes.container}>
-
       <Stepper activeStep={activeStep} orientation="vertical">
         <Step key="0">
           <StepLabel>미성년자 확인</StepLabel>
@@ -135,17 +129,12 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
         <Step key="1">
           <StepLabel>정보 동의 및 계약</StepLabel>
           <StepContent>
-            <PaperSheet
-              handleNext={handleNext}
-              handleBack={handleReset}
-            />
+            <PaperSheet handleNext={handleNext} handleBack={handleReset} />
           </StepContent>
         </Step>
         <Step key="2">
           <StepLabel>개인정보 입력</StepLabel>
-          <StepContent>
-            {getRegistComponent()}
-          </StepContent>
+          <StepContent>{getRegistComponent()}</StepContent>
         </Step>
       </Stepper>
     </div>

@@ -1,9 +1,7 @@
 import React, { useReducer } from 'react';
 // material ui core
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid, Slide, Collapse
-} from '@material-ui/core';
+import { Grid, Slide, Collapse } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
 // customized component
 import Dialog from '../../../../../atoms/Dialog/Dialog';
@@ -31,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '1200px',
     width: '1200px',
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   button: { marginRight: theme.spacing(1) },
   title: {
@@ -43,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleWrap: {
     background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.primary.dark} 90%)`,
     color: 'white',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 }));
 
 interface RefundDialogProps {
@@ -61,22 +59,17 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
 
-  const {
-    open, handleClose, currentCash, accountNumber, accountHolder
-  } = props;
+  const { open, handleClose, currentCash, accountNumber, accountHolder } = props;
 
   const currentCashNumber = Number(currentCash.replace(/,/gi, ''));
 
   // 환불 요청 절차에서 사용할(step2) State.
-  const [stepState, stepDispatch] = useReducer(
-    stepReducer,
-    {
-      currentCash: currentCashNumber,
-      selectValue: '',
-      checked: false,
-      totalDebit: 0
-    }
-  );
+  const [stepState, stepDispatch] = useReducer(stepReducer, {
+    currentCash: currentCashNumber,
+    selectValue: '',
+    checked: false,
+    totalDebit: 0,
+  });
 
   const { selectValue, checked } = stepState;
 
@@ -84,18 +77,21 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
     event.preventDefault();
 
     // 해당 금액 만큼 환불 내역에 추가하는 요청
-    axios.post(`${HOST}/marketer/cash/refund`, {
-      withdrawCash: selectValue,
-    }).then(() => {
-      setIndex((preIndex) => preIndex + 1);
-    }).catch((err) => {
-      console.log(err);
-      history.push('/mypage/marketer/myoffice');
-    });
+    axios
+      .post(`${HOST}/marketer/cash/refund`, {
+        withdrawCash: selectValue,
+      })
+      .then(() => {
+        setIndex(preIndex => preIndex + 1);
+      })
+      .catch(err => {
+        console.log(err);
+        history.push('/mypage/marketer/myoffice/cash');
+      });
   }
 
   const handleNext = (go: number | null) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ): void => {
     event.preventDefault();
     setPaperSwitch(false);
@@ -103,14 +99,16 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
 
     if (index === 1) {
       if (currentCashNumber - parseInt(selectValue, 10) < 0 || parseInt(selectValue, 10) <= 1000) {
-        alert('환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.');
-        history.push('/mypage/marketer/myoffice');
+        alert(
+          '환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.',
+        );
+        history.push('/mypage/marketer/myoffice/cash');
       } else {
         setTimeout(() => {
           if (go) {
             setIndex(go);
           } else {
-            setIndex((preIndex) => preIndex + 1);
+            setIndex(preIndex => preIndex + 1);
           }
           setPaperSwitch(true);
         }, 500);
@@ -120,7 +118,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
         if (go) {
           setIndex(go);
         } else {
-          setIndex((preIndex) => preIndex + 1);
+          setIndex(preIndex => preIndex + 1);
         }
         setPaperSwitch(true);
       }, 500);
@@ -135,7 +133,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
       stepDispatch({ key: 'reset' });
     }
     setTimeout(() => {
-      setIndex((preIndex) => preIndex - 1);
+      setIndex(preIndex => preIndex - 1);
       setPaperSwitch(true);
     }, 500);
   };
@@ -170,11 +168,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
           />
         );
       case 3:
-        return (
-          <RefundComplete
-            state={stepState}
-          />
-        );
+        return <RefundComplete state={stepState} />;
       default:
         return <div />;
     }
@@ -188,80 +182,77 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
 
   const finishIndex = (): void => {
     handleClose();
-    history.push('/dashboard/marketer/myoffice');
+    history.push('/dashboard/marketer/myoffice/cash');
   };
 
   return (
     <Dialog
       open={open}
-      onClose={index !== 3 ? (DefaultIndex) : (finishIndex)}
+      onClose={index !== 3 ? DefaultIndex : finishIndex}
       maxWidth="sm"
       fullWidth
-      buttons={(
+      buttons={
         <div>
           <Grid container direction="row">
-            {index === 2
-              && (
-                <Grid item>
-                  <Collapse in>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSubmitClick}
-                    >
-                      신청
-                    </Button>
-                  </Collapse>
-                </Grid>
-              )}
-            {(index === 0 || index === 1)
-              && (
-                <Grid item>
-                  <Collapse in={stepComplete}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNext(null)}
-                    >
-                      다음
-                    </Button>
-                  </Collapse>
-                </Grid>
-              )}
-            {(index === 1 || index === 2) ? (
+            {index === 2 && (
+              <Grid item>
+                <Collapse in>
+                  <Button variant="contained" color="primary" onClick={handleSubmitClick}>
+                    신청
+                  </Button>
+                </Collapse>
+              </Grid>
+            )}
+            {(index === 0 || index === 1) && (
+              <Grid item>
+                <Collapse in={stepComplete}>
+                  <Button variant="contained" color="primary" onClick={handleNext(null)}>
+                    다음
+                  </Button>
+                </Collapse>
+              </Grid>
+            )}
+            {index === 1 || index === 2 ? (
               <Grid item>
                 <Button onClick={handleBack} className={classes.button}>
                   뒤로
                 </Button>
               </Grid>
             ) : null}
-            {index !== 3
-              && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
-            {index === 3
-              && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>}
+            {index !== 3 && (
+              <Grid item>
+                <Button onClick={DefaultIndex}>취소</Button>
+              </Grid>
+            )}
+            {index === 3 && (
+              <Grid item>
+                <Button onClick={finishIndex}>완료</Button>
+              </Grid>
+            )}
           </Grid>
         </div>
-      )}
+      }
     >
       <div>
         <div className={classes.titleWrap}>
           <div style={{ fontSize: 18, paddingTop: 15 }}>
-            OnAD 환불요청 Step
-            {' '}
-            {index + 1}
+            OnAD 환불요청 Step {index + 1}
             /4
           </div>
           <h4 className={classes.title}>{sources.titleRefund[index]}</h4>
         </div>
-        <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
-          <div>
-            {setSteps(index)}
-          </div>
+        <Slide
+          direction="right"
+          in={paperSwitch}
+          mountOnEnter
+          unmountOnExit
+          timeout={{ exit: 500 }}
+        >
+          <div>{setSteps(index)}</div>
         </Slide>
       </div>
     </Dialog>
   );
 }
-
 
 export default RefundDialog;

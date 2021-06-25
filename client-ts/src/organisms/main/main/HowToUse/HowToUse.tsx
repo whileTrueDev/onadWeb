@@ -1,7 +1,5 @@
 import React, { useLayoutEffect } from 'react';
-import {
-  Button, Typography, CircularProgress
-} from '@material-ui/core';
+import { Button, Typography, CircularProgress } from '@material-ui/core';
 import shortid from 'shortid';
 import styles from '../style/HowToUse.style';
 
@@ -13,7 +11,7 @@ interface HowToUseProps {
   // timer: NodeJS.Timeout | undefined;
 }
 
-function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
+function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
   const classes = styles();
 
   const [loading, setLoading] = React.useState(false);
@@ -57,28 +55,27 @@ function HowToUse({ source, MainUserType, }: HowToUseProps): JSX.Element {
           />
         </div>
         <div className={classes.contentWapper}>
-          {source.content.map((text) => (
-            <Typography variant="h4" key={shortid.generate()} className={classes.content}>{text}</Typography>
+          {source.content.map(text => (
+            <Typography variant="h4" key={shortid.generate()} className={classes.content}>
+              {text}
+            </Typography>
           ))}
           <div className={MainUserType ? classes.bottomLine : classes.bottomLine2} />
           <Button
             className={classes.button}
             onClick={() => {
               handleClick();
-              window.open('https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/onadIntro.pdf', '_blank');
+              window.open(
+                'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/onadIntro.pdf',
+                '_blank',
+              );
             }}
           >
             <Typography variant="subtitle1">
               소개 자료 다운로드
-              {loading
-                  && (
-                  <CircularProgress
-                    disableShrink
-                    size={16}
-                    thickness={5}
-                    variant="indeterminate"
-                  />
-                  )}
+              {loading && (
+                <CircularProgress disableShrink size={16} thickness={5} variant="indeterminate" />
+              )}
             </Typography>
           </Button>
         </div>

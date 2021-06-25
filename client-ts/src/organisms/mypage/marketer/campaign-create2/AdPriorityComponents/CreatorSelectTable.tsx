@@ -1,9 +1,8 @@
+/* eslint-disable react/display-name */
 /* eslint-disable max-len */
 import React, { useRef, useState } from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import {
-  Typography, Avatar, Grid, makeStyles, TextField, Button,
-} from '@material-ui/core';
+import { Typography, Avatar, Grid, makeStyles, TextField, Button } from '@material-ui/core';
 import Poll from '@material-ui/icons/Poll';
 import MaterialTable from '../../../../../atoms/Table/MaterialTable';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
@@ -41,9 +40,9 @@ const SearchTextField = ({ searchText, setSearchText }: any) => {
         검색
       </Button>
       {searchText && (
-      <Button variant="contained" onClick={handleSearchReset} style={{ marginLeft: 8 }}>
-        검색제거
-      </Button>
+        <Button variant="contained" onClick={handleSearchReset} style={{ marginLeft: 8 }}>
+          검색제거
+        </Button>
       )}
     </div>
   );
@@ -52,7 +51,7 @@ const SearchTextField = ({ searchText, setSearchText }: any) => {
 const BANNER_MAX_WIDTH = 48;
 const BANNER_MAX_HEIGHT = 48;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
   image: {
     width: 48,
@@ -61,20 +60,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.grey[300],
     [theme.breakpoints.only('lg')]: {
       width: 48,
-      height: 48
-    }
+      height: 48,
+    },
   },
   flex: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   unit: { fontWeight: 700, marginLeft: '2px' },
   table: { boxShadow: 'none', overflow: 'hidden' },
   left: {
     display: 'flex',
     justifyContent: 'left',
-    alignItems: 'left'
+    alignItems: 'left',
   },
   platformLogoWrapper: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end' },
   valueContainer: { textAlign: 'right' },
@@ -93,7 +92,6 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
   // **********************************************************
   // 데이터 요청
   const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
-
 
   // 크리에이터별 상세 그래프
   const renderDetailGraph = (rowData: CreatorDetailDataInterface): JSX.Element => (
@@ -120,10 +118,10 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           </Grid>
           <Grid item>
             {rowData.creatorId && (
-            <TimeChart selectedChartData={JSON.parse(rowData.timeGraphData)} />
+              <TimeChart selectedChartData={JSON.parse(rowData.timeGraphData)} />
             )}
             {!rowData.creatorId && rowData.creatorIdAfreeca && (
-            <TimeChart selectedChartData={JSON.parse(rowData.timeGraphDataAfreeca)} />
+              <TimeChart selectedChartData={JSON.parse(rowData.timeGraphDataAfreeca)} />
             )}
           </Grid>
         </Grid>
@@ -137,8 +135,8 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
     <div id="creator-select-table">
       {/* 검색 컴포넌트 */}
       <SearchTextField searchText={searchText} setSearchText={setSearchText} />
-      {fetchData.loading && (<MaterialTable columns={[]} data={[]} isLoading title="" />)}
-      {!fetchData.loading && fetchData.error && (<span>Error</span>)}
+      {fetchData.loading && <MaterialTable columns={[]} data={[]} isLoading title="" />}
+      {!fetchData.loading && fetchData.error && <span>Error</span>}
       {!fetchData.loading && fetchData.data && (
         <MaterialTable
           columns={[
@@ -159,7 +157,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
                     {rowData.creatorName || rowData.afreecaName}
                   </Typography>
                 </div>
-              )
+              ),
             },
             {
               title: '채널',
@@ -167,10 +165,21 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.platformLogoWrapper}>
                   {rowData.creatorId && (
-                  <img height={20} width={20} src="/pngs/logo/twitch/TwitchGlitchPurple.png" alt="" />
+                    <img
+                      height={20}
+                      width={20}
+                      src="/pngs/logo/twitch/TwitchGlitchPurple.png"
+                      alt=""
+                    />
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <img className={classes.secondText} height={20} width={20} src="/pngs/logo/afreeca/onlyFace.png" alt="" />
+                    <img
+                      className={classes.secondText}
+                      height={20}
+                      width={20}
+                      src="/pngs/logo/afreeca/onlyFace.png"
+                      alt=""
+                    />
                   )}
                 </div>
               ),
@@ -179,141 +188,139 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
               searchable: false,
               title: '팔로워 수',
               field: 'followers',
-              customSort: (a, b) => (b.followers + b.followersAfreeca) - (a.followers + a.followersAfreeca),
+              customSort: (a, b) =>
+                b.followers + b.followersAfreeca - (a.followers + a.followersAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.followers.toLocaleString()} 명`}</Typography>
+                    <Typography>{`${rowData.followers.toLocaleString()} 명`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.followersAfreeca.toLocaleString()} 명`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.followersAfreeca.toLocaleString()} 명`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '평균 시청자 수',
               field: 'viewer',
-              customSort: (a, b) => (b.viewer + b.viewerAfreeca) - (a.viewer + a.viewerAfreeca),
+              customSort: (a, b) => b.viewer + b.viewerAfreeca - (a.viewer + a.viewerAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.viewer.toLocaleString()} 명`}</Typography>
+                    <Typography>{`${rowData.viewer.toLocaleString()} 명`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.viewerAfreeca.toLocaleString()} 명`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.viewerAfreeca.toLocaleString()} 명`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '평균 방송 시간',
               field: 'airtime',
-              customSort: (a, b) => (b.airtime + b.airtimeAfreeca) - (a.airtime + a.airtimeAfreeca),
+              customSort: (a, b) => b.airtime + b.airtimeAfreeca - (a.airtime + a.airtimeAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.airtime.toLocaleString()} 시간`}</Typography>
+                    <Typography>{`${rowData.airtime.toLocaleString()} 시간`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.airtimeAfreeca.toLocaleString()} 시간`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.airtimeAfreeca.toLocaleString()} 시간`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '방송당 평균 노출량',
               field: 'impression',
-              customSort: (a, b) => (b.impression + b.impressionAfreeca) - (a.impression + a.impressionAfreeca),
+              customSort: (a, b) =>
+                b.impression + b.impressionAfreeca - (a.impression + a.impressionAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.impression.toLocaleString()} 회`}</Typography>
+                    <Typography>{`${rowData.impression.toLocaleString()} 회`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.impressionAfreeca.toLocaleString()} 회`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.impressionAfreeca.toLocaleString()} 회`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '시간당 예상 노출 비용',
               field: 'cost',
-              customSort: (a, b) => (b.cost + b.costAfreeca) - (a.cost + a.costAfreeca),
+              customSort: (a, b) => b.cost + b.costAfreeca - (a.cost + a.costAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.cost.toLocaleString()} 원`}</Typography>
+                    <Typography>{`${rowData.cost.toLocaleString()} 원`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.costAfreeca.toLocaleString()} 원`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.costAfreeca.toLocaleString()} 원`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '일간 평균 클릭 수',
               field: 'ctr',
-              customSort: (a, b) => (b.ctr + b.ctrAfreeca) - (a.ctr + a.ctrAfreeca),
+              customSort: (a, b) => b.ctr + b.ctrAfreeca - (a.ctr + a.ctrAfreeca),
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
                   {rowData.creatorId && (
-                  <Typography>{`${rowData.ctr.toLocaleString()} 회`}</Typography>
+                    <Typography>{`${rowData.ctr.toLocaleString()} 회`}</Typography>
                   )}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.ctrAfreeca.toLocaleString()} 회`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.ctrAfreeca.toLocaleString()} 회`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '주 컨텐츠',
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
                 <div className={classes.valueContainer}>
-                  {rowData.creatorId && (
-                  <Typography>{`${rowData.content}`}</Typography>
-                  )}
+                  {rowData.creatorId && <Typography>{`${rowData.content}`}</Typography>}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.contentAfreeca}`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.contentAfreeca}`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
             {
               searchable: false,
               title: '주 방송시간대',
               render: (rowData: CreatorDetailDataInterface): JSX.Element => (
-                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap', }}>
-                  {rowData.creatorId && (
-                  <Typography>{`${rowData.openHour}`}</Typography>
-                  )}
+                <div className={classes.valueContainer} style={{ whiteSpace: 'nowrap' }}>
+                  {rowData.creatorId && <Typography>{`${rowData.openHour}`}</Typography>}
                   {rowData.creatorIdAfreeca && (
-                  <Typography className={classes.secondText}>
-                    {`${rowData.openHourAfreeca}`}
-                  </Typography>
+                    <Typography className={classes.secondText}>
+                      {`${rowData.openHourAfreeca}`}
+                    </Typography>
                   )}
                 </div>
-              )
+              ),
             },
           ]}
           onRowClick={(e, rowData): void => {
@@ -321,7 +328,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           }}
           title=""
           cellWidth={90}
-          data={fetchData.data.filter((d) => {
+          data={fetchData.data.filter(d => {
             if (d.creatorName && d.creatorName.indexOf(searchText) > -1) {
               return true;
             }
@@ -332,10 +339,10 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           })}
           detailPanel={[
             {
-              icon: (): JSX.Element => (<Poll color="disabled" />),
+              icon: (): JSX.Element => <Poll color="disabled" />,
               tooltip: '분석 그래프 보기',
               render: renderDetailGraph,
-            }
+            },
           ]}
           style={{ padding: theme.spacing(4, 2, 0, 2) }}
           options={{
@@ -345,9 +352,10 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
             detailPanelColumnAlignment: 'left',
             rowStyle: (rowData: CreatorDetailDataInterface): React.CSSProperties => ({
               backgroundColor: isCheckedCreator(rowData.creatorId || rowData.creatorIdAfreeca)
-                ? theme.palette.action.selected : theme.palette.background.paper,
+                ? theme.palette.action.selected
+                : theme.palette.background.paper,
             }),
-            headerStyle: { textAlign: 'right', flexDirection: 'row-reverse' }
+            headerStyle: { textAlign: 'right', flexDirection: 'row-reverse' },
           }}
           localization={{
             body: { emptyDataSourceMessage: '선택가능한 방송인이 없습니다.' },

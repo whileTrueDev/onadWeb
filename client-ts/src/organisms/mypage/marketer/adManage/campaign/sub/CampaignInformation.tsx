@@ -1,19 +1,13 @@
-import {
-  Button,
-  Divider,
-  makeStyles, Tab, Tabs,
-} from '@material-ui/core';
+import { Button, Divider, makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 import { CampaignInterface } from '../../../dashboard/interfaces';
-import {
-  CONFIRM_STATE_CONFIRMED,
-} from '../../../../../../utils/render_funcs/renderBannerConfirmState';
+import { CONFIRM_STATE_CONFIRMED } from '../../../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignDetail from './CampaignDetail';
 import OrderInventory from '../../../shared/merchandiseOrder/OrderInventory';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
-    margin: theme.spacing(0, 0, 2,),
+    margin: theme.spacing(0, 0, 2),
   },
   contents: {
     padding: theme.spacing(4),
@@ -27,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
   openAnalysisButton: {
-    margin: theme.spacing(2, 1, 0)
-  }
+    margin: theme.spacing(2, 1, 0),
+  },
 }));
 
 const CPS_OPTION_TYPE = 3; // CPS 캠페인 옵션 넘버
@@ -59,37 +53,29 @@ export default function CampaignInformation({
         className={classes.tabs}
       >
         <Tab label="상세 정보" value="0" />
-        {campaign.optionType === CPS_OPTION_TYPE && (<Tab label="주문 및 판매관리" value="1" />)}
+        {campaign.optionType === CPS_OPTION_TYPE && <Tab label="주문 및 판매관리" value="1" />}
       </Tabs>
 
       {selectedTabIndex === '0' && (
-      <section id="campaign-analysis" className={classes.contents}>
-        <CampaignDetail campaign={campaign} />
-      </section>
+        <section id="campaign-analysis" className={classes.contents}>
+          <CampaignDetail campaign={campaign} />
+        </section>
       )}
       {selectedTabIndex === '1' && (
-      <section id="campaign-analysis" className={classes.contents}>
-        <OrderInventory by="merchandise" merchandiseId={campaign.merchandiseId} />
-      </section>
+        <section id="campaign-analysis" className={classes.contents}>
+          <OrderInventory by="merchandise" merchandiseId={campaign.merchandiseId} />
+        </section>
       )}
 
       <Divider />
 
-      {campaign.confirmState === CONFIRM_STATE_CONFIRMED && !analysisToggle
-      && (
+      {campaign.confirmState === CONFIRM_STATE_CONFIRMED && !analysisToggle && (
         <div className={classes.openAnalysisButton}>
-          <Button
-            onClick={openAnalysis}
-            fullWidth
-            size="large"
-            variant="contained"
-            color="default"
-          >
+          <Button onClick={openAnalysis} fullWidth size="large" variant="contained" color="default">
             분석정보보기
           </Button>
         </div>
       )}
-
     </div>
   );
 }

@@ -4,7 +4,7 @@ const useWithdrawalAgreementStyles = makeStyles((theme: Theme) => ({
   warning: {
     backgroundColor: theme.palette.action.disabledBackground,
     borderLeft: `0.25rem solid ${theme.palette.error.main}`,
-    wordBreak: 'keep-all'
+    wordBreak: 'keep-all',
   },
   title: {
     marginBottom: 0,
@@ -57,7 +57,6 @@ const useWithdrawalAgreementStyles = makeStyles((theme: Theme) => ({
     },
   },
   names: { lineHeight: 1.8 },
-
 }));
 
 export default useWithdrawalAgreementStyles;

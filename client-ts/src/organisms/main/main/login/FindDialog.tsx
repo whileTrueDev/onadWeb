@@ -12,7 +12,6 @@ import style from '../style/FindDialog.style';
 import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 
-
 interface Props {
   dialogType: string;
   findDialogOpen: boolean;
@@ -23,14 +22,13 @@ interface Props {
 const initialState = {
   marketerName: '',
   marketerMail: '',
-  marketerId: ''
+  marketerId: '',
 };
 
 const FindResult: any = initialState;
 
-type InputType = React.ChangeEvent<HTMLInputElement>
-type FormType = React.FormEvent<HTMLFormElement>
-
+type InputType = React.ChangeEvent<HTMLInputElement>;
+type FormType = React.FormEvent<HTMLFormElement>;
 
 function FindDialog({
   dialogType,
@@ -50,8 +48,9 @@ function FindDialog({
     event.preventDefault();
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
-      axios.get(`${HOST}/marketer/id`, { params: findContent })
-        .then((res) => {
+      axios
+        .get(`${HOST}/marketer/id`, { params: findContent })
+        .then(res => {
           const ans = JSON.parse(res.data);
           if (ans.error) {
             alert(ans.message);
@@ -62,7 +61,7 @@ function FindDialog({
             setFindContent(initialState);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           handleFindDialogClose();
           setFindContent(initialState);
@@ -78,20 +77,19 @@ function FindDialog({
     event.preventDefault();
     const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
-      axios.patch(`${HOST}/marketer/tmp-password`, findContent)
-        .then((res) => {
-          console.log(res.data);
-          const ans = JSON.parse(res.data);
-          if (ans.error) {
-            alert(ans.message);
-            setFindContent(initialState);
-          } else {
-            alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
-            handleFindDialogClose();
-            handleClose();
-            setFindContent(initialState);
-          }
-        });
+      axios.patch(`${HOST}/marketer/tmp-password`, findContent).then(res => {
+        console.log(res.data);
+        const ans = JSON.parse(res.data);
+        if (ans.error) {
+          alert(ans.message);
+          setFindContent(initialState);
+        } else {
+          alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
+          handleFindDialogClose();
+          handleClose();
+          setFindContent(initialState);
+        }
+      });
     } else {
       // 이메일 형식 오류
       alert('이메일 형식이 올바르지 않습니다.');
@@ -167,10 +165,7 @@ function FindDialog({
   };
 
   return (
-    <Dialog
-      open={findDialogOpen}
-      maxWidth="sm"
-    >
+    <Dialog open={findDialogOpen} maxWidth="sm">
       <DialogTitle>Find ID/PW</DialogTitle>
       <form onSubmit={handleSubmit()}>
         <Content />
@@ -186,6 +181,5 @@ function FindDialog({
     </Dialog>
   );
 }
-
 
 export default FindDialog;

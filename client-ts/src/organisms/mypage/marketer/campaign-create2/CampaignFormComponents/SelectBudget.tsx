@@ -9,7 +9,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   input: {
     width: '300px',
     [theme.breakpoints.down('sm')]: {
-      width: '100%', fontSize: '12px', margin: 0,
+      width: '100%',
+      fontSize: '12px',
+      margin: 0,
     },
   },
 }));
@@ -37,7 +39,7 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
           name="no-limit"
           checked={!toggle}
           onClick={handleNotUse}
-        // disabled
+          // disabled
         />
         <StyledSelectText
           onClick={handleNotUse}
@@ -46,41 +48,39 @@ const SelectBudget = (props: SelectBudgetProps): JSX.Element => {
         />
       </Grid>
       <Grid container item direction="row">
-        <GreenCheckbox
-          name="set-limit"
-          checked={toggle}
-          onClick={handleUse}
-        />
+        <GreenCheckbox name="set-limit" checked={toggle} onClick={handleUse} />
         <StyledSelectText
           onClick={handleUse}
           style={{ cursor: 'pointer', maxWidth: 300 }}
           primary="일예산 설정"
-          secondary={toggle && (
-            <Typography variant="body2" color="textSecondary">
-              최소금액
-              <Typography color="error" variant="caption">(5000원 이상)</Typography>
-            </Typography>
-          )}
+          secondary={
+            toggle && (
+              <Typography variant="body2" color="textSecondary">
+                최소금액
+                <Typography color="error" variant="caption">
+                  (5000원 이상)
+                </Typography>
+              </Typography>
+            )
+          }
         />
       </Grid>
       {toggle && (
-      <Grid container item>
-        <StyledInput
-          autoFocus
-          name="campaign-create-budget"
-          className={classes.input}
-          type="number"
-          inputRef={budgetInputRef}
-          inputProps={{
-            min: 5000,
-            step: 100,
-            required: true
-          }}
-        />
-        <Grid item>
-          원
+        <Grid container item>
+          <StyledInput
+            autoFocus
+            name="campaign-create-budget"
+            className={classes.input}
+            type="number"
+            inputRef={budgetInputRef}
+            inputProps={{
+              min: 5000,
+              step: 100,
+              required: true,
+            }}
+          />
+          <Grid item>원</Grid>
         </Grid>
-      </Grid>
       )}
     </Grid>
   );

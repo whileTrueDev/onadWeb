@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  Grid
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 import DatePicker from './DateTermPicker';
 
-import {
-  CampaignCreateAction,
-  CampaignCreateInterface
-} from '../reducers/campaignCreate.reducer';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 
 interface SelectDateTermProps {
   state: CampaignCreateInterface;
@@ -32,11 +27,7 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
   return (
     <Grid container direction="column">
       <Grid container item direction="row">
-        <GreenCheckbox
-          name="no-limit"
-          checked={!toggle}
-          onClick={handleNotUse}
-        />
+        <GreenCheckbox name="no-limit" checked={!toggle} onClick={handleNotUse} />
         <StyledSelectText
           onClick={handleNotUse}
           style={{ cursor: 'pointer' }}
@@ -44,11 +35,7 @@ const SelectDateTerm = (props: SelectDateTermProps): JSX.Element => {
         />
       </Grid>
       <Grid item container direction="row">
-        <GreenCheckbox
-          name="set-limit"
-          checked={toggle}
-          onClick={handleUse}
-        />
+        <GreenCheckbox name="set-limit" checked={toggle} onClick={handleUse} />
         <StyledSelectText
           primary="시작일 또는 종료일 설정"
           onClick={handleUse}

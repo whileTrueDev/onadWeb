@@ -26,7 +26,7 @@ function Navbar(props: NavbarProps): JSX.Element {
   function makeBrand(): string {
     const { pathname } = window.location;
     let name = '';
-    routes.forEach((route) => {
+    routes.forEach(route => {
       if (route.hasSubRoutes && route.subRoutes && route.subRoutes.length > 0) {
         for (let i = 0; i < route.subRoutes.length; i += 1) {
           if (route.layout + route.path + route.subRoutes[i].path === pathname) {
@@ -59,8 +59,7 @@ function Navbar(props: NavbarProps): JSX.Element {
             <Button color="default" variant="text" href="#" className={classes.title}>
               {makeBrand()}
             </Button>
-          ) : (null)}
-
+          ) : null}
         </div>
         <AdminNavbarLinks type={type} />
       </Toolbar>

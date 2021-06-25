@@ -7,23 +7,39 @@ import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useDialog from '../../../../utils/hooks/useDialog';
-import NowBroadCard, { CurrentBannerRes } from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
+import NowBroadCard, {
+  CurrentBannerRes,
+} from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
 import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ContractionDataType } from '../CPAManage';
-import OverlayUrlCard, { OverlayUrlRes } from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import OverlayUrlCard, {
+  OverlayUrlRes,
+} from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
-import IncomeChart, { IncomeChartParams } from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import IncomeChart, {
+  IncomeChartParams,
+} from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
 
-
-interface LanidngUrlRes { url: string }
-interface AdChatRes { adChatAgreement: 1 | 0 }
-interface ClicksRes { adpanel: number; adchat: number }
-interface LevelRes { creatorId: string; level: number; exp: number }
+interface LanidngUrlRes {
+  url: string;
+}
+interface AdChatRes {
+  adChatAgreement: 1 | 0;
+}
+interface ClicksRes {
+  adpanel: number;
+  adchat: number;
+}
+interface LevelRes {
+  creatorId: string;
+  level: number;
+  exp: number;
+}
 
 const CampaignManage = (): JSX.Element => {
   // 배너광고 그만하기 성공시 스낵바
@@ -45,7 +61,8 @@ const CampaignManage = (): JSX.Element => {
 
   // 수익금 차트 정보 조회
   const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
-    '/creator/income/chart', { dateRange: '30' }
+    '/creator/income/chart',
+    { dateRange: '30' },
   );
 
   // For Onoff success snackbar
@@ -57,31 +74,32 @@ const CampaignManage = (): JSX.Element => {
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer>
-
         {/* 광고 시작 가이드 */}
         <GridItem xs={12} lg={6}>
-          {!overlayUrlGet.loading && overlayUrlGet.data
-            && !profileGet.loading && profileGet.data && (
-            <StartGuideCard
-              doContractionDataRequest={profileGet.doGetRequest}
-              doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
-              overlayUrlData={overlayUrlGet.data}
-              contractionData={profileGet.data}
-              handleSnackOpen={snack.handleOpen}
-            />
-          )}
+          {!overlayUrlGet.loading &&
+            overlayUrlGet.data &&
+            !profileGet.loading &&
+            profileGet.data && (
+              <StartGuideCard
+                doContractionDataRequest={profileGet.doGetRequest}
+                doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
+                overlayUrlData={overlayUrlGet.data}
+                contractionData={profileGet.data}
+                handleSnackOpen={snack.handleOpen}
+              />
+            )}
         </GridItem>
 
         {/* 배너 광고 오버레이 URL */}
         <GridItem xs={12} lg={6}>
           {overlayUrlGet.loading && (
-          <OverlayUrlCard
-            overlayUrlData={{
-              advertiseUrl: '',
-              creatorContractionAgreement: 0
-            }}
-            handleSnackOpen={overlayUrlCopySnack.handleOpen}
-          />
+            <OverlayUrlCard
+              overlayUrlData={{
+                advertiseUrl: '',
+                creatorContractionAgreement: 0,
+              }}
+              handleSnackOpen={overlayUrlCopySnack.handleOpen}
+            />
           )}
           {!overlayUrlGet.loading && overlayUrlGet.data && (
             <OverlayUrlCard
@@ -119,17 +137,17 @@ const CampaignManage = (): JSX.Element => {
           <AdIncomeCard />
         </GridItem>
         <GridItem xs={12} lg={6}>
-          <AdClickCard
-            clicksSummaryData={clicksSummaryGet}
-          />
+          <AdClickCard clicksSummaryData={clicksSummaryGet} />
         </GridItem>
 
         <GridItem xs={12}>
           {!incomeChartGet.loading && (
-          <IncomeChart
-            title={<Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>광고 현황</Typography>}
-            incomeChartData={incomeChartGet.data ? incomeChartGet.data : []}
-          />
+            <IncomeChart
+              title={
+                <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>광고 현황</Typography>
+              }
+              incomeChartData={incomeChartGet.data ? incomeChartGet.data : []}
+            />
           )}
         </GridItem>
 
@@ -160,7 +178,6 @@ const CampaignManage = (): JSX.Element => {
           color="success"
           onClose={overlayUrlCopySnack.handleClose}
         />
-
       </GridContainer>
     </div>
   );

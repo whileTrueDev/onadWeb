@@ -15,23 +15,23 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import Tooltip from '../../../../atoms/DescPopover';
 // hooks
 import useTooltip from '../../../../utils/hooks/useTooltip';
-// 
+//
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import AdPageData, { AdPagePatchParamAndRes } from './AdPageData.interfece';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   flex: {
-    display: 'flex'
+    display: 'flex',
   },
   flexEnd: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textField: {
     width: '100%',
     [theme.breakpoints.up('lg')]: {
       width: '50%',
     },
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -41,7 +41,9 @@ interface AdPageSettingProps {
   handleSnackOpen: () => void;
 }
 export default function AdPageSetting({
-  userData, setUserData, handleSnackOpen
+  userData,
+  setUserData,
+  handleSnackOpen,
 }: AdPageSettingProps): JSX.Element {
   const classes = useStyles();
 
@@ -50,41 +52,38 @@ export default function AdPageSetting({
     setUserData({ ...userData, creatorDesc: e.target.value });
   }
   // for tooltip
-  const {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose,
-  } = useTooltip();
+  const { tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
   // for data update
   const AdPagePatch = usePatchRequest<AdPagePatchParamAndRes, AdPagePatchParamAndRes>(
-    '/creator/ad-page', () => {
+    '/creator/ad-page',
+    () => {
       handleSnackOpen();
-    }
+    },
   );
 
   return (
     <CustomCard
       iconComponent={<StyledItemText primary="광고페이지 설정" color="white" />}
-      buttonComponent={(
+      buttonComponent={
         <div className={classnames(classes.flex, classes.flexEnd)}>
           <Button
             color="primary"
             onClick={(): void => {
               AdPagePatch.doPatchRequest({
                 creatorDesc: userData.creatorDesc,
-                creatorTheme: userData.creatorTheme
+                creatorTheme: userData.creatorTheme,
               });
             }}
           >
             변경 저장하기
           </Button>
         </div>
-      )}
+      }
     >
       <div style={{ marginBottom: 40 }}>
         <div className={classes.flex}>
-          <Typography variant="h6">
-            소개글 관리
-          </Typography>
+          <Typography variant="h6">소개글 관리</Typography>
           <div
             onMouseEnter={(evt): void => handleTooltipOpen(evt, 0)}
             onMouseLeave={handleTooltipClose}
@@ -115,10 +114,7 @@ export default function AdPageSetting({
 
       <div>
         <div className={classes.flex}>
-
-          <Typography variant="h6">
-            라이트모드 / 다크모드 관리
-          </Typography>
+          <Typography variant="h6">라이트모드 / 다크모드 관리</Typography>
           <div
             onMouseEnter={(evt): void => handleTooltipOpen(evt, 1)}
             onMouseLeave={handleTooltipClose}
@@ -138,7 +134,10 @@ export default function AdPageSetting({
             color="default"
             checked={userData.creatorTheme === 'dark'}
             onChange={(): void => {
-              setUserData({ ...userData, creatorTheme: userData.creatorTheme === 'dark' ? 'light' : 'dark' });
+              setUserData({
+                ...userData,
+                creatorTheme: userData.creatorTheme === 'dark' ? 'light' : 'dark',
+              });
             }}
           />
           <NightsStay color={userData.creatorTheme === 'dark' ? 'primary' : 'disabled'} />

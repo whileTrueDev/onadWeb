@@ -16,10 +16,12 @@ export default function PieChart(props: PieChartProps): JSX.Element {
       redraw
       data={{
         labels,
-        datasets: [{
-          data,
-          backgroundColor: chartTheme.pie
-        }],
+        datasets: [
+          {
+            data,
+            backgroundColor: chartTheme.pie,
+          },
+        ],
       }}
     />
   );

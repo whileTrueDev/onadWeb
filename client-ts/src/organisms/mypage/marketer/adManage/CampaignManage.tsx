@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  makeStyles,
-  Paper, Tab, Tabs
-} from '@material-ui/core';
+import { makeStyles, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 import { CampaignInterface, OnOffInterface } from '../dashboard/interfaces';
@@ -12,14 +9,14 @@ import CampaignButtons from './campaign/CampaignButtons';
 import CampaignDetail from './campaign/CampaignDetail';
 import OnOffSwitch from '../shared/OnOffSwitch';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   tabs: {
     padding: theme.spacing(2, 0, 0),
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   detail: {
     marginTop: theme.spacing(2),
-  }
+  },
 }));
 
 export default function InventoryManage(): JSX.Element {
@@ -34,9 +31,10 @@ export default function InventoryManage(): JSX.Element {
   // 캠페인 데이터
   const CAMPAIGN_LOAD_PAGE_OFFSET = 5;
   const campaignPageLength = useGetRequest('/marketer/campaign/length');
-  const campaignData = usePaginatedGetRequest<CampaignInterface>(
-    '/marketer/campaign/list', { offset: CAMPAIGN_LOAD_PAGE_OFFSET, disableConcat: true }
-  );
+  const campaignData = usePaginatedGetRequest<CampaignInterface>('/marketer/campaign/list', {
+    offset: CAMPAIGN_LOAD_PAGE_OFFSET,
+    disableConcat: true,
+  });
 
   // ****************************************
   // 선택된 캠페인
@@ -45,9 +43,8 @@ export default function InventoryManage(): JSX.Element {
     setSelectedCampaignId(campaignId);
   }
 
-  const selectedCampaign = campaignData.data && campaignData.data.find(
-    (cam) => cam.campaignId === selectedCampaignId
-  );
+  const selectedCampaign =
+    campaignData.data && campaignData.data.find(cam => cam.campaignId === selectedCampaignId);
 
   // ********************************************
   // 광고주 캠페인 On/Off
@@ -81,9 +78,7 @@ export default function InventoryManage(): JSX.Element {
                 handleCampaignSelect={handleCampaignSelect}
               />
             </TabPanel>
-
           </div>
-
         </TabContext>
       </Paper>
 

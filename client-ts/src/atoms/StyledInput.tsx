@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Input, InputProps } from '@material-ui/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
@@ -16,10 +15,8 @@ const StyledInput = withStyles((theme: Theme) => ({
     },
   },
   underline: {
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
-}))((props: InputProps) => (
-  <Input {...props} />
-));
+}))((props: InputProps) => <Input {...props} />);
 
 export default StyledInput;

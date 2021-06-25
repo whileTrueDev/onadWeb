@@ -1,18 +1,18 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '90%',
     padding: `${theme.spacing(5)}px 0`,
     display: 'flex',
     flexDirection: 'column',
-    margin: '20px auto'
+    margin: '20px auto',
   },
   iconsWrapper: {
     width: '100%',
     height: 30,
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   icons: {
     display: 'flex',
@@ -26,13 +26,13 @@ const useStyles = makeStyles((theme) => ({
   },
   iconLogo: {
     width: 40,
-    height: 40
+    height: 40,
   },
   Wrapper: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logoWrapper: {
     display: 'flex',
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: 30,
     height: 30,
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   address: {
     marginLeft: '7px',
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     listStyle: 'none',
     display: 'flex',
     flexDirection: 'row',
-    padding: 0
+    padding: 0,
   },
   listItem: {
     paddingTop: theme.spacing(2),

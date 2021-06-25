@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, Divider
-} from '@material-ui/core';
+import { Grid, Typography, Divider } from '@material-ui/core';
 import BarChart from '@material-ui/icons/BarChart';
 import CustomCard from '../../../../atoms/CustomCard';
 import PrettoSlider from '../../../../atoms/AdLevelSlider';
@@ -15,28 +13,29 @@ const useStyles = makeStyles(() => ({
   flex: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  head: { fontWeight: 500, },
+  head: { fontWeight: 500 },
   unit: { fontWeight: 700, marginLeft: '3px' },
-  level: { fontWeight: 700, marginLeft: '3px' }
+  level: { fontWeight: 700, marginLeft: '3px' },
 }));
 
 interface AdPageDetailProps {
   userData: AdPageData;
 }
-const AdPageDetail = ({
-  userData
-}: AdPageDetailProps): JSX.Element => {
+const AdPageDetail = ({ userData }: AdPageDetailProps): JSX.Element => {
   const classes = useStyles();
-  const {
-    tooltipIndex, anchorEl, handleTooltipClose, handleTooltipOpen
-  } = useTooltip();
+  const { tooltipIndex, anchorEl, handleTooltipClose, handleTooltipOpen } = useTooltip();
 
   return (
     <CustomCard
-      iconComponent={(<BarChart />)}
-      buttonComponent={<StyledItemText primary="광고페이지 현황" secondary="광고페이지의 상호작용에 따라 레벨이 결정됩니다." />}
+      iconComponent={<BarChart />}
+      buttonComponent={
+        <StyledItemText
+          primary="광고페이지 현황"
+          secondary="광고페이지의 상호작용에 따라 레벨이 결정됩니다."
+        />
+      }
     >
       <Grid container direction="column" spacing={2}>
         <Grid item />
@@ -47,7 +46,7 @@ const AdPageDetail = ({
             direction="row"
             style={{
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
             onMouseEnter={(evt): void => handleTooltipOpen(evt, 2)}
             onMouseLeave={handleTooltipClose}
@@ -69,15 +68,15 @@ const AdPageDetail = ({
                 {`LV. ${userData.level}`}
               </Typography>
             </Grid> */}
-
           </Grid>
         </Grid>
-
 
         <Grid container direction="row" justify="space-evenly">
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 방문수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>
+                총 방문수
+              </Typography>
             </div>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
@@ -94,7 +93,9 @@ const AdPageDetail = ({
 
           <Grid item>
             <div className={classes.flex}>
-              <Typography gutterBottom variant="body1" className={classes.head}>총 배너 클릭수</Typography>
+              <Typography gutterBottom variant="body1" className={classes.head}>
+                총 배너 클릭수
+              </Typography>
             </div>
             <div className={classes.flex}>
               <Typography gutterBottom variant="h5">
@@ -112,7 +113,9 @@ const AdPageDetail = ({
           <Grid item>
             <Grid container className={classes.flex}>
               <Grid item>
-                <Typography gutterBottom variant="body1" className={classes.head}>총 구매 이동수</Typography>
+                <Typography gutterBottom variant="body1" className={classes.head}>
+                  총 구매 이동수
+                </Typography>
               </Grid>
             </Grid>
             <div className={classes.flex}>
@@ -142,7 +145,6 @@ const AdPageDetail = ({
           horizontal: 'left',
         }}
       />
-
     </CustomCard>
   );
 };

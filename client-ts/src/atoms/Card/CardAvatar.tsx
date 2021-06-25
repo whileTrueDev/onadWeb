@@ -12,7 +12,11 @@ interface CardAvaterProps {
 }
 
 function CardAvatar({
-  children, className, plain, profile, ...rest
+  children,
+  className,
+  plain,
+  profile,
+  ...rest
 }: CardAvaterProps): JSX.Element {
   const classes = useCardAvaterStyles();
   const cardAvatarClasses = classNames({

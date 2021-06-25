@@ -9,25 +9,30 @@ import CardTemplate from './CardTemplate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   flex: {
-    display: 'flex', alignItems: 'center'
+    display: 'flex',
+    alignItems: 'center',
   },
   flexCenter: {
-    display: 'flex', justifyContent: 'center', alignItems: 'center'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contents: {
-    padding: '16px 28px', display: 'flex', justifyContent: 'space-between'
+    padding: '16px 28px',
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   icon: {
-    marginRight: '5px'
+    marginRight: '5px',
   },
   value: {
-    fontWeight: 700
+    fontWeight: 700,
   },
   primaryColor: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   secondaryColor: {
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
   },
 }));
 
@@ -40,9 +45,7 @@ interface ContentCardProps {
 
 export default function ContentCard(props: ContentCardProps): JSX.Element {
   const classes = useStyles();
-  const {
-    title, contents, color, IconComponent
-  } = props;
+  const { title, contents, color, IconComponent } = props;
 
   const colorClass = color === 'secondary' ? classes.secondaryColor : classes.primaryColor;
 
@@ -70,9 +73,7 @@ export default function ContentCard(props: ContentCardProps): JSX.Element {
               </Typography>
             </div>
           </div>
-          {!(index === contents.length - 1) && (
-          <Divider />
-          )}
+          {!(index === contents.length - 1) && <Divider />}
         </div>
       ))}
     </CardTemplate>

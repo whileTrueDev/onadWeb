@@ -1,9 +1,7 @@
 import React from 'react';
 import shortid from 'shortid';
 // @material-ui/core components
-import {
-  Table, TableHead, TableRow, TableBody, TableCell, Button
-} from '@material-ui/core';
+import { Table, TableHead, TableRow, TableBody, TableCell, Button } from '@material-ui/core';
 // custom table component
 import CustomTableFooter from './TableFooter';
 import useTableStyles from './Table.style';
@@ -28,18 +26,17 @@ function CustomTable({
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, tableData.length - page * rowsPerPage,
-  );
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
   // page handler
   function handleChangeTablePage(
-    event: React.MouseEvent<HTMLButtonElement> | null, newPage: number
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
   ): void {
     setPage(newPage);
   }
   // page per row handler
   function handleChangeTableRowsPerPage(
-    event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
@@ -49,7 +46,7 @@ function CustomTable({
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {tableHead.map((value) => (
+            {tableHead.map(value => (
               <TableCell
                 className={`${classes.tableCell} ${classes.tableHeadCell}`}
                 key={shortid.generate()}
@@ -63,7 +60,7 @@ function CustomTable({
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
             <TableRow hover key={shortid.generate()}>
-              {prop.map((value) => (
+              {prop.map(value => (
                 <TableCell className={classes.tableCell} key={shortid.generate()}>
                   {!perMonth ? (
                     <div style={{ display: 'flex' }}>
@@ -89,7 +86,7 @@ function CustomTable({
                     size="small"
                     onClick={(): void => {
                       if (handleDialogOpen) {
-                        handleDialogOpen((page * rowsPerPage) + i);
+                        handleDialogOpen(page * rowsPerPage + i);
                       }
                     }}
                   >
@@ -105,7 +102,6 @@ function CustomTable({
               <TableCell colSpan={6} />
             </TableRow>
           )}
-
         </TableBody>
 
         <CustomTableFooter

@@ -1,8 +1,6 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {
-  Grid, Divider, Typography,
-} from '@material-ui/core';
+import { Grid, Divider, Typography } from '@material-ui/core';
 import { Assignment } from '@material-ui/icons';
 // own components
 import ContentCard from './sub/ContentCard';
@@ -11,83 +9,85 @@ import CampaignCostBar from './sub/CampaignCostBar';
 import BannerBroadCreators from './sub/BannerBroadCreators';
 import CampaignInfo from './sub/CampaignInfo';
 import MakePdfButton from './sub/MakePdfButton';
-import { ReportInterface, CreatorDataInterface, CampaignInterface } from '../../marketer/dashboard/interfaces';
+import {
+  ReportInterface,
+  CreatorDataInterface,
+  CampaignInterface,
+} from '../../marketer/dashboard/interfaces';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-
 
 const makeContents = (reportData: ReportInterface) => ({
   price: [
     {
       title: '광고 총 비용',
       value: Number(reportData.totalCPM + reportData.totalCPC),
-      unit: '원'
+      unit: '원',
     },
     {
       title: '배너광고 총 비용',
       value: Number(reportData.totalCPM),
-      unit: '원'
+      unit: '원',
     },
   ],
   effect: [
     {
       title: '배너 총 노출 수',
       value: Number(reportData.totalViewCount),
-      unit: '회'
+      unit: '회',
     },
     {
       title: '배너 총 노출 시간',
       value: Number(reportData.totalTime),
-      unit: '분'
-    }
+      unit: '분',
+    },
   ],
   metrics: [
     {
       title: '전환당 비용',
-      value: ((reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer),
+      value: (reportData.totalCPM + reportData.totalCPC) / reportData.totalTransfer,
       unit: '원',
-      decimalRange: 2
+      decimalRange: 2,
     },
     {
       title: '전환율',
-      value: (reportData.totalTransfer / reportData.totalLandingView),
+      value: reportData.totalTransfer / reportData.totalLandingView,
       unit: '%',
-      decimalRange: 4
+      decimalRange: 4,
     },
-    { title: '상호작용 수', value: (reportData.totalClick + reportData.totalTransfer), unit: '회' },
+    { title: '상호작용 수', value: reportData.totalClick + reportData.totalTransfer, unit: '회' },
     {
       title: '상호 작용 발생율',
-      value: ((reportData.totalClick + reportData.totalTransfer)
-        / reportData.totalCPM),
+      value: (reportData.totalClick + reportData.totalTransfer) / reportData.totalCPM,
       unit: '%',
-      decimalRange: 4
+      decimalRange: 4,
     },
     {
       title: '배너조회율',
-      value: (reportData.totalClick / reportData.totalCPM),
+      value: reportData.totalClick / reportData.totalCPM,
       unit: '',
-      decimalRange: 4
+      decimalRange: 4,
     },
     {
       title: '배너클릭율',
-      value: (reportData.totalTransfer / reportData.totalCPM),
+      value: reportData.totalTransfer / reportData.totalCPM,
       unit: '',
-      decimalRange: 4
+      decimalRange: 4,
     },
     { title: '지표 준비중', value: '', unit: '' },
     { title: '지표 준비중.', value: '', unit: '' },
-  ]
+  ],
 });
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   headline: {
     display: 'flex',
     padding: '24px 32px 0px 32px',
     justifyContent: 'space-between',
-    alignItems: 'cetner'
+    alignItems: 'cetner',
   },
   title: { fontWeight: 500 },
-  formControl: { margin: theme.spacing(1), minWidth: 120, },
-  contents: { padding: '24px 32px' }
+  formControl: { margin: theme.spacing(1), minWidth: 120 },
+  contents: { padding: '24px 32px' },
 }));
 
 interface CampaignOnlyBannerAdProps {
@@ -99,21 +99,19 @@ interface CampaignOnlyBannerAdProps {
 
 export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): JSX.Element {
   const classes = useStyles();
-  const {
-    selectedCampaign, reportData, chartData,
-    creatorsData
-  } = props;
+  const { selectedCampaign, reportData, chartData, creatorsData } = props;
 
   return (
     <div>
-      {!reportData.loading && reportData.data
-        && !chartData.loading && chartData.data
-        && !creatorsData.loading && (
+      {!reportData.loading &&
+        reportData.data &&
+        !chartData.loading &&
+        chartData.data &&
+        !creatorsData.loading && (
           <Grid container id="report-window">
             {/* 헤드라인 */}
             <Grid item xs={12}>
               <div className={classes.headline}>
-
                 {/* 제목 */}
                 <Typography variant="h5" className={classes.title}>
                   {reportData.data.campaignName}
@@ -130,7 +128,6 @@ export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): 
               {!reportData.loading && reportData.data && (
                 <div className={classes.contents}>
                   <Grid container>
-
                     {/* 캠페인 정보 */}
                     <Grid item xs={12}>
                       <CampaignInfo selectedCampaign={selectedCampaign} />
@@ -138,7 +135,6 @@ export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): 
 
                     {/* 개요 및 전체적 정보 */}
                     <Grid item xs={12}>
-
                       {/* 개요 */}
                       <Grid container spacing={4}>
                         <Grid item xs={12} sm={6}>
@@ -165,19 +161,11 @@ export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): 
                     <Grid item xs={12}>
                       <Grid container spacing={4}>
                         <Grid item xs={12} sm={6}>
-                          <CampaignCostBar
-                            color="primary"
-                            chartData={chartData}
-                          />
-                          <CampaignCostPie
-                            color="secondary"
-                            reportData={reportData}
-                          />
+                          <CampaignCostBar color="primary" chartData={chartData} />
+                          <CampaignCostPie color="secondary" reportData={reportData} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                          <BannerBroadCreators
-                            creatorsData={creatorsData}
-                          />
+                          <BannerBroadCreators creatorsData={creatorsData} />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -185,9 +173,8 @@ export default function CampaignOnlyBannerAd(props: CampaignOnlyBannerAdProps): 
                 </div>
               )}
             </Grid>
-
           </Grid>
-      )}
+        )}
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography, Button, CircularProgress, Tooltip,
-} from '@material-ui/core';
+import { Typography, Button, CircularProgress, Tooltip } from '@material-ui/core';
 import jsPdfGenerate from '../../../../../utils/PdfGenerator';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,13 +20,10 @@ export default function MakePdfButton(): JSX.Element {
 
   return (
     <div data-html2canvas-ignore="true">
-
       <Tooltip
-        title={(
-          <Typography variant="body2">
-            1440 x 800 해상도 이상에서 올바르게 작동합니다.
-          </Typography>
-        )}
+        title={
+          <Typography variant="body2">1440 x 800 해상도 이상에서 올바르게 작동합니다.</Typography>
+        }
       >
         <div>
           <Button
@@ -52,7 +47,6 @@ export default function MakePdfButton(): JSX.Element {
             )}
           </Button>
         </div>
-
       </Tooltip>
     </div>
   );

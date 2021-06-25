@@ -1,14 +1,19 @@
 import React, { useState, useRef } from 'react';
 import {
-  Checkbox, FormControlLabel, Button,
-  Typography, Input, Container, Grid, CircularProgress,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Typography,
+  Input,
+  Container,
+  Grid,
+  CircularProgress,
 } from '@material-ui/core';
 import useStyles from '../style/Inqurie.style';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
 import useDialog from '../../../../utils/hooks/useDialog';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-
 
 interface Props {
   confirmClose?: () => void;
@@ -21,7 +26,7 @@ const initialContent = {
   brandName: '',
   homepage: '',
   inquiryContents: '',
-  privacyAgreement: false
+  privacyAgreement: false,
 };
 
 const InquiryResult: any = {};
@@ -62,7 +67,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
       alert('개인정보수집 및 이용안내에 동의해주세요');
     } else {
       AnonymousUser.privacyAgreement = true;
-      axios.post(`${HOST}/inquiry`, AnonymousUser)
+      axios
+        .post(`${HOST}/inquiry`, AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);
@@ -75,7 +81,9 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         })
         .catch(() => {
           setLoading(false);
-          alert('불편을 드려 대단히 죄송합니다.\n문의 요청중 오류가 발생했습니다.\nsupport@onad.io 메일로 보내주시면 감사하겠습니다.');
+          alert(
+            '불편을 드려 대단히 죄송합니다.\n문의 요청중 오류가 발생했습니다.\nsupport@onad.io 메일로 보내주시면 감사하겠습니다.',
+          );
         });
     }
   }
@@ -96,9 +104,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
           <Grid container className={classes.card} direction="column">
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  성명
-                </Typography>
+                <Typography className={classes.detailTitle}>성명</Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
@@ -110,9 +116,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 />
               </Grid>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  이메일
-                </Typography>
+                <Typography className={classes.detailTitle}>이메일</Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
@@ -126,9 +130,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 />
               </Grid>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  연락처
-                </Typography>
+                <Typography className={classes.detailTitle}>연락처</Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
@@ -145,9 +147,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
             <Grid container direction="row" alignItems="center" className={classes.cardContent}>
               <Grid item xs={6} sm={6} md={4} className={classes.detailWrap}>
-                <Typography className={classes.notColoredTitle}>
-                  브랜드명
-                </Typography>
+                <Typography className={classes.notColoredTitle}>브랜드명</Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
@@ -157,9 +157,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                 />
               </Grid>
               <Grid item xs={6} sm={6} md={8} className={classes.detailWrap}>
-                <Typography className={classes.notColoredTitle}>
-                  홈페이지
-                </Typography>
+                <Typography className={classes.notColoredTitle}>홈페이지</Typography>
                 <Input
                   className={classes.datailContent}
                   classes={{ focused: classes.inputStyle }}
@@ -175,9 +173,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
 
             <Grid container className={classes.cardContent}>
               <Grid item xs={12} sm={12} className={classes.detailWrap}>
-                <Typography className={classes.detailTitle}>
-                  내용
-                </Typography>
+                <Typography className={classes.detailTitle}>내용</Typography>
                 <Input
                   classes={{ focused: classes.inputStyle }}
                   className={classes.datailContent}
@@ -195,7 +191,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
             <Grid container direction="column" alignItems="center">
               <Grid item xs={12} sm={6}>
                 <FormControlLabel
-                  control={(
+                  control={
                     <Checkbox
                       onChange={handleChange}
                       checked={checked}
@@ -204,17 +200,13 @@ function Inquire({ confirmClose }: Props): JSX.Element {
                         checked: classes.checked,
                       }}
                     />
-                  )}
+                  }
                   label="개인정보수집 및 이용안내에 동의합니다."
                   style={{ margin: '20px auto' }}
                 />
               </Grid>
 
-              <Button
-                className={classes.button}
-                type="submit"
-                disabled={loading}
-              >
+              <Button className={classes.button} type="submit" disabled={loading}>
                 문의하기
                 {loading && (
                   <CircularProgress
@@ -236,19 +228,24 @@ function Inquire({ confirmClose }: Props): JSX.Element {
         onClose={confirmDialog.handleClose}
         fullWidth
         maxWidth="xs"
-        buttons={(
+        buttons={
           <div>
-            <Button onClick={(): void => {
-              confirmDialog.handleClose();
-              if (confirmClose) { confirmClose(); }
-            }}
+            <Button
+              onClick={(): void => {
+                confirmDialog.handleClose();
+                if (confirmClose) {
+                  confirmClose();
+                }
+              }}
             >
               확인
             </Button>
           </div>
-        )}
+        }
       >
-        <p style={{ textAlign: 'center', fontSize: '20px', marginTop: 30 }}>문의 요청 완료되었습니다.</p>
+        <p style={{ textAlign: 'center', fontSize: '20px', marginTop: 30 }}>
+          문의 요청 완료되었습니다.
+        </p>
         <p style={{ textAlign: 'center', fontSize: '20px' }}>빠른 답변 드리겠습니다.</p>
       </Dialog>
     </Container>

@@ -1,6 +1,4 @@
-import {
-  Avatar, Button, makeStyles, Typography
-} from '@material-ui/core';
+import { Avatar, Button, makeStyles, Typography } from '@material-ui/core';
 import moment from 'moment';
 import React from 'react';
 import ImageCarousel from '../../../../../atoms/Carousel/Carousel';
@@ -10,8 +8,7 @@ import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS
 import { useToggle } from '../../../../../utils/hooks';
 import { OrderStatus } from '../../../../../utils/render_funcs/renderOrderStatus';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   linkText: {
     textDecoration: 'underline',
     cursor: 'pointer',
@@ -21,20 +18,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   title: {
     marginBottom: theme.spacing(2),
   },
   nameSection: {
-    marginTop: theme.spacing(1), display: 'flex', alignItems: 'center'
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
   },
   contents: {
     margin: theme.spacing(2, 0),
   },
   avatar: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 export interface CPSReview {
@@ -58,7 +57,6 @@ export interface CPSReview {
   marketerId: string;
 }
 
-
 interface CPSReviewDialogProps {
   open: boolean;
   onClose: () => void;
@@ -73,7 +71,6 @@ export default function CPSReviewDialog({
   const classes = useStyles();
 
   const imgaeToggle = useToggle(false);
-
 
   return (
     <CustomDialog
@@ -90,10 +87,14 @@ export default function CPSReviewDialog({
             <OrderStatusChip status={review.status} />
           </div>
           <Typography>
-            {`${review.merchandiseName}(${review.quantity}개) 구매금액: ${review.orderPrice.toLocaleString()}원`}
+            {`${review.merchandiseName}(${
+              review.quantity
+            }개) 구매금액: ${review.orderPrice.toLocaleString()}원`}
           </Typography>
         </div>
-        <Typography variant="h5" style={{ fontWeight: 'bold' }}>{review.title}</Typography>
+        <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+          {review.title}
+        </Typography>
         <div className={classes.nameSection}>
           <Avatar src="" className={classes.avatar} />
           <div>
@@ -117,14 +118,19 @@ export default function CPSReviewDialog({
             >
               {`상품사진 ${imgaeToggle.toggle ? '닫기' : '열기'}`}
             </Button>
-              {imgaeToggle.toggle && (
+            {imgaeToggle.toggle && (
               <ImageCarousel
-                images={review.images.split(',')
-                  .map((image) => getReadableS3MerchandiseImagePath(
-                    review.marketerId, review.merchandiseId, image
-                  ))}
+                images={review.images
+                  .split(',')
+                  .map(image =>
+                    getReadableS3MerchandiseImagePath(
+                      review.marketerId,
+                      review.merchandiseId,
+                      image,
+                    ),
+                  )}
               />
-              )}
+            )}
           </>
         )}
       </div>

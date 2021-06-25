@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Paper, Typography, FormControlLabel,
-  Checkbox, Divider, Grid,
-} from '@material-ui/core';
+import { Paper, Typography, FormControlLabel, Checkbox, Divider, Grid } from '@material-ui/core';
 import shortid from 'shortid';
 import sources from '../sources';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
@@ -19,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.action.disabledBackground,
     padding: theme.spacing(2),
     borderLeft: `0.25rem solid ${theme.palette.error.main}`,
-    wordBreak: 'keep-all'
+    wordBreak: 'keep-all',
   },
   title: {
     marginBottom: 0,
@@ -79,7 +76,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontWeight: 700,
     },
   },
-
 }));
 
 interface TermInterface {
@@ -88,24 +84,21 @@ interface TermInterface {
   text: string;
 }
 
-const TestChargeAgreement = (
-  props: { setStepComplete: React.Dispatch<React.SetStateAction<boolean>> }
-): JSX.Element => {
+const TestChargeAgreement = (props: {
+  setStepComplete: React.Dispatch<React.SetStateAction<boolean>>;
+}): JSX.Element => {
   const classes = useStyles();
   const terms = sources.agreement;
-  const {
-    setStepComplete
-  } = props;
+  const { setStepComplete } = props;
   const [checkedA, setA] = useState<boolean>(false);
   const [checkedB, setB] = useState<boolean>(false);
   const [checkedC, setC] = useState<boolean>(false);
   const [checkedD, setD] = useState<boolean>(false);
 
-
   const [selectTerm, setTerm] = useState<TermInterface>({
     title: '',
     state: '',
-    text: ''
+    text: '',
   });
   const [open, setOpen] = useState<boolean>(false);
 
@@ -177,9 +170,11 @@ const TestChargeAgreement = (
   const checked = (term: TermInterface): boolean => {
     if (term.state === 'checkedB') {
       return checkedB;
-    } if (term.state === 'checkedC') {
+    }
+    if (term.state === 'checkedC') {
       return checkedC;
-    } if (term.state === 'checkedD') {
+    }
+    if (term.state === 'checkedD') {
       return checkedD;
     }
     return checkedA;
@@ -189,12 +184,15 @@ const TestChargeAgreement = (
     setStepComplete(false);
   }, [setStepComplete]);
 
-
   return (
     <div>
       <blockquote className={classes.warning}>
-        <Typography variant="h6" className={classes.title}>&raquo; 주의사항</Typography>
-        <Typography color="textPrimary" variant="body2">{sources.content.warning}</Typography>
+        <Typography variant="h6" className={classes.title}>
+          &raquo; 주의사항
+        </Typography>
+        <Typography color="textPrimary" variant="body2">
+          {sources.content.warning}
+        </Typography>
       </blockquote>
       <div>
         {terms.map((term: TermInterface) => (
@@ -208,7 +206,7 @@ const TestChargeAgreement = (
               <Grid item>
                 <Grid container direction="row" alignItems="center">
                   <Grid item>
-                    {term.state === 'checkedA' ? (null) : (
+                    {term.state === 'checkedA' ? null : (
                       <Button
                         style={{ flex: 1, height: '70%', fontSize: 13 }}
                         onClick={handleOpen(term)}
@@ -222,7 +220,7 @@ const TestChargeAgreement = (
                   </Grid>
                   <Grid item>
                     <FormControlLabel
-                      control={(
+                      control={
                         <Checkbox
                           onChange={handleChange(term.state)}
                           checked={checked(term)}
@@ -232,7 +230,7 @@ const TestChargeAgreement = (
                             checked: classes.checked,
                           }}
                         />
-                      )}
+                      }
                       label="동의"
                       style={{ flex: 2, marginRight: 0 }}
                     />
@@ -247,22 +245,21 @@ const TestChargeAgreement = (
           onClose={handleClose}
           title={selectTerm.title}
           maxWidth="md"
-          buttons={(
+          buttons={
             <div>
-              <Button onClick={handleClose}>
-                취소
-              </Button>
+              <Button onClick={handleClose}>취소</Button>
             </div>
-          )}
+          }
         >
           {/* 계약 내용 */}
           <div className={classes.inDialogContent}>
-            {selectTerm.text.split('\n').map((sentence) => (
-              <p key={shortid.generate()} className={classes.names}>{sentence}</p>
+            {selectTerm.text.split('\n').map(sentence => (
+              <p key={shortid.generate()} className={classes.names}>
+                {sentence}
+              </p>
             ))}
           </div>
         </Dialog>
-
       </div>
     </div>
   );

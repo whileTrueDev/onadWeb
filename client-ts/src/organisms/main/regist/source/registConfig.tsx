@@ -1,4 +1,3 @@
-
 const terms: any = [
   {
     title: 'OnAd 서비스 이용 약관*',

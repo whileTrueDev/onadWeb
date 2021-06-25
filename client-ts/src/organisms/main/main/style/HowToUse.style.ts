@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme) => ({
+const styles = makeStyles(theme => ({
   root: {
     width: '100%',
     height: '100vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255, 0.6)'
+    backgroundColor: 'rgba(255,255,255, 0.6)',
   },
   wrapper: {
     display: 'flex',
@@ -19,7 +19,7 @@ const styles = makeStyles((theme) => ({
       flexDirection: 'column-reverse',
       alignItems: 'center',
       justifyContent: 'center',
-    }
+    },
   },
   onadVideo: {
     position: 'absolute',
@@ -42,13 +42,13 @@ const styles = makeStyles((theme) => ({
     '0%, 50%': {
       visibility: 'hidden',
       transform: 'translate(0%, 10%)',
-      opacity: 0
+      opacity: 0,
     },
     '100%': {
       visibility: 'visible',
       transform: 'translate(0%, 0%)',
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   contentWapper: {
     marginLeft: theme.spacing(8),
@@ -77,7 +77,7 @@ const styles = makeStyles((theme) => ({
     animation: '$lineEffect 2s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
       margin: theme.spacing(1.5, 0),
-    }
+    },
   },
   bottomLine2: {
     borderBottom: '2px solid #5ed7ed',
@@ -90,8 +90,8 @@ const styles = makeStyles((theme) => ({
     border: `1px solid ${theme.palette.common.black}`,
     [theme.breakpoints.down('xs')]: {
       width: 170,
-      height: 50
-    }
+      height: 50,
+    },
   },
   '@keyframes lineEffect': {
     '0%': { width: '0%' },
@@ -104,15 +104,14 @@ const styles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: '90%',
       padding: '50.625% 0 0 0',
-    }
+    },
   },
   download: {
     color: 'black',
     [theme.breakpoints.down('xs')]: {
-      fontSize: 15
-    }
-  }
+      fontSize: 15,
+    },
+  },
 }));
-
 
 export default styles;

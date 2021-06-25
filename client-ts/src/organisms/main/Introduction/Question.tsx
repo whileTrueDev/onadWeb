@@ -7,7 +7,6 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import textSource from './source/textSource';
 import Styles from './style/Question.style';
 
-
 function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   const classes = Styles();
 
@@ -60,14 +59,14 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
     expanded: {},
   }))(MuiAccordionSummary);
 
-  const AccordionDetails = withStyles((theme) => ({
+  const AccordionDetails = withStyles(theme => ({
     root: {
       padding: theme.spacing(2),
-      backgroundColor: '#f8f8f8'
+      backgroundColor: '#f8f8f8',
     },
   }))(MuiAccordionDetails);
 
-  function QnAAccordion({ source, ansData }: any): JSX.Element {
+  function QnAAccordion({ source: _source, ansData: _ansData }: any): JSX.Element {
     const [expanded, setExpanded] = React.useState<string | false>('one');
 
     const handleChange = (row: any) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
@@ -76,22 +75,29 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
 
     return (
       <div>
-        {source.map((row: any, index: number) => (
-          <Accordion square expanded={expanded === row.id} onChange={handleChange(row)} key={shortid.generate()}>
+        {_source.map((row: any, index: number) => (
+          <Accordion
+            square
+            expanded={expanded === row.id}
+            onChange={handleChange(row)}
+            key={shortid.generate()}
+          >
             <AccordionSummary aria-controls={`${row.id}d-content`} id={`${row.id}d-header`}>
               <div className={classes.titleWrapper}>
-                <div className={classes.ansTitle}>
-                  {row.text}
-                </div>
-                { MainUserType === 'marketer'
-                  ? <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
-                  : <img src="/introduction/arrowCreator.svg" alt="arrow" className={classes.arrow} />}
+                <div className={classes.ansTitle}>{row.text}</div>
+                {MainUserType === 'marketer' ? (
+                  <img src="/introduction/arrow.svg" alt="arrow" className={classes.arrow} />
+                ) : (
+                  <img src="/introduction/arrowCreator.svg" alt="arrow" className={classes.arrow} />
+                )}
               </div>
             </AccordionSummary>
             <AccordionDetails>
               <div className={classes.ansWrapper}>
-                {ansData[index].split('\n').map((ans: string) => (
-                  <Typography key={shortid.generate()} className={classes.color}>{`${ans}`}</Typography>
+                {_ansData[index].split('\n').map((ans: string) => (
+                  <Typography key={shortid.generate()} className={classes.color}>
+                    {`${ans}`}
+                  </Typography>
                 ))}
               </div>
             </AccordionDetails>
@@ -103,7 +109,10 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h3" className={MainUserType === 'marketer' ? classes.title : classes.title2}>
+      <Typography
+        variant="h3"
+        className={MainUserType === 'marketer' ? classes.title : classes.title2}
+      >
         FAQ
       </Typography>
       <QnAAccordion source={source} ansData={ansData} />

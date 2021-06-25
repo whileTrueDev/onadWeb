@@ -18,10 +18,7 @@ export default function CampaignCostBar(props: CampaignCostBarProps): JSX.Elemen
       <CardTemplate title="광고 비용 그래프" color={color} IconComponent={Assignment}>
         <div style={{ justifyContent: 'center', display: 'flex' }}>
           {!chartData.loading && chartData.data && (
-          <ReportStackedBar
-            height={250}
-            dataSet={chartData.data[0]}
-          />
+            <ReportStackedBar height={250} dataSet={chartData.data[0]} />
           )}
         </div>
       </CardTemplate>

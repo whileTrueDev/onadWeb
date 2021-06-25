@@ -1,25 +1,21 @@
 import React from 'react';
 // @material-ui/core
-import {
-  Button, makeStyles, TextField, TextFieldProps, Typography
-} from '@material-ui/core';
+import { Button, makeStyles, TextField, TextFieldProps, Typography } from '@material-ui/core';
 import { useToggle } from '../../utils/hooks';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   label: {
     fontWeight: 'bold',
   },
-  editable: {
-
-  },
-  value: { margin: theme.spacing(1, 0), },
+  editable: {},
+  value: { margin: theme.spacing(1, 0) },
   textField: {
     maxWidth: 320,
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0),
   },
   button: {
     margin: theme.spacing(0, 1, 0, 0),
-  }
+  },
 }));
 
 export interface EditableTextFieldProps {
@@ -62,7 +58,9 @@ export default function EditableTextField({
       {!editMode.toggle ? (
         <div className={classes.editable}>
           <Typography className={classes.value}>{displayValue}</Typography>
-          <Button onClick={editMode.handleToggle} variant="outlined">편집</Button>
+          <Button onClick={editMode.handleToggle} variant="outlined">
+            편집
+          </Button>
         </div>
       ) : (
         <div className={classes.editable}>

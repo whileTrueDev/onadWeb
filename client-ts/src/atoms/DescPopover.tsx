@@ -4,12 +4,16 @@ import Popover, { PopoverProps } from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
 import shortid from 'shortid';
 import {
-  sendTypeConfig, optionConfig, budgetConfig,
-  landingManageConfig, reportConfig, reportCardConfig
+  sendTypeConfig,
+  optionConfig,
+  budgetConfig,
+  landingManageConfig,
+  reportConfig,
+  reportCardConfig,
 } from '../utils/tooltipContentConfig';
 import StyledSelectText from './StyledSelectText';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   label: {
     color: theme.palette.info.main,
     fontWeight: 700,
@@ -33,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
   },
   cardText: {
     fontSize: '14px',
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 }));
 
 interface DescPopoverProps extends PopoverProps {
@@ -74,11 +78,9 @@ function DescPopover({
                 className={classes.label}
               />
             </Grid>
-            {sendTypeConfig[descIndex].text.split('\n').map((row) => (
+            {sendTypeConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.text}>
-                  {row}
-                </Typography>
+                <Typography className={classes.text}>{row}</Typography>
               </Grid>
             ))}
           </Grid>
@@ -89,11 +91,9 @@ function DescPopover({
             <Grid item>
               <StyledSelectText primary={optionConfig[descIndex].title} className={classes.label} />
             </Grid>
-            {optionConfig[descIndex].text.split('\n').map((row) => (
+            {optionConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.text}>
-                  {row}
-                </Typography>
+                <Typography className={classes.text}>{row}</Typography>
               </Grid>
             ))}
           </Grid>
@@ -104,11 +104,9 @@ function DescPopover({
             <Grid item>
               <StyledSelectText primary={budgetConfig[descIndex].title} className={classes.label} />
             </Grid>
-            {budgetConfig[descIndex].text.split('\n').map((row) => (
+            {budgetConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.text}>
-                  {row}
-                </Typography>
+                <Typography className={classes.text}>{row}</Typography>
               </Grid>
             ))}
           </Grid>
@@ -122,11 +120,9 @@ function DescPopover({
                 className={classes.label}
               />
             </Grid>
-            {landingManageConfig[descIndex].text.split('\n').map((row) => (
+            {landingManageConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.text}>
-                  {row}
-                </Typography>
+                <Typography className={classes.text}>{row}</Typography>
               </Grid>
             ))}
             {landingManageConfig[descIndex].image ? (
@@ -143,16 +139,11 @@ function DescPopover({
         return (
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <StyledSelectText
-                primary={reportConfig[descIndex].title}
-                className={classes.label}
-              />
+              <StyledSelectText primary={reportConfig[descIndex].title} className={classes.label} />
             </Grid>
-            {reportConfig[descIndex].text.split('\n').map((row) => (
+            {reportConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.text}>
-                  {row}
-                </Typography>
+                <Typography className={classes.text}>{row}</Typography>
               </Grid>
             ))}
           </Grid>
@@ -162,15 +153,11 @@ function DescPopover({
         return (
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <StyledSelectText
-                primary={reportCardConfig[descIndex].title}
-              />
+              <StyledSelectText primary={reportCardConfig[descIndex].title} />
             </Grid>
-            {reportCardConfig[descIndex].text.split('\n').map((row) => (
+            {reportCardConfig[descIndex].text.split('\n').map(row => (
               <Grid item key={shortid.generate()}>
-                <Typography className={classes.cardText}>
-                  {row}
-                </Typography>
+                <Typography className={classes.cardText}>{row}</Typography>
               </Grid>
             ))}
           </Grid>

@@ -1,23 +1,19 @@
-import React, { useContext, } from 'react';
-import {
-  Button,
-  makeStyles,
-  Typography
-} from '@material-ui/core';
+import React, { useContext } from 'react';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import { FiberNew } from '@material-ui/icons';
 import EditableAvatar from '../../../../../../atoms/Avatar/EditableAvatar';
 import { useDialog } from '../../../../../../utils/hooks';
 import CustomDialog from '../../../../../../atoms/Dialog/Dialog';
 import MarketerInfoContext from '../../../../../../context/MarketerInfo.context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bold: { fontWeight: 'bold' },
   successIcon: {
     color: theme.palette.success.main,
   },
   button: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 export interface EditProfileImageProps {
   onSubmit: (value: string) => void;
@@ -35,7 +31,7 @@ export default function EditProfileImage({
    */
   function handleProfileImageChange(event: React.FormEvent<HTMLElement>): void {
     const target = event.target as HTMLInputElement;
-    const files = (target.files as FileList);
+    const files = target.files as FileList;
     if (files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = files[0];
@@ -70,11 +66,16 @@ export default function EditProfileImage({
         <Typography className={classes.bold}>
           프로필 사진
           {marketerInfo.user && !marketerInfo.user.profileImage && (
-          <FiberNew fontSize="small" className={classes.successIcon} />
+            <FiberNew fontSize="small" className={classes.successIcon} />
           )}
         </Typography>
-        <Typography color="textSecondary" variant="body2">* 프로필 사진을 클릭해 편집을 시작하세요.</Typography>
-        <Typography color="textSecondary" variant="body2">* 프로필 사진은 방송인에게 보여집니다. 브랜드 로고를 프로필 사진으로 사용하는 것이 일반적입니다.</Typography>
+        <Typography color="textSecondary" variant="body2">
+          * 프로필 사진을 클릭해 편집을 시작하세요.
+        </Typography>
+        <Typography color="textSecondary" variant="body2">
+          * 프로필 사진은 방송인에게 보여집니다. 브랜드 로고를 프로필 사진으로 사용하는 것이
+          일반적입니다.
+        </Typography>
         <EditableAvatar
           changeLoading={loading}
           src={marketerInfo.user ? marketerInfo.user.profileImage : ''}
@@ -91,7 +92,12 @@ export default function EditProfileImage({
         </Button>
       </div>
 
-      <CustomDialog open={confirmDialog.open} onClose={confirmDialog.handleClose} fullWidth maxWidth="xs">
+      <CustomDialog
+        open={confirmDialog.open}
+        onClose={confirmDialog.handleClose}
+        fullWidth
+        maxWidth="xs"
+      >
         <Typography>프로필 사진을 초기화 하시겠습니까?</Typography>
         <div style={{ textAlign: 'right' }}>
           <Button

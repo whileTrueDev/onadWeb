@@ -1,7 +1,13 @@
 import {
-  Button, FormControl,
-  FormControlLabel, makeStyles, OutlinedInput,
-  Radio, RadioGroup, TextField, Typography
+  Button,
+  FormControl,
+  FormControlLabel,
+  makeStyles,
+  OutlinedInput,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, { useEffect, useState } from 'react';
@@ -15,7 +21,7 @@ import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
 import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
 import { MarketerSettlement } from '../../office/interface';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   field: { margin: theme.spacing(2, 0) },
   fieldTitle: {
     fontWeight: theme.typography.fontWeightBold,
@@ -25,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 240,
   },
   button: {
-    margin: theme.spacing(0, 1, 0, 0)
+    margin: theme.spacing(0, 1, 0, 0),
   },
   form: {
-    margin: theme.spacing(0, 0, 2)
-  }
+    margin: theme.spacing(0, 0, 2),
+  },
 }));
 
 export interface SettlementRegDTO {
@@ -81,19 +87,19 @@ export default function SettlementRegForm({
       setDto({
         ...settlementData.data,
         bank: { bankCode: 'unknown', bankName: settlementData.data.bankName },
-        businessmanFlag: settlementData.data.businessmanFlag ? 'true' : 'false'
+        businessmanFlag: settlementData.data.businessmanFlag ? 'true' : 'false',
       });
       setRequestType('patch');
     }
-  // run only once
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // run only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChange = (
-    field: keyof SettlementRegDTO
-  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChange = (field: keyof SettlementRegDTO) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     e.persist();
-    setDto((prev) => ({ ...prev, [field]: e.target.value }));
+    setDto(prev => ({ ...prev, [field]: e.target.value }));
   };
 
   // ************************************************************
@@ -103,9 +109,7 @@ export default function SettlementRegForm({
   };
   // ************************************************************
   // 주민등록번호 핸들러
-  const handleNumberFormatChange = (
-    d: NumberFormatValues, key: keyof SettlementRegDTO
-  ): void => {
+  const handleNumberFormatChange = (d: NumberFormatValues, key: keyof SettlementRegDTO): void => {
     setDto({ ...dto, [key]: d.value });
   };
 
@@ -153,9 +157,10 @@ export default function SettlementRegForm({
           callback(imageData);
         }
       };
-      reader.onerror = (): void => alert(
-        '이미지를 읽는 과정에서 오류가 발생했습니다. 동일 현상이 지속되는 경우, support@onad.io에 문의 바랍니다.'
-      );
+      reader.onerror = (): void =>
+        alert(
+          '이미지를 읽는 과정에서 오류가 발생했습니다. 동일 현상이 지속되는 경우, support@onad.io에 문의 바랍니다.',
+        );
     }
   }
 
@@ -175,7 +180,6 @@ export default function SettlementRegForm({
             <FormControlLabel value="true" control={<Radio />} label="사업자" />
           </RadioGroup>
         </FormControl>
-
       </div>
       <div className={classes.field}>
         <Typography className={classes.fieldTitle}>
@@ -207,7 +211,9 @@ export default function SettlementRegForm({
           allowLeadingZeros
         />
         <Typography variant="body2" color="textSecondary">
-          {dto.businessmanFlag === 'true' ? '사업자등록번호 10자리를 입력해주세요' : '주민등록번호 13자리를 입력해주세요'}
+          {dto.businessmanFlag === 'true'
+            ? '사업자등록번호 10자리를 입력해주세요'
+            : '주민등록번호 13자리를 입력해주세요'}
         </Typography>
       </div>
 
@@ -215,13 +221,11 @@ export default function SettlementRegForm({
         <Typography className={classes.fieldTitle}>은행</Typography>
         <Autocomplete
           options={banks}
-          getOptionLabel={(options) => options.bankName}
+          getOptionLabel={options => options.bankName}
           value={dto.bank}
           onChange={handleBankSelected}
           style={{ maxWidth: 240 }}
-          renderInput={(params) => (
-            <TextField {...params} margin="dense" />
-          )}
+          renderInput={params => <TextField {...params} margin="dense" />}
         />
       </div>
 
@@ -251,7 +255,9 @@ export default function SettlementRegForm({
           variant="outlined"
           inputProps={{ maxLength: 16 }}
         />
-        <Typography variant="body2" color="textSecondary">&quot;-&quot; 을 제외하고 입력하세요</Typography>
+        <Typography variant="body2" color="textSecondary">
+          &quot;-&quot; 을 제외하고 입력하세요
+        </Typography>
       </div>
 
       <div className={classes.field}>
@@ -259,7 +265,9 @@ export default function SettlementRegForm({
           <Typography>
             {dto.businessmanFlag === 'true' ? '사업자 등록증 업로드' : '신분증 업로드'}
           </Typography>
-          <Typography variant="body2" color="textSecondary">이미지, pdf 파일을 업로드할 수 있습니다.</Typography>
+          <Typography variant="body2" color="textSecondary">
+            이미지, pdf 파일을 업로드할 수 있습니다.
+          </Typography>
         </div>
         <Button component="label" color="primary" variant="outlined" className={classes.button}>
           <input
@@ -270,23 +278,25 @@ export default function SettlementRegForm({
           />
         </Button>
         {!(dto.businessmanFlag === 'true') && (
-        <Button
-          className={classes.button}
-          variant="outlined"
-          onClick={() => {
-            handleDialogType('identificaiton');
-            sampleDialog.handleOpen();
-          }}
-        >
-          예시 보기
-        </Button>
+          <Button
+            className={classes.button}
+            variant="outlined"
+            onClick={() => {
+              handleDialogType('identificaiton');
+              sampleDialog.handleOpen();
+            }}
+          >
+            예시 보기
+          </Button>
         )}
       </div>
 
       <div className={classes.field}>
         <div className={classes.fieldTitle}>
           <Typography>통장 사본 업로드</Typography>
-          <Typography variant="body2" color="textSecondary">이미지 파일만 업로드할 수 있습니다.</Typography>
+          <Typography variant="body2" color="textSecondary">
+            이미지 파일만 업로드할 수 있습니다.
+          </Typography>
         </div>
         <Button component="label" color="primary" variant="outlined" className={classes.button}>
           <input
@@ -318,22 +328,19 @@ export default function SettlementRegForm({
       >
         등록
       </Button>
-      <Button
-        variant="contained"
-        onClick={onCancle}
-      >
+      <Button variant="contained" onClick={onCancle}>
         취소
       </Button>
 
       {dialogType && (
-      <CustomDialog
-        open={sampleDialog.open}
-        onClose={sampleDialog.handleClose}
-        title={dto.businessmanFlag === 'true' ? '사업자 등록증 예시' : '신분증 예시'}
-      >
-        {dialogType === 'account' && (<ImageUploadAccount />)}
-        {dialogType === 'identificaiton' && (<ImageUploadIdentity />)}
-      </CustomDialog>
+        <CustomDialog
+          open={sampleDialog.open}
+          onClose={sampleDialog.handleClose}
+          title={dto.businessmanFlag === 'true' ? '사업자 등록증 예시' : '신분증 예시'}
+        >
+          {dialogType === 'account' && <ImageUploadAccount />}
+          {dialogType === 'identificaiton' && <ImageUploadIdentity />}
+        </CustomDialog>
       )}
     </form>
   );

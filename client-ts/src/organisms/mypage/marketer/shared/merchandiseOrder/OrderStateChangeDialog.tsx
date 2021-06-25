@@ -1,14 +1,16 @@
-import {
-  Button, Divider, makeStyles, TextField, Typography
-} from '@material-ui/core';
+import { Button, Divider, makeStyles, TextField, Typography } from '@material-ui/core';
 import { Alert, Autocomplete } from '@material-ui/lab';
 import React, { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import courierCompanies, { CourierCompany } from '../../../../../constants/courierCompanies';
-import renderOrderStatus, { OrderStatus, 주문상태_출고완료, 주문상태_주문취소 } from '../../../../../utils/render_funcs/renderOrderStatus';
+import renderOrderStatus, {
+  OrderStatus,
+  주문상태_출고완료,
+  주문상태_주문취소,
+} from '../../../../../utils/render_funcs/renderOrderStatus';
 import { MerchandiseOrder } from '../../adManage/interface';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   divider: {
     margin: theme.spacing(2, 0),
   },
@@ -17,15 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
   bold: {
     fontWeight: 'bold',
-  }
+  },
 }));
-
 
 export interface OrderCourierDTO {
   courierCompany?: CourierCompany; // 택배사
   trackingNumber?: string; // 송장번호
 }
-
 
 interface OrderStateChangeDialogProps {
   open: boolean;
@@ -45,7 +45,8 @@ export default function OrderStateChangeDialog({
   const classes = useStyles();
 
   const [dto, setDto] = useState<OrderCourierDTO>({
-    courierCompany: undefined, trackingNumber: '',
+    courierCompany: undefined,
+    trackingNumber: '',
   });
 
   const defaultError = { field: '', message: '' };
@@ -58,10 +59,8 @@ export default function OrderStateChangeDialog({
     setError(defaultError);
     setDto({ ...dto, trackingNumber: e.target.value });
   };
-  const handleCourierCompChange = (
-    e: React.ChangeEvent<any>, newValue: string | null
-  ): void => {
-    const courierCompany = (newValue) as CourierCompany | undefined;
+  const handleCourierCompChange = (e: React.ChangeEvent<any>, newValue: string | null): void => {
+    const courierCompany = newValue as CourierCompany | undefined;
     setError(defaultError);
     setDto({ ...dto, courierCompany });
   };
@@ -78,28 +77,32 @@ export default function OrderStateChangeDialog({
       maxWidth="xs"
       open={open}
       onClose={onClose}
-      buttons={(
+      buttons={
         <div>
           <Button
             variant="contained"
             color="primary"
             onClick={(): void => {
               if (selectedStatus === 주문상태_출고완료) {
-                if (!dto.courierCompany) return handleError('courierCompany', '택배사를 입력해주세요.');
-                if (!dto.trackingNumber) return handleError('trackingNumber', '송장번호를 입력해주세요.');
+                if (!dto.courierCompany)
+                  return handleError('courierCompany', '택배사를 입력해주세요.');
+                if (!dto.trackingNumber)
+                  return handleError('trackingNumber', '송장번호를 입력해주세요.');
                 return onClick({ status: selectedStatus, dto });
               }
               if (selectedStatus === 주문상태_주문취소 && !denialReason) {
                 return handleError('denialReason', '취소사유를 입력해주세요.');
               }
-              return onClick({ status: selectedStatus, denialReason, });
+              return onClick({ status: selectedStatus, denialReason });
             }}
           >
             확인
           </Button>
-          <Button variant="contained" onClick={onClose}>취소</Button>
+          <Button variant="contained" onClick={onClose}>
+            취소
+          </Button>
         </div>
-        )}
+      }
     >
       <div>
         {/* 출고완료로 변경하는 경우 */}
@@ -109,10 +112,10 @@ export default function OrderStateChangeDialog({
               aria-required
               value={dto.courierCompany}
               onChange={handleCourierCompChange}
-              // concat nothing to converting readonly array => mutable array 
+              // concat nothing to converting readonly array => mutable array
               options={courierCompanies as any} // 현재 버전에서 readonly 타입을 지원하지 않는 버그 있음.
               fullWidth
-              renderInput={(params) => (
+              renderInput={params => (
                 <TextField
                   {...params}
                   required
@@ -136,13 +139,12 @@ export default function OrderStateChangeDialog({
               helperText={error.field === 'trackingNumber' ? error.message : null}
               onChange={handleTrackNumChange}
               inputProps={{
-                maxLength: 40
+                maxLength: 40,
               }}
             />
             <Divider className={classes.divider} />
           </>
         )}
-
 
         {/* 주문취소로 변경하는 경우 */}
         {selectedStatus === 주문상태_주문취소 && (
@@ -160,7 +162,7 @@ export default function OrderStateChangeDialog({
             error={error.field === 'denialReason'}
             helperText={error.field === 'denialReason' ? error.message : null}
             inputProps={{
-              maxLength: 200
+              maxLength: 200,
             }}
           />
         )}
@@ -179,7 +181,6 @@ export default function OrderStateChangeDialog({
           </Typography>
         </Alert>
       </div>
-
     </CustomDialog>
   );
 }

@@ -71,7 +71,7 @@ const cardHeaderStyle = makeStyles((theme: Theme) => ({
       lineHeight: '33px',
       margin: '5px 4px 0px',
     },
-  }
+  },
 }));
 
 export default cardHeaderStyle;

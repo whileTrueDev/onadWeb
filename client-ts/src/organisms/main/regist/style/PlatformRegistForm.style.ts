@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   textField: {
     fontSize: '17px',
     [theme.breakpoints.down('xs')]: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   adornment: {
     fontSize: '20px',
-    fontWeight: 900
+    fontWeight: 900,
   },
   switchbox: {
     marginLeft: theme.spacing(1),
@@ -52,18 +52,18 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 0,
     },
     [theme.breakpoints.up('sm')]: {
-      maxWidth: 150
+      maxWidth: 150,
     },
   },
   companyNum: {
-    marginTop : '16px',
+    marginTop: '16px',
   },
-  companySelect : {
+  companySelect: {
     [theme.breakpoints.down('xs')]: {
       minWidth: '100%',
       marginRight: 0,
     },
-  }
+  },
 }));
 
 export default useStyles;

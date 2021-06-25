@@ -12,7 +12,6 @@ import Grid from '@material-ui/core/Grid';
 // icons
 import CloseIcon from '@material-ui/icons/Close';
 
-
 const DialogTitle = withStyles((theme: Theme) => ({
   root: {
     margin: 0,
@@ -34,8 +33,16 @@ const DialogTitle = withStyles((theme: Theme) => ({
       fontSize: '1.25rem',
     },
   },
-}))(({ children, classes, onClose }:
-  { children: React.ReactNode; classes: any; onClose: () => void }) => (
+}))(
+  ({
+    children,
+    classes,
+    onClose,
+  }: {
+    children: React.ReactNode;
+    classes: any;
+    onClose: () => void;
+  }) => (
     <MuiDialogTitle disableTypography className={classes.root}>
       <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
         <Grid item>
@@ -50,15 +57,16 @@ const DialogTitle = withStyles((theme: Theme) => ({
         </Grid>
       </Grid>
     </MuiDialogTitle>
-));
+  ),
+);
 
-const DialogContent = withStyles((theme) => ({
+const DialogContent = withStyles(theme => ({
   root: {
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles((theme) => ({
+const DialogActions = withStyles(theme => ({
   root: {
     margin: 0,
     padding: theme.spacing(1),
@@ -77,7 +85,14 @@ interface CustomDialogProps {
 }
 
 function CustomDialog({
-  title, open, onClose, buttons, children, disableScrollTop = false, dialogContentRef, ...rest
+  title,
+  open,
+  onClose,
+  buttons,
+  children,
+  disableScrollTop = false,
+  dialogContentRef,
+  ...rest
 }: CustomDialogProps): JSX.Element {
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -90,26 +105,12 @@ function CustomDialog({
     }
   });
   return (
-    <Dialog
-      onClose={onClose}
-      open={open}
-      {...rest}
-    >
-      {title ? (
-        <DialogTitle onClose={onClose}>
-          {title}
-        </DialogTitle>
-      ) : null}
+    <Dialog onClose={onClose} open={open} {...rest}>
+      {title ? <DialogTitle onClose={onClose}>{title}</DialogTitle> : null}
       <DialogContent dividers ref={dialogContentRef || contentRef}>
         {children}
       </DialogContent>
-      {buttons
-        ? (
-          <DialogActions>
-            {buttons}
-          </DialogActions>
-        )
-        : null}
+      {buttons ? <DialogActions>{buttons}</DialogActions> : null}
     </Dialog>
   );
 }

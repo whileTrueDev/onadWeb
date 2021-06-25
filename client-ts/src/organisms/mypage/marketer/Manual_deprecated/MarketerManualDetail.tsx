@@ -19,18 +19,18 @@ function ManualProgramSelector({ source }: ManualProgramSelectorProps): JSX.Elem
     <GridContainer>
       <Card>
         <CardHeader>
-          <Typography variant="h6">
-            {source.card.title}
-          </Typography>
-          <Typography variant="caption">
-            {source.card.subtitle}
-          </Typography>
+          <Typography variant="h6">{source.card.title}</Typography>
+          <Typography variant="caption">{source.card.subtitle}</Typography>
         </CardHeader>
         <CardBody>
           <ManualContent source={source.source as Source[]} />
           <Divider />
-          <Typography variant="caption" style={{ textTransform: 'none', float: 'right', padding: 12 }}>
-            이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail : support@onad.io
+          <Typography
+            variant="caption"
+            style={{ textTransform: 'none', float: 'right', padding: 12 }}
+          >
+            이해가 잘 안되시거나, 문의사항이 있으시면 고객센터로 문의해주세요. E-mail :
+            support@onad.io
           </Typography>
         </CardBody>
       </Card>

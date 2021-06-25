@@ -4,13 +4,16 @@ import {
   CircularProgress,
   darken,
   Divider,
-  Grid, IconButton, InputAdornment, makeStyles, Paper,
-  TextField, Typography
+  Grid,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import {
-  Check, HowToReg, Lock, Visibility, VisibilityOff
-} from '@material-ui/icons';
+import { Check, HowToReg, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
@@ -30,22 +33,22 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     width: '100%',
     height: 60,
     margin: `${theme.spacing(1)}px 0px`,
-    boxShadow: theme.shadows[0]
+    boxShadow: theme.shadows[0],
   },
   twitch: {
     color: theme.palette.getContrastText(theme.palette.platform.twitch),
     backgroundColor: theme.palette.platform.twitch,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.twitch, 0.07),
-    }
+    },
   },
   success: {
     cursor: 'default',
     backgroundColor: theme.palette.success.main,
     '&:hover': {
       backgroundColor: theme.palette.success.main,
-      boxShadow: theme.shadows[0]
-    }
+      boxShadow: theme.shadows[0],
+    },
   },
   successIcon: { color: theme.palette.success.main },
   socialLogo: {
@@ -55,13 +58,17 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     left: theme.spacing(2),
   },
   finished: {
-    minWidth: 280, padding: theme.spacing(2),
-  }
+    minWidth: 280,
+    padding: theme.spacing(2),
+  },
 }));
 
 export interface CreatorSignupInfo {
-  userid: string; passwd: string; repasswd: string;
-  pwdVisibility: boolean; repwdVisibility: boolean;
+  userid: string;
+  passwd: string;
+  repasswd: string;
+  pwdVisibility: boolean;
+  repwdVisibility: boolean;
   referralCode: string;
 }
 export default function SignupCreator(): JSX.Element {
@@ -69,7 +76,12 @@ export default function SignupCreator(): JSX.Element {
   const location = useLocation();
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
-    userid: '', passwd: '', repasswd: '', pwdVisibility: false, repwdVisibility: false, referralCode: ''
+    userid: '',
+    passwd: '',
+    repasswd: '',
+    pwdVisibility: false,
+    repwdVisibility: false,
+    referralCode: '',
   });
 
   // 에러 정보
@@ -88,7 +100,9 @@ export default function SignupCreator(): JSX.Element {
   // 단계 정보
   const [activeStep, setStep] = useState(0);
   function handleNext(target?: number): void {
-    if (target) { setStep(target); }
+    if (target) {
+      setStep(target);
+    }
     setStep(activeStep + 1);
   }
 
@@ -103,22 +117,31 @@ export default function SignupCreator(): JSX.Element {
   // Parse search parpameter
   function parseParams(params: string) {
     const result: {
-        accessToken?: string; creatorId?: string; creatorName?: string; error?: string;
-      } = {};
-    params.substr(1).split('&').map((splited) => {
-      const [key, value] = splited.split('=');
-      return Object.assign(result, {
-        [key]: decodeURI(value),
+      accessToken?: string;
+      creatorId?: string;
+      creatorName?: string;
+      error?: string;
+    } = {};
+    params
+      .substr(1)
+      .split('&')
+      .map(splited => {
+        const [key, value] = splited.split('=');
+        return Object.assign(result, {
+          [key]: decodeURI(value),
+        });
       });
-    });
     return result;
   }
 
   // 본인인증 완료 이후 -> 회원가입 요청
   function handleSignup(): void {
-    axiosInstance.post(`${HOST}/creator`, {
-      userid: signupInfo.userid, passwd: signupInfo.passwd, referralCode: signupInfo.referralCode
-    })
+    axiosInstance
+      .post(`${HOST}/creator`, {
+        userid: signupInfo.userid,
+        passwd: signupInfo.passwd,
+        referralCode: signupInfo.referralCode,
+      })
       .then(() => {
         history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
@@ -132,17 +155,20 @@ export default function SignupCreator(): JSX.Element {
    * 기존 유저 새로운 로그인 방식으로 회원가입 및 기존 onad 계정과 연동 핸들러
    * */
   function handleSignupPreCreator(): void {
-    axiosInstance.post(`${HOST}/creator/pre-user`, {
-      userid: signupInfo.userid,
-      passwd: signupInfo.passwd,
-      creatorId: parseParams(location.search).creatorId,
-      accessToken: parseParams(location.search).accessToken
-    }).then(() => {
-      history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
-    }).catch(() => {
-      setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
-      failSnack.handleOpen();
-    });
+    axiosInstance
+      .post(`${HOST}/creator/pre-user`, {
+        userid: signupInfo.userid,
+        passwd: signupInfo.passwd,
+        creatorId: parseParams(location.search).creatorId,
+        accessToken: parseParams(location.search).accessToken,
+      })
+      .then(() => {
+        history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
+      })
+      .catch(() => {
+        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
+        failSnack.handleOpen();
+      });
   }
 
   // *************************************************************
@@ -154,17 +180,15 @@ export default function SignupCreator(): JSX.Element {
   const needReferredCreatorSnack = useDialog();
   // 추천인 확인 함수
   function checkReferralCode(): void {
-    const errorMsg = '입력하신 추천인 코드에 해당하는 방송인이 없습니다. 추천인 코드를 사용하지 않는 경우, 추천인 코드를 꼭 비워주세요.';
+    const errorMsg =
+      '입력하신 추천인 코드에 해당하는 방송인이 없습니다. 추천인 코드를 사용하지 않는 경우, 추천인 코드를 꼭 비워주세요.';
     setLoadingCheckReferralCode(true);
-    axiosInstance.get(
-      `${HOST}/creator/referral-code`, { params: { referralCode: signupInfo.referralCode } }
-    )
-      .then((res) => {
+    axiosInstance
+      .get(`${HOST}/creator/referral-code`, { params: { referralCode: signupInfo.referralCode } })
+      .then(res => {
         setLoadingCheckReferralCode(false);
         if (res.data && res.data.length > 0) {
-          const {
-            creatorName, afreecaName, loginId, calculateState
-          } = res.data[0];
+          const { creatorName, afreecaName, loginId, calculateState } = res.data[0];
           if (calculateState === null) setReferredCreator(creatorName || afreecaName || loginId);
           else setReferredCreatorError('이미 다른 방송인에 의해 사용된 추천인 코드입니다.');
         } else {
@@ -179,9 +203,9 @@ export default function SignupCreator(): JSX.Element {
   // *************************************************************
 
   // 회원가입 정보 변경 핸들러
-  const handleChange = (
-    prop: keyof CreatorSignupInfo
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (prop: keyof CreatorSignupInfo) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setSignupInfo({ ...signupInfo, [prop]: event.target.value });
     setUseridHelperText(defaultHelperText);
     setUseridError(false);
@@ -221,10 +245,11 @@ export default function SignupCreator(): JSX.Element {
   const [duplicateCheckLoading, setLoading] = useState<boolean>(false);
   async function duplicateCheck(): Promise<boolean> {
     setLoading(true);
-    const result = await axiosInstance.get<'duplicate' | 'allow'>(
-      `${HOST}/creator/check-id`, { params: { userid: signupInfo.userid } }
-    )
-      .then((res) => {
+    const result = await axiosInstance
+      .get<'duplicate' | 'allow'>(`${HOST}/creator/check-id`, {
+        params: { userid: signupInfo.userid },
+      })
+      .then(res => {
         setLoading(false);
         if (res.data === 'duplicate') {
           setUseridHelperText('중복되는 아이디가 존재합니다.');
@@ -236,7 +261,9 @@ export default function SignupCreator(): JSX.Element {
       })
       .catch(() => {
         setLoading(false);
-        setUseridHelperText('아이디 중복확인 도중에 오류가 발생했습니다. support@onad.io로 문의바랍니다.');
+        setUseridHelperText(
+          '아이디 중복확인 도중에 오류가 발생했습니다. support@onad.io로 문의바랍니다.',
+        );
         setUseridError(true);
         return false;
       });
@@ -259,9 +286,12 @@ export default function SignupCreator(): JSX.Element {
   }
 
   // 기존 계정 로그인 성공 여부
-  const isLogedIn = !!(location.search && parseParams(location.search).accessToken
-        && parseParams(location.search).creatorId
-        && parseParams(location.search).creatorName);
+  const isLogedIn = !!(
+    location.search &&
+    parseParams(location.search).accessToken &&
+    parseParams(location.search).creatorId &&
+    parseParams(location.search).creatorName
+  );
 
   // form 작성 오류 검사 -> 통과시 본인인증 다이얼로그 오픈
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -294,14 +324,15 @@ export default function SignupCreator(): JSX.Element {
   useEffect(() => {
     if (isLogedIn) {
       const { creatorId } = parseParams(location.search);
-      axiosInstance.get(`${HOST}/creator`, { params: { creatorId } })
-        .then((res) => {
+      axiosInstance
+        .get(`${HOST}/creator`, { params: { creatorId } })
+        .then(res => {
           if (res.data.loginId) {
             setAlreadySigned(true);
             setAlreadySignedId(res.data.loginId);
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
         });
     }
@@ -309,10 +340,7 @@ export default function SignupCreator(): JSX.Element {
 
   // 회원가입 입력 폼
   const signupForm = (
-    <form
-      onSubmit={handleSubmit}
-      style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}
-    >
+    <form onSubmit={handleSubmit} style={{ marginTop: 16, marginBottom: 16, minWidth: 270 }}>
       {/* 아이디 */}
       <TextField
         style={{ marginBottom: 16 }}
@@ -333,7 +361,7 @@ export default function SignupCreator(): JSX.Element {
             <InputAdornment position="start">
               <AccountCircleIcon color={useridIconColor} />
             </InputAdornment>
-          )
+          ),
         }}
       />
       {/* 비밀번호 */}
@@ -368,7 +396,7 @@ export default function SignupCreator(): JSX.Element {
                 {signupInfo.pwdVisibility ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
-          )
+          ),
         }}
       />
       {/* 비밀번호 확인 */}
@@ -403,7 +431,7 @@ export default function SignupCreator(): JSX.Element {
                 {signupInfo.repwdVisibility ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
-          )
+          ),
         }}
       />
 
@@ -442,7 +470,7 @@ export default function SignupCreator(): JSX.Element {
                   </Button>
                 )}
               </InputAdornment>
-            )
+            ),
           }}
         />
       )}
@@ -454,9 +482,9 @@ export default function SignupCreator(): JSX.Element {
       )}
       {/* 올바른 추천인이 있는 경우 */}
       {!loadingCheckReferralCode && referredCreator && (
-      <Alert severity="success" style={{ marginBottom: 16 }}>
-        {`추천인: ${referredCreator}`}
-      </Alert>
+        <Alert severity="success" style={{ marginBottom: 16 }}>
+          {`추천인: ${referredCreator}`}
+        </Alert>
       )}
       {/* 추천인 코드가 만료되었거나, 없는 코드인 경우 */}
       {!loadingCheckReferralCode && !referredCreator && referredCreatorError && (
@@ -483,9 +511,7 @@ export default function SignupCreator(): JSX.Element {
           size="large"
           variant="contained"
           style={{ width: '100%' }}
-          disabled={
-            !signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd
-          }
+          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
         >
           가입하기
         </Button>
@@ -522,18 +548,16 @@ export default function SignupCreator(): JSX.Element {
     <Grid container alignItems="center" direction="column">
       <Grid item xs={12} md={6} style={{ maxWidth: 500 }}>
         <Paper style={{ padding: 24, textAlign: 'center' }}>
-          <Typography variant="h4" style={{ fontWeight: 'bold' }}>회원가입</Typography>
+          <Typography variant="h4" style={{ fontWeight: 'bold' }}>
+            회원가입
+          </Typography>
 
           {/* 이미 새로운 방식의 회원가입을 완료한 경우 */}
-          {(isLogedIn && alreadySigned) ? (
+          {isLogedIn && alreadySigned ? (
             <div className={classes.finished}>
-              <Typography>
-                이미 새로운 방식의 회원가입을 완료하였습니다.
-              </Typography>
+              <Typography>이미 새로운 방식의 회원가입을 완료하였습니다.</Typography>
               <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
-                <Typography>
-                  가입하신 아이디는 다음과 같습니다.
-                </Typography>
+                <Typography>가입하신 아이디는 다음과 같습니다.</Typography>
                 <Typography>
                   {alreadySignedId.slice(0, alreadySignedId.length - 3).concat('***')}
                 </Typography>
@@ -546,14 +570,19 @@ export default function SignupCreator(): JSX.Element {
               {/* 기존 유저 회원 가입 안내 */}
               {location.pathname === '/creator/signup/pre-user' && (
                 <>
-                  <Alert severity="info" style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}>
+                  <Alert
+                    severity="info"
+                    style={{ textAlign: 'left', marginTop: 16, paddingTop: 16 }}
+                  >
                     <Typography>
-                      기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로 로그인할 수 있습니다.
+                      기존 &quot;트위치로 로그인&quot;기능으로 온애드를 이용한 유저는 다음 방법으로
+                      로그인할 수 있습니다.
                     </Typography>
 
                     <div style={{ marginTop: 8 }}>
                       <Typography variant="body2">
-                        1. &quot;기존 트위치 계정 인증&quot; 버튼을 통해 사용하던 트위치 계정으로 로그인해주세요.
+                        1. &quot;기존 트위치 계정 인증&quot; 버튼을 통해 사용하던 트위치 계정으로
+                        로그인해주세요.
                       </Typography>
                       <Typography variant="body2">
                         2. 로그인 시 사용할 ID/PW를 입력해주세요.
@@ -567,9 +596,7 @@ export default function SignupCreator(): JSX.Element {
                   {/* 기존 유저가 아닌 경우 */}
                   {parseParams(location.search).error === 'no-pre-creator' ? (
                     <div style={{ marginTop: 16 }}>
-                      <Typography variant="body1">
-                        기존 유저가 아닙니다.
-                      </Typography>
+                      <Typography variant="body1">기존 유저가 아닙니다.</Typography>
                       <Typography variant="body1" style={{ marginBottom: 16 }}>
                         온애드 회원가입을 진행해주세요.
                       </Typography>
@@ -601,7 +628,7 @@ export default function SignupCreator(): JSX.Element {
                         if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
                       }}
                       className={classnames(classes.socialLoginButton, classes.twitch, {
-                        [classes.success]: !!isLogedIn
+                        [classes.success]: !!isLogedIn,
                       })}
                       variant="contained"
                     >
@@ -614,7 +641,11 @@ export default function SignupCreator(): JSX.Element {
                         </>
                       ) : (
                         <>
-                          <img src="/pngs/logo/twitch/TwitchGlitchWhite.png" alt="" className={classes.socialLogo} />
+                          <img
+                            src="/pngs/logo/twitch/TwitchGlitchWhite.png"
+                            alt=""
+                            className={classes.socialLogo}
+                          />
                           <Typography variant="body1">기존 트위치 계정 인증</Typography>
                         </>
                       )}
@@ -634,40 +665,39 @@ export default function SignupCreator(): JSX.Element {
                 </Alert>
               )}
 
-
               {/* 회원정보 받기 */}
               {/* 완료화면이 아니며, no-pre-creator에러가 아닌 경우 */}
-              {!(location.pathname === '/creator/signup/complete') && activeStep === 0
-              && !(parseParams(location.search).error === 'no-pre-creator') && (
-              <div>{signupForm}</div>
-              )}
-
+              {!(location.pathname === '/creator/signup/complete') &&
+                activeStep === 0 &&
+                !(parseParams(location.search).error === 'no-pre-creator') && (
+                  <div>{signupForm}</div>
+                )}
             </>
           )}
 
-
           {/* 본인인증 진행 */}
-          {!(location.pathname === '/creator/signup/pre-user')
-          && !(location.pathname === '/creator/signup/complete') && activeStep === 1 && (
-            <IndentityVerificationDialog
-              onSuccess={handleSignup}
-              onBackClick={handleBack}
-            />
-          )}
+          {!(location.pathname === '/creator/signup/pre-user') &&
+            !(location.pathname === '/creator/signup/complete') &&
+            activeStep === 1 && (
+              <IndentityVerificationDialog onSuccess={handleSignup} onBackClick={handleBack} />
+            )}
 
           {/* 회원가입 완료 페이지 */}
           {location.pathname === '/creator/signup/complete' && (
-          <div className={classes.finished}>
-            <Typography>회원가입이 성공적으로 완료되었습니다.</Typography>
-            {completeButtonSet}
-          </div>
+            <div className={classes.finished}>
+              <Typography>회원가입이 성공적으로 완료되었습니다.</Typography>
+              {completeButtonSet}
+            </div>
           )}
 
           {location.pathname === '/creator/signup' && (
             <>
               <Divider />
               <div style={{ margin: 16 }}>
-                <Typography variant="body2" onClick={() => history.push('/creator/signup/pre-user')}>
+                <Typography
+                  variant="body2"
+                  onClick={() => history.push('/creator/signup/pre-user')}
+                >
                   트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
                   <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>
                     기존계정로그인
@@ -681,12 +711,12 @@ export default function SignupCreator(): JSX.Element {
 
       <Snackbar color="error" message={snackErrMsg} onClose={failSnack.handleClose} />
       {needReferredCreatorSnack.open && (
-      <Snackbar
-        open={needReferredCreatorSnack.open}
-        color="error"
-        message="추천인 확인이 올바르게 끝나지 않았어요!"
-        onClose={needReferredCreatorSnack.handleClose}
-      />
+        <Snackbar
+          open={needReferredCreatorSnack.open}
+          color="error"
+          message="추천인 확인이 올바르게 끝나지 않았어요!"
+          onClose={needReferredCreatorSnack.handleClose}
+        />
       )}
     </Grid>
   );

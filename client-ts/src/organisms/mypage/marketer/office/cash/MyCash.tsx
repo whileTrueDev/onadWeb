@@ -4,9 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 // own components
-import {
-  Paper, Button, CircularProgress, makeStyles
-} from '@material-ui/core';
+import { Paper, Button, CircularProgress, makeStyles } from '@material-ui/core';
 
 import CashChargeDialog from './CashChargeDialog';
 import RefundDialog from '../refund/RefundDialog';
@@ -20,15 +18,15 @@ import HOST, { REACT_HOST } from '../../../../../config';
 import { AdInterface } from '../../dashboard/interfaces';
 import axiosInstance from '../../../../../utils/axios';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4),
     marginTop: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
   },
-  button: { margin: theme.spacing(0, 1, 0, 0) }
+  button: { margin: theme.spacing(0, 1, 0, 0) },
 }));
 
 interface MyCashProps {
@@ -42,34 +40,35 @@ function MyCash(props: MyCashProps): JSX.Element {
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
 
-  const {
-    accountData,
-    cashData,
-    adData,
-  } = props;
+  const { accountData, cashData, adData } = props;
 
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 700;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
-  const POPUP_X = process.env.NODE_ENV === 'production'
-    ? (window.screen.width / 2) - 450 : (window.screen.width / 2) - 350;
-  const POPUP_Y = process.env.NODE_ENV === 'production'
-    ? (window.screen.height / 2) - 400 : (window.screen.height / 2) - 350;
+  const POPUP_X =
+    process.env.NODE_ENV === 'production'
+      ? window.screen.width / 2 - 450
+      : window.screen.width / 2 - 350;
+  const POPUP_Y =
+    process.env.NODE_ENV === 'production'
+      ? window.screen.height / 2 - 400
+      : window.screen.height / 2 - 350;
   // front HOST
 
   const [vbankload, setVbankload] = useState<boolean>(false);
 
-  const { data, loading } = useGetRequest<null, { data: string[][] }>('/marketer/cash/history/charge');
+  const { data, loading } = useGetRequest<null, { data: string[][] }>(
+    '/marketer/cash/history/charge',
+  );
 
   useEffect(() => {
-    axiosInstance.post<boolean[]>(`${HOST}/marketer/cash/vbank`)
-      .then((row) => {
-        setVbankload(row.data[0]);
-      });
+    axiosInstance.post<boolean[]>(`${HOST}/marketer/cash/vbank`).then(row => {
+      setVbankload(row.data[0]);
+    });
   }, [setVbankload, vbankload]);
 
   return (
     <Paper className={classes.root}>
-      {adData.loading && (<CircularProgress />)}
+      {adData.loading && <CircularProgress />}
       {!adData.loading && !adData.error && adData.data && (
         <div>
           <Typography style={{ fontWeight: 'bold' }}>보유 광고 캐시</Typography>
@@ -81,9 +80,9 @@ function MyCash(props: MyCashProps): JSX.Element {
             </Typography>
           </Typography>
           {!cashData.loading && !cashData.error && cashData.data && (
-          <Typography variant="caption" color="textSecondary">
-            {`최근 캐시 변동: ${moment(cashData.data.date).fromNow()}`}
-          </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {`최근 캐시 변동: ${moment(cashData.data.date).fromNow()}`}
+            </Typography>
           )}
 
           {/* 충전, 환불버튼 */}
@@ -94,8 +93,11 @@ function MyCash(props: MyCashProps): JSX.Element {
               size="small"
               className={classes.button}
               onClick={(): void => {
-                window.open(`${REACT_HOST}/marketer/charge`,
-                  '_blank', `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`);
+                window.open(
+                  `${REACT_HOST}/marketer/charge`,
+                  '_blank',
+                  `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`,
+                );
               }}
             >
               캐시충전(전자결제)
@@ -105,40 +107,47 @@ function MyCash(props: MyCashProps): JSX.Element {
               color="primary"
               size="small"
               className={classes.button}
-              onClick={(): void => { chargeDialog.handleOpen(); }}
+              onClick={(): void => {
+                chargeDialog.handleOpen();
+              }}
             >
               캐시충전(무통장)
             </Button>
 
-            {!accountData.loading && !accountData.error && accountData.data
-          && !accountData.data.marketerAccountNumber && (
-            <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
-              <span>
+            {!accountData.loading &&
+              !accountData.error &&
+              accountData.data &&
+              !accountData.data.marketerAccountNumber && (
+                <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
+                  <span>
+                    <Button
+                      size="medium"
+                      variant="outlined"
+                      color="default"
+                      disabled
+                      className={classes.button}
+                    >
+                      환불요청
+                    </Button>
+                  </span>
+                </Tooltip>
+              )}
+            {!accountData.loading &&
+              !accountData.error &&
+              accountData.data &&
+              accountData.data.marketerAccountNumber && (
                 <Button
                   size="medium"
                   variant="outlined"
                   color="default"
-                  disabled
                   className={classes.button}
+                  onClick={(): void => {
+                    refundDialog.handleOpen();
+                  }}
                 >
-                환불요청
+                  환불요청
                 </Button>
-
-              </span>
-            </Tooltip>
-            )}
-            {!accountData.loading && !accountData.error && accountData.data
-          && accountData.data.marketerAccountNumber && (
-            <Button
-              size="medium"
-              variant="outlined"
-              color="default"
-              className={classes.button}
-              onClick={(): void => { refundDialog.handleOpen(); }}
-            >
-              환불요청
-            </Button>
-            )}
+              )}
           </div>
 
           <div style={{ marginTop: 16 }}>
@@ -146,7 +155,7 @@ function MyCash(props: MyCashProps): JSX.Element {
             <Table
               rowPerPage={3}
               tableHead={['날짜', '충전금액', '결제수단', '진행상황']}
-              tableData={(loading || !data) ? [] : data.data}
+              tableData={loading || !data ? [] : data.data}
               pagination
             />
           </div>
@@ -162,13 +171,13 @@ function MyCash(props: MyCashProps): JSX.Element {
         />
       )}
 
-      {!accountData.loading
-        && !accountData.error
-        && accountData.data
-        && cashData.data
-        && accountData.data.marketerAccountNumber
-        && !cashData.loading
-        && !accountData.error && (
+      {!accountData.loading &&
+        !accountData.error &&
+        accountData.data &&
+        cashData.data &&
+        accountData.data.marketerAccountNumber &&
+        !cashData.loading &&
+        !accountData.error && (
           <RefundDialog
             open={refundDialog.open}
             handleClose={refundDialog.handleClose}
@@ -176,8 +185,7 @@ function MyCash(props: MyCashProps): JSX.Element {
             accountHolder={accountData.data.accountHolder}
             currentCash={cashData.data.cashAmount}
           />
-      )}
-
+        )}
     </Paper>
   );
 }

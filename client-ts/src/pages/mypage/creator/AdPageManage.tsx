@@ -28,24 +28,23 @@ function AdPageManage(): JSX.Element {
       <GridContainer>
         <GridItem xs={12} xl={8}>
           <Alert severity="warning">
-            <Typography variant="h6">
-              내 광고페이지 변경 관련 알림
+            <Typography variant="h6">내 광고페이지 변경 관련 알림</Typography>
+            <Typography variant="body1">‘내 광고페이지’ 기능이 4월 21일에 중단됩니다.</Typography>
+            <Typography variant="body1">
+              광고페이지로 이동되던 링크 주소는 ‘패널 광고’ 주소로 사용됩니다. (우측 ‘내 클릭 광고’
+              클릭 후 ‘패널 광고 설정’ 확인)
             </Typography>
             <Typography variant="body1">
-              ‘내 광고페이지’ 기능이 4월 21일에 중단됩니다.
-            </Typography>
-            <Typography variant="body1">
-              광고페이지로 이동되던 링크 주소는 ‘패널 광고’ 주소로 사용됩니다.
-              (우측 ‘내 클릭 광고’ 클릭 후 ‘패널 광고 설정’ 확인)
-            </Typography>
-            <Typography variant="body1">
-              ‘내 광고페이지’ 기능 중단 안내에 대한 자세한 사항을
-              {' '}
-              <Typography variant="h6" component={Link} to="/mypage/creator/notice" style={{ verticalAlign: 'center' }}>
+              ‘내 광고페이지’ 기능 중단 안내에 대한 자세한 사항을{' '}
+              <Typography
+                variant="h6"
+                component={Link}
+                to="/mypage/creator/notice"
+                style={{ verticalAlign: 'center' }}
+              >
                 공지사항
                 <SpeakerNotes />
-              </Typography>
-              {' '}
+              </Typography>{' '}
               에서 꼭 확인해주세요!
             </Typography>
           </Alert>
@@ -54,45 +53,40 @@ function AdPageManage(): JSX.Element {
       <GridContainer>
         {/* 랜딩페이지 URL 보기 */}
         <GridItem xs={12} lg={6} xl={4}>
-          {landingData.loading && (<Skeleton variant="text" height={100} />)}
-          {!landingData.loading && landingData.data && (
-          <AdPageUrl userData={landingData.data} />
-          )}
+          {landingData.loading && <Skeleton variant="text" height={100} />}
+          {!landingData.loading && landingData.data && <AdPageUrl userData={landingData.data} />}
         </GridItem>
       </GridContainer>
 
       <GridContainer>
         <GridItem xs={12} sm={6} md={6} xl={4}>
           <GridContainer>
-
             {/* 배경이미지 선택 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="rect" height={500} />)}
+              {landingData.loading && <Skeleton variant="rect" height={500} />}
               {!landingData.loading && landingData.data && (
-              <AdPageImageUploadForm
-                userData={landingData.data}
-                handleSnackOpen={snack.handleOpen}
-              />
+                <AdPageImageUploadForm
+                  userData={landingData.data}
+                  handleSnackOpen={snack.handleOpen}
+                />
               )}
             </GridItem>
 
             {/* 광고페이지 현황 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="text" height={300} />)}
+              {landingData.loading && <Skeleton variant="text" height={300} />}
               {!landingData.loading && landingData.data && (
-              <AdPageDetail userData={landingData.data} />
+                <AdPageDetail userData={landingData.data} />
               )}
             </GridItem>
-
           </GridContainer>
         </GridItem>
 
         <GridItem xs={12} sm={6} md={6} xl={4}>
           <GridContainer spacing={3}>
-
             {/* 랜딩페이지설정 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="rect" height={300} />)}
+              {landingData.loading && <Skeleton variant="rect" height={300} />}
               {!landingData.loading && landingData.data && (
                 <AdPageSetting
                   userData={landingData.data}
@@ -102,15 +96,13 @@ function AdPageManage(): JSX.Element {
               )}
             </GridItem>
 
-
             {/* 패널배너 기본이미지 */}
             <GridItem xs={12}>
-              {landingData.loading && (<Skeleton variant="text" height={450} />)}
+              {landingData.loading && <Skeleton variant="text" height={450} />}
               {!landingData.loading && landingData.data && (
-              <AdPagePanelBanner userData={landingData.data} />
+                <AdPagePanelBanner userData={landingData.data} />
               )}
             </GridItem>
-
           </GridContainer>
         </GridItem>
       </GridContainer>

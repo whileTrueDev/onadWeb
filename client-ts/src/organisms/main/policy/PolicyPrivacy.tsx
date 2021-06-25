@@ -3,7 +3,6 @@ import shortid from 'shortid';
 import useStyles from './style/PolicyPrivacy.style';
 import terms from './source/PolicySource';
 
-
 interface Terms {
   title: string;
   text: string;
@@ -21,7 +20,7 @@ function PolicyPrivacy(): JSX.Element {
           <div key={shortid.generate()} className={classes.policyWrapper}>
             <h3 key={shortid.generate()}>{term.title}</h3>
             <div key={shortid.generate()} className={classes.text}>
-              {term.text.split('\n').map((sentence) => (
+              {term.text.split('\n').map(sentence => (
                 <p key={shortid.generate()}>{sentence}</p>
               ))}
             </div>

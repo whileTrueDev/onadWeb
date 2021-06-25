@@ -1,15 +1,14 @@
 import React, { useReducer, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid, Paper, Collapse, useMediaQuery, Button
-} from '@material-ui/core';
+import { Grid, Paper, Collapse, useMediaQuery, Button } from '@material-ui/core';
 // organisms
 import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/AdPriorityPaper';
 import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/CampaignFormPaper';
 import {
-  CampaignCreateReducer, defaultState as step3DefaultState
+  CampaignCreateReducer,
+  defaultState as step3DefaultState,
 } from '../../../organisms/mypage/marketer/campaign-create2/reducers/campaignCreate.reducer';
 // others
 import HOST from '../../../config';
@@ -19,7 +18,6 @@ import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import { useDialog } from '../../../utils/hooks';
 import parseParams from '../../../utils/parseParams';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-
 
 const useStyles = makeStyles((_theme: Theme) => ({
   root: {
@@ -57,7 +55,8 @@ const CampaignCreate = (): JSX.Element => {
   const [step, setStep] = React.useState(0);
   // 전체적 캠페인 생성 state 리듀서
   const [campaignCreateState, campaignCreateDispatch] = useReducer(
-    CampaignCreateReducer, step3DefaultState
+    CampaignCreateReducer,
+    step3DefaultState,
   );
 
   // *****************************************************
@@ -98,15 +97,22 @@ const CampaignCreate = (): JSX.Element => {
       alert('캠페인의 배너가 선택되지 않았습니다. 송출할 배너를 선택해 주세요.');
       return;
     }
-    if (campaignCreateState.selectedOption === 'option1' && !campaignCreateState.selectedLandingUrl) {
+    if (
+      campaignCreateState.selectedOption === 'option1' &&
+      !campaignCreateState.selectedLandingUrl
+    ) {
       alert('캠페인의 랜딩 페이지 URL이 선택되지 않았습니다. URL을 선택해 주세요.');
       return;
     }
-    if (campaignCreateState.selectedOption === 'option3' && !campaignCreateState.selectedMerchandiseId) {
+    if (
+      campaignCreateState.selectedOption === 'option3' &&
+      !campaignCreateState.selectedMerchandiseId
+    ) {
       alert('캠페인의 판매 상품이 선택되지 않았습니다. 상품을 선택해 주세요.');
     }
-    if (campaignCreateState.campaignTerm.finDate && (
-      campaignCreateState.campaignTerm.finDate < campaignCreateState.campaignTerm.startDate)
+    if (
+      campaignCreateState.campaignTerm.finDate &&
+      campaignCreateState.campaignTerm.finDate < campaignCreateState.campaignTerm.startDate
     ) {
       alert('시작일은 종료일보다 빠를 수 없습니다.');
     }
@@ -120,8 +126,10 @@ const CampaignCreate = (): JSX.Element => {
       optionType: typeToNum(campaignCreateState.selectedOption),
       // 아프리카 카테고리 선택형의 경우 type1-1이므로 11이 됨.
       // 하지만 "카테고리 선택형" 이라는 동일한 유형이므로 동일하게 처리되어야 함. => 1로 수정함.
-      priorityType: campaignCreateState.selectedPriorityType === 'type1-1'
-        ? '1-1' : typeToNum(campaignCreateState.selectedPriorityType),
+      priorityType:
+        campaignCreateState.selectedPriorityType === 'type1-1'
+          ? '1-1'
+          : typeToNum(campaignCreateState.selectedPriorityType),
     };
     // ***********************************************************
     // 필수 ref 값 설정
@@ -145,27 +153,51 @@ const CampaignCreate = (): JSX.Element => {
     campaignCreateDTO.merchandiseId = campaignCreateState.selectedMerchandiseId;
     // ***********************************************************
     // optional state 값 설정
-    if (campaignCreateState.selectedPriorityType === 'type0'
-      && campaignCreateState.selectedCreators.length > 0) {
-      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators.map((c) => c.creatorId);
+    if (
+      campaignCreateState.selectedPriorityType === 'type0' &&
+      campaignCreateState.selectedCreators.length > 0
+    ) {
+      campaignCreateDTO.priorityList = campaignCreateState.selectedCreators.map(c => c.creatorId);
     }
-    if ((campaignCreateState.selectedPriorityType === 'type1'
-      && campaignCreateState.selectedGames.length > 0)
-      || (campaignCreateState.selectedPriorityType === 'type1-1'
-      && campaignCreateState.selectedGames.length > 0)) {
+    if (
+      (campaignCreateState.selectedPriorityType === 'type1' &&
+        campaignCreateState.selectedGames.length > 0) ||
+      (campaignCreateState.selectedPriorityType === 'type1-1' &&
+        campaignCreateState.selectedGames.length > 0)
+    ) {
       campaignCreateDTO.priorityList = campaignCreateState.selectedGames;
     }
     if (campaignCreateState.selectedPriorityType === 'type2') {
       campaignCreateDTO.priorityList = ['무관'];
     }
     if (campaignCreateState.campaignTime.length > 0) {
-      campaignCreateDTO.selectedTime = campaignCreateState.campaignTime
-        .map((x) => Number(x))
-        .sort();
+      campaignCreateDTO.selectedTime = campaignCreateState.campaignTime.map(x => Number(x)).sort();
     } else {
       campaignCreateDTO.selectedTime = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
       ];
     }
     if (campaignCreateState.campaignTerm.startDate) {
@@ -179,8 +211,9 @@ const CampaignCreate = (): JSX.Element => {
     campaignCreateDTO.keyword = ['', '', '']; // keyword추가후 수정
 
     campaignCreateDispatch({ type: 'LOADING_START', value: '' });
-    axios.post(`${HOST}/marketer/campaign`, campaignCreateDTO)
-      .then((res) => {
+    axios
+      .post(`${HOST}/marketer/campaign`, campaignCreateDTO)
+      .then(res => {
         campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
           alert(res.data[1]);
@@ -190,7 +223,7 @@ const CampaignCreate = (): JSX.Element => {
           alert(res.data[1]);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
         errorSnack.handleOpen();
       });
@@ -199,7 +232,6 @@ const CampaignCreate = (): JSX.Element => {
   useMypageScrollToTop();
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-
       {/* 요청 실패 스낵바 */}
       <Snackbar
         open={errorSnack.open}
@@ -214,7 +246,6 @@ const CampaignCreate = (): JSX.Element => {
             <form onSubmit={handleSubmit}>
               <Grid container direction="column" className={classes.root}>
                 <Grid item xs={12}>
-
                   {/* 광고 유형 선택 단계 */}
                   <Collapse in={step >= 0}>
                     <OptionPaper
@@ -256,14 +287,15 @@ const CampaignCreate = (): JSX.Element => {
           </Paper>
         </Grid>
       ) : (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-          width: '100%'
-        }}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+            width: '100%',
+          }}
         >
           <h4>캠페인 생성은 데스크탑에서 진행해주세요.</h4>
           <Button variant="contained" color="primary" component={Link} to="/mypage/marketer/main">

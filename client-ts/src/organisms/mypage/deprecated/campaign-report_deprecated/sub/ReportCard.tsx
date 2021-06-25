@@ -10,20 +10,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   card: {
     margin: 0,
     padding: 0,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   titleSection: {
     display: 'flex',
     [theme.breakpoints.up('md')]: {
-      marginBottom: 65
+      marginBottom: 65,
     },
   },
-  value: { color: theme.palette.primary.light, fontWeight: 700 }
+  value: { color: theme.palette.primary.light, fontWeight: 700 },
 }));
 
 interface DataInterface {
-  title: string; value: number | string;
-  unit: string; decimalRange?: number; percent?: number | string;
+  title: string;
+  value: number | string;
+  unit: string;
+  decimalRange?: number;
+  percent?: number | string;
 }
 
 const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
@@ -33,18 +36,15 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
 
   return (
     <Grid container spacing={3} className={classes.container} {...rest}>
-      {data.map((content) => (
+      {data.map(content => (
         <Grid key={content.title} item xs={12} md={4}>
           <Card className={classes.card}>
             <CardBody>
               <div className={classes.titleSection}>
-
                 <Typography variant="h5">{content.title}</Typography>
-
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-
                 <Typography gutterBottom variant="h5" className={classes.value}>
                   {content.value === '-' ? (
                     <span>{content.value}</span>
@@ -66,7 +66,6 @@ const ReportCard = (props: { data: DataInterface[] }): JSX.Element => {
                 <Typography gutterBottom variant="body2">
                   {content.unit}
                 </Typography>
-
               </div>
             </CardBody>
           </Card>

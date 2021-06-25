@@ -2,9 +2,7 @@ import React from 'react';
 import shortid from 'shortid';
 import { makeStyles } from '@material-ui/core/styles';
 // @material-ui/core components
-import {
-  Table, TableHead, TableRow, TableBody, TableCell, Grid
-} from '@material-ui/core';
+import { Table, TableHead, TableRow, TableBody, TableCell, Grid } from '@material-ui/core';
 // custom table component
 import Help from '@material-ui/icons/Help';
 import GreenCheckbox from '../Checkbox/GreenCheckBox';
@@ -17,12 +15,12 @@ const useSecondStyles = makeStyles({
     fontSize: '15px',
     fontWeight: 700,
     textAlign: 'center',
-    color: 'theme.palette.info.main'
+    color: 'theme.palette.info.main',
   },
 });
 
 interface CustomTableProps {
-  tableHead: {label: string; desc: string}[];
+  tableHead: { label: string; desc: string }[];
   tableData: Array<string[]>;
   banner?: boolean;
   checkBox?: boolean;
@@ -34,7 +32,7 @@ function CustomTable({
   tableData,
   banner = false,
   checkBox = false,
-  pagination = false
+  pagination = false,
 }: CustomTableProps): JSX.Element {
   // style classes
   const classes = useTableStyles();
@@ -42,18 +40,17 @@ function CustomTable({
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(5); // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, tableData.length - page * rowsPerPage,
-  );
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
   // page handler
   function handleChangeTablePage(
-    event: React.MouseEvent<HTMLButtonElement> | null, newPage: number
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
   ): void {
     setPage(newPage);
   }
   // page per row handler
   function handleChangeTableRowsPerPage(
-    event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
@@ -64,27 +61,18 @@ function CustomTable({
         {tableHead !== undefined ? (
           <TableHead>
             <TableRow>
-              {banner
-              && (
-              <TableCell />
-              )}
+              {banner && <TableCell />}
               {tableHead.map((column, index) => (
-                <TableCell
-                  className={myClasses.tableHeadCell}
-                  key={shortid.generate()}
-                >
+                <TableCell className={myClasses.tableHeadCell} key={shortid.generate()}>
                   <Grid container direction="row">
                     <Grid item>
                       <div>{column.label}</div>
                     </Grid>
                     {/* 각 변수에 대한 설명 Dialog를 추가하는 영역 */}
                     {column.desc !== '' && (
-                    <Grid item>
-                      <Help
-                        fontSize="small"
-                        color="disabled"
-                      />
-                    </Grid>
+                      <Grid item>
+                        <Help fontSize="small" color="disabled" />
+                      </Grid>
                     )}
                   </Grid>
                 </TableCell>
@@ -93,45 +81,47 @@ function CustomTable({
           </TableHead>
         ) : null}
         <TableBody>
-          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop) => (
+          {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(prop => (
             <TableRow key={shortid.generate()}>
-              {banner
-              && (
-              <TableCell key={shortid.generate()}>
-                <img src="/pngs/logo/onad_logo.png" alt="banner" style={{ width: '100%', height: 'auto', maxWidth: '50px' }} key={shortid.generate()} />
-              </TableCell>
+              {banner && (
+                <TableCell key={shortid.generate()}>
+                  <img
+                    src="/pngs/logo/onad_logo.png"
+                    alt="banner"
+                    style={{ width: '100%', height: 'auto', maxWidth: '50px' }}
+                    key={shortid.generate()}
+                  />
+                </TableCell>
               )}
               {prop.map((value, i) => (
                 <TableCell className={classes.tableCell} key={shortid.generate()}>
                   {value}
                 </TableCell>
               ))}
-              {checkBox
-              && (
-              <TableCell className={classes.tableCell}>
-                <GreenCheckbox size="small" checked />
-              </TableCell>
+              {checkBox && (
+                <TableCell className={classes.tableCell}>
+                  <GreenCheckbox size="small" checked />
+                </TableCell>
               )}
             </TableRow>
           ))}
 
           {emptyRows > 0 && (
-          <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
-            <TableCell colSpan={3} />
-          </TableRow>
+            <TableRow style={{ height: 48 * emptyRows }} key={shortid.generate()}>
+              <TableCell colSpan={3} />
+            </TableRow>
           )}
         </TableBody>
 
         {pagination && (
-        <TableFooter
-          count={tableData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          handleChangeTablePage={handleChangeTablePage}
-          handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
-        />
+          <TableFooter
+            count={tableData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            handleChangeTablePage={handleChangeTablePage}
+            handleChangeTableRowsPerPage={handleChangeTableRowsPerPage}
+          />
         )}
-
       </Table>
     </div>
   );

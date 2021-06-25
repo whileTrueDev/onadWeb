@@ -1,4 +1,3 @@
-
 import React from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,8 +18,7 @@ import useTooltip from '../../../../utils/hooks/useTooltip';
 import useOpenValue from '../../../../utils/hooks/useOpenValue';
 import copyToClipboard from '../../../../utils/copyToClipboard';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   flex: {
     display: 'flex',
   },
@@ -33,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   site: {
     color: theme.palette.primary.main,
-  }
+  },
 }));
 
 interface AdPagePanelBannerProps {
@@ -43,32 +41,25 @@ interface AdPagePanelBannerProps {
  * @deprecated
  * @author hwasurr 2021. 02. 02
  */
-export default function AdPagePanelBanner({
-  userData
-}: AdPagePanelBannerProps): JSX.Element {
+export default function AdPagePanelBanner({ userData }: AdPagePanelBannerProps): JSX.Element {
   const classes = useStyles();
   const snack = useOpenValue();
-  const {
-    tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose
-  } = useTooltip();
+  const { tooltipIndex, anchorEl, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
   return (
     <CustomCard
       iconComponent={<FlightTakeoff />}
-      buttonComponent={(
+      buttonComponent={
         <StyledItemText
           primary="트위치 패널용 온애드 기본 배너"
           secondary="광고페이지로 링크하여 광고를 더 많이 노출할 수 있습니다."
         />
-      )}
+      }
     >
       <Grid container>
         <Grid item xs={12}>
-
           <div style={{ marginBottom: 30 }}>
-            <Typography variant="h6">
-              광고페이지 링크
-            </Typography>
+            <Typography variant="h6">광고페이지 링크</Typography>
             <div>
               <StyledInput
                 className={classes.site}
@@ -93,9 +84,7 @@ export default function AdPagePanelBanner({
 
           <div>
             <div className={classes.flex}>
-              <Typography variant="h6">
-                기본 이미지
-              </Typography>
+              <Typography variant="h6">기본 이미지</Typography>
               <div
                 onMouseEnter={(evt): void => handleTooltipOpen(evt, 3)}
                 onMouseLeave={handleTooltipClose}
@@ -111,14 +100,28 @@ export default function AdPagePanelBanner({
 
             <div className={classnames(classes.flex, classes.images)}>
               <div>
-                <a href="/pngs/landing/onad_panel_banner_default.png" download="onad_panel_banner_default">
-                  <img src="/pngs/landing/onad_panel_banner_default.png" alt="패널기본배너1" className={classes.image} />
+                <a
+                  href="/pngs/landing/onad_panel_banner_default.png"
+                  download="onad_panel_banner_default"
+                >
+                  <img
+                    src="/pngs/landing/onad_panel_banner_default.png"
+                    alt="패널기본배너1"
+                    className={classes.image}
+                  />
                 </a>
               </div>
 
               <div>
-                <a href="/pngs/landing/onad_panel_banner_default_third.png" download="onad_panel_banner_default2">
-                  <img src="/pngs/landing/onad_panel_banner_default_third.png" alt="패널기본배너2" className={classes.image} />
+                <a
+                  href="/pngs/landing/onad_panel_banner_default_third.png"
+                  download="onad_panel_banner_default2"
+                >
+                  <img
+                    src="/pngs/landing/onad_panel_banner_default_third.png"
+                    alt="패널기본배너2"
+                    className={classes.image}
+                  />
                 </a>
               </div>
             </div>

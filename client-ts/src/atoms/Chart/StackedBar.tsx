@@ -11,7 +11,10 @@ interface DefaultDataType {
 }
 // 차트 데이터
 const setStackedBarData = (theme: Theme) => <T extends DefaultDataType>(
-  data: T[], labelArray: string[], type = 'day', dateRange = 30
+  data: T[],
+  labelArray: string[],
+  type = 'day',
+  dateRange = 30,
 ): any => {
   let setupFunc;
   if (type === 'day') {
@@ -40,7 +43,7 @@ const setStackedBarData = (theme: Theme) => <T extends DefaultDataType>(
         borderWidth: 1,
         hoverBackgroundColor: chartTheme2.hover,
         hoverBorderColor: chartTheme2.hover,
-        data: CPC
+        data: CPC,
       },
     ],
   };

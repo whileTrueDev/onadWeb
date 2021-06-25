@@ -16,11 +16,15 @@ const SignOut = (props: { userData: MarketerInfo }): JSX.Element => {
   }
 
   function doSignOut(): void {
-    axios.delete<null, boolean[]>(`${HOST}/marketer`)
+    axios
+      .delete<null, boolean[]>(`${HOST}/marketer`)
       .then(() => {
         alert('탈퇴가 완료되었습니다.');
         window.location.href = REACT_HOST!;
-      }).catch(() => { alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.'); });
+      })
+      .catch(() => {
+        alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      });
   }
 
   useEffect(() => {
@@ -28,7 +32,6 @@ const SignOut = (props: { userData: MarketerInfo }): JSX.Element => {
   }, [userData.marketerId]);
 
   return (
-
     <div style={{ display: 'flex', margin: '5px', border: '5px' }}>
       <Typography variant="body2" color="textPrimary">
         더 이상 온애드를 사용하시지 않나요?

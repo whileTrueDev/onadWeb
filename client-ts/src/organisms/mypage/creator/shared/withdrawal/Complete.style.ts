@@ -3,12 +3,12 @@ import { Theme, makeStyles } from '@material-ui/core/styles';
 const useWithdrawalCompleteStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '85%',
-    margin: '5px auto'
+    margin: '5px auto',
   },
   newContentTitle: {
     fontWeight: 'bold',
     color: theme.palette.secondary.main,
-    fontFamily: 'Noto Sans KR'
+    fontFamily: 'Noto Sans KR',
   },
   content: {
     color: 'black',
@@ -44,7 +44,7 @@ const useWithdrawalCompleteStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 }));
 
 export default useWithdrawalCompleteStyles;

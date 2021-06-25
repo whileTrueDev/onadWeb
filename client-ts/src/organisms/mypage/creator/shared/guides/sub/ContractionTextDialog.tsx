@@ -1,12 +1,10 @@
 import React from 'react';
-import {
-  Grid, Divider, Typography, makeStyles
-} from '@material-ui/core';
+import { Grid, Divider, Typography, makeStyles } from '@material-ui/core';
 import Button from '../../../../../../atoms/CustomButtons/Button';
 import terms from '../../../Dashboard/source/contractTerms';
 import Dialog from '../../../../../../atoms/Dialog/Dialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   inDialogContent: {
     padding: theme.spacing(1),
     outline: 'none',
@@ -33,17 +31,12 @@ export default function ContractionTextDialog({
 }: ContractionTextProps): JSX.Element {
   const classes = useStyles();
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      title={title}
-      maxWidth="sm"
-    >
-      { /* 약관 보기 Dialog */}
+    <Dialog open={open} onClose={onClose} title={title} maxWidth="sm">
+      {/* 약관 보기 Dialog */}
 
       <div className={classes.inDialogContent}>
         {/* 계약 내용 */}
-        {terms[activeTermIndex].text.split('\n').map((sentence) => (
+        {terms[activeTermIndex].text.split('\n').map(sentence => (
           <p key={sentence}>{sentence}</p>
         ))}
         <Divider />

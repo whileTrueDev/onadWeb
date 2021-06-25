@@ -5,22 +5,22 @@ import Card from '../../../../atoms/Card/Card';
 import CardBody from '../../../../atoms/Card/CardBody';
 import AdPageData from './AdPageData.interfece';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   card: { marginBottom: theme.spacing(1) },
   root: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
   site: {
     color: theme.palette.primary.main,
     textDecoration: 'underline',
     '&:hover': {
-      cursor: 'pointer'
-    }
-  }
+      cursor: 'pointer',
+    },
+  },
 }));
 
 interface AdPageUrlProps {
@@ -37,7 +37,9 @@ export default function AdPageUrl({ userData }: AdPageUrlProps): JSX.Element {
           <Typography
             className={classes.site}
             variant="body1"
-            onClick={(): void => { window.open(`https://l.onad.io/${userData.creatorTwitchId}`); }}
+            onClick={(): void => {
+              window.open(`https://l.onad.io/${userData.creatorTwitchId}`);
+            }}
           >
             {`https://l.onad.io/${userData.creatorTwitchId}`}
           </Typography>

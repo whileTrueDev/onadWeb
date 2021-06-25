@@ -1,13 +1,13 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255, 0.6)'
+    backgroundColor: 'rgba(255,255,255, 0.6)',
   },
   contentWrapper: {
     backgroundColor: 'rgb(255,255,255,0.2)',
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: 150,
       height: 110,
-    }
+    },
   },
   text: {
     color: 'white',
@@ -39,15 +39,15 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('xs')]: {
-      fontSize: 22
-    }
+      fontSize: 22,
+    },
   },
   box1: {
     background: 'linear-gradient(to right, #20BFE2, #44A0E7)',
     animation: '$flowTop1 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      animation: 'none'
-    }
+      animation: 'none',
+    },
   },
   '@keyframes flowTop1': {
     '0%': { transform: 'translate(0, 0)' },
@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
     background: 'linear-gradient(to right, #40A4E6, #6384EB)',
     animation: '$flowTop2 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      animation: 'none'
-    }
+      animation: 'none',
+    },
   },
   '@keyframes flowTop2': {
     '0%': { transform: 'translate(0, 0)' },
@@ -68,8 +68,8 @@ const useStyles = makeStyles((theme) => ({
     background: 'linear-gradient(to right, #6088EA, #826AEF)',
     animation: '$flowTop3 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      animation: 'none'
-    }
+      animation: 'none',
+    },
   },
   '@keyframes flowTop3': {
     '0%': { transform: 'translate(0, 0)' },
@@ -79,14 +79,13 @@ const useStyles = makeStyles((theme) => ({
     background: 'linear-gradient(to right, #7E6DEE, #A34DF4)',
     animation: '$flowTop4 3s ease-in-out forwards',
     [theme.breakpoints.down('xs')]: {
-      animation: 'none'
-    }
+      animation: 'none',
+    },
   },
   '@keyframes flowTop4': {
     '0%': { transform: 'translate(0, 0)' },
     '100%': { transform: 'translate(0, -40px)' },
   },
-
 }));
 
 export default useStyles;

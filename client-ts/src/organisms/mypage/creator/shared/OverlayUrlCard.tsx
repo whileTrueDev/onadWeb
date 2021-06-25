@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {
-  Input, Paper, Typography, Button
-} from '@material-ui/core';
+import { Input, Paper, Typography, Button } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: theme.spacing(2),
     marginTop: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   title: { marginRight: theme.spacing(1), fontWeight: 'bold' },
   textField: {
     maxWidth: 200,
     marginRight: theme.spacing(2),
-    fontSize: theme.typography.body2.fontSize
+    fontSize: theme.typography.body2.fontSize,
   },
   line: { alignItems: 'center' },
 }));
@@ -34,7 +32,7 @@ interface UrlCardProps {
 function UrlCard({
   overlayUrlData,
   handleSnackOpen,
-  helperText = '이용 동의가 필요합니다.'
+  helperText = '이용 동의가 필요합니다.',
 }: UrlCardProps): JSX.Element {
   const classes = useStyles();
 
@@ -63,8 +61,7 @@ function UrlCard({
       <Input
         className={classes.textField}
         id="overlayUrl"
-        value={overlayUrlData.creatorContractionAgreement
-          ? overlayUrlValue : helperText}
+        value={overlayUrlData.creatorContractionAgreement ? overlayUrlValue : helperText}
         readOnly
         fullWidth
         disabled={!overlayUrlValue}

@@ -3,8 +3,8 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
     'airbnb',
-    'plugin:react/recommended',
     'plugin:prettier/recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
   ],
@@ -54,6 +54,11 @@ module.exports = {
     'react/jsx-props-no-spreading': 1,
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/jsx-wrap-multilines': 'off',
+    'react/jsx-indent': 'off',
+    'react/jsx-one-expression-per-line': 'off',
+    'react/jsx-curly-newline': 'off',
+    'react/prop-types': 'off',
     // typescript
     '@typescript-eslint/no-var-requires': 'warn',
     '@typescript-eslint/no-use-before-define': 2,

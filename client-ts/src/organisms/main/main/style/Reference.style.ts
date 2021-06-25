@@ -1,7 +1,7 @@
 import { grey } from '@material-ui/core/colors';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: grey[100],
     width: '100%',

@@ -9,9 +9,7 @@ interface ContentsPieProps {
 }
 
 export default function ContentsPie(props: ContentsPieProps): JSX.Element {
-  const {
-    selectedChartData
-  } = props;
+  const { selectedChartData } = props;
   // 마우스오버 핸들러
   const [activeIndex, setActiveIndex] = React.useState(0);
 
@@ -21,11 +19,9 @@ export default function ContentsPie(props: ContentsPieProps): JSX.Element {
 
   return (
     <div>
-      {!selectedChartData && (
-        <Skeleton height={400} />
-      )}
+      {!selectedChartData && <Skeleton height={400} />}
       {selectedChartData && (
-        <ReChartPie< { gameName: string; percent: number }>
+        <ReChartPie<{ gameName: string; percent: number }>
           activeIndex={activeIndex}
           onPieEnter={onPieEnter}
           data={selectedChartData.data}

@@ -13,9 +13,7 @@ interface CardProps {
   [rest: string]: any;
 }
 
-export default function Card({
-  className, children, profile, ...rest
-}: CardProps): JSX.Element {
+export default function Card({ className, children, profile, ...rest }: CardProps): JSX.Element {
   const classes = useCardStyles();
 
   const cardClasses = classNames({

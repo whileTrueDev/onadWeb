@@ -1,7 +1,4 @@
-
-import {
-  Chip, makeStyles, Paper, Tooltip, Typography
-} from '@material-ui/core';
+import { Chip, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 import OnadBanner from '../../../../../../atoms/Banner/OnadBanner';
@@ -9,18 +6,18 @@ import renderOptionType from '../../../../../../utils/render_funcs/renderOptionT
 import renderPriorityType from '../../../../../../utils/render_funcs/renderPriorityType';
 import { CampaignInterface } from '../../../dashboard/interfaces';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   metaInfo: {
     maxWidth: 320,
     marginBottom: theme.spacing(1),
   },
   title: {
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
   },
   contents: {
     display: 'grid',
     padding: theme.spacing(1, 2),
-  }
+  },
 }));
 
 export interface CampaignMetaInfoCardProps {
@@ -29,7 +26,7 @@ export interface CampaignMetaInfoCardProps {
 }
 export default function CampaignMetaInfoCard({
   campaign,
-  switchComponent
+  switchComponent,
 }: CampaignMetaInfoCardProps): JSX.Element {
   const classes = useStyles();
 
@@ -37,7 +34,9 @@ export default function CampaignMetaInfoCard({
     const DAILY_LIMIT_UNLIMITED = -1;
     const dailySum = campaign.dailysum ? campaign.dailysum.toLocaleString() : 0;
     if (campaign.dailyLimit !== DAILY_LIMIT_UNLIMITED) {
-      return `오늘 집행 ${dailySum}원 • 일예산 ${new Intl.NumberFormat().format(campaign.dailyLimit)}원 `;
+      return `오늘 집행 ${dailySum}원 • 일예산 ${new Intl.NumberFormat().format(
+        campaign.dailyLimit,
+      )}원 `;
     }
     return `오늘 집행 ${dailySum}원`;
   }, [campaign.dailyLimit, campaign.dailysum]);
@@ -55,11 +54,11 @@ export default function CampaignMetaInfoCard({
           />
           {switchComponent || null}
         </div>
-        <Typography className={classes.title}>
-          {campaign.campaignName}
-        </Typography>
+        <Typography className={classes.title}>{campaign.campaignName}</Typography>
         <Typography variant="body2" noWrap>
-          {`${renderOptionType(campaign.optionType)} • ${renderPriorityType(campaign.priorityType)}`}
+          {`${renderOptionType(campaign.optionType)} • ${renderPriorityType(
+            campaign.priorityType,
+          )}`}
         </Typography>
 
         {campaign.dailyLimit !== -1 ? (
@@ -77,7 +76,6 @@ export default function CampaignMetaInfoCard({
           {`등록시간: ${moment(campaign.regiDate).format('YYYY/MM/DD HH:MM:SS')}`}
         </Typography>
       </div>
-
     </Paper>
   );
 }

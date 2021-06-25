@@ -5,9 +5,12 @@ import CardIcon from './Card/CardIcon';
 import CardHeader from './Card/CardHeader';
 import CardBody from './Card/CardBody';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   buttonWrapper: {
-    display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', padding: 5
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row-reverse',
+    padding: 5,
   },
   root: {
     marginTop: theme.spacing(4),
@@ -31,25 +34,23 @@ interface CustomCardProps {
   backgroundColor?: boolean;
 }
 export default function CustomCard({
-  iconComponent, secondComponent, buttonComponent, children, backgroundColor
+  iconComponent,
+  secondComponent,
+  buttonComponent,
+  children,
+  backgroundColor,
 }: CustomCardProps): JSX.Element {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardHeader stats icon>
-        <CardIcon color="blueGray" className={backgroundColor ? ('yellowBack') : (null)}>
+        <CardIcon color="blueGray" className={backgroundColor ? 'yellowBack' : null}>
           {iconComponent}
         </CardIcon>
-        {secondComponent && (
-          <CardIcon>
-            {secondComponent}
-          </CardIcon>
-        )}
-        {buttonComponent && (buttonComponent)}
+        {secondComponent && <CardIcon>{secondComponent}</CardIcon>}
+        {buttonComponent && buttonComponent}
       </CardHeader>
-      <CardBody>
-        {children}
-      </CardBody>
+      <CardBody>{children}</CardBody>
     </Card>
   );
 }

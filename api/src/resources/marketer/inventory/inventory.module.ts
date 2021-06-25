@@ -14,6 +14,7 @@ import { MerchandisesService } from './merchandises/merchandises.service';
 import { MerchandiseRegistered } from '../../../entities/MerchandiseRegistered';
 import { MerchandiseOptions } from '../../../entities/MerchandiseOptions';
 import { MerchandisePickupAddresses } from '../../../entities/MerchandisePickupAddresses';
+import { MerchandisePaymentMethods } from '../../../entities/MerchandisePaymentMethods';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MerchandisePickupAddresses } from '../../../entities/MerchandisePickupA
       MerchandiseRegistered,
       MerchandiseOptions,
       MerchandisePickupAddresses,
+      MerchandisePaymentMethods,
     ]),
     forwardRef(() => MarketerModule),
     SlackModule,

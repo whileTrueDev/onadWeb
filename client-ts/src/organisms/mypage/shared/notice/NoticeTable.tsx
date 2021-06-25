@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
@@ -6,22 +7,24 @@ import FiberNew from '@material-ui/icons/FiberNew';
 import { lighten, makeStyles, Paper } from '@material-ui/core';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   new: { color: theme.palette.primary.main },
   title: {
     cursor: 'pointer',
     '&:hover': { textDecoration: 'underline' },
   },
   container: {
-    width: '100%', height: 600, marginTop: theme.spacing(2)
+    width: '100%',
+    height: 600,
+    marginTop: theme.spacing(2),
   },
-  datagrid: { width: '100%', height: '100%', },
+  datagrid: { width: '100%', height: '100%' },
   important: {
     backgroundColor: lighten(theme.palette.error.main, 0.5),
     color: theme.palette.getContrastText(lighten(theme.palette.error.main, 0.5)),
     fontWeight: theme.typography.fontWeightBold,
-    padding: theme.spacing(0.5, 0)
-  }
+    padding: theme.spacing(0.5, 0),
+  },
 }));
 
 function dateDiff(date1: Date, date2: Date): number {
@@ -45,7 +48,9 @@ export interface NoticeData {
 }
 
 export default function NoticeTable({
-  data, loading, onNoticeClick
+  data,
+  loading,
+  onNoticeClick,
 }: NoticeTableProps): JSX.Element {
   const classes = useStyles();
 
@@ -64,7 +69,6 @@ export default function NoticeTable({
             {
               width: 100,
               headerName: '번호',
-              disableClickEventBubbling: true,
               disableColumnMenu: true,
               field: 'code',
               renderCell: (_data): React.ReactElement => (
@@ -78,8 +82,10 @@ export default function NoticeTable({
               headerName: '구분',
               field: 'target',
               renderCell: (_data): React.ReactElement => (
-                <Typography variant="body2" noWrap>{_data.row.target}</Typography>
-              )
+                <Typography variant="body2" noWrap>
+                  {_data.row.target}
+                </Typography>
+              ),
             },
             {
               width: 150,
@@ -99,7 +105,8 @@ export default function NoticeTable({
               renderCell: (_data): React.ReactElement => (
                 <Typography
                   className={classnames({
-                    [classes.title]: true, [classes.important]: isImportantNotice(_data.row.topic)
+                    [classes.title]: true,
+                    [classes.important]: isImportantNotice(_data.row.topic),
                   })}
                   onClick={(): void => onNoticeClick(_data.row as NoticeData)}
                   variant="body2"
@@ -107,10 +114,10 @@ export default function NoticeTable({
                 >
                   {_data.row.title}
                   {dateDiff(new Date(), new Date(_data.row.regiDate)) < 8 && (
-                  <FiberNew className={classes.new} />
+                    <FiberNew className={classes.new} />
                   )}
                 </Typography>
-              )
+              ),
             },
             {
               width: 200,
@@ -120,7 +127,7 @@ export default function NoticeTable({
                 <Typography variant="body2" noWrap>
                   {moment(_data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
-              )
+              ),
             },
           ]}
         />

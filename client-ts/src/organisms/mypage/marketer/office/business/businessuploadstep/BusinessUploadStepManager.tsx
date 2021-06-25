@@ -14,9 +14,9 @@ import BusinessSelectStep from './BusinessSelectStep';
 import BusinessUploadStep from './BusinessUploadStep';
 import BusinessCompleteStep from './BusinessCompleteStep';
 
-const useStyles = makeStyles((theme) => ({
-  root: { width: '100%', },
-  backButton: { marginRight: theme.spacing(1), },
+const useStyles = makeStyles(theme => ({
+  root: { width: '100%' },
+  backButton: { marginRight: theme.spacing(1) },
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -30,7 +30,7 @@ interface BusinessRegiUploadDialogProps {
   businessRegiImage: string;
   request: () => void;
   handleSnackOpen: () => void;
-  step: {currStep: number; isBusiness: boolean};
+  step: { currStep: number; isBusiness: boolean };
 }
 
 // stepper 의 스탭 이름 정의
@@ -39,18 +39,16 @@ function getSteps(): string[] {
 }
 
 export default function BuisnessUploadStepManager(
-  props: BusinessRegiUploadDialogProps
+  props: BusinessRegiUploadDialogProps,
 ): JSX.Element {
-  const {
-    handleClose, businessRegiImage, request, step
-  } = props;
+  const { handleClose, businessRegiImage, request, step } = props;
   const steps = getSteps();
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(step.currStep);
   const [isBusiness, setIsBusiness] = React.useState(step.isBusiness);
 
   const handleBack = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleReset = (): void => {
@@ -85,20 +83,19 @@ export default function BuisnessUploadStepManager(
           />
         );
       case 2:
-        return (
-          <BusinessCompleteStep
-            handleChangeStep={handleChangeStep}
-            isBusiness={isBusiness}
-          />
-        );
+        return <BusinessCompleteStep handleChangeStep={handleChangeStep} isBusiness={isBusiness} />;
       default:
-        return <Typography variant="body1">진행에 문제가 발생했습니다. 창을 닫고 다시 처음부터 실행해 주세요</Typography>;
+        return (
+          <Typography variant="body1">
+            진행에 문제가 발생했습니다. 창을 닫고 다시 처음부터 실행해 주세요
+          </Typography>
+        );
     }
   }
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => (
+        {steps.map(label => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
@@ -123,19 +120,19 @@ export default function BuisnessUploadStepManager(
                 onClick={handleBack}
                 className={classes.backButton}
               >
-              이전으로
+                이전으로
               </Button>
               {activeStep === 2 && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={(): void => {
-                  handleClose();
-                  request();
-                }}
-              >
-                완료
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(): void => {
+                    handleClose();
+                    request();
+                  }}
+                >
+                  완료
+                </Button>
               )}
             </div>
           </div>

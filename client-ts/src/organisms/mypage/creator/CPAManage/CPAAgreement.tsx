@@ -1,7 +1,12 @@
 import React from 'react';
 // components
 import {
-  Grid, Checkbox, FormControlLabel, CircularProgress, Button, Divider
+  Grid,
+  Checkbox,
+  FormControlLabel,
+  CircularProgress,
+  Button,
+  Divider,
 } from '@material-ui/core';
 import shortid from 'shortid';
 import CustomCard from '../../../../atoms/CustomCard';
@@ -15,17 +20,14 @@ import useStyle from './CPAAgreement.style';
 interface CPAAgreementProps {
   callback: () => void;
 }
-const CPAAgreement = ({
-  callback
-}: CPAAgreementProps): JSX.Element => {
+const CPAAgreement = ({ callback }: CPAAgreementProps): JSX.Element => {
   const classes = useStyle();
   const [check, setCheck] = React.useState(false);
   const [checkConfirm, setCheckConfirm] = React.useState(false);
-  const CAPAgreementPatch = usePatchRequest('/creator',
-    () => {
-      // 동의하기 누를시에 다시 리렌더링 되도록 로직 추가
-      callback();
-    });
+  const CAPAgreementPatch = usePatchRequest('/creator', () => {
+    // 동의하기 누를시에 다시 리렌더링 되도록 로직 추가
+    callback();
+  });
 
   function handleChange(): void {
     if (checkConfirm) {
@@ -42,41 +44,39 @@ const CPAAgreement = ({
       <Grid container direction="row" className={classes.stepExplain} justify="center">
         {CAPAgreementPatch.loading ? (
           <CircularProgress />
-        )
-          : (
-            <>
-              <Grid item className={classes.text} xs={12} md={8} sm={8}>
-                <div className={classes.agreementWrap}>
-                  {textsource.agreementText.split('\n').map((sentence) => (
-                    <p key={shortid.generate()}>{sentence}</p>
-                  ))}
-                  <Divider />
-                  <div className={classes.endButton}>
-                    {!checkConfirm && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={(): void => setCheckConfirm(true)}
-                      >
-                        동의
-                      </Button>
-                    )}
-                  </div>
+        ) : (
+          <>
+            <Grid item className={classes.text} xs={12} md={8} sm={8}>
+              <div className={classes.agreementWrap}>
+                {textsource.agreementText.split('\n').map(sentence => (
+                  <p key={shortid.generate()}>{sentence}</p>
+                ))}
+                <Divider />
+                <div className={classes.endButton}>
+                  {!checkConfirm && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={(): void => setCheckConfirm(true)}
+                    >
+                      동의
+                    </Button>
+                  )}
                 </div>
-              </Grid>
-              <Grid item className={classes.box} xs={12} md={4} sm={4}>
-                <FormControlLabel
-                  control={<Checkbox checked={check} onChange={handleChange} color="primary" />}
-                  label="참여형 광고의 유의사항 읽고 동의하였습니다"
-                  labelPlacement="end"
-                />
-              </Grid>
-            </>
-          )}
+              </div>
+            </Grid>
+            <Grid item className={classes.box} xs={12} md={4} sm={4}>
+              <FormControlLabel
+                control={<Checkbox checked={check} onChange={handleChange} color="primary" />}
+                label="참여형 광고의 유의사항 읽고 동의하였습니다"
+                labelPlacement="end"
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
     </CustomCard>
-
   );
 };
 

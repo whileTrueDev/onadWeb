@@ -16,23 +16,24 @@ export default function CampaignCostPie(props: CampaignCostPieProps): JSX.Elemen
   const theme = useTheme();
   const { color, reportData, ...rest } = props;
 
-
   return (
     <div {...rest}>
       <CardTemplate title="광고 비용 비율" color={color} IconComponent={DonutSmall}>
         <div style={{ justifyContent: 'center', display: 'flex' }}>
           {!reportData.loading && reportData.data && (
-          <Pie
-            height={250}
-            data={{
-              labels: ['CPM', 'CPC'],
-              datasets: [{
-                data: [reportData.data.totalCPM, reportData.data.totalCPC],
-                backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light]
-              }]
-            }}
-            options={{ maintainAspectRatio: false, }}
-          />
+            <Pie
+              height={250}
+              data={{
+                labels: ['CPM', 'CPC'],
+                datasets: [
+                  {
+                    data: [reportData.data.totalCPM, reportData.data.totalCPC],
+                    backgroundColor: [theme.palette.primary.light, theme.palette.secondary.light],
+                  },
+                ],
+              }}
+              options={{ maintainAspectRatio: false }}
+            />
           )}
         </div>
       </CardTemplate>

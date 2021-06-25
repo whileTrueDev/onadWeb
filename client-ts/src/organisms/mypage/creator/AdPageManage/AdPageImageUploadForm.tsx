@@ -20,13 +20,18 @@ interface ImageUploadButtonsProps {
   handleImageChange: (a: ImageData) => void;
 }
 const Buttons = ({
-  imageUrl, userImage, handleUploadClick, handleImageChange
+  imageUrl,
+  userImage,
+  handleUploadClick,
+  handleImageChange,
 }: ImageUploadButtonsProps): JSX.Element => (
   <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
     <Button
       color="primary"
       disabled={imageUrl === userImage}
-      onClick={(): void => { handleUploadClick(); }}
+      onClick={(): void => {
+        handleUploadClick();
+      }}
     >
       변경 저장하기
     </Button>
@@ -34,7 +39,9 @@ const Buttons = ({
     <Button
       color="secondary"
       disabled={imageUrl === defaultImage}
-      onClick={(): void => { handleImageChange({ newImageUrl: defaultImage }); }}
+      onClick={(): void => {
+        handleImageChange({ newImageUrl: defaultImage });
+      }}
     >
       기본 이미지로
     </Button>
@@ -50,16 +57,16 @@ interface LandingImageUploadFormProps {
  * @author hwasurr 2021. 02. 02
  */
 export default function LandingImageUploadForm({
-  userData, handleSnackOpen
+  userData,
+  handleSnackOpen,
 }: LandingImageUploadFormProps): JSX.Element {
   const isLgWidth = useMediaQuery('(min-width:1200px)');
   const classes = useAdPageImageUploadFormStyles();
 
-
   // 배경 이미지 업로드를 위한 훅
-  const {
-    imageUrl, readImage, handleImageChange
-  } = useBannerUpload(userData.creatorBackgroundImage);
+  const { imageUrl, readImage, handleImageChange } = useBannerUpload(
+    userData.creatorBackgroundImage,
+  );
 
   const backgroundPatch = usePatchRequest('/creator/ad-page', () => {
     handleSnackOpen();
@@ -68,24 +75,23 @@ export default function LandingImageUploadForm({
   return (
     <CustomCard
       iconComponent={<StyledItemText primary="배경이미지 업로드" color="white" />}
-      buttonComponent={isLgWidth && (
-      <Buttons
-        imageUrl={imageUrl}
-        userImage={userData.creatorBackgroundImage}
-        handleUploadClick={(): void => {
-          backgroundPatch.doPatchRequest({
-            creatorBackgroundImage: imageUrl
-          });
-        }}
-        handleImageChange={handleImageChange}
-      />
-      )}
+      buttonComponent={
+        isLgWidth && (
+          <Buttons
+            imageUrl={imageUrl}
+            userImage={userData.creatorBackgroundImage}
+            handleUploadClick={(): void => {
+              backgroundPatch.doPatchRequest({
+                creatorBackgroundImage: imageUrl,
+              });
+            }}
+            handleImageChange={handleImageChange}
+          />
+        )
+      }
     >
       <div className={classes.imageWrapper}>
-        <div
-          className={classes.imageSrc}
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
+        <div className={classes.imageSrc} style={{ backgroundImage: `url(${imageUrl})` }} />
 
         <div>
           <Button className={classes.imageButton} size="large" color="primary">
@@ -94,23 +100,25 @@ export default function LandingImageUploadForm({
               type="file"
               id="getfile"
               accept="image/*"
-              onChange={(e): void => { readImage(e); }}
+              onChange={(e): void => {
+                readImage(e);
+              }}
             />
           </Button>
         </div>
       </div>
 
       {!isLgWidth && (
-      <Buttons
-        imageUrl={imageUrl}
-        userImage={userData.creatorBackgroundImage}
-        handleUploadClick={(): void => {
-          backgroundPatch.doPatchRequest({
-            creatorBackgroundImage: imageUrl
-          });
-        }}
-        handleImageChange={handleImageChange}
-      />
+        <Buttons
+          imageUrl={imageUrl}
+          userImage={userData.creatorBackgroundImage}
+          handleUploadClick={(): void => {
+            backgroundPatch.doPatchRequest({
+              creatorBackgroundImage: imageUrl,
+            });
+          }}
+          handleImageChange={handleImageChange}
+        />
       )}
     </CustomCard>
   );
