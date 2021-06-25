@@ -81,6 +81,7 @@ function dailyMissionTimer(duration:number) {
           && !$('.bottom-timer').attr('class')?.includes('urgent')
       ) {
         $('.bottom-timer').addClass('urgent')
+        $('.bottom-left-icon#clock').addClass('urgent')
       } else if (hours === '00' 
           && Number(minutes) < 10
           && !$('.bottom-timer').attr('class')?.includes('warning')
@@ -94,7 +95,7 @@ function dailyMissionTimer(duration:number) {
   }, 1000);
 }
 
-dailyMissionTimer(10);	// hour base
+dailyMissionTimer(5);	// hour base
 
 // ---------------------------------------- 소켓 ------------------------------------
 const device: string|null = getOS();
