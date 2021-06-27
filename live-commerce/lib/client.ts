@@ -59,44 +59,82 @@ function getOS(): string|null {
   return os;
 }
 
-function dailyMissionTimer(duration:number) {
+// function dailyMissionTimer(duration:number) {
     
-  let timer = duration * 60;
-  let hours, minutes, seconds;
+//   let timer = duration * 60;
+//   let hours, minutes, seconds;
   
-  const interval = setInterval(function(){
-      hours	= parseInt(String(timer / 3600), 10);
-      minutes = parseInt(String(timer / 60 % 60), 10);
-      seconds = parseInt(String(timer % 60), 10);
+//   const interval = setInterval(function(){
+//       hours	= parseInt(String(timer / 3600), 10);
+//       minutes = parseInt(String(timer / 60 % 60), 10);
+//       seconds = parseInt(String(timer % 60), 10);
   
-      hours 	= hours < 10 ? "0" + hours : hours;
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+//       hours 	= hours < 10 ? "0" + hours : hours;
+//       minutes = minutes < 10 ? "0" + minutes : minutes;
+//       seconds = seconds < 10 ? "0" + seconds : seconds;
   
-      $('#time-hour').text(hours);
-      $('#time-min').text(minutes);
-      $('#time-sec').text(seconds);
-      if (hours === '00' 
+//       $('#time-hour').text(hours);
+//       $('#time-min').text(minutes);
+//       $('#time-sec').text(seconds);
+//       if (hours === '00' 
+//           && Number(minutes) < 5
+//           && !$('.bottom-timer').attr('class')?.includes('urgent')
+//       ) {
+//         $('.bottom-timer').addClass('urgent')
+//         $('.bottom-left-icon#clock').addClass('urgent')
+//       } else if (hours === '00' 
+//           && Number(minutes) < 10
+//           && !$('.bottom-timer').attr('class')?.includes('warning')
+//       ) {
+//         $('.bottom-timer').addClass('warning')
+//       } 
+//       if (--timer < 0) {
+//           timer = 0;
+//           clearInterval(interval);
+//       }
+//   }, 1000);
+// }
+
+function dailyMissionTimer (){ 
+  const setDate = new Date("2021-06-28T02:00:00+0900");
+
+  setInterval(function(){
+    // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
+    const now = new Date();
+    let distance = setDate.getTime() - now.getTime();
+    if(distance < 0) { 
+      distance = 0
+    }
+    let hours: string|number = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
+    let minutes: string|number = Math.floor((distance % (1000*60*60))/(1000*60));
+    let seconds: string|number = Math.floor((distance % (1000*60))/1000);
+    
+    hours 	= hours < 10 ? "0" + String(hours) : String(hours);
+    minutes = minutes < 10 ? "0" + String(minutes) : String(minutes);
+    seconds = seconds < 10 ? "0" + String(seconds) : String(seconds);
+
+    $('#time-hour').text(hours);
+    $('#time-min').text(minutes);
+    $('#time-sec').text(seconds);
+
+    if (hours === '00'
           && Number(minutes) < 5
           && !$('.bottom-timer').attr('class')?.includes('urgent')
       ) {
         $('.bottom-timer').addClass('urgent')
         $('.bottom-left-icon#clock').addClass('urgent')
-      } else if (hours === '00' 
+      } else if (hours === '00'
           && Number(minutes) < 10
           && !$('.bottom-timer').attr('class')?.includes('warning')
       ) {
         $('.bottom-timer').addClass('warning')
       } 
-      if (--timer < 0) {
-          timer = 0;
-          clearInterval(interval);
-      }
-  }, 1000);
-}
+    }, 1000)
+    
+  }
 
-dailyMissionTimer(5);	// hour base
-
+// ------------------------------------- 타이머 실행 --------------------------
+dailyMissionTimer();
 // ---------------------------------------- 소켓 ------------------------------------
 const device: string|null = getOS();
 
@@ -284,5 +322,12 @@ socket.on('show virtual ad to client', async () => {
   }, 10000);
 });
 
+socket.on('quantity object from server', (quantityObject:string) => {
+  $('#quantity-object').text(quantityObject)
+});
+
+socket.on('get current quantity', (currentQuantity:number) => {
+  $('#current-quantity').text(currentQuantity)
+});
 
 export { };

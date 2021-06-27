@@ -107,12 +107,16 @@ io.on('connection', (socket: Socket) => {
                           ORDER BY total desc
                           LIMIT 3`
     
-    const orderedRanking = await doQuery(selectQuery)
-    .then((res) => {
-      return res.result
-    })
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+
+    const [orderedRanking, totalQuantity] = await Promise.all([
+      doQuery(selectQuery),
+      doQuery(selectTotalQuery)
+    ])
+
     io.to(roomName).emit('get right-top purchase message', data);
-    io.to(roomName).emit('get top-left ranking', orderedRanking);
+    io.to(roomName).emit('get top-left ranking', orderedRanking.result);
+    io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
     io.to(roomName).emit('get bottom purchase message', completeText);
   });
 
@@ -144,6 +148,31 @@ io.on('connection', (socket: Socket) => {
   socket.on('show virtual ad', (roomName: string) => {
     io.to(roomName).emit('show virtual ad to client');
   });
+
+  socket.on('quantity object', (data:any) => {
+    const {roomName} = data;
+    const {quantityObject} = data;
+    io.to(roomName).emit('quantity object from server', quantityObject)
+  })
+
+  socket.on('get all data', async (roomName:string) => {
+    const selectQuery = `
+                          SELECT nickname, sum(quantity) AS total 
+                          FROM liveCommerceRanking 
+                          GROUP BY nickname 
+                          ORDER BY total desc
+                          LIMIT 3`
+    
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+
+    const [orderedRanking, totalQuantity] = await Promise.all([
+      doQuery(selectQuery),
+      doQuery(selectTotalQuery)
+    ])
+
+    io.to(roomName).emit('get top-left ranking', orderedRanking.result);
+    io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
+  })
 });
 
 
