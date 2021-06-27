@@ -1,4 +1,4 @@
-import { ImageData, PurchaseMessage, SinglePurchase } from '../@types/data';
+import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
 
 const socket: any = io({ transports: ['websocket'] });
 const idArray: Array<null|string> = [];
@@ -11,16 +11,16 @@ const messageArray: string[] = [];
 let idx = 0;
 
 // 하단 marquee 영역 이벤트
-// setInterval(() => {
-//   if (idx >= idArray.length) {
-//     idx = 0;
-//   }
-//   if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
-//     $('.bottom-area-wrapper').html(`<div class="bottom-area"><p class="bottom-area-text">${idArray[idx]}</p></div>`);
-//     $('.bottom-area-wrapper').css({ display: 'flex' });
-//     idx += 1;
-//   } else { $('.purchase-customer-id').html('<p></p>'); }
-// }, 10000);
+setInterval(() => {
+  if (idx >= idArray.length) {
+    idx = 0;
+  }
+  if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
+    $('.bottom-area-wrapper').html(`<div class="bottom-area"><p class="bottom-area-text">${idArray[idx]}</p></div>`);
+    $('.bottom-area-wrapper').css({ display: 'flex' });
+    idx += 1;
+  } else { $('.purchase-customer-id').html('<p></p>'); }
+}, 10000);
 
 // 우측상단 응원문구 이벤트
 setInterval(async () => {
@@ -145,24 +145,13 @@ function compare(a: SinglePurchase, b: SinglePurchase): number {
   return 1;
 }
 
-socket.on('get top-left ranking', (data: PurchaseMessage) => {
-  const { userId } = data;
-  const { purchaseNum } = data;
-  const singlePurchase: SinglePurchase = { name: '', purchaseNumber: 0 };
-  singlePurchase.name = userId;
-  singlePurchase.purchaseNumber = Number(purchaseNum);
-  rankingArray.push(singlePurchase);
-
-  rankingArray.sort(compare);
-  if (rankingArray.length > 3) {
-    rankingArray.splice(4);
-  }
-  rankingArray.map((puschaseInfo, index: number) => (
-    $(`.ranking-text-area-id#rank-${index}`).text !== Object.values(puschaseInfo)[0] ? $(`.ranking-text-area#rank-${index}`).html(`
-    <img src="/public/images/${ICON_ARRAY[index]}.png" id="ranking-icon"/>
-    <span class="ranking-text-area-id" id=${index}>${Object.values(puschaseInfo)[0]}</span>님 ${Object.values(puschaseInfo)[1]}개 구매`)
-      : null
-  ));
+socket.on('get top-left ranking', (data: RankingData[]) => {
+  const rankingArray = data;
+  console.log(rankingArray)    
+  rankingArray.map((value, index) => {
+    $(`.ranking-text-area-id#rank-${index}`).text(value.nickname)
+    $(`.quantity#rank-${index}`).text(`${value.total}개`)
+  })
 });
 
 // 우측 상단 응원 문구

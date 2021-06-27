@@ -4,6 +4,8 @@ import http from 'http';
 import {
   UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData
 } from './@types/data';
+import doQuery from './models/doQuery';
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -24,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/:id', (req, res) => {
-  res.render('test-client.ejs');
+  res.render('client.ejs');
 });
 
 io.on('connection', (socket: Socket) => {
@@ -93,13 +95,26 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('get top-left ranking', data);
   });
 
-  socket.on('right-top-purchase-message', (data: PurchaseMessage) => {
+  socket.on('right-top-purchase-message', async (data: PurchaseMessage) => {
     const { roomName } = data;
     const { userId } = data;
     const { text } = data;
     const completeText = `${text} - [${userId}]`;
+    const selectQuery = `
+                          SELECT nickname, sum(quantity) AS total 
+                          FROM liveCommerceRanking 
+                          GROUP BY nickname 
+                          ORDER BY total desc
+                          LIMIT 3`
+    
+    const orderedRanking = await doQuery(selectQuery)
+    .then((res) => {
+      return res.result
+    })
+    console.log(orderedRanking)
+    // console.log(orderedRanking)
     io.to(roomName).emit('get right-top purchase message', data);
-    io.to(roomName).emit('get top-left ranking', data);
+    io.to(roomName).emit('get top-left ranking', orderedRanking);
     io.to(roomName).emit('get bottom purchase message', completeText);
   });
 
