@@ -111,8 +111,6 @@ io.on('connection', (socket: Socket) => {
     .then((res) => {
       return res.result
     })
-    console.log(orderedRanking)
-    // console.log(orderedRanking)
     io.to(roomName).emit('get right-top purchase message', data);
     io.to(roomName).emit('get top-left ranking', orderedRanking);
     io.to(roomName).emit('get bottom purchase message', completeText);

@@ -4,7 +4,7 @@ const socket: any = io({ transports: ['websocket'] });
 const idArray: Array<null|string> = [];
 const rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
-const ICON_ARRAY = ['crown', 'second', 'third'];
+// const ICON_ARRAY = ['crown', 'second', 'third'];
 
 let messageHtml: string;
 const messageArray: string[] = [];
@@ -16,8 +16,8 @@ setInterval(() => {
     idx = 0;
   }
   if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
-    $('.bottom-area-wrapper').html(`<div class="bottom-area"><p class="bottom-area-text">${idArray[idx]}</p></div>`);
-    $('.bottom-area-wrapper').css({ display: 'flex' });
+    $('.bottom-area-text').text(`${idArray[idx]}`)
+    $('.bottom-area-text').css({ display: 'flex' });
     idx += 1;
   } else { $('.purchase-customer-id').html('<p></p>'); }
 }, 10000);
@@ -161,6 +161,8 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
   const { productName } = data;
   const { text } = data;
   const num = data.purchaseNum;
+
+  console.log(data)
   // <img src="/public/images/${alarmType === '2' ? 'mars-2.gif' : 'mars-1.gif'}" id="donation-image"/>
   // <video src="/public/videos/${alarmType === '2' ? 'thanos.mp4' : 'thanos.mp4'}" class="donation-image" autoplay muted loop/>
   // <img src="/public/images/${alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'}" class="donation-image"/>

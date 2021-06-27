@@ -316,7 +316,7 @@ body {
 
 /* 우측 상단 응원메세지 영역 */
 .top-right {
-  display: flex;
+  display: none;
   width: 34.4%;
   height: 44.5%;
   top: 9.5%;
