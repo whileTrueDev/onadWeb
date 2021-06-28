@@ -10,9 +10,7 @@ import { FindSettlementLogsRes } from './interfaces/FindSettlementLogsRes.interf
 export class SettlementLogsService {
   constructor(
     @InjectRepository(MarketerSalesIncomeSettlementLogs)
-    private readonly marketerSalesIncomeSettlementLogsRepo: Repository<
-      MarketerSalesIncomeSettlementLogs
-    >,
+    private readonly marketerSalesIncomeSettlementLogsRepo: Repository<MarketerSalesIncomeSettlementLogs>,
     @InjectRepository(MerchandiseOrdersDetailRepository)
     private readonly merchandiseOrdersDetailRepo: MerchandiseOrdersDetailRepository,
   ) {}

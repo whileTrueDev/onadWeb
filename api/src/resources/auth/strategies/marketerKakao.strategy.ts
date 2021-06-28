@@ -16,8 +16,9 @@ export class MarketerKakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
       // from https://github.com/rotoshine/passport-kakao#readme
       clientSecret: '',
-      callbackURL: `${configService.get<string>('API_HOSTNAME') ||
-        'http://localhost:3000'}/login/kakao/callback`,
+      callbackURL: `${
+        configService.get<string>('API_HOSTNAME') || 'http://localhost:3000'
+      }/login/kakao/callback`,
     });
   }
 

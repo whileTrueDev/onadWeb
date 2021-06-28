@@ -48,6 +48,7 @@ module.exports = {
       },
     ],
     'no-underscore-dangle': 0,
+    'no-shadow': 'off',
     // react
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/require-default-props': 0,
@@ -66,6 +67,7 @@ module.exports = {
     // typescript
     '@typescript-eslint/no-var-requires': 'warn',
     '@typescript-eslint/no-use-before-define': 2,
+    '@typescript-eslint/no-shadow': 'error',
   },
   ignorePatterns: ['generated/**/*.tsx'],
   settings: {

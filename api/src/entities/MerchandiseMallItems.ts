@@ -1,6 +1,4 @@
-import {
-  Column, Entity, Index, PrimaryGeneratedColumn
-} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Index('merchandiseId_unique', ['merchandiseId'], { unique: true })
 @Entity('merchandiseMallItems', { schema: 'onadnode' })

@@ -28,17 +28,17 @@ export class NoticeService {
     targetUserId: string,
   ): Promise<{ noticeReadState: number | boolean }> {
     if (userType === 'marketer') {
-      return this.marketerInfoRepo.findOne({
+      const data = await this.marketerInfoRepo.findOne({
         where: { marketerId: targetUserId },
-        select: ['noticeReadState'],
       });
+      return { noticeReadState: data.noticeReadState };
     }
 
     if (userType === 'creator') {
-      return this.creatorInfoRepo.findOne({
+      const data = await this.creatorInfoRepo.findOne({
         where: { creatorId: targetUserId },
-        select: ['noticeReadState'],
       });
+      return { noticeReadState: data.noticeReadState };
     }
     throw new UnauthorizedException();
   }
