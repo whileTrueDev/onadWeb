@@ -1,4 +1,5 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import {
   Avatar,
   Button,
@@ -14,6 +15,8 @@ import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import { Link } from './BannerList';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -183,7 +186,7 @@ export default function NowBroadCard({
                     : bannerData.campaignDescription}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {`${moment(bannerData.date).fromNow()}`}
+                  {`${dayjs(bannerData.date).fromNow()}`}
                 </Typography>
               </Grid>
             </Grid>

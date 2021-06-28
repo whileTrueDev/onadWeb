@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { makeStyles, Paper, Tooltip, Typography } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import * as React from 'react';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
@@ -112,7 +112,7 @@ export default function CPSReviews({ cpsReviewData }: CPSReviewsProps): React.Re
             field: 'createDate',
             renderCell: (data): React.ReactElement => (
               <Typography variant="body2">
-                {moment(data.row.createDate).format('YY/MM/DD HH:mm:ss')}
+                {dayjs(data.row.createDate).format('YY/MM/DD HH:mm:ss')}
               </Typography>
             ),
           },

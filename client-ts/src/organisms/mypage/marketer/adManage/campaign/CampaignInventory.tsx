@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 import * as React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Badge, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { MoreVert, OpenInNew } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
@@ -319,7 +319,7 @@ export default function CampaignInventory({
             width: 200,
             renderCell: (data): React.ReactElement => (
               <Typography noWrap variant="body2">
-                {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                {dayjs(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
               </Typography>
             ),
           },

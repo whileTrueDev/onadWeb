@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Grid,
   List,
@@ -120,7 +120,7 @@ function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
                         </Typography>
                       </>
                     }
-                    secondary={`등록일: ${moment(ll.regiDate).format('YYYY년 MM월 DD일 HH:mm:ss')}`}
+                    secondary={`등록일: ${dayjs(ll.regiDate).format('YYYY년 MM월 DD일 HH:mm:ss')}`}
                   />
                   <ListItemSecondaryAction>
                     <GreenRadio

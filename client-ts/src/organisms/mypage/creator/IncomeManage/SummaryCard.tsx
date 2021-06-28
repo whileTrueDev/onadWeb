@@ -1,12 +1,14 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { Chip, Grid, Paper, Typography } from '@material-ui/core';
-import moment from 'moment';
 import { Help } from '@material-ui/icons';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { IncomeCashRes } from '../Dashboard/UserInfoCard';
 import { ProfileDataType } from '../Mypage/ProfileData.type';
 
+dayjs.extend(relativeTime);
 export interface SummaryCardProps {
   descAnchor: boolean;
   descAnchorOpen: (event: React.MouseEvent<HTMLElement>) => void;
@@ -83,7 +85,7 @@ export default function SummaryCard({
             </Grid>
           </Grid>
           <Typography color="textSecondary" variant="caption">
-            {`최근 수익 반영: ${moment(incomeCashGet.data.date).fromNow()}`}
+            {`최근 수익 반영: ${dayjs(incomeCashGet.data.date).fromNow()}`}
           </Typography>
         </div>
       )}

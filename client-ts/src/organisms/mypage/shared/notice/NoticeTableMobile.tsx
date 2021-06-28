@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Markdown from 'react-markdown/with-html';
 
 import List from '@material-ui/core/List';
@@ -63,7 +63,7 @@ export default function NoticeTableMobile({ data }: NoticeTableMobileProps): JSX
                   primary={row.title}
                   secondary={
                     <Typography color="textSecondary" variant="body2">
-                      {moment(row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                      {dayjs(row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                     </Typography>
                   }
                 />

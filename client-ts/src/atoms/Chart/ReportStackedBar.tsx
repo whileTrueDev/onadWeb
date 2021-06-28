@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useTheme } from '@material-ui/core/styles';
@@ -29,7 +29,7 @@ export default function ReportStackedBar({
       const array1 = Array<number>();
       const array2 = Array<number>();
       const grouped = _.groupBy(
-        data.map(x => ({ ...x, date: moment(x.date).format('M.DD') })),
+        data.map(x => ({ ...x, date: dayjs(x.date).format('M.DD') })),
         'date',
       );
 

@@ -1,5 +1,5 @@
 import { Chip, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import * as React from 'react';
 import OnadBanner from '../../../../../../atoms/Banner/OnadBanner';
@@ -74,7 +74,7 @@ export default function CampaignMetaInfoCard({
           </Typography>
         )}
         <Typography color="textSecondary" variant="body2">
-          {`등록시간: ${moment(campaign.regiDate).format('YYYY/MM/DD HH:MM:SS')}`}
+          {`등록시간: ${dayjs(campaign.regiDate).format('YYYY/MM/DD HH:MM:SS')}`}
         </Typography>
       </div>
     </Paper>

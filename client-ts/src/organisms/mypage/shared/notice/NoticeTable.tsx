@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import * as React from 'react';
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Typography from '@material-ui/core/Typography';
 import FiberNew from '@material-ui/icons/FiberNew';
 import { lighten, makeStyles, Paper } from '@material-ui/core';
@@ -125,7 +125,7 @@ export default function NoticeTable({
               field: 'regiDate',
               renderCell: (_data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
-                  {moment(_data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(_data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
               ),
             },

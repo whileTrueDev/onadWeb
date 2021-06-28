@@ -5,7 +5,7 @@ import {
   responsiveFontSizes,
 } from '@material-ui/core/styles';
 import dotenv from 'dotenv';
-import 'moment/locale/ko';
+import 'dayjs/locale/ko';
 import ReactDOM from 'react-dom';
 import { Route, Router, Switch } from 'react-router-dom';
 import history from './history';

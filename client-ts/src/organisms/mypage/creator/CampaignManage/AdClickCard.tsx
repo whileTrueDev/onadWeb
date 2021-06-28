@@ -1,4 +1,5 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import classnames from 'classnames';
 import {
   Button,
@@ -15,6 +16,8 @@ import {
 import { useState } from 'react';
 import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { useAnchorEl } from '../../../../utils/hooks';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -193,7 +196,7 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
                   {`${renderClickChannel(click.channel)} • `}
                 </Typography>
                 <Typography style={{ cursor: 'default' }} variant="caption" color="textSecondary">
-                  {moment(click.clickedTime).fromNow()}
+                  {dayjs(click.clickedTime).fromNow()}
                 </Typography>
               </div>
             ))}

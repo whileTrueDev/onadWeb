@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { makeStyles, Paper, Popover, Typography } from '@material-ui/core';
 import { CampaignInterface } from '../../dashboard/interfaces';
 import { BannerDataInterface } from '../interface';
@@ -52,7 +52,7 @@ export default function BannerInfoPopover({
               </Typography>
             </Typography>
             <Typography variant="body2">
-              {`생성 날짜: ${moment(selectedBanner.regiDate).format('YYYY/MM/DD HH:mm:ss')}`}
+              {`생성 날짜: ${dayjs(selectedBanner.regiDate).format('YYYY/MM/DD HH:mm:ss')}`}
             </Typography>
           </div>
         )}
@@ -77,9 +77,7 @@ export default function BannerInfoPopover({
               </Typography>
             )}
             <Typography variant="body2">
-              {`생성 날짜: ${moment(selectedCampaign.bannerRegiDate).format(
-                'YYYY/MM/DD HH:mm:ss',
-              )}`}
+              {`생성 날짜: ${dayjs(selectedCampaign.bannerRegiDate).format('YYYY/MM/DD HH:mm:ss')}`}
             </Typography>
           </div>
         )}

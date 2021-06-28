@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import { useEffect } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Button,
   Paper,
@@ -138,7 +138,7 @@ export default function ReferralCodeManage(): JSX.Element {
                 </Typography>
 
                 <Typography variant="body2">
-                  {moment(referralCodeReq.data.calculatedAt).format('YYYY년 MM월 DD일 HH:mm:ss')}
+                  {dayjs(referralCodeReq.data.calculatedAt).format('YYYY년 MM월 DD일 HH:mm:ss')}
                 </Typography>
               </div>
             )}

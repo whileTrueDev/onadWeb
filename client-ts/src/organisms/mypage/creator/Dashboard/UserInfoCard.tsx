@@ -1,5 +1,6 @@
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Divider, Paper, Avatar, Chip, Grow } from '@material-ui/core';
 import { nanoid } from 'nanoid';
@@ -7,6 +8,8 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
 import history from '../../../../history';
 import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
@@ -206,7 +209,7 @@ const UserInfoCard = ({
           {`${incomeData.creatorReceivable.toLocaleString()} 원`}
         </Typography>
         <Typography color="textSecondary" variant="caption">
-          {`최근 수익 반영: ${moment(incomeData.date).fromNow()}`}
+          {`최근 수익 반영: ${dayjs(incomeData.date).fromNow()}`}
         </Typography>
 
         {incomeData && incomeData.creatorAccountNumber && (
@@ -240,7 +243,7 @@ const UserInfoCard = ({
               <Typography className={classes.ellipsis}>
                 {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
                 <Typography component="span" variant="caption" color="textSecondary">
-                  {moment(withdrawalRequest.date).format('YYYY년 MM월 DD일')}
+                  {dayjs(withdrawalRequest.date).format('YYYY년 MM월 DD일')}
                 </Typography>
               </Typography>
               <Chip

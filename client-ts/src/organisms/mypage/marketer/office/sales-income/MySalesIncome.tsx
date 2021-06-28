@@ -1,5 +1,6 @@
 import { Button, Chip, makeStyles, Paper, Typography } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import CircularProgress from '../../../../../atoms/Progress/CircularProgress';
@@ -11,6 +12,8 @@ import renderMarketerSettlementState, {
 import SettlementRegDialog from '../../shared/settlement/SettlementRegDialog';
 import SettlementViewer from '../../shared/settlement/SettlementViewer';
 import { MarketerSalesIncome, MarketerSettlement } from '../interface';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -77,7 +80,7 @@ export default function MySalesIncome({
           </Typography>
           {!salesIncomeData.loading && !salesIncomeData.error && salesIncomeData.data && (
             <Typography variant="caption" color="textSecondary">
-              {`최근 판매 대금 변동: ${moment(salesIncomeData.data.createDate).fromNow()}`}
+              {`최근 판매 대금 변동: ${dayjs(salesIncomeData.data.createDate).fromNow()}`}
             </Typography>
           )}
         </div>

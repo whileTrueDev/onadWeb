@@ -1,9 +1,12 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import classnames from 'classnames';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
 import { usePatchRequest } from '../../../../utils/hooks';
 import { NoticeData } from '../../shared/notice/NoticeTable';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -59,7 +62,7 @@ export default function NoticeCard({ noticeData }: NoticeCardProps): JSX.Element
                 align="right"
                 className={classes.noticeDate}
               >
-                {moment(noti.regiDate).fromNow()}
+                {dayjs(noti.regiDate).fromNow()}
               </Typography>
             </div>
           ))}

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import ReactTooltip from 'react-tooltip';
 import Heatmap from 'react-calendar-heatmap';
 import getMeanStd from './getMeanStd';
@@ -18,7 +18,7 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     }
     // Configuration for react-tooltip
     return {
-      'data-tip': `${moment(value.date).format('YYYY년 MM월 DD일')}, ${value.count}회 클릭`,
+      'data-tip': `${dayjs(value.date).format('YYYY년 MM월 DD일')}, ${value.count}회 클릭`,
     };
   };
 

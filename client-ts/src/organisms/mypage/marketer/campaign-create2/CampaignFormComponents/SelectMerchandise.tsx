@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   List,
   ListItem,
@@ -82,7 +82,7 @@ export default function SelectMerchandise({
               >
                 <ListItemText
                   primary={merchandise.name}
-                  secondary={`등록일: ${moment(merchandise.createDate).format(
+                  secondary={`등록일: ${dayjs(merchandise.createDate).format(
                     'YYYY년 MM월 DD일 HH:mm:ss',
                   )}`}
                 />

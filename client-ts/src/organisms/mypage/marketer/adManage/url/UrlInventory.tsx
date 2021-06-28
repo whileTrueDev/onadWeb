@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import * as React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
 import { UrlDataInterface, UrlLink } from '../interface';
@@ -132,7 +132,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               headerName: '링크 등록 일자',
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
-                  {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
               ),
             },

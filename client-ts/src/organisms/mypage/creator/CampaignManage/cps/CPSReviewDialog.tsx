@@ -1,5 +1,5 @@
 import { Avatar, Button, makeStyles, Typography } from '@material-ui/core';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import * as React from 'react';
 import ImageCarousel from '../../../../../atoms/Carousel/Carousel';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
@@ -100,7 +100,7 @@ export default function CPSReviewDialog({
           <div>
             <Typography variant="body2">{`${review.authorName}(${review.authorId})`}</Typography>
             <Typography variant="body2" color="textSecondary">
-              {moment(review.createDate).format('YY/MM/DD HH:mm:ss')}
+              {dayjs(review.createDate).format('YY/MM/DD HH:mm:ss')}
             </Typography>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Avatar, ButtonBase, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { useCallback } from 'react';
 import * as React from 'react';
@@ -225,10 +225,10 @@ export default function CampaignDetail({ campaign }: CampaignDetailProps): React
       <article className={classes.article}>
         <Typography className={classes.bold}>송출 기간</Typography>
         {campaign.startDate && (
-          <Typography>{moment(campaign.startDate).format('YYYY년 MM월 DD일 부터')}</Typography>
+          <Typography>{dayjs(campaign.startDate).format('YYYY년 MM월 DD일 부터')}</Typography>
         )}
         {campaign.finDate && (
-          <Typography>{moment(campaign.finDate).format('YYYY년 MM월 DD일 까지')}</Typography>
+          <Typography>{dayjs(campaign.finDate).format('YYYY년 MM월 DD일 까지')}</Typography>
         )}
       </article>
 

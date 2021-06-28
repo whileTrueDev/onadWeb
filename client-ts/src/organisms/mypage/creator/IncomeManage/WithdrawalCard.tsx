@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Paper, TablePagination, Typography } from '@material-ui/core';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import { WithdrawalDataType } from './WithdrawalData.type';
@@ -17,7 +17,7 @@ function Mypage({ withdrawalData }: WithdrawalCardProps): JSX.Element {
           {
             title: '출금신청날짜',
             field: 'date',
-            render: rowData => moment(rowData.date).format('YYYY년 MM월 DD일'),
+            render: rowData => dayjs(rowData.date).format('YYYY년 MM월 DD일'),
           },
           { title: '출금금액', field: 'creatorWithdrawalAmount' },
           {

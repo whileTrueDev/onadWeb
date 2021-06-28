@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import * as React from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Typography, Tooltip, IconButton } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import { BannerDataInterface } from '../interface';
@@ -107,7 +107,7 @@ export default function BannerInventory({
               width: 150,
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2">
-                  {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
               ),
             },

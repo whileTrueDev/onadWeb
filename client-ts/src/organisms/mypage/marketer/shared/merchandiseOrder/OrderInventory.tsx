@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import * as React from 'react';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
@@ -172,7 +172,7 @@ export default function OrderInventory({
               width: 180,
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2">
-                  {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
               ),
             },

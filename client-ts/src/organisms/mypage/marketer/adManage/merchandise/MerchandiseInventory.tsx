@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import * as React from 'react';
@@ -118,7 +118,7 @@ export default function MerchandiseInventory({
             headerName: '등록 일자',
             renderCell: (data): React.ReactElement => (
               <Typography variant="body2" noWrap>
-                {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
+                {dayjs(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
               </Typography>
             ),
           },

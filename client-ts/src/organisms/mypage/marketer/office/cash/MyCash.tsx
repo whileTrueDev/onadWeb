@@ -1,4 +1,5 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useEffect, useState } from 'react';
 // core
 import Tooltip from '@material-ui/core/Tooltip';
@@ -17,6 +18,8 @@ import useDialog from '../../../../../utils/hooks/useDialog';
 import HOST, { REACT_HOST } from '../../../../../config';
 import { AdInterface } from '../../dashboard/interfaces';
 import axiosInstance from '../../../../../utils/axios';
+
+dayjs.extend(relativeTime);
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -81,7 +84,7 @@ function MyCash(props: MyCashProps): JSX.Element {
           </Typography>
           {!cashData.loading && !cashData.error && cashData.data && (
             <Typography variant="caption" color="textSecondary">
-              {`최근 캐시 변동: ${moment(cashData.data.date).fromNow()}`}
+              {`최근 캐시 변동: ${dayjs(cashData.data.date).fromNow()}`}
             </Typography>
           )}
 

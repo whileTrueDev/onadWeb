@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import * as React from 'react';
 import { Grid, Typography, CircularProgress, Avatar } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -150,7 +150,7 @@ export default function CustomPieChart(): JSX.Element {
                   flex: 1,
                   renderCell: (data): React.ReactElement => (
                     <Typography variant="body2" align="center">
-                      {moment(data.row.recentDate).format('YYYY/MM/DD')}
+                      {dayjs(data.row.recentDate).format('YYYY/MM/DD')}
                     </Typography>
                   ),
                 },
