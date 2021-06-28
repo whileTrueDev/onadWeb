@@ -6,6 +6,7 @@ import {
   responsiveFontSizes,
 } from '@material-ui/core/styles';
 import dotenv from 'dotenv';
+import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import ReactDOM from 'react-dom';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -26,6 +27,7 @@ import useOnadThemeType from './utils/hooks/useOnadThemeType';
 import LoadingPage from './pages/others/LoadingPage';
 
 dotenv.config();
+dayjs.locale('ko'); // 글로벌로 ko locale사용
 
 // code spliting
 const CreatorDashboard = lazy(() => import('./pages/mypage/layouts/CreatorLayout'));
