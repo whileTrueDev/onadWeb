@@ -11,21 +11,17 @@ dotenv.config();
 
 const app = new cdk.App();
 
-((): OnADTestAwsStack => new OnADTestAwsStack(
-  app,
-  'OnADTestAwsStack',
-  {
+((): OnADTestAwsStack =>
+  new OnADTestAwsStack(app, 'OnADTestAwsStack', {
     env: {
       account: cdk.Aws.ACCOUNT_ID,
-      region: process.env.AWS_ONAD_REGION
-    }
-  }
-))();
-
+      region: process.env.AWS_ONAD_REGION,
+    },
+  }))();
 
 new LiveCommerceStack(app, 'OnADLiveCommerceStack', {
   env: {
     account: process.env.AWS_ACCOUNT_ID,
     region: process.env.AWS_ONAD_REGION,
-  }
+  },
 });
