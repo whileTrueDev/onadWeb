@@ -14,7 +14,7 @@ import callImg from './public/callImg';
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = socketio(httpServer);
+const io = socketio(httpServer, {perMessageDeflate:false});
 
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
