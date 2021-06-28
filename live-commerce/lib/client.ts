@@ -96,7 +96,7 @@ function getOS(): string|null {
 // }
 
 function dailyMissionTimer (){ 
-  const setDate = new Date("2021-06-28T11:31:00+0900");
+  const setDate = new Date("2021-06-29T01:00:00+0900");
 
   setInterval(function(){
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
@@ -113,7 +113,12 @@ function dailyMissionTimer (){
     minutes = minutes < 10 ? "0" + String(minutes) : String(minutes);
     seconds = seconds < 10 ? "0" + String(seconds) : String(seconds);
 
-    $('#time-hour').text(hours);
+    if(hours !== '00'){
+      $('#time-hour').text(hours);
+    } else {
+      $('#time-hour').css({display:'none'})
+      $('#hour-min-separator').css({display:'none'})
+    }
     $('#time-min').text(minutes);
     $('#time-sec').text(seconds);
 
@@ -313,7 +318,6 @@ socket.on('show virtual ad to client', async () => {
     `
     <img 
       src="/public/images/virtual-ad.gif"
-      style="width:600px;height:300px;bottom:50px;right:50px;position:fixed;"
     />
     `
   ).show();

@@ -17,10 +17,10 @@
     <div class="left-section">
       <!--랭킹-->
       <div class="ranking-area">
+        <p class="ranking-text-area" id="title">
+          TOP 구매자
+        </p>
         <div class="ranking-area-inner">
-          <p class="ranking-text-area" id="title">
-            TOP 구매자
-          </p>
           <p class="ranking-text-area" id="rank-0">
             <span class="ranking-id-wrapper">
               <img src="/public/images/crown.png" id="ranking-icon" />
@@ -67,21 +67,24 @@
       <div class="bottom-left">
         <div class="bottom-object">
           <img src="/public/images/object.png" class="bottom-left-icon" />
-          <span id="current-quantity">
-            0
-          </span>
-          <span>
-            /
-          </span>
-          <span id="quantity-object">
-            1000
-          </span>
+          <div class="bottom-object-quantity">
+            <span id="current-quantity">
+              0
+            </span>
+            <span>
+              /
+            </span>
+            <span id="quantity-object">
+              500
+            </span>
+          </div>
         </div>
         <div class="bottom-timer">
           <img src="/public/images/clock.png" class="bottom-left-icon" id="clock"/>
-          <!-- <span id="time-hour"></span> -->
+          <span id="time-hour"></span>
+          <span id="hour-min-separator"> : </span>
           <span id="time-min"></span>
-          <span> : </span>
+          <span id="min-sec-separator"> : </span>
           <span id="time-sec"></span>
         </div>
       </div>

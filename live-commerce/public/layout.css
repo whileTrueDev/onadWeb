@@ -57,9 +57,15 @@ body {
 }
 
 .bottom-left-icon {
-  width: 15%;
-  margin-right: 5%;
+  width: 18%;
+  margin-left:10%;
 }
+
+.bottom-left-icon#clock {
+  width: 17%;
+  margin-right:8%;
+}
+
 
 .bottom-left-icon.urgent#clock {
   /* Start the shake animation and make the animation last for 0.5 seconds */
@@ -109,7 +115,7 @@ body {
   width: 50%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -118,6 +124,10 @@ body {
   font-size: 30px;
   color: rgb(85, 83, 83);
   -webkit-text-stroke: 1px #000000;
+}
+
+.bottom-object-quantity {
+  display: flex;
 }
 
 #current-quantity {
@@ -145,7 +155,7 @@ body {
 }
 
 .bottom-timer.urgent {
-  color: red;
+  color: #ffd200;;
 }
 
 .bottom-timer span {
@@ -269,6 +279,7 @@ body {
 /* 좌측 상단 랭킹 */
 .ranking-area {
   display: flex;
+  flex-direction: column;
   top: 3.5%;
   width: 100%;
   height: 25%;
@@ -289,12 +300,12 @@ body {
 }
 
 .ranking-text-area {
-  width: 100%;
+  width: 85%;
   height: 29%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 10%;
+  justify-content: space-between;
+  flex-wrap: wrap;
   margin: 1%;
   font-family: 'JALNAN';
   font-size: 25px;
@@ -321,7 +332,7 @@ body {
 }
 
 .ranking-text-area-id {
-  width: 70%;
+  width: 85%;
   display: block;
   margin-left: 2%;
   font-size: 30px;
@@ -332,7 +343,7 @@ body {
 }
 
 #ranking-icon {
-  width: 13%;
+  width: 15%;
   margin-right: 0.005%;
 }
 

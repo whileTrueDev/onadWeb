@@ -104,7 +104,8 @@ io.on('connection', (socket: Socket) => {
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
                           GROUP BY nickname 
-                          ORDER BY total desc
+                          ORDER BY total desc,
+                          id
                           LIMIT 3`
     
     const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
@@ -160,7 +161,8 @@ io.on('connection', (socket: Socket) => {
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
                           GROUP BY nickname 
-                          ORDER BY total desc
+                          ORDER BY total desc,
+                          id
                           LIMIT 3`
     
     const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
