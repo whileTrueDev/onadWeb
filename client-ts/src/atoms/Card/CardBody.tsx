@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // style
@@ -11,9 +11,7 @@ interface CardBodyProps {
   profile?: boolean;
   [rest: string]: any;
 }
-function CardBody({
-  className, children, plain, profile, ...rest
-}: CardBodyProps): JSX.Element {
+function CardBody({ className, children, plain, profile, ...rest }: CardBodyProps): JSX.Element {
   const classes = useCardBodyStyles();
   const cardBodyClasses = classNames({
     [classes.cardBody]: true,

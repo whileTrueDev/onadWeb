@@ -1,8 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Dialog, DialogContent,
-  DialogTitle, Grid, Button, Divider, Typography
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Button,
+  Divider,
+  Typography,
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import useStyles from './style/RegistDialog.style';
@@ -22,12 +26,7 @@ const RegistDialog = ({ open, handleClose }: Props) => {
   // 하나의 change로 값을 받을 수 있다.
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="xs"
-      fullWidth
-    >
+    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle className={classes.title}>광고주 회원가입</DialogTitle>
       <DialogContent>
         <Grid container direction="column" className={classes.contents}>
@@ -47,7 +46,7 @@ const RegistDialog = ({ open, handleClose }: Props) => {
               color="textSecondary"
               style={{
                 marginTop: 16,
-                marginBottom: '3px'
+                marginBottom: '3px',
               }}
             >
               소셜 계정으로 온애드 시작하기
@@ -74,8 +73,6 @@ const RegistDialog = ({ open, handleClose }: Props) => {
             </Grid>
           </Grid>
         </Grid>
-
-
       </DialogContent>
     </Dialog>
   );

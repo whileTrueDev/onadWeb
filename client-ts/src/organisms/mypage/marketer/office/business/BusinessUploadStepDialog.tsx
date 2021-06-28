@@ -1,4 +1,3 @@
-import React from 'react';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import BuisnessUploadStepManager from './businessuploadstep/BusinessUploadStepManager';
 
@@ -8,15 +7,13 @@ interface BusinessRegiUploadDialogProps {
   businessRegiImage: string;
   request: () => void;
   handleSnackOpen: () => void;
-  step: {currStep: number; isBusiness: boolean};
+  step: { currStep: number; isBusiness: boolean };
 }
 
 export default function BusinessRegiUploadStepDialogProps(
-  props: BusinessRegiUploadDialogProps
+  props: BusinessRegiUploadDialogProps,
 ): JSX.Element {
-  const {
-    open, handleClose, businessRegiImage, request, step, handleSnackOpen
-  } = props;
+  const { open, handleClose, businessRegiImage, request, step, handleSnackOpen } = props;
 
   return (
     <Dialog

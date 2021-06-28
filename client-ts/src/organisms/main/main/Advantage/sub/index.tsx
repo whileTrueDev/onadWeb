@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import SliderItem from './SliderItems';
@@ -11,7 +11,6 @@ interface SliderProps {
   maxVisibleSlides: number;
   pageTransition: number;
   MainUserType: boolean;
-
 }
 
 const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
@@ -41,11 +40,14 @@ function Slider({
   const totalPages: number = Math.ceil(children.length / visibleSlides) - 1;
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    const resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver(entries => {
       setScrollSize(entries[0].contentRect.width);
     });
-    resizeObserver.observe(sliderRef.current);
+    if (sliderRef.current) {
+      resizeObserver.observe(sliderRef.current);
+    }
 
     const sliderRefCurrent = sliderRef.current;
 
@@ -59,9 +61,7 @@ function Slider({
   useEffect(() => {
     if (sliderRef && sliderRef.current) {
       if (currentPage > totalPages) setCurrentPage(totalPages);
-      sliderRef.current.style.transform = `translate3D(-${
-        currentPage * scrollSize
-      }px, 0, 0)`;
+      sliderRef.current.style.transform = `translate3D(-${currentPage * scrollSize}px, 0, 0)`;
     }
   }, [sliderRef, currentPage, scrollSize, totalPages]);
 
@@ -109,6 +109,7 @@ function Slider({
       >
         {children.map((child: any, i: any) => (
           <SliderItem
+            // eslint-disable-next-line react/no-array-index-key
             key={i}
             slideMargin={slideMargin}
             visibleSlides={visibleSlides}

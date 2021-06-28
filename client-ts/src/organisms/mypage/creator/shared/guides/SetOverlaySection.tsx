@@ -1,16 +1,18 @@
-import React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import OverlayUrlCard, { OverlayUrlRes } from '../OverlayUrlCard';
 import history from '../../../../../history';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
   section: { margin: theme.spacing(4) },
   bold: { fontWeight: 'bold' },
   alertContainer: {
-    display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
   link: { textDecoration: 'underline', cursor: 'pointer' },
 }));
@@ -30,7 +32,9 @@ export default function SetOverlaySection({
         <Typography>배너광고의 수익은 시간과 시청자 수에 비례합니다.</Typography>
 
         <br />
-        <Typography>배너 광고 송출은 OBS, XSplit 와 같은 방송 송출프로그램에서 설정할 수 있습니다.</Typography>
+        <Typography>
+          배너 광고 송출은 OBS, XSplit 와 같은 방송 송출프로그램에서 설정할 수 있습니다.
+        </Typography>
         <Typography>배너 오버레이를 설정하기 위해 아래의 오버레이URL을 복사해주세요.</Typography>
 
         <div className={classes.section}>
@@ -45,14 +49,10 @@ export default function SetOverlaySection({
           XSplit, OBS 등의 방송 송출 프로그램에 브라우저소스(Webpage 소스) 를 추가한 이후,
         </Typography>
 
-        <Typography>
-          복사된 오버레이URL을 붙여넣어주세요!
-        </Typography>
+        <Typography>복사된 오버레이URL을 붙여넣어주세요!</Typography>
 
         <br />
-        <Typography className={classes.bold}>
-          이때, 꼭! 다음 사항을 지켜주세요!
-        </Typography>
+        <Typography className={classes.bold}>이때, 꼭! 다음 사항을 지켜주세요!</Typography>
 
         <Alert
           severity="error"
@@ -60,34 +60,25 @@ export default function SetOverlaySection({
           className={classnames(classes.section, classes.alertContainer)}
         >
           <Typography>
-            내 방송의 해상도가 1920 X 1080(1080p) 이상이면 너비를
-            {' '}
-            <span className={classes.bold}>320</span>
-            , 높이를
-            {' '}
-            <span className={classes.bold}>160</span>
-            {' '}
-            으로 설정합니다.
+            내 방송의 해상도가 1920 X 1080(1080p) 이상이면 너비를{' '}
+            <span className={classes.bold}>320</span>, 높이를{' '}
+            <span className={classes.bold}>160</span> 으로 설정합니다.
           </Typography>
           <Typography>
-            내 방송의 해상도가 1280 X 720(720p) 이면 너비를
-            {' '}
-            <span className={classes.bold}>214</span>
-            , 높이를
-            {' '}
-            <span className={classes.bold}>107</span>
-            {' '}
-            로 설정합니다.
+            내 방송의 해상도가 1280 X 720(720p) 이면 너비를{' '}
+            <span className={classes.bold}>214</span>, 높이를{' '}
+            <span className={classes.bold}>107</span> 로 설정합니다.
           </Typography>
         </Alert>
 
         <Typography>
-          배너를 관리하는 데에 대한 더욱 자세한 사항은
-          {' '}
+          배너를 관리하는 데에 대한 더욱 자세한 사항은{' '}
           <Typography
             component="span"
             className={classes.link}
-            onClick={() => { history.push('/mypage/creator/manual'); }}
+            onClick={() => {
+              history.push('/mypage/creator/manual');
+            }}
           >
             이용안내
           </Typography>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import useStyles from '../style/ProductHeroLayout.style';
 
 interface ProductHeroLayoutProps {
@@ -10,9 +10,7 @@ function ProductHeroLayout({ children, MainUserType }: ProductHeroLayoutProps): 
   const classes = useStyles();
 
   return (
-    <section className={MainUserType ? (classes.marketer) : (classes.creator)}>
-      {children}
-    </section>
+    <section className={MainUserType ? classes.marketer : classes.creator}>{children}</section>
   );
 }
 

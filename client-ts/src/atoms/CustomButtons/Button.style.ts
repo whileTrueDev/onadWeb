@@ -9,7 +9,7 @@ const useButtonStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     verticalAlign: 'middle',
     touchAction: 'manipulation',
-  }
+  },
 }));
 
 export default useButtonStyles;

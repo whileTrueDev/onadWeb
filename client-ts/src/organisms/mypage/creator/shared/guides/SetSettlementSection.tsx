@@ -1,5 +1,4 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import history from '../../../../../history';
 
 const useStyles = makeStyles(() => ({
@@ -13,9 +12,10 @@ export default function SetSettlementSection(): JSX.Element {
       <div className={classes.container}>
         <Typography>광고를 진행해서 수익을 창출했다면,</Typography>
         <Typography>
-          당연히
-          &nbsp;
-          <Typography component="span" style={{ fontWeight: 'bold' }}>수익을 현금화 할수 있어야겠죠?</Typography>
+          당연히 &nbsp;
+          <Typography component="span" style={{ fontWeight: 'bold' }}>
+            수익을 현금화 할수 있어야겠죠?
+          </Typography>
         </Typography>
 
         <br />
@@ -27,8 +27,7 @@ export default function SetSettlementSection(): JSX.Element {
         <Typography>수익금 출금 신청을 하면 매달 정산 처리 된다. </Typography>
         <Typography>출금을 하기 위해서는 정산 등록이 필요하다.</Typography>
         <Typography>
-          출금 신청과 정산등록은
-          &nbsp;
+          출금 신청과 정산등록은 &nbsp;
           <Typography
             color="primary"
             component="span"
@@ -39,12 +38,9 @@ export default function SetSettlementSection(): JSX.Element {
           >
             [내 수익 관리]
           </Typography>
-          &nbsp;
-          에서 진행할 수 있습니다!
+          &nbsp; 에서 진행할 수 있습니다!
         </Typography>
-
       </div>
-
     </div>
   );
 }

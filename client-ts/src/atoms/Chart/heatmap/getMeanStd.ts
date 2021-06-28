@@ -8,7 +8,7 @@ function getMeanStd(dataArray: number[]): {
   stddev: number;
 } {
   let allCounts = 0;
-  dataArray.map((d) => {
+  dataArray.map(d => {
     allCounts += d;
     return null;
   });
@@ -25,7 +25,7 @@ function getMeanStd(dataArray: number[]): {
 
   return {
     mean: avgCounts,
-    stddev
+    stddev,
   };
 }
 

@@ -1,13 +1,13 @@
 export type JosaType = '을/를' | '은/는' | '이/가' | '과/와' | '으로/로';
 
 function checkJongSung(wordCode: number): boolean {
-  return (wordCode - 0xAC00) % 28 > 0;
+  return (wordCode - 0xac00) % 28 > 0;
 }
 
 export default function withJosa(word: string, josaType: JosaType): string {
   const strCode = word.charCodeAt(word.length - 1);
   // 한글이 아닌 경우
-  if (strCode < 0xAC00 || strCode > 0xD7A3) {
+  if (strCode < 0xac00 || strCode > 0xd7a3) {
     return word;
   }
   switch (josaType) {

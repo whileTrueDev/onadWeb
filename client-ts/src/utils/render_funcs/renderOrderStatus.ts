@@ -10,9 +10,14 @@ export const 주문상태_배송완료 = 4;
 export const 주문상태_주문취소 = 5;
 export const 주문상태_구매확정 = 6;
 
-export type OrderStatus = typeof 주문상태_출고준비
-|typeof 주문상태_상품준비|typeof 주문상태_주문취소|typeof 주문상태_배송완료
-|typeof 주문상태_주문접수|typeof 주문상태_출고완료|typeof 주문상태_구매확정;
+export type OrderStatus =
+  | typeof 주문상태_출고준비
+  | typeof 주문상태_상품준비
+  | typeof 주문상태_주문취소
+  | typeof 주문상태_배송완료
+  | typeof 주문상태_주문접수
+  | typeof 주문상태_출고완료
+  | typeof 주문상태_구매확정;
 
 export const orderStatus = [
   '주문접수',
@@ -24,7 +29,7 @@ export const orderStatus = [
   '구매확정',
 ] as const;
 
-export type OrderStatusString = ArrayElementType<typeof orderStatus>
+export type OrderStatusString = ArrayElementType<typeof orderStatus>;
 
 export default function renderOrderStatus(status: number): string {
   return orderStatus[status];

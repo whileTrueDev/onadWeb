@@ -1,14 +1,9 @@
-import React from 'react';
-import {
-  Grid, Typography
-} from '@material-ui/core';
+import * as React from 'react';
+import { Grid, Typography } from '@material-ui/core';
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
 import StyledSelectText from '../../../../../atoms/StyledSelectText';
 
-import {
-  CampaignCreateAction,
-  CampaignCreateInterface
-} from '../reducers/campaignCreate.reducer';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 import TimeSelector from '../../../../../atoms/Selector/TimeSelector';
 
 interface SelectTimeProps {
@@ -36,11 +31,7 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
     <Grid container direction="column">
       <Grid item>
         <Grid container direction="row">
-          <GreenCheckbox
-            name="no-limit"
-            checked={!toggle}
-            onClick={handleNotUse}
-          />
+          <GreenCheckbox name="no-limit" checked={!toggle} onClick={handleNotUse} />
           <StyledSelectText
             onClick={handleNotUse}
             style={{ cursor: 'pointer', maxWidth: 300 }}
@@ -49,28 +40,27 @@ const SelectTime = (props: SelectTimeProps): JSX.Element => {
         </Grid>
       </Grid>
       <Grid item>
-
         <Grid container direction="row">
-          <GreenCheckbox
-            name="set-limit"
-            checked={toggle}
-            onClick={handleUse}
-          />
+          <GreenCheckbox name="set-limit" checked={toggle} onClick={handleUse} />
           <StyledSelectText
             primary="송출 시간 설정"
-            secondary={toggle && (
-              <Typography variant="body2" color="textSecondary">
-                선택한 시간대에 광고가 송출됩니다.
-                <Typography color="error" variant="caption">(중복 선택 가능)</Typography>
-              </Typography>
-            )}
+            secondary={
+              toggle && (
+                <Typography variant="body2" color="textSecondary">
+                  선택한 시간대에 광고가 송출됩니다.
+                  <Typography color="error" variant="caption">
+                    (중복 선택 가능)
+                  </Typography>
+                </Typography>
+              )
+            }
             onClick={handleUse}
             style={{ cursor: 'pointer', maxWidth: 300 }}
           />
         </Grid>
-        {toggle
-          ? (<TimeSelector timeList={state.campaignTime} onTimeSelect={handleTimeSelect} />)
-          : null}
+        {toggle ? (
+          <TimeSelector timeList={state.campaignTime} onTimeSelect={handleTimeSelect} />
+        ) : null}
       </Grid>
     </Grid>
   );

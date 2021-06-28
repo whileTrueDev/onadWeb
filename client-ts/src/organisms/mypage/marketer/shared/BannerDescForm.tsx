@@ -1,8 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme, withStyles } from '@material-ui/core/styles';
 
 import {
-  Grid, FormControl, InputLabel, Input, FormHelperText, CircularProgress
+  Grid,
+  FormControl,
+  InputLabel,
+  Input,
+  FormHelperText,
+  CircularProgress,
 } from '@material-ui/core';
 import CustomButton from '../../../../atoms/CustomButtons/Button';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
@@ -38,8 +43,8 @@ const useStyle = makeStyles((theme: Theme) => ({
     marginLeft: -12,
   },
   buttonSet: {
-    maginTop: '16px'
-  }
+    maginTop: '16px',
+  },
 }));
 
 const CssFormControl = withStyles((theme: Theme) => ({
@@ -58,7 +63,6 @@ const CssFormControl = withStyles((theme: Theme) => ({
   },
 }))(FormControl);
 
-
 interface ImageInterface {
   imageName?: string;
   imageUrl?: string;
@@ -71,16 +75,12 @@ interface BannerDescFromProps {
 }
 
 const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
-  const {
-    handleNext, state, handleSubmit,
-  } = props;
+  const { handleNext, state, handleSubmit } = props;
   const [value, setValue] = React.useState('');
   const [inProgress, setInProgress] = React.useState(false);
   const classes = useStyle();
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ): void => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     setValue(event.target.value);
   };
 
@@ -89,17 +89,21 @@ const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
       <Grid item>
         <div>
           {state.imageUrl && (
-            <OnadBanner id="preview" src={state.imageUrl} className={classes.imgPreview} alt="배너이미지" />
+            <OnadBanner
+              id="preview"
+              src={state.imageUrl}
+              className={classes.imgPreview}
+              alt="배너이미지"
+            />
           )}
         </div>
       </Grid>
 
       <Grid item>
-        <CssFormControl
-          required
-          fullWidth
-        >
-          <InputLabel shrink htmlFor="company" className={classes.label}>홍보문구 입력</InputLabel>
+        <CssFormControl required fullWidth>
+          <InputLabel shrink htmlFor="company" className={classes.label}>
+            홍보문구 입력
+          </InputLabel>
           <Input
             required
             id="banner"
@@ -110,17 +114,13 @@ const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
           />
           <FormHelperText>
             {' '}
-            {'랜딩페이지 클릭 시 보일 홍보문구를 입력해주세요. < 이벤트 / 할인정보 등>'}
-            {' '}
+            {'랜딩페이지 클릭 시 보일 홍보문구를 입력해주세요. < 이벤트 / 할인정보 등>'}{' '}
           </FormHelperText>
         </CssFormControl>
       </Grid>
       <Grid item>
         <div className={classes.buttonSet}>
-          <CustomButton
-            size="small"
-            onClick={handleNext(0)}
-          >
+          <CustomButton size="small" onClick={handleNext(0)}>
             뒤로
           </CustomButton>
           <CustomButton
@@ -147,7 +147,6 @@ const BannerDescFrom = (props: BannerDescFromProps): JSX.Element => {
         </div>
       </Grid>
     </Grid>
-
   );
 };
 

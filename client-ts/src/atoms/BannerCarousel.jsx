@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import ButtonBase from '@material-ui/core/Paper';
@@ -10,7 +10,7 @@ import Check from '@material-ui/icons/Check';
 import Success from './Typography/Success';
 import OnadBanner from './Banner/OnadBanner';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: 320,
     [theme.breakpoints.down('sm')]: {
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BannerCarousel = (props) => {
+const BannerCarousel = props => {
   const { steps, handleBannerId, registStep } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -83,12 +83,12 @@ const BannerCarousel = (props) => {
 
   function handleNext() {
     setCheckImage({});
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   }
 
   function handleBack() {
     setCheckImage(0);
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   }
 
   function handleStepChange(step) {
@@ -96,7 +96,7 @@ const BannerCarousel = (props) => {
   }
 
   // check가 안될
-  const handleActiveStep = (step) => () => {
+  const handleActiveStep = step => () => {
     // check가 되어있었던 상태였다면.
     if (checkImage.check) {
       setCheckImage({ step: -1, check: 0 });
@@ -115,7 +115,7 @@ const BannerCarousel = (props) => {
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {steps.map((step) => (
+        {steps.map(step => (
           <ButtonBase
             key={step.bannerId}
             className={classes.image}
@@ -140,23 +140,22 @@ const BannerCarousel = (props) => {
         position="static"
         variant="dots"
         activeStep={activeStep}
-        nextButton={(
+        nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Next
             {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
-        )}
-        backButton={(
+        }
+        backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             Back
           </Button>
-        )}
+        }
       />
     </div>
   );
 };
-
 
 /**
  * @description

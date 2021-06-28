@@ -1,8 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
 }));
 export default function CampaignButtons(): JSX.Element {

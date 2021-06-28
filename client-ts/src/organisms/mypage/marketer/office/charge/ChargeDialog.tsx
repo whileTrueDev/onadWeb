@@ -1,8 +1,9 @@
-import React, { useReducer, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/camelcase */
+import { useReducer, useEffect, useState } from 'react';
+
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid, Slide, Collapse
-} from '@material-ui/core';
+import { Grid, Slide, Collapse } from '@material-ui/core';
 import axios from '../../../../../utils/axios';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -16,7 +17,9 @@ import { chargeReducer, VbankInterface } from '../interface';
 import sources from '../sources';
 
 declare global {
-  interface Window { IMP: any }
+  interface Window {
+    IMP: any;
+  }
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '1200px',
     width: '1200px',
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
 
   button: {
@@ -60,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleWrap: {
     background: `linear-gradient(45deg, ${theme.palette.primary.light} 30%, ${theme.palette.primary.dark} 90%)`,
     color: theme.palette.common.white,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 20,
@@ -68,7 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 20,
   },
 }));
-
 
 interface MarketerInfoInterface {
   marketerId: string;
@@ -84,31 +86,25 @@ function TestChargeDialog(): JSX.Element {
   const marketerProfileData = useGetRequest<null, MarketerInfoInterface>('/marketer');
   // const cashData = useGetRequest<null, string | null>('/marketer/cash');
 
-
   const classes = useStyles();
   const [completeLoading, setCompleteLoading] = useState(false);
-  const [vbankInfo, setVbankInfo] = useState<VbankInterface>(
-    {
-      vbankNum: '',
-      vbankHolder: '',
-      vbankName: '',
-      vbanDate: '',
-      vbankAmount: ''
-    }
-  );
+  const [vbankInfo, setVbankInfo] = useState<VbankInterface>({
+    vbankNum: '',
+    vbankHolder: '',
+    vbankName: '',
+    vbanDate: '',
+    vbankAmount: '',
+  });
 
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [index, setIndex] = React.useState<number>(0); // 각 step을 정의하는  state
-  const [stepState, stepDispatch] = useReducer(
-    chargeReducer,
-    {
-      currentCash: '',
-      selectValue: '',
-      chargeType: '',
-      totalDebit: ''
-    }
-  );
+  const [stepState, stepDispatch] = useReducer(chargeReducer, {
+    currentCash: '',
+    selectValue: '',
+    chargeType: '',
+    totalDebit: '',
+  });
 
   // useEffect(() => {
   //   if (cashData.data) {
@@ -125,22 +121,18 @@ function TestChargeDialog(): JSX.Element {
   // }, [cashData.data]);
 
   useEffect(() => {
-    axios.get(`${HOST}/marketer/cash`)
-      .then((res) => {
-        if (res.data) {
-          const { cashAmount } = res.data;
-          stepDispatch({ key: 'currentCash', value: cashAmount });
-        }
-      });
+    axios.get(`${HOST}/marketer/cash`).then(res => {
+      if (res.data) {
+        const { cashAmount } = res.data;
+        stepDispatch({ key: 'currentCash', value: cashAmount });
+      }
+    });
   }, []);
 
   const { selectValue, chargeType } = stepState;
 
-
   // 전자 결제시스템
-  function handleSubmitClick(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void {
+  function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
 
     if (marketerProfileData.data == null) {
@@ -151,15 +143,15 @@ function TestChargeDialog(): JSX.Element {
 
     // merchant_uid 생성에 필요한 날짜 포맷
     const currentDate = new Date();
-    const currentDateFormat = `${currentDate.getFullYear()}`
-      + `${(currentDate.getMonth() + 1)}`
-      + `${currentDate.getDate()}`
-      + `${currentDate.getHours()}`
-      + `${currentDate.getMinutes()}`
-      + `${currentDate.getSeconds()}`;
+    const currentDateFormat =
+      `${currentDate.getFullYear()}` +
+      `${currentDate.getMonth() + 1}` +
+      `${currentDate.getDate()}` +
+      `${currentDate.getHours()}` +
+      `${currentDate.getMinutes()}` +
+      `${currentDate.getSeconds()}`;
 
     // 전역 객체에서 imp라이브러리 호출
-
 
     // const { IMP } = window.MyNamespace || {};
     const { IMP } = window;
@@ -179,7 +171,8 @@ function TestChargeDialog(): JSX.Element {
       case 'trans':
         buyerName = marketerProfileData.data.marketerName;
         break;
-      default: break;
+      default:
+        break;
     }
 
     // import 서버로 보낼 초기 데이터
@@ -192,48 +185,54 @@ function TestChargeDialog(): JSX.Element {
       buyer_email: marketerProfileData.data.marketerMail,
       buyer_name: buyerName,
       buyer_tel: marketerProfileData.data.marketerPhoneNum,
-      biz_num: '6590301549'
+      biz_num: '6590301549',
     };
 
     // 결제 완료 시 호출될 콜백함수
     const payCallback = (rsp: any) => {
-      if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-        axios.post(`${HOST}/marketer/cash/charge/card`, {
-          chargeCash: selectValue,
-          chargeType,
-          imp_uid: rsp.imp_uid,
-          merchant_uid: rsp.merchant_uid
-        }).then((data: any) => { // 결제 완료에 대한 응답처리
-          switch (data.data.status) {
-            // 가상계좌 발급 완료시 로직
-            case 'vbankIssued':
-              // 가상계좌 안내에 대한 데이터를 마케터에게 표시하기 위해 state에 담는다.
-              setVbankInfo({
-                vbankNum: `${rsp.vbank_num}`,
-                vbankHolder: `${rsp.vbank_holder}`,
-                vbankName: `${rsp.vbank_name}`,
-                vbanDate: `${rsp.vbank_date}`,
-                vbankAmount: `${rsp.paid_amount}`,
-              });
-              setCompleteLoading(false);
-              setIndex((preIndex) => preIndex + 1);
-              break;
-
-            // 계좌이체 및 신용카드 결제 완료시 로직
-            case 'success':
-              if (!data.data[0]) {
+      if (rsp.success) {
+        // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+        axios
+          .post(`${HOST}/marketer/cash/charge/card`, {
+            chargeCash: selectValue,
+            chargeType,
+            imp_uid: rsp.imp_uid,
+            merchant_uid: rsp.merchant_uid,
+          })
+          .then((data: any) => {
+            // 결제 완료에 대한 응답처리
+            switch (data.data.status) {
+              // 가상계좌 발급 완료시 로직
+              case 'vbankIssued':
+                // 가상계좌 안내에 대한 데이터를 마케터에게 표시하기 위해 state에 담는다.
+                setVbankInfo({
+                  vbankNum: `${rsp.vbank_num}`,
+                  vbankHolder: `${rsp.vbank_holder}`,
+                  vbankName: `${rsp.vbank_name}`,
+                  vbanDate: `${rsp.vbank_date}`,
+                  vbankAmount: `${rsp.paid_amount}`,
+                });
                 setCompleteLoading(false);
-                setIndex(index + 1);
-              } else {
-                console.log('cash - charge - error!');
-              }
-              break;
+                setIndex(preIndex => preIndex + 1);
+                break;
 
-            default: break;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
+              // 계좌이체 및 신용카드 결제 완료시 로직
+              case 'success':
+                if (!data.data[0]) {
+                  setCompleteLoading(false);
+                  setIndex(index + 1);
+                } else {
+                  console.log('cash - charge - error!');
+                }
+                break;
+
+              default:
+                break;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
       } else {
         // 결제 실패시
         const msg = '결제가 실패하였습니다. 다시 시도해 주세요';
@@ -246,18 +245,28 @@ function TestChargeDialog(): JSX.Element {
     IMP.request_pay(paydata, payCallback);
   }
 
+  const handleNext =
+    (go: number | null) =>
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      event.preventDefault();
+      setPaperSwitch(false);
+      setStepComplete(false);
 
-  const handleNext = (go: number | null) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
-    event.preventDefault();
-    setPaperSwitch(false);
-    setStepComplete(false);
-
-    if (index === 1) {
-      if (parseInt(selectValue, 10) < 10000) {
-        alert('충전 최소 금액은 10000원 입니다');
-        window.close();
+      if (index === 1) {
+        if (parseInt(selectValue, 10) < 10000) {
+          alert('충전 최소 금액은 10000원 입니다');
+          window.close();
+        } else {
+          setTimeout(() => {
+            if (go) {
+              setIndex(go);
+            } else {
+              // setIndex(preIndex => preIndex + 1);
+              setIndex(index + 1);
+            }
+            setPaperSwitch(true);
+          }, 500);
+        }
       } else {
         setTimeout(() => {
           if (go) {
@@ -269,18 +278,7 @@ function TestChargeDialog(): JSX.Element {
           setPaperSwitch(true);
         }, 500);
       }
-    } else {
-      setTimeout(() => {
-        if (go) {
-          setIndex(go);
-        } else {
-          // setIndex(preIndex => preIndex + 1);
-          setIndex(index + 1);
-        }
-        setPaperSwitch(true);
-      }, 500);
-    }
-  };
+    };
 
   const handleBack = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault();
@@ -300,11 +298,7 @@ function TestChargeDialog(): JSX.Element {
   const setSteps = (_index: number): JSX.Element => {
     switch (_index) {
       case 0:
-        return (
-          <TestChargeAgreement
-            setStepComplete={setStepComplete}
-          />
-        );
+        return <TestChargeAgreement setStepComplete={setStepComplete} />;
       case 1:
         return (
           <TestChargeAmount
@@ -324,12 +318,7 @@ function TestChargeDialog(): JSX.Element {
           />
         );
       case 3:
-        return (
-          <TestChargeComplete
-            state={stepState}
-            vbankInfo={vbankInfo}
-          />
-        );
+        return <TestChargeComplete state={stepState} vbankInfo={vbankInfo} />;
       default:
         return <div />;
     }
@@ -344,7 +333,7 @@ function TestChargeDialog(): JSX.Element {
 
   // 완료 버튼 누를 시
   const finishIndex = (): void => {
-    window.opener.location.reload();
+    window.opener?.location.reload();
     window.close();
   };
 
@@ -352,36 +341,34 @@ function TestChargeDialog(): JSX.Element {
   const BottomButton = (): JSX.Element => (
     <div className={classes.buttonContainer}>
       <Grid container direction="row" justify="flex-end" alignItems="center">
-        {index === 2
-          && (
-            <Grid item>
-              <Collapse in={stepComplete}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmitClick}
-                  className={classes.end}
-                >
-                  결제
-                </Button>
-              </Collapse>
-            </Grid>
-          )}
-        {(index === 0 || index === 1)
-          && (
-            <Grid item>
-              <Collapse in={stepComplete}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext(null)}
-                  className={classes.end}
-                >
-                  다음
-                </Button>
-              </Collapse>
-            </Grid>
-          )}
+        {index === 2 && (
+          <Grid item>
+            <Collapse in={stepComplete}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmitClick}
+                className={classes.end}
+              >
+                결제
+              </Button>
+            </Collapse>
+          </Grid>
+        )}
+        {(index === 0 || index === 1) && (
+          <Grid item>
+            <Collapse in={stepComplete}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext(null)}
+                className={classes.end}
+              >
+                다음
+              </Button>
+            </Collapse>
+          </Grid>
+        )}
         {index === 1 || index === 2 ? (
           <Grid item>
             <Button onClick={handleBack} className={classes.button}>
@@ -389,30 +376,31 @@ function TestChargeDialog(): JSX.Element {
             </Button>
           </Grid>
         ) : null}
-        {index !== 3
-          && <Grid item><Button onClick={DefaultIndex}>취소</Button></Grid>}
-        {index === 3
-          && <Grid item><Button onClick={finishIndex}>완료</Button></Grid>}
+        {index !== 3 && (
+          <Grid item>
+            <Button onClick={DefaultIndex}>취소</Button>
+          </Grid>
+        )}
+        {index === 3 && (
+          <Grid item>
+            <Button onClick={finishIndex}>완료</Button>
+          </Grid>
+        )}
       </Grid>
     </div>
   );
-
 
   return (
     <div className={classes.container}>
       <div className={classes.titleWrap}>
         <div style={{ fontSize: 18, paddingTop: 15 }}>
-          OnAD 캐시 충전하기 Step
-          {' '}
-          {index + 1}
+          OnAD 캐시 충전하기 Step {index + 1}
           /4
         </div>
         <h4 className={classes.title}>{sources.title[index]}</h4>
       </div>
       <Slide direction="right" in={paperSwitch} mountOnEnter unmountOnExit timeout={{ exit: 500 }}>
-        <div>
-          {setSteps(index)}
-        </div>
+        <div>{setSteps(index)}</div>
       </Slide>
       <BottomButton />
     </div>

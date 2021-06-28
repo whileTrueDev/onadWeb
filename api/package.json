@@ -20,10 +20,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:create": "typeorm migration:create -n",
+    "migration:create": "typeorm migration:create -d ./src/migrations -n",
     "premigration:run": "yarn build",
     "migration:run": "typeorm migration:run --config ./dist/setting/ormconfig.js",
-    "migration:revert": "typeorm migration:revert --ocnfig ./dist/setting/ormconfig.js"
+    "migration:revert": "typeorm migration:revert --config ./dist/setting/ormconfig.js"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",

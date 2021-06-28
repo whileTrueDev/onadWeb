@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react/display-name */
+import * as React from 'react';
 import MuiMaterialTable, { MaterialTableProps, Column } from 'material-table';
 import ArrowUpward from '@material-ui/icons/ArrowUpwardRounded';
 import Check from '@material-ui/icons/CheckRounded';
@@ -20,45 +21,45 @@ const tableIcons = {
   FirstPage: React.forwardRef<SVGSVGElement>((props, ref) => <FirstPage {...props} ref={ref} />),
   LastPage: React.forwardRef<SVGSVGElement>((props, ref) => <LastPage {...props} ref={ref} />),
   NextPage: React.forwardRef<SVGSVGElement>((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: React.forwardRef<SVGSVGElement>(
-    (props, ref) => <ChevronLeft {...props} ref={ref} />
-  ),
+  PreviousPage: React.forwardRef<SVGSVGElement>((props, ref) => (
+    <ChevronLeft {...props} ref={ref} />
+  )),
   SortArrow: React.forwardRef<SVGSVGElement>((props, ref) => <ArrowUpward {...props} ref={ref} />),
   Search: React.forwardRef<SVGSVGElement>((props, ref) => <Search {...props} ref={ref} />),
 };
 const localization = {
   body: {
     deleteTooltip: '캠페인 삭제',
-    emptyDataSourceMessage: '잠시만 기다려주세요'
+    emptyDataSourceMessage: '잠시만 기다려주세요',
   },
   pagination: {
     firstTooltip: '첫 페이지',
     previousTooltip: '이전 페이지',
     nextTooltip: '다음 페이지',
     lastTooltip: '마지막 페이지',
-    labelRowsSelect: '행'
+    labelRowsSelect: '행',
   },
   header: {
-    actions: ''
+    actions: '',
   },
   toolbar: {
     searchTooltip: '',
-    searchPlaceholder: '검색어를 입력해주세요!'
-  }
+    searchPlaceholder: '검색어를 입력해주세요!',
+  },
 };
 
-interface CustomMaterialTableProps<T extends object> extends MaterialTableProps<T> {
+interface CustomMaterialTableProps<T extends Record<string, any>> extends MaterialTableProps<T> {
   cellWidth?: number;
   style?: React.CSSProperties;
 }
 
-export default function MaterialTable<RowDataType extends object>(
-  props: CustomMaterialTableProps<RowDataType>
+export default function MaterialTable<RowDataType extends Record<string, any>>(
+  props: CustomMaterialTableProps<RowDataType>,
 ): JSX.Element {
   const { columns, cellWidth, ...rest } = props;
 
   function styleColumn(_columns: Column<RowDataType>[], minWidth = 100): Column<RowDataType>[] {
-    _columns.map((col) => {
+    _columns.map(col => {
       const column = col;
       column.cellStyle = { minWidth, padding: 0, ...column };
       return column;

@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react';
+/* eslint-disable react/display-name */
+import { useEffect } from 'react';
+
+import * as React from 'react';
 import { Collapse, Chip } from '@material-ui/core';
 import SelectPaper from './shared/SelectPaper';
 import CampaignCreateStepLayout from './shared/StepLayout';
@@ -8,10 +11,9 @@ import GameSelect from './AdPriorityComponents/GameSelect';
 import {
   CampaignCreateInterface,
   CampaignCreateAction,
-  CampaignSelectedCreator
+  CampaignSelectedCreator,
 } from './reducers/campaignCreate.reducer';
 import GameSelectAfreeca from './AdPriorityComponents/GameSelecAfreeca';
-
 
 export interface PriorityInterface {
   id: string;
@@ -47,7 +49,7 @@ const priorityTypes: PriorityInterface[] = [
     ),
     completeChildren: (data: { selectedCreators: CampaignSelectedCreator[] }): JSX.Element => (
       <div>
-        {data.selectedCreators.map((creator) => (
+        {data.selectedCreators.map(creator => (
           <Chip
             key={creator.creatorName}
             label={creator.creatorName}
@@ -80,12 +82,7 @@ const priorityTypes: PriorityInterface[] = [
     completeChildren: (data: { selectedGameNames: string[] }): JSX.Element => (
       <div>
         {data.selectedGameNames.map((game: string) => (
-          <Chip
-            key={game}
-            label={game}
-            variant="outlined"
-            style={{ margin: 4 }}
-          />
+          <Chip key={game} label={game} variant="outlined" style={{ margin: 4 }} />
         ))}
       </div>
     ),
@@ -112,12 +109,7 @@ const priorityTypes: PriorityInterface[] = [
     completeChildren: (data: { selectedGameNames: string[] }): JSX.Element => (
       <div>
         {data.selectedGameNames.map((game: string) => (
-          <Chip
-            key={game}
-            label={game}
-            variant="outlined"
-            style={{ margin: 4 }}
-          />
+          <Chip key={game} label={game} variant="outlined" style={{ margin: 4 }} />
         ))}
       </div>
     ),
@@ -126,7 +118,7 @@ const priorityTypes: PriorityInterface[] = [
     id: 'type2',
     primaryText: '조건 무관 송출 (노출 우선)',
     secondaryText: '최대한 많은 시청자들에게 브랜드를 인지시키고 싶은 광고주님께 추천드립니다.',
-  }
+  },
 ];
 
 interface PriorityPaperProps {
@@ -137,9 +129,11 @@ interface PriorityPaperProps {
   handleBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 function PriorityPaper({
-  step, state, dispatch, // 우선형 타입 선택
+  step,
+  state,
+  dispatch, // 우선형 타입 선택
   handleNext,
-  handleBack
+  handleBack,
 }: PriorityPaperProps): JSX.Element {
   // ***************************************************
   // "다음" 버튼 핸들을 위한 상태값.
@@ -196,8 +190,8 @@ function PriorityPaper({
                   }
                 }}
               >
-                {type.defaultChildren
-                  && type.defaultChildren(state, dispatch, handleComplete, handleIncomplete)}
+                {type.defaultChildren &&
+                  type.defaultChildren(state, dispatch, handleComplete, handleIncomplete)}
               </SelectPaper>
             ))}
           <ButtonSet
@@ -220,16 +214,16 @@ function PriorityPaper({
                 secondaryText={selected.secondaryText}
                 checked
                 disabled
-                innerPaperChildren={(
+                innerPaperChildren={
                   <div>
                     {selected.completeChildren
                       ? selected.completeChildren({
-                        selectedCreators: state.selectedCreators,
-                        selectedGameNames: state.selectedGames,
-                      })
+                          selectedCreators: state.selectedCreators,
+                          selectedGameNames: state.selectedGames,
+                        })
                       : null}
                   </div>
-                )}
+                }
               />
             ))}
         </div>

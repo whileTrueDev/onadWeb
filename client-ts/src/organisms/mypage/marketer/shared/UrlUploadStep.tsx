@@ -1,8 +1,9 @@
-import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import {
-  Grid, TextField, Typography,
+  Grid,
+  TextField,
+  Typography,
   // InputLabel, Input, FormHelperText, Collapse,
   //  FormControlLabel, Checkbox,
 } from '@material-ui/core';
@@ -20,14 +21,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UrlUploadStep = (props: any): JSX.Element => {
   const classes = useStyles();
   const {
-    mainUrlName, mainUrl,
+    mainUrlName,
+    mainUrl,
     // subOpen, subUrlName, subUrl, subUrlCheck,
   } = props;
   return (
     <Grid container direction="column" spacing={3} className={classes.root}>
       <Alert severity="info" icon={false}>
-        <Typography variant="body2">* 시청자가 채팅광고 또는 패널 클릭시 접속될 웹페이지를 작성해주세요.</Typography>
-        <Typography variant="body2">* URL 이름은 시청자에게 보여지는 부분이므로 신중히 작성해주세요.</Typography>
+        <Typography variant="body2">
+          * 시청자가 채팅광고 또는 패널 클릭시 접속될 웹페이지를 작성해주세요.
+        </Typography>
+        <Typography variant="body2">
+          * URL 이름은 시청자에게 보여지는 부분이므로 신중히 작성해주세요.
+        </Typography>
       </Alert>
 
       <div className={classes.fields}>
@@ -54,7 +60,7 @@ const UrlUploadStep = (props: any): JSX.Element => {
           className={classes.textField}
           inputProps={{ minLength: 8 }}
           onChange={mainUrl.handleChange}
-          error={!(landingUrlRegex.test(mainUrl.value))}
+          error={!landingUrlRegex.test(mainUrl.value)}
           helperText="클릭시 이동될 주소"
         />
       </div>

@@ -1,7 +1,5 @@
 import { createMuiTheme, Theme } from '@material-ui/core/styles';
-import {
-  blueGrey
-} from '@material-ui/core/colors';
+import { blueGrey } from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import { Palette } from '@material-ui/core/styles/createPalette';
 
@@ -83,6 +81,5 @@ const platformOverrides = {
   kakao: '#ffe812',
   kakaoContrastText: defaultTheme.palette.getContrastText('#ffe812'),
 };
-
 
 export default { rawTheme, platformOverrides };

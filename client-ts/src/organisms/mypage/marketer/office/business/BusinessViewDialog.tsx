@@ -1,8 +1,7 @@
-import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   imgInput: {
     [theme.breakpoints.down('xs')]: {
       margin: '2px',
@@ -34,13 +33,11 @@ interface BusinessRegiUploadDialogProps {
   businessRegiImage: string;
   request: () => void;
   handleSnackOpen: () => void;
-  step: {currStep: number; isBusiness: boolean};
+  step: { currStep: number; isBusiness: boolean };
 }
 
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {
-  const {
-    open, handleClose, businessRegiImage
-  } = props;
+  const { open, handleClose, businessRegiImage } = props;
   const classes = useStyles();
   let defaultImage = '/pngs/logo/renewal/1x/logo_onad_y_w.png';
   let isPdf = false;
@@ -52,13 +49,7 @@ const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element =
     }
   }
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="sm"
-      fullWidth
-      title="사업자 등록증"
-    >
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth title="사업자 등록증">
       <div>
         <img
           className={classes.imgPreview}
@@ -66,11 +57,7 @@ const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element =
           src={defaultImage}
           alt="business-registration-preview"
         />
-        {isPdf && (
-          <span>
-            PDF파일은 미리보기를 지원하지 않습니다.
-          </span>
-        )}
+        {isPdf && <span>PDF파일은 미리보기를 지원하지 않습니다.</span>}
       </div>
     </Dialog>
   );

@@ -1,7 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
     width: '100%',
@@ -16,24 +15,24 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     paddingBottom: theme.spacing(5),
     [theme.breakpoints.down('md')]: {
-      height: 600
+      height: 600,
     },
     [theme.breakpoints.down('sm')]: {
-      height: 500
+      height: 500,
     },
     [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   title: {
     fontWeight: theme.typography.fontWeightBold,
     [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(5)
-    }
+      marginTop: theme.spacing(5),
+    },
   },
   mainImage: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   wrapper: {
     padding: '5% 15%',
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       padding: '10% 0%',
-    }
+    },
   },
   liveContainer: {
     overflowX: 'scroll',
@@ -61,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       height: 110,
-    }
+    },
   },
   liveCreatorWrapper: {
     borderRadius: '50%',
@@ -81,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: 60,
       height: 60,
-    }
+    },
   },
   liveCreator: {
     margin: theme.spacing(2, 2),
@@ -99,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       width: 50,
       height: 50,
-    }
+    },
   },
   creatorLogoWrapper: {
     borderRadius: '50%',
@@ -111,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   creatorLogo: {
     width: 50,
@@ -122,11 +121,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   columnText: {
-    fontWeight: theme.typography.fontWeightBold
-  }
+    fontWeight: theme.typography.fontWeightBold,
+  },
 }));
 
 export default useStyles;

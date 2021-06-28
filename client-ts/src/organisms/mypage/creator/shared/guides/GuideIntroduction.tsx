@@ -1,7 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
   section: { margin: theme.spacing(2) },
   title: { fontWeight: 'bold' },
@@ -12,7 +11,9 @@ export default function GuideIntroduction(): JSX.Element {
   return (
     <div className={classes.container}>
       <div className={classes.section}>
-        <Typography variant="h6" className={classes.title}>온애드 시작하기</Typography>
+        <Typography variant="h6" className={classes.title}>
+          온애드 시작하기
+        </Typography>
       </div>
 
       <div className={classes.section}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 export default function useEventTargetValue(defaultValue = ''): {
   value: string;
@@ -14,7 +14,8 @@ export default function useEventTargetValue(defaultValue = ''): {
     let phone = '';
     if (number.length < 4) {
       return number;
-    } if (number.length < 7) {
+    }
+    if (number.length < 7) {
       phone += number.substr(0, 3);
       phone += '-';
       phone += number.substr(3);
@@ -49,6 +50,10 @@ export default function useEventTargetValue(defaultValue = ''): {
   }
 
   return {
-    value, handleChange, handleReset, setValue, handleChangePhoneNumber
+    value,
+    handleChange,
+    handleReset,
+    setValue,
+    handleChangePhoneNumber,
   };
 }

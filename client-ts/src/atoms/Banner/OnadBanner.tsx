@@ -1,5 +1,5 @@
 import { ButtonBase } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import isVideo from '../../utils/isVideo';
 
 export interface OnadBannerProps {
@@ -66,7 +66,5 @@ export default function OnadBanner({
     );
   }
 
-  return (
-    <img draggable={false} src={src} alt={alt} width={width} height={height} {...rest} />
-  );
+  return <img draggable={false} src={src} alt={alt} width={width} height={height} {...rest} />;
 }

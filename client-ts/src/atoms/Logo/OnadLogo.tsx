@@ -1,15 +1,10 @@
 import { useTheme } from '@material-ui/core';
-import React from 'react';
 
 export interface OnadLogoProps {
   width?: number;
   height?: number;
 }
-export default function OnadLogo({
-  width,
-  height,
-  ...props
-}: OnadLogoProps): JSX.Element {
+export default function OnadLogo({ width, height, ...props }: OnadLogoProps): JSX.Element {
   const theme = useTheme();
   return (
     <div>

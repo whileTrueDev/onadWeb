@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import {
@@ -25,10 +26,7 @@ interface Props {
   logout?: () => void;
 }
 // TODO: 비밀번호 암호화하여 전달하기.
-function LoginForm({
-  open,
-  handleClose,
-}: Props): JSX.Element {
+function LoginForm({ open, handleClose }: Props): JSX.Element {
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
   const classes = useStyles();
@@ -53,9 +51,9 @@ function LoginForm({
       event.preventDefault();
     }
     setLoading(true);
-    axios.post(`${HOST}/login`,
-      { userid, passwd, type: 'marketer' })
-      .then((res) => {
+    axios
+      .post(`${HOST}/login`, { userid, passwd, type: 'marketer' })
+      .then(res => {
         setLoading(false);
         if (res.data[0]) {
           setPasswd('');
@@ -76,7 +74,7 @@ function LoginForm({
           }
         }
       })
-      .catch((reason) => {
+      .catch(reason => {
         setLoading(false);
         console.log(reason);
         setPasswd(''); // 비밀번호 초기화
@@ -86,14 +84,8 @@ function LoginForm({
 
   const dialog = (
     // 마케터 로그인 창
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="xs"
-      fullWidth
-    >
+    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogContent className={classes.dialog}>
-
         <IconButton onClick={handleClose} style={{ position: 'absolute', top: 10, right: 10 }}>
           <Close />
         </IconButton>
@@ -126,7 +118,7 @@ function LoginForm({
             name="passwd"
             onChange={onChange}
             fullWidth
-            onKeyPress={(e) => {
+            onKeyPress={e => {
               if (e.key === 'Enter') login(e);
             }}
           />
@@ -141,7 +133,6 @@ function LoginForm({
           >
             로그인
           </Button>
-
         </form>
 
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
@@ -221,9 +212,10 @@ function LoginForm({
       </DialogContent>
 
       {loading && (
-      <div className={classes.buttonLoading}><CircularProgress /></div>
+        <div className={classes.buttonLoading}>
+          <CircularProgress />
+        </div>
       )}
-
     </Dialog>
   );
 
@@ -233,7 +225,9 @@ function LoginForm({
       <FindDialog
         dialogType={dialogType}
         findDialogOpen={findDialogOpen}
-        handleFindDialogClose={() => { setFindDialogOpen(false); }}
+        handleFindDialogClose={() => {
+          setFindDialogOpen(false);
+        }}
         handleClose={handleClose}
       />
     </div>

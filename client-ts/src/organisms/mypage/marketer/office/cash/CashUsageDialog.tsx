@@ -1,4 +1,3 @@
-import React from 'react';
 import { CircularProgress, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
@@ -6,11 +5,11 @@ import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import Table from '../../../../../atoms/Table/CashUsageTable';
 
 const initialData = {
-  data: [['-', '-', '-']]
+  data: [['-', '-', '-']],
 };
 
 const useStyles = makeStyles(() => ({
-  flex: { display: 'flex', alignItems: 'center' }
+  flex: { display: 'flex', alignItems: 'center' },
 }));
 
 interface CashUsageDialogProps {
@@ -20,7 +19,7 @@ interface CashUsageDialogProps {
 }
 
 interface UsageInterface {
-  data: (string)[][];
+  data: string[][];
   metaData: { type: string; cash: string }[];
 }
 
@@ -29,9 +28,10 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
   const { open, handleClose, data } = props;
 
   const usagePerMonthData = useGetRequest<{ month: string }, UsageInterface>(
-    '/marketer/cash/history/usage/month', {
-      month: data[0] // data[0] = "00년 00월"
-    }
+    '/marketer/cash/history/usage/month',
+    {
+      month: data[0], // data[0] = "00년 00월"
+    },
   );
 
   return (
@@ -51,10 +51,14 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
           <Typography variant="h6" gutterBottom>{`${data[1]} 원`}</Typography>
         </div>
 
-        {usagePerMonthData.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
+        {usagePerMonthData.loading && (
+          <div style={{ textAlign: 'center' }}>
+            <CircularProgress />
+          </div>
+        )}
         {!usagePerMonthData.loading && usagePerMonthData.data && (
           <div className={classes.flex}>
-            {usagePerMonthData.data.metaData.map((meta) => (
+            {usagePerMonthData.data.metaData.map(meta => (
               <div key={`month_data_${meta.type}${meta.cash}`} className={classes.flex}>
                 <Typography variant="body1" gutterBottom>
                   &emsp;
@@ -69,9 +73,7 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
           <Table
             // tableHeaderColor="info"
             tableHead={['집행 날짜', '집행 금액', '광고 타입']}
-            tableData={usagePerMonthData.loading
-              ? initialData.data
-              : usagePerMonthData.data.data}
+            tableData={usagePerMonthData.loading ? initialData.data : usagePerMonthData.data.data}
             perMonth
           />
         )}

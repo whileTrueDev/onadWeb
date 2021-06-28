@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const Styles = makeStyles((theme) => ({
+const Styles = makeStyles(theme => ({
   root: {
     margin: theme.spacing(4, 0),
   },
@@ -48,16 +48,15 @@ const Styles = makeStyles((theme) => ({
     alignItems: 'flex-start',
   },
   ansTitle: {
-    fontSize: 20
+    fontSize: 20,
   },
   arrow: {
     width: 25,
-    height: 12
+    height: 12,
   },
   color: {
-    color: theme.palette.common.black
-  }
-
+    color: theme.palette.common.black,
+  },
 }));
 
 export default Styles;

@@ -16,13 +16,7 @@ const hexToRgb = (paramInput: string): string => {
   const first = input[0] + input[1];
   const second = input[2] + input[3];
   const last = input[4] + input[5];
-  return (
-    `${parseInt(first, 16)
-    }, ${
-      parseInt(second, 16)
-    }, ${
-      parseInt(last, 16)}`
-  );
+  return `${parseInt(first, 16)}, ${parseInt(second, 16)}, ${parseInt(last, 16)}`;
 };
 
 // ##############################
@@ -31,7 +25,4 @@ const hexToRgb = (paramInput: string): string => {
 // const drawerWidth = 120;
 const drawerWidth = 240;
 
-export {
-  hexToRgb,
-  drawerWidth,
-};
+export { hexToRgb, drawerWidth };

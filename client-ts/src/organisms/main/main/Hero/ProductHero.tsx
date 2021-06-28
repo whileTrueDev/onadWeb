@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -23,12 +23,10 @@ interface ProductHeroProps {
   logout: () => void;
 }
 
-function ProductHero({
-  MainUserType, source, isLogin, logout
-}: ProductHeroProps): JSX.Element {
+function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps): JSX.Element {
   const classes = styles();
 
-  const [loginValue, setLoginValue] = React.useState('');
+  const [loginValue, setLoginValue] = useState('');
 
   function handleDialogOpenClick(newValue: string): void {
     setLoginValue(newValue);
@@ -51,7 +49,7 @@ function ProductHero({
             <span>{source.text.subTitle}</span>
           </Typography>
 
-          { !isLogin ? (
+          {!isLogin ? (
             <Button
               className={classes.loginButton}
               onClick={() => handleDialogOpenClick('marketer')}
@@ -59,51 +57,41 @@ function ProductHero({
               온애드 시작하기
             </Button>
           ) : (
-            <Button
-              className={classes.loginButton}
-              onClick={logout}
-            >
+            <Button className={classes.loginButton} onClick={logout}>
               로그아웃
             </Button>
           )}
         </div>
-      )
-        : (
+      ) : (
         // 크리에이터 페이지
-          <div className={classes.root}>
-            <Typography align="center" variant="h4" className={classes.mainTitle}>
-              {source.textCreator.title}
-            </Typography>
-            <Typography align="center" variant="h4" className={classes.mainTitle}>
-              <span>{source.textCreator.subTitle}</span>
-            </Typography>
+        <div className={classes.root}>
+          <Typography align="center" variant="h4" className={classes.mainTitle}>
+            {source.textCreator.title}
+          </Typography>
+          <Typography align="center" variant="h4" className={classes.mainTitle}>
+            <span>{source.textCreator.subTitle}</span>
+          </Typography>
 
-            { !isLogin ? (
-              <Button
-                className={classes.loginButton2}
-                onClick={() => handleDialogOpenClick('creator')}
-              >
-                온애드 시작하기
-              </Button>
-            ) : (
-              <Button
-                className={classes.loginButton2}
-                onClick={logout}
-              >
-                로그아웃
-              </Button>
-            )}
-          </div>
-        )}
+          {!isLogin ? (
+            <Button
+              className={classes.loginButton2}
+              onClick={() => handleDialogOpenClick('creator')}
+            >
+              온애드 시작하기
+            </Button>
+          ) : (
+            <Button className={classes.loginButton2} onClick={logout}>
+              로그아웃
+            </Button>
+          )}
+        </div>
+      )}
       <MarketerLoginForm
         open={loginValue === 'marketer'}
         handleClose={handleDialogClose}
         logout={logout}
       />
-      <CreatorLoginForm
-        open={loginValue === 'creator'}
-        handleClose={handleDialogClose}
-      />
+      <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </ProductHeroLayout>
   );
 }

@@ -1,12 +1,17 @@
 import {
-  DialogActions, DialogContent,
+  DialogActions,
+  DialogContent,
   DialogContentText,
-  FormControl, FormHelperText,
-  Input, InputLabel, TextField
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  TextField,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../config';
@@ -45,12 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AccountDialog = (
-  props: {
-    open: boolean;
-    handleDialogClose: () => void;
-  }
-): JSX.Element => {
+const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }): JSX.Element => {
   const { open, handleDialogClose } = props;
   const classes = useStyles();
 
@@ -60,7 +60,7 @@ const AccountDialog = (
     setBank(newValue);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     const bankRealName = (document.getElementById('accountHolder') as HTMLInputElement).value;
@@ -72,20 +72,25 @@ const AccountDialog = (
      ******************* */
     if (!bank) return alert('은행을 선택해주세요!');
 
-    axios.put(`${HOST}/marketer/account`, {
-      bankName: bank.bankName, bankRealName, idNumber, bankAccount
-    })
+    return axios
+      .put(`${HOST}/marketer/account`, {
+        bankName: bank.bankName,
+        bankRealName,
+        idNumber,
+        bankAccount,
+      })
       .then(() => {
         alert('환불 계좌번호 저장에 성공하였습니다.');
         handleDialogClose();
-        history.push('/mypage/marketer/myoffice');
+        history.push('/mypage/marketer/myoffice/cash');
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
-        alert('환불 계좌번호 저장에 실패하였습니다. 문제가 지속적으로 발견될 시, support@onad.io로 문의바랍니다.');
+        alert(
+          '환불 계좌번호 저장에 실패하였습니다. 문제가 지속적으로 발견될 시, support@onad.io로 문의바랍니다.',
+        );
       });
   };
-
 
   const Content = (): JSX.Element => (
     <DialogContent className={classes.contents}>
@@ -96,10 +101,10 @@ const AccountDialog = (
       <Autocomplete
         id="bank-name-box"
         options={banks}
-        getOptionLabel={(option) => option.bankName}
+        getOptionLabel={option => option.bankName}
         value={bank}
         onChange={handleChangeBank}
-        renderInput={(params) => (
+        renderInput={params => (
           <TextField
             {...params}
             required
@@ -120,7 +125,7 @@ const AccountDialog = (
         id="accountHolder"
         type="text"
         inputProps={{
-          maxLength: 17
+          maxLength: 17,
         }}
         InputLabelProps={{
           shrink: true,
@@ -137,7 +142,7 @@ const AccountDialog = (
         margin="normal"
         type="number"
         inputProps={{
-          maxLength: 6
+          maxLength: 6,
         }}
         InputLabelProps={{
           shrink: true,
@@ -156,24 +161,16 @@ const AccountDialog = (
           type="number"
           inputProps={{
             required: true,
-            maxLength: 16
+            maxLength: 16,
           }}
         />
-        <FormHelperText>
-          (-)을 제외한 계좌번호를 입력하세요
-        </FormHelperText>
+        <FormHelperText>(-)을 제외한 계좌번호를 입력하세요</FormHelperText>
       </FormControl>
     </DialogContent>
   );
 
   return (
-    <Dialog
-      maxWidth="xl"
-      title="환불 계좌 입력"
-      open={open}
-      onClose={handleDialogClose}
-
-    >
+    <Dialog maxWidth="xl" title="환불 계좌 입력" open={open} onClose={handleDialogClose}>
       {/* <DialogTitle>환급 계좌 입력</DialogTitle> */}
       <form id="accountForm" onSubmit={handleSubmit}>
         <Content />

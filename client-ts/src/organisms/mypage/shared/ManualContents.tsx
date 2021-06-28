@@ -1,14 +1,10 @@
-import {
-  Chip,
-  CircularProgress,
-  makeStyles, Paper, Typography
-} from '@material-ui/core';
+import { Chip, CircularProgress, makeStyles, Paper, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import React, { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown/with-html';
 import { UseGetRequestObject } from '../../../utils/hooks/useGetRequest';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   tabs: { padding: theme.spacing(1, 0), borderBottom: `2px solid ${theme.palette.divider}` },
   chip: { margin: theme.spacing(1, 1) },
   container: { padding: theme.spacing(4) },
@@ -19,20 +15,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface Manual {
-  title: string; subTitle: string; contents: string;
-  priority: string; createdAt: string; updatedAt: string;
+  title: string;
+  subTitle: string;
+  contents: string;
+  priority: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export type ManualRes = Array<Manual>;
 export interface ManualProps {
   manualGet: UseGetRequestObject<ManualRes>;
 }
 
-export default function ManualContents({
-  manualGet,
-}: ManualProps): JSX.Element {
+export default function ManualContents({ manualGet }: ManualProps): JSX.Element {
   const classes = useStyles();
 
-  const [tabValue, setTabValue] = React.useState<string>();
+  const [tabValue, setTabValue] = useState<string>();
   function handleTabChange(newValue: string): void {
     setTabValue(newValue);
   }
@@ -53,11 +51,16 @@ export default function ManualContents({
 
   return (
     <Paper>
-      {manualGet.loading && (<div style={{ textAlign: 'center' }}><CircularProgress /></div>)}
+      {manualGet.loading && (
+        <div style={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </div>
+      )}
 
       <div className={classes.tabs}>
-        {!manualGet.loading && manualGet.data && manualGet.data
-          .map((eachManual: any) => (
+        {!manualGet.loading &&
+          manualGet.data &&
+          manualGet.data.map((eachManual: any) => (
             <Chip
               onClick={() => {
                 handleTabChange(eachManual.title);
@@ -70,7 +73,6 @@ export default function ManualContents({
               color={eachManual.title === tabValue ? 'primary' : 'default'}
             />
           ))}
-
       </div>
 
       {!manualGet.loading && manualGet.data && (
@@ -78,8 +80,12 @@ export default function ManualContents({
           {currentManual && (
             <div className={classes.container}>
               <div>
-                <Typography color="primary" variant="h6">{currentManual.title}</Typography>
-                <Typography color="primary" variant="body2">{currentManual.subTitle}</Typography>
+                <Typography color="primary" variant="h6">
+                  {currentManual.title}
+                </Typography>
+                <Typography color="primary" variant="body2">
+                  {currentManual.subTitle}
+                </Typography>
               </div>
 
               <div className={classes.contents}>

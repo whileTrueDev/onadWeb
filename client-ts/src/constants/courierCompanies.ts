@@ -47,7 +47,6 @@ const courierCompanies = [
   'CJ대한국제택배',
 ] as const;
 
-
-export type CourierCompany = ArrayElementType<typeof courierCompanies>
+export type CourierCompany = ArrayElementType<typeof courierCompanies>;
 
 export default courierCompanies;

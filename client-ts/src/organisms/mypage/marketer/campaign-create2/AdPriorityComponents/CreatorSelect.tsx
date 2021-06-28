@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Chip, Grid, Typography,
-} from '@material-ui/core';
+import { Chip, Grid, Typography } from '@material-ui/core';
 import CreatorTable from './CreatorSelectTable';
-import { CampaignCreateInterface, CampaignCreateAction, CampaignSelectedCreator } from '../reducers/campaignCreate.reducer';
+import {
+  CampaignCreateInterface,
+  CampaignCreateAction,
+  CampaignSelectedCreator,
+} from '../reducers/campaignCreate.reducer';
 import { CreatorDetailDataInterface } from '../interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,11 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   bold: {
-    fontWeight: theme.typography.fontWeightBold
+    fontWeight: theme.typography.fontWeightBold,
   },
-  chip: { margin: theme.spacing(0.5) }
+  chip: { margin: theme.spacing(0.5) },
 }));
-
 
 interface CreatorSelectProps {
   state: CampaignCreateInterface;
@@ -31,9 +33,7 @@ interface CreatorSelectProps {
   priorityType?: string;
 }
 const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
-  const {
-    state, dispatch, handleComplete, handleIncomplete
-  } = props;
+  const { state, dispatch, handleComplete, handleIncomplete } = props;
   const classes = useStyles();
 
   // **********************************************************
@@ -52,26 +52,24 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
   // **********************************************************
   // 선택된 크리에이터인지 확인하는 함수
   const isCheckedCreator = (creatorId: string): boolean => {
-    if (state.selectedCreators.filter((c) => c.creatorId === creatorId).length > 0) return true;
+    if (state.selectedCreators.filter(c => c.creatorId === creatorId).length > 0) return true;
     return false;
   };
   // 크리에이터 선택 해제 핸들러
-  const handleCreatorSelectCancel = (creator: CampaignSelectedCreator): void => dispatch({
-    type: 'DELETE_SELECTED_CREATORS',
-    value: { creatorId: creator.creatorId, creatorName: creator.creatorName, }
-  });
+  const handleCreatorSelectCancel = (creator: CampaignSelectedCreator): void =>
+    dispatch({
+      type: 'DELETE_SELECTED_CREATORS',
+      value: { creatorId: creator.creatorId, creatorName: creator.creatorName },
+    });
   // 크리에이터 선택 핸들러
-  const handleCreatorSelect = (
-    rowData?: CreatorDetailDataInterface
-  ): void => {
+  const handleCreatorSelect = (rowData?: CreatorDetailDataInterface): void => {
     if (rowData) {
-      const {
-        creatorId, creatorName, creatorIdAfreeca, afreecaName
-      } = rowData;
+      const { creatorId, creatorName, creatorIdAfreeca, afreecaName } = rowData;
       if (isCheckedCreator(creatorId || creatorIdAfreeca)) {
         // 체크 된 걸 다시 체크할 때
         handleCreatorSelectCancel({
-          creatorId: creatorId || creatorIdAfreeca, creatorName: creatorName || afreecaName || ''
+          creatorId: creatorId || creatorIdAfreeca,
+          creatorName: creatorName || afreecaName || '',
         });
       } else {
         // 체크 됐을 때
@@ -80,19 +78,22 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
           value: {
             creatorId: creatorId || creatorIdAfreeca,
             creatorName: creatorName || afreecaName,
-          }
+          },
         });
       }
     }
   };
 
-
   return (
     <Grid container direction="column" spacing={2} className={classes.root}>
       <Grid item>
-        <Typography variant="body1" className={classes.bold}>현재까지 선택된 방송인 : </Typography>
-        <Typography variant="body2" color="textSecondary">* 표에서 방송인 클릭시 선택됩니다.</Typography>
-        {state.selectedCreators.map((creator) => (
+        <Typography variant="body1" className={classes.bold}>
+          현재까지 선택된 방송인 :{' '}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          * 표에서 방송인 클릭시 선택됩니다.
+        </Typography>
+        {state.selectedCreators.map(creator => (
           <Chip
             className={classes.chip}
             label={creator.creatorName}
@@ -103,10 +104,7 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
         ))}
       </Grid>
       <Grid item>
-        <CreatorTable
-          onCreatorSelect={handleCreatorSelect}
-          isCheckedCreator={isCheckedCreator}
-        />
+        <CreatorTable onCreatorSelect={handleCreatorSelect} isCheckedCreator={isCheckedCreator} />
       </Grid>
     </Grid>
   );
@@ -123,6 +121,5 @@ const CreatorSelect = (props: CreatorSelectProps): JSX.Element => {
 
  * @author 박찬우
  */
-
 
 export default CreatorSelect;

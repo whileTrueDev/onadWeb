@@ -18,7 +18,7 @@ type SliderProps = {
 export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
   overflow: hidden;
   position: relative;
-  padding: ${(props) => `${(props.zoomFactor / props.visibleSlides) * 1}%`} 0;
+  padding: ${props => `${(props.zoomFactor / props.visibleSlides) * 1}%`} 0;
   .button-wrapper {
     position: absolute;
     width: 30px;
@@ -94,8 +94,8 @@ export const StyledSliderWrapper = styled.div<SliderWrapperProps>`
 export const StyledSlider = styled.div<SliderProps>`
   display: flex;
   padding: 0 60px;
-  transition: transform ${(props) => props.pageTransition}ms ease;
+  transition: transform ${props => props.pageTransition}ms ease;
   :hover ${StyledSliderItem} {
-    transform: translateX(${(props) => props.transformValue});
+    transform: translateX(${props => props.transformValue});
   }
 `;

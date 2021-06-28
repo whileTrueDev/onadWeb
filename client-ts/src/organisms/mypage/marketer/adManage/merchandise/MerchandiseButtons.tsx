@@ -1,12 +1,11 @@
 import { Button, makeStyles } from '@material-ui/core';
-import React from 'react';
 import MerchandiseUploadDialog from '../../shared/MerchandiseUploadDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import { Merchandise } from '../interface';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
 }));
 
@@ -28,11 +27,7 @@ export default function MerchandiseButtons({
 
   return (
     <div className={classes.container}>
-      <Button
-        color="primary"
-        variant="outlined"
-        onClick={merchandiseUploadDialog.handleOpen}
-      >
+      <Button color="primary" variant="outlined" onClick={merchandiseUploadDialog.handleOpen}>
         + 새 상품 등록
       </Button>
 
@@ -49,7 +44,11 @@ export default function MerchandiseButtons({
         }}
       />
 
-      <Snackbar message="상품 등록을 완료하였습니다." open={successSnack.open} onClose={successSnack.handleClose} />
+      <Snackbar
+        message="상품 등록을 완료하였습니다."
+        open={successSnack.open}
+        onClose={successSnack.handleClose}
+      />
       <Snackbar
         message="상품 등록 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
         open={failSnack.open}

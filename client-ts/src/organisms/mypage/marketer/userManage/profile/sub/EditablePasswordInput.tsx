@@ -1,24 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 // @material-ui/core
-import {
-  Button, makeStyles, TextField, TextFieldProps, Typography
-} from '@material-ui/core';
+import { Button, makeStyles, TextField, TextFieldProps, Typography } from '@material-ui/core';
 import { useEventTargetValue, useToggle } from '../../../../../../utils/hooks';
 import passwordRegex from '../../../../../../utils/inputs/regex/password.regex';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   label: {
     fontWeight: 'bold',
   },
-  editable: {
-
-  },
-  value: { margin: theme.spacing(1, 0), },
+  editable: {},
+  value: { margin: theme.spacing(1, 0) },
   textField: {
     maxWidth: 320,
-    margin: theme.spacing(1, 1, 1, 0)
+    margin: theme.spacing(1, 1, 1, 0),
   },
-  button: { margin: theme.spacing(0, 1, 0, 0) }
+  button: { margin: theme.spacing(0, 1, 0, 0) },
 }));
 
 export interface EditablePasswordInputProps {
@@ -51,7 +47,8 @@ export default function EditablePasswordInput({
 
   function submit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
-    if (!(value === rePassword.value)) return alert('비밀번호와 비밀번호 확인이 동일하지 않습니다.');
+    if (!(value === rePassword.value))
+      return alert('비밀번호와 비밀번호 확인이 동일하지 않습니다.');
     if (!passwordRegex.test(value)) return alert('비밀번호 형식이 올바르지 않습니다.');
     return onSubmit(value);
   }
@@ -63,7 +60,9 @@ export default function EditablePasswordInput({
       {!editMode.toggle ? (
         <div className={classes.editable}>
           <Typography className={classes.value}>{displayValue}</Typography>
-          <Button onClick={editMode.handleToggle} variant="outlined">편집</Button>
+          <Button onClick={editMode.handleToggle} variant="outlined">
+            편집
+          </Button>
         </div>
       ) : (
         <div className={classes.editable}>
@@ -101,8 +100,9 @@ export default function EditablePasswordInput({
               color="primary"
               type="submit"
               className={classes.button}
-              disabled={!(rePassword.value === value)
-                || !value || !passwordRegex.test(value) || loading}
+              disabled={
+                !(rePassword.value === value) || !value || !passwordRegex.test(value) || loading
+              }
             >
               저장
             </Button>

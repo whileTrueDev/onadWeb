@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // material ui core
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -17,8 +17,8 @@ import HOST from '../../../../../config';
 import history from '../../../../../history';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  contentTitle: { fontWeight: 'bold', },
-  contentDetail: { marginTop: theme.spacing(1), },
+  contentTitle: { fontWeight: 'bold' },
+  contentDetail: { marginTop: theme.spacing(1) },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 16,
   },
   account: { marginBottom: 5, fontWeight: 700, color: 'red' },
-  typo: { fontWeight: 600, color: 'red' }
+  typo: { fontWeight: 600, color: 'red' },
 }));
 
 function useConfirmDialog(handleClose: () => void): {
@@ -79,9 +79,7 @@ interface CashDialogProps {
 
 function CashDialog(props: CashDialogProps): JSX.Element {
   const classes = useStyles();
-  const {
-    open, handleClose, currentCash,
-  } = props;
+  const { open, handleClose, currentCash } = props;
   // select value
   const { selectValue, handleChange } = useValue('10000');
   const chargeType = useValue('무통장입금');
@@ -90,27 +88,31 @@ function CashDialog(props: CashDialogProps): JSX.Element {
 
   // 출금신청 스낵바
   const {
-    confirmDialogOpen, handleConfirmDialogClose, handleOnlyDialogClose,
+    confirmDialogOpen,
+    handleConfirmDialogClose,
+    handleOnlyDialogClose,
     handleConfirmDialogOpen,
   } = useConfirmDialog(handleClose);
-
 
   function handleSubmitClick(): void {
     if (selectValue > 1000001) return;
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios.post<boolean[]>(`${HOST}/marketer/cash/charge`, {
-      chargeCash: selectValue,
-      chargeType: chargeType.selectValue,
-    }).then((res) => {
-      if (res.data[0]) {
-        handleConfirmDialogClose();
-        history.push('/mypage/marketer/myoffice');
-      } else {
-        console.log('cash - charge - error!');
-      }
-    }).catch((err) => {
-      console.log(err);
-    });
+    axios
+      .post<boolean[]>(`${HOST}/marketer/cash/charge`, {
+        chargeCash: selectValue,
+        chargeType: chargeType.selectValue,
+      })
+      .then(res => {
+        if (res.data[0]) {
+          handleConfirmDialogClose();
+          history.push('/mypage/marketer/myoffice/cash');
+        } else {
+          console.log('cash - charge - error!');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   return (
@@ -120,18 +122,14 @@ function CashDialog(props: CashDialogProps): JSX.Element {
       maxWidth="sm"
       fullWidth
       title="광고캐시 충전"
-      buttons={(
+      buttons={
         <div>
-          <Button
-            color="primary"
-            onClick={handleConfirmDialogOpen}
-          >
+          <Button color="primary" onClick={handleConfirmDialogOpen}>
             진행
-
           </Button>
           <Button onClick={handleClose}>취소</Button>
         </div>
-      )}
+      }
     >
       <div>
         <div>
@@ -140,11 +138,7 @@ function CashDialog(props: CashDialogProps): JSX.Element {
             <Typography className={classes.contentTitle} variant="subtitle1">
               보유한 광고캐시 금액
             </Typography>
-            <Typography
-              variant="h4"
-              id="select-account"
-              className={classes.contentDetail}
-            >
+            <Typography variant="h4" id="select-account" className={classes.contentDetail}>
               {`${currentCash} 원`}
             </Typography>
           </div>
@@ -182,17 +176,12 @@ function CashDialog(props: CashDialogProps): JSX.Element {
               <FormControlLabel
                 value="무통장입금"
                 control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1">
-                    무통장입금
-                  </Typography>
-                )}
+                label={<Typography variant="subtitle1">무통장입금</Typography>}
               />
             </RadioGroup>
             <Typography variant="subtitle1" className={classes.account}>
               부산은행 : 101 - 2064 - 1964 - 03 (와일트루강동기)
             </Typography>
-
           </div>
           <Divider />
 
@@ -210,49 +199,29 @@ function CashDialog(props: CashDialogProps): JSX.Element {
               <FormControlLabel
                 value="50000"
                 control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1">
-                    50,000 원
-                  </Typography>
-                )}
+                label={<Typography variant="subtitle1">50,000 원</Typography>}
               />
               <FormControlLabel
                 value="100000"
                 control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1">
-                    100,000 원
-                  </Typography>
-                )}
+                label={<Typography variant="subtitle1">100,000 원</Typography>}
               />
               <FormControlLabel
                 value="300000"
                 control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1">
-                    300,000 원
-                  </Typography>
-                )}
+                label={<Typography variant="subtitle1">300,000 원</Typography>}
               />
               <FormControlLabel
                 value="500000"
                 control={<Radio color="primary" />}
-                label={(
-                  <Typography variant="subtitle1">
-                    500,000 원
-                  </Typography>
-                )}
+                label={<Typography variant="subtitle1">500,000 원</Typography>}
               />
             </RadioGroup>
             <div style={{ position: 'absolute', top: 50, left: 200 }}>
               <Tooltip title="직접입력 하십시오.">
                 <TextField
                   id="selectValue"
-                  label={(
-                    <Typography variant="subtitle1">
-                      충전할 금액을 입력하세요
-                    </Typography>
-                  )}
+                  label={<Typography variant="subtitle1">충전할 금액을 입력하세요</Typography>}
                   error={selectValue > 1000001}
                   helperText="최대 1000만원까지 가능합니다."
                   type="number"
@@ -265,7 +234,6 @@ function CashDialog(props: CashDialogProps): JSX.Element {
               </Tooltip>
             </div>
           </div>
-
         </div>
 
         {/* 캐시충전 신청 완료 시의 notification */}
@@ -273,20 +241,14 @@ function CashDialog(props: CashDialogProps): JSX.Element {
           open={confirmDialogOpen}
           onClose={handleOnlyDialogClose}
           title="입력하신대로 캐시 충전 하시겠어요?"
-          buttons={(
+          buttons={
             <div>
-              <Button
-                disabled={selectValue > 1000001}
-                onClick={handleSubmitClick}
-                color="primary"
-              >
+              <Button disabled={selectValue > 1000001} onClick={handleSubmitClick} color="primary">
                 진행
               </Button>
-              <Button onClick={handleOnlyDialogClose}>
-                취소
-              </Button>
+              <Button onClick={handleOnlyDialogClose}>취소</Button>
             </div>
-          )}
+          }
         >
           <DialogContent>
             <Typography variant="h6">
@@ -299,7 +261,11 @@ function CashDialog(props: CashDialogProps): JSX.Element {
             </Typography>
             <Divider />
             <Typography variant="h6" style={{ marginTop: 10 }} className={classes.typo}>
-              {`무통장 입금액 : ${(typeof selectValue === 'string') ? parseInt(selectValue, 10) * 1.1 : selectValue * 1.1}`}
+              {`무통장 입금액 : ${
+                typeof selectValue === 'string'
+                  ? parseInt(selectValue, 10) * 1.1
+                  : selectValue * 1.1
+              }`}
               원(부가세포함)을
             </Typography>
             <Typography variant="h6" className={classes.typo}>
@@ -316,7 +282,6 @@ function CashDialog(props: CashDialogProps): JSX.Element {
             </Typography>
           </DialogContent>
         </Dialog>
-
       </div>
     </Dialog>
   );

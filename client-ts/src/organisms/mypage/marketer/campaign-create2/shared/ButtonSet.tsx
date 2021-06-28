@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Button, Collapse } from '@material-ui/core';
 
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   end: {
     color: theme.palette.common.white,
     marginRight: theme.spacing(1),
-  }
+  },
 }));
 
 interface ButtonSetProps {

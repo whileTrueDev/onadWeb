@@ -1,7 +1,5 @@
 import { Theme, makeStyles } from '@material-ui/core/styles';
-import {
-  hexToRgb,
-} from '../../assets/jss/onad';
+import { hexToRgb } from '../../assets/jss/onad';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -20,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   cardProfile: {
     marginTop: '20px',
     textAlign: 'center',
-  }
+  },
 }));
 
 export default useStyles;

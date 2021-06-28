@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
-import {
-  makeStyles,
-  Paper, Typography,
-} from '@material-ui/core';
-import {
-  Done, Clear, CheckCircleOutline
-} from '@material-ui/icons';
+import { makeStyles, Paper, Typography } from '@material-ui/core';
+import { Done, Clear, CheckCircleOutline } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import terms from '../../Dashboard/source/contractTerms';
 import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
 import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
 import ContractionTextDialog from './sub/ContractionTextDialog';
-import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../StartGuideCard';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
   bold: { fontWeight: 'bold' },
   red: { color: theme.palette.error.main },
@@ -24,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: theme.spacing(2),
-    margin: `${theme.spacing(2)}px 0px`
+    margin: `${theme.spacing(2)}px 0px`,
   },
   termButton: { display: 'flex', alignItems: 'center' },
   textRightSpace: { marginRight: theme.spacing(1) },
@@ -43,12 +38,14 @@ export default function ContractionSection({
   const classes = useStyles();
   // ****************************************
   // 계약 정보 업데이트 요청
-  const contractionPatch = usePatchRequest('/creator', // 계약정보 업데이트
+  const contractionPatch = usePatchRequest(
+    '/creator', // 계약정보 업데이트
     () => {
       doReRequest();
       // 성공 스낵 오픈
       handleSuccess();
-    });
+    },
+  );
 
   // ****************************************
   // 계약 정보 창
@@ -75,9 +72,15 @@ export default function ContractionSection({
     <div>
       {/* 약관 동의 설명 */}
       <div className={classes.container}>
-        <Typography>온애드 서비스를 정상적으로 이용하기 위해서는 이용 동의가 필요합니다.</Typography>
-        <Typography>아래의 약관들에 대해서 동의한 이후, [이용동의완료] 버튼을 클릭해 완료해주세요.</Typography>
-        <Typography variant="body2" color="textSecondary">약관보기를 클릭한 이후 하단에서 약관을 동의할 수 있습니다.</Typography>
+        <Typography>
+          온애드 서비스를 정상적으로 이용하기 위해서는 이용 동의가 필요합니다.
+        </Typography>
+        <Typography>
+          아래의 약관들에 대해서 동의한 이후, [이용동의완료] 버튼을 클릭해 완료해주세요.
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          약관보기를 클릭한 이후 하단에서 약관을 동의할 수 있습니다.
+        </Typography>
       </div>
 
       {contractionData.creatorContractionAgreement === 1 ? (
@@ -88,14 +91,8 @@ export default function ContractionSection({
       ) : (
         <>
           {terms.map((term, index) => (
-            <Paper
-              key={term.state}
-              elevation={1}
-              className={classes.termItem}
-            >
-              <Typography>
-                {term.title}
-              </Typography>
+            <Paper key={term.state} elevation={1} className={classes.termItem}>
+              <Typography>{term.title}</Typography>
               <div className={classes.termButton}>
                 <Button
                   size="small"
@@ -106,9 +103,15 @@ export default function ContractionSection({
                 >
                   약관보기
                 </Button>
-                {contractionList[index]
-                  ? (<SuccessTypo><Done /></SuccessTypo>)
-                  : (<DangerTypo><Clear /></DangerTypo>)}
+                {contractionList[index] ? (
+                  <SuccessTypo>
+                    <Done />
+                  </SuccessTypo>
+                ) : (
+                  <DangerTypo>
+                    <Clear />
+                  </DangerTypo>
+                )}
               </div>
             </Paper>
           ))}
@@ -117,13 +120,14 @@ export default function ContractionSection({
             <Button
               color="primary"
               onClick={(): void => {
-                if (contractionList.every((row) => row === true)) {
+                if (contractionList.every(row => row === true)) {
                   // 크리에이터 계약정보 patch 요청
                   contractionPatch.doPatchRequest({ type: 'contraction' });
                 }
               }}
-              disabled={!(contractionList.every((row) => row === true))
-                || Boolean(contractionPatch.loading)}
+              disabled={
+                !contractionList.every(row => row === true) || Boolean(contractionPatch.loading)
+              }
             >
               이용동의완료
             </Button>
@@ -135,15 +139,14 @@ export default function ContractionSection({
 
       {/* 계약 내용 보기 다이얼로그 */}
       {!contractionData.creatorContractionAgreement && (
-      <ContractionTextDialog
-        open={contractionTextDialog.open}
-        onClose={contractionTextDialog.handleClose}
-        onAgree={handleContractionAgree}
-        activeTermIndex={activeContractionIndex}
-        title={terms[activeContractionIndex].title}
-      />
+        <ContractionTextDialog
+          open={contractionTextDialog.open}
+          onClose={contractionTextDialog.handleClose}
+          onAgree={handleContractionAgree}
+          activeTermIndex={activeContractionIndex}
+          title={terms[activeContractionIndex].title}
+        />
       )}
-
     </div>
   );
 }

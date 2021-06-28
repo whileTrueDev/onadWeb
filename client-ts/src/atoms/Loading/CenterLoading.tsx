@@ -1,10 +1,12 @@
 import { CircularProgress, makeStyles } from '@material-ui/core';
-import React from 'react';
 
 const useStyles = makeStyles(() => ({
   container: {
-    height: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex'
-  }
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+  },
 }));
 
 export default function CenterLoading(): JSX.Element {

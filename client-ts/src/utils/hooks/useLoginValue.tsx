@@ -1,10 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import axios from '../axios';
 import HOST from '../../config';
 import history from '../../history';
 
 interface LoginCheckResponse {
-  error: boolean; state?: number; userType: string;
+  error: boolean;
+  state?: number;
+  userType: string;
 }
 
 const useLoginValue = (): {
@@ -25,7 +27,8 @@ const useLoginValue = (): {
     // ****************************************
     // ONAD API v2에서 POST요청으로 바꾸어야 한다.
     // ****************************************
-    axios.get(`${HOST}/logout`)
+    axios
+      .get(`${HOST}/logout`)
       .then(() => {
         history.push('/');
       })
@@ -35,8 +38,9 @@ const useLoginValue = (): {
   };
 
   React.useLayoutEffect(() => {
-    axios.get<LoginCheckResponse>(`${HOST}/login/check`)
-      .then((res) => {
+    axios
+      .get<LoginCheckResponse>(`${HOST}/login/check`)
+      .then(res => {
         if (!res.data.error) {
           if (res.data.state) {
             // 임시 로그인되었습니다.
@@ -48,13 +52,17 @@ const useLoginValue = (): {
           setisLogin(false);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   });
 
   return {
-    isLogin, repasswordOpen, logout, setRepassword, userType
+    isLogin,
+    repasswordOpen,
+    logout,
+    setRepassword,
+    userType,
   };
 };
 

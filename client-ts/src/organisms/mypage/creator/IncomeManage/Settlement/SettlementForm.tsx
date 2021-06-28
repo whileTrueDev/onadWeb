@@ -1,12 +1,9 @@
 // AccountNumber를 입력하는 Form component 작성
-import {
-  Checkbox, Dialog, FormControlLabel, Grid, TextField
-} from '@material-ui/core';
+import { Checkbox, Dialog, FormControlLabel, Grid, TextField } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
-import React, {
-  useState
-} from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
@@ -22,14 +19,14 @@ import SettlementAgreement from './SettlementAgreement';
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {
     width: '80%',
-    margin: '4px 0px 8px 0px'
+    margin: '4px 0px 8px 0px',
   },
   titleWrap: {
-    margin: '20px 0'
+    margin: '20px 0',
   },
   contentTitle: {
     width: '20%',
-    margin: 0
+    margin: 0,
   },
   content: {
     display: 'flex',
@@ -42,17 +39,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: '20px 0'
+    margin: '20px 0',
   },
   contentImage: {
-    width: '50%'
+    width: '50%',
   },
   titleWraper: {
     textAlign: 'center',
     height: 30,
     border: 'solid 1px #2771ff',
     margin: '30px 0',
-    borderRadius: 5
+    borderRadius: 5,
   },
   AgreementField: {
     width: '100%',
@@ -60,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 80,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #2771ff'
+    border: 'solid 1px #2771ff',
   },
   checked: {},
   checkboxRoot: {
@@ -68,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&$checked': {
       color: theme.palette.success.main,
     },
-    marginLeft: 20
+    marginLeft: 20,
   },
 }));
 interface SettlementFormProps {
@@ -79,9 +76,7 @@ interface ImageData {
   index: number;
 }
 
-function SettlementForm({
-  CreatorType
-}: SettlementFormProps): JSX.Element {
+function SettlementForm({ CreatorType }: SettlementFormProps): JSX.Element {
   const classes = useStyles();
   const ImageUploadID = useDialog();
   const ImageUploadAC = useDialog();
@@ -119,7 +114,7 @@ function SettlementForm({
   };
 
   // 크리에이터 주민등록번호
-  const [creatorIdentity, setCreatorIdentity] = useState<string|number>();
+  const [creatorIdentity, setCreatorIdentity] = useState<string | number>();
   const [checkIdentity, setCheckIdentity] = useState(false);
   const handleCreatorIdentityChange = (values: NumberFormatValues): void => {
     setCreatorIdentity(values.value);
@@ -132,7 +127,7 @@ function SettlementForm({
   };
 
   // 크리에이터 휴대전화번호
-  const [creatorPhone, setCreatorPhone] = useState<string|number>();
+  const [creatorPhone, setCreatorPhone] = useState<string | number>();
   const handleCreatorPhone = (values: NumberFormatValues): void => {
     setCreatorPhone(values.value);
   };
@@ -147,8 +142,8 @@ function SettlementForm({
   const [creatorAccountImg, setCreatorAccountImg] = React.useState<string | ArrayBuffer | null>('');
 
   // 사업자 등록증 이미지
-  const [creatorBussinessImg, setCreatorBussinessImg] = React.useState<string | ArrayBuffer | null>('');
-
+  const [creatorBussinessImg, setCreatorBussinessImg] =
+    React.useState<string | ArrayBuffer | null>('');
 
   // image reset
   function handleReset(index: number): void {
@@ -176,7 +171,7 @@ function SettlementForm({
 
   const readImage = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
     const target = event.target as HTMLInputElement;
-    const files = (target.files as FileList);
+    const files = target.files as FileList;
     if (files.length !== 0) {
       const fileRegx = /^image\/[a-z]*$/;
       const myImage = files[0];
@@ -223,7 +218,7 @@ function SettlementForm({
         CreatorIDImg: creatorIDImg,
         CreatorAccountImg: creatorAccountImg,
         CreatorBussinessImg: creatorBussinessImg,
-        CreatorType
+        CreatorType,
       };
       // usePostRequest
       settlementPatch.doPatchRequest({ ...creatorData });
@@ -233,19 +228,19 @@ function SettlementForm({
   return (
     <>
       <form id="accountForm" onSubmit={handleSubmit}>
-        { (CreatorType === 1)
-          && (
+        {CreatorType === 1 && (
           <div>
             <Grid item className={classes.AgreementField}>
               <p>
-                개인사업자 계약 진행시 세무대리인 혹은 본인이 직접 홈택스를 통해 모든 세무 신고를 진행하여야하며 신고 누락, 금액 오기재 등으로
-                피해가 발생하여도 온애드는 일절 책임이 없음을 알립니다.
+                개인사업자 계약 진행시 세무대리인 혹은 본인이 직접 홈택스를 통해 모든 세무 신고를
+                진행하여야하며 신고 누락, 금액 오기재 등으로 피해가 발생하여도 온애드는 일절 책임이
+                없음을 알립니다.
               </p>
             </Grid>
             <Grid item>
               세무처리와 관련된 설명을 읽고 이해하였으며, 이에 동의합니다.
               <FormControlLabel
-                control={(
+                control={
                   <Checkbox
                     required
                     onChange={handleChange()}
@@ -256,20 +251,29 @@ function SettlementForm({
                       checked: classes.checked,
                     }}
                   />
-                )}
+                }
                 label="동의"
                 style={{ flex: 2, marginRight: 0 }}
               />
             </Grid>
           </div>
-          )}
+        )}
         <div>
-          <StyledItemText className={classes.titleWrap} primary="계약자 정보 📋" fontSize="18px" color="#2771ff" />
+          <StyledItemText
+            className={classes.titleWrap}
+            primary="계약자 정보 📋"
+            fontSize="18px"
+            color="#2771ff"
+          />
         </div>
         <Grid item className={classes.content}>
           <StyledItemText primary="과세 유형" fontSize="15px" className={classes.contentTitle} />
-          { CreatorType === 0 ? (
-            <StyledItemText primary="개인(사업소득)" fontSize="15px" className={classes.textField} />
+          {CreatorType === 0 ? (
+            <StyledItemText
+              primary="개인(사업소득)"
+              fontSize="15px"
+              className={classes.textField}
+            />
           ) : (
             <StyledItemText primary="개인사업자" fontSize="15px" className={classes.textField} />
           )}
@@ -321,19 +325,22 @@ function SettlementForm({
           />
         </Grid>
         <div>
-          <StyledItemText className={classes.titleWrap} primary="정산 계좌 정보 📋" fontSize="18px" color="#2771ff" />
+          <StyledItemText
+            className={classes.titleWrap}
+            primary="정산 계좌 정보 📋"
+            fontSize="18px"
+            color="#2771ff"
+          />
         </div>
         <Grid item className={classes.content}>
           <StyledItemText primary="은행" fontSize="15px" className={classes.contentTitle} />
           <Autocomplete
             options={banks}
-            getOptionLabel={(option) => option.bankName}
+            getOptionLabel={option => option.bankName}
             value={bankState}
             onChange={handleChangeBank}
             className={classes.textField}
-            renderInput={(params) => (
-              <TextField {...params} required margin="dense" />
-            )}
+            renderInput={params => <TextField {...params} required margin="dense" />}
           />
         </Grid>
         <Grid item className={classes.content}>
@@ -365,15 +372,26 @@ function SettlementForm({
           />
         </Grid>
         <div>
-          <StyledItemText className={classes.titleWrap} primary="파일업로드 📋" fontSize="18px" color="#2771ff" />
+          <StyledItemText
+            className={classes.titleWrap}
+            primary="파일업로드 📋"
+            fontSize="18px"
+            color="#2771ff"
+          />
         </div>
         <Grid item className={classes.contentImageWrap}>
-          <StyledItemText primary="신분증 업로드" fontSize="15px" className={classes.contentTitle} />
+          <StyledItemText
+            primary="신분증 업로드"
+            fontSize="15px"
+            className={classes.contentTitle}
+          />
           <input
             required
             accept="image/*"
             color="primary"
-            onChange={(e): void => { readImage(e, 1); }}
+            onChange={(e): void => {
+              readImage(e, 1);
+            }}
             type="file"
             className={classes.contentImage}
           />
@@ -385,38 +403,41 @@ function SettlementForm({
             required
             accept="image/*"
             color="primary"
-            onChange={(e): void => { readImage(e, 2); }}
+            onChange={(e): void => {
+              readImage(e, 2);
+            }}
             type="file"
             className={classes.contentImage}
           />
           <Button onClick={ImageUploadAC.handleOpen}>통장사본업로드안내</Button>
         </Grid>
-        { (CreatorType === 1)
-          && (
+        {CreatorType === 1 && (
           <Grid item className={classes.contentImageWrap}>
-            <StyledItemText primary="사업자 등록증" fontSize="15px" className={classes.contentTitle} />
+            <StyledItemText
+              primary="사업자 등록증"
+              fontSize="15px"
+              className={classes.contentTitle}
+            />
             <input
               required
               accept="image/*"
               color="primary"
-              onChange={(e): void => { readImage(e, 3); }}
+              onChange={(e): void => {
+                readImage(e, 3);
+              }}
               type="file"
               className={classes.contentImage}
             />
             <Button onClick={BussinessUpload.handleOpen}>사업자등록증안내</Button>
           </Grid>
-          )}
+        )}
         <div className={classes.titleWraper}>
           <StyledItemText primary="서비스 이용 및 정산등록 동의" fontSize="18px" color="#2771ff" />
         </div>
         <SettlementAgreement />
         <Grid item>
           <div style={{ textAlign: 'center' }}>
-            <Button
-              type="submit"
-              value="Submit"
-              color="primary"
-            >
+            <Button type="submit" value="Submit" color="primary">
               등록
             </Button>
           </div>
@@ -457,6 +478,5 @@ function SettlementForm({
     </>
   );
 }
-
 
 export default SettlementForm;

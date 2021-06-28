@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import StyledSliderItem from './SliderItems.style';
 
 interface SliderItemProps {
@@ -20,7 +20,7 @@ function SliderItem({
   callback,
   callbackOut,
   slideMargin,
-  visibleSlides
+  visibleSlides,
 }: SliderItemProps): JSX.Element {
   return (
     <StyledSliderItem

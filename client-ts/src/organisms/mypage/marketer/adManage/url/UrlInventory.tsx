@@ -1,23 +1,22 @@
-import React from 'react';
-import moment from 'moment';
-import {
-  IconButton,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+/* eslint-disable react/display-name */
+import * as React from 'react';
+import dayjs from 'dayjs';
+import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
 import { UrlDataInterface, UrlLink } from '../interface';
 import UrlDeleteDialog from './UrlDeleteDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import renderUrlConfirmState, { CONFIRM_STATE_REJECTED } from '../../../../../utils/render_funcs/renderUrlConfirmState';
+import renderUrlConfirmState, {
+  CONFIRM_STATE_REJECTED,
+} from '../../../../../utils/render_funcs/renderUrlConfirmState';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 
 const useStyles = makeStyles(() => ({
   clickableText: {
-    cursor: 'pointer', alignItems: 'center'
+    cursor: 'pointer',
+    alignItems: 'center',
   },
   datagrid: { height: 400, width: '100%' },
 }));
@@ -29,11 +28,7 @@ export interface UrlTableProps {
 
 export default function UrlTable(props: UrlTableProps): JSX.Element {
   const classes = useStyles();
-  const {
-    urlData,
-    pageOffset,
-    totalPageLength,
-  } = props;
+  const { urlData, pageOffset, totalPageLength } = props;
 
   const urlDeleteDialog = useDialog();
   const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
@@ -46,7 +41,6 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
 
   return (
     <div>
-
       <div className={classes.datagrid}>
         <CustomDataGrid
           pagination
@@ -55,7 +49,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           onPageChange={(param): void => {
             // 페이지 수정 => 해당 페이지 데이터 로드
             // page 가 1부터 시작되므로 1 줄인다.
-            urlData.handlePage(param.page - 1);
+            urlData.handlePage(param.page);
           }}
           pageSize={pageOffset}
           rowCount={totalPageLength}
@@ -69,26 +63,31 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               width: 150,
               renderCell: (data): React.ReactElement => (
                 <Tooltip title={data.row.linkId}>
-                  <Typography noWrap variant="body2">{data.row.linkId}</Typography>
+                  <Typography noWrap variant="body2">
+                    {data.row.linkId}
+                  </Typography>
                 </Tooltip>
-              )
+              ),
             },
             {
               headerName: '심의 결과',
               field: 'confirmState',
               width: 150,
               renderCell: (data): React.ReactElement => (
-                <Typography variant="body2" color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}>
+                <Typography
+                  variant="body2"
+                  color={data.row.confirmState === CONFIRM_STATE_REJECTED ? 'error' : 'textPrimary'}
+                >
                   {renderUrlConfirmState(data.row.confirmState)}
                   <br />
                   {data.row.confirmState === CONFIRM_STATE_REJECTED && (
-                  // 거절됨의 경우 사유 렌더링
-                  <Typography noWrap component="span" variant="caption" color="error">
-                    {data.row.denialReason}
-                  </Typography>
+                    // 거절됨의 경우 사유 렌더링
+                    <Typography noWrap component="span" variant="caption" color="error">
+                      {data.row.denialReason}
+                    </Typography>
                   )}
                 </Typography>
-              )
+              ),
             },
             {
               field: 'links',
@@ -105,7 +104,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
                       component="div"
                     >
                       {link.linkName || ''}
-                      {link.linkName && (<br />)}
+                      {link.linkName && <br />}
                       <Tooltip title={link.linkTo} placement="bottom-start">
                         <Typography
                           noWrap
@@ -133,41 +132,46 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               headerName: '링크 등록 일자',
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
-                  {moment(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(data.row.regiDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
-              )
+              ),
             },
             {
               field: '',
               width: 80,
               headerName: '삭제',
               renderCell: (data): React.ReactElement => (
-                <IconButton onClick={(): void => {
-                  handleUrlSelect(data.row as UrlDataInterface);
-                  urlDeleteDialog.handleOpen();
-                }}
+                <IconButton
+                  onClick={(): void => {
+                    handleUrlSelect(data.row as UrlDataInterface);
+                    urlDeleteDialog.handleOpen();
+                  }}
                 >
                   <Delete fontSize="small" />
                 </IconButton>
-              )
-            }
+              ),
+            },
           ]}
         />
       </div>
 
       {urlDeleteDialog.open && selectedUrl && (
-      <UrlDeleteDialog
-        open={urlDeleteDialog.open}
-        selectedUrl={selectedUrl}
-        handleClose={urlDeleteDialog.handleClose}
-        recallRequest={(): void => {
-          urlData.requestWithoutConcat();
-          successSnack.handleOpen();
-        }}
-      />
+        <UrlDeleteDialog
+          open={urlDeleteDialog.open}
+          selectedUrl={selectedUrl}
+          handleClose={urlDeleteDialog.handleClose}
+          recallRequest={(): void => {
+            urlData.requestWithoutConcat();
+            successSnack.handleOpen();
+          }}
+        />
       )}
 
-      <Snackbar message="올바르게 삭제되었습니다." open={successSnack.open} onClose={successSnack.handleClose} />
+      <Snackbar
+        message="올바르게 삭제되었습니다."
+        open={successSnack.open}
+        onClose={successSnack.handleClose}
+      />
     </div>
   );
 }

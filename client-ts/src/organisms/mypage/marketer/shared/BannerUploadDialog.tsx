@@ -1,10 +1,8 @@
-import {
-  Button, Collapse, Step, StepContent, StepLabel, Stepper
-} from '@material-ui/core';
+import { Button, Collapse, Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
-import React, { useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../config';
 import axios from '../../../../utils/axios';
@@ -15,7 +13,7 @@ import './upload.css';
 const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
-  root: { color: theme.palette.background.paper, display: 'flex', },
+  root: { color: theme.palette.background.paper, display: 'flex' },
   active: {
     color: theme.palette.primary.main,
   },
@@ -41,9 +39,7 @@ function QontoStepIcon(props: any): JSX.Element {
   const { active, completed } = props;
 
   return (
-    <div
-      className={classnames(classes.root, { [classes.active]: active })}
-    >
+    <div className={classnames(classes.root, { [classes.active]: active })}>
       {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
     </div>
   );
@@ -69,7 +65,8 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
       if (action.imageUrl && typeof action.imageUrl !== 'string') {
         // ArrayBuffer to String에 대한 test가 필요하다. => 안되면 any를 하자.
         const strUrl = String.fromCharCode.apply(
-          null, Array.from(new Uint16Array(action.imageUrl))
+          null,
+          Array.from(new Uint16Array(action.imageUrl)),
         );
         return { imageName: action.imageName, imageUrl: strUrl };
       }
@@ -89,9 +86,7 @@ interface UploadDialogProps {
 }
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
-  const {
-    open, onClose, recallRequest, failCallback
-  } = props;
+  const { open, onClose, recallRequest, failCallback } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
   const handleClose = (): void => {
@@ -106,8 +101,9 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   // 배너를 등록 함수
   const handleSubmit = (): void => {
     setSubmitLoading(true);
-    axios.post(`${HOST}/marketer/banner`, { bannerSrc: state.imageUrl })
-      .then((res) => {
+    axios
+      .post(`${HOST}/marketer/banner`, { bannerSrc: state.imageUrl })
+      .then(res => {
         setSubmitLoading(false);
         if (res.data[0]) {
           alert(res.data[1]);
@@ -117,7 +113,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
         }
         handleClose();
       })
-      .catch((e) => {
+      .catch(e => {
         if (failCallback) failCallback(e);
         else {
           alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
@@ -132,9 +128,9 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
       maxWidth="sm"
       fullWidth
       title="배너 등록"
-      buttons={(
+      buttons={
         <div style={{ display: 'flex' }}>
-          <Collapse in={Boolean(state.imageUrl && (state.imageUrl !== DEFAULT_IMAGE_PATH))}>
+          <Collapse in={Boolean(state.imageUrl && state.imageUrl !== DEFAULT_IMAGE_PATH)}>
             <Button
               color="primary"
               variant="contained"
@@ -144,27 +140,24 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
               등록
             </Button>
           </Collapse>
-          <Button
-            variant="contained"
-            onClick={handleClose}
-          >
+          <Button variant="contained" onClick={handleClose}>
             취소
           </Button>
         </div>
-          )}
+      }
     >
       <Stepper activeStep={activeStep} orientation="vertical" style={{ padding: 0 }}>
         <Step key="0">
-          <StepLabel StepIconComponent={QontoStepIcon}>
-            배너 이미지 등록
-          </StepLabel>
+          <StepLabel StepIconComponent={QontoStepIcon}>배너 이미지 등록</StepLabel>
           <StepContent>
             <BannerUpload
               image={state}
               onReset={(): void => dispatch({ type: 'reset' })}
               onSucess={(image): void => {
                 dispatch({
-                  type: 'set', imageName: image.imageName, imageUrl: image.imageUrl,
+                  type: 'set',
+                  imageName: image.imageName,
+                  imageUrl: image.imageUrl,
                 });
               }}
             />
@@ -174,6 +167,5 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     </Dialog>
   );
 };
-
 
 export default UploadDialog;

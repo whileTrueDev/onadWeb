@@ -66,9 +66,11 @@ export interface LandingUrlData {
 }
 
 export interface AdMaterial {
-   name: string; desc: string;
-   images: {src: string; desc: string}[]; lastDesc: string ;
-   billingType: string;
+  name: string;
+  desc: string;
+  images: { src: string; desc: string }[];
+  lastDesc: string;
+  billingType: string;
 }
 export interface OptionInterface {
   id: string;

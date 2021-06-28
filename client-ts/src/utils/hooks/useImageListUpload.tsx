@@ -26,11 +26,12 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
    * @param imageData 목록에 추가할 이미지 데이터
    */
   function handleImageUpload(imageData: T): void {
-    if (options && images.length >= options.limit) return alert(`이미지는 최대 ${options.limit}장까지 업로드 가능합니다.`);
+    if (options && images.length >= options.limit)
+      return alert(`이미지는 최대 ${options.limit}장까지 업로드 가능합니다.`);
 
-    return setImages((prev) => {
+    return setImages(prev => {
       // 이미 동일한 이미지가 업로드 되지 않았을 때만 추가
-      if (!(prev.map((x) => x.imageName).includes(imageData.imageName))) {
+      if (!prev.map(x => x.imageName).includes(imageData.imageName)) {
         return prev.concat(imageData);
       }
       return prev;
@@ -42,7 +43,7 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
    * @param imageName 목록에서 제거할 이미지 이름
    */
   function handleImageRemove(imageName: string): void {
-    setImages((prev) => prev.filter((imageData) => imageData.imageName !== imageName));
+    setImages(prev => prev.filter(imageData => imageData.imageName !== imageName));
   }
 
   /**
@@ -52,14 +53,16 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
    * @param onFail 실패시 콜백
    */
   function uploadToS3(
-    key: string, onSuccess: () => void, onFail: (err: any) => void
+    key: string,
+    onSuccess: () => void,
+    onFail: (err: any) => void,
   ): Promise<void[]> {
     return Promise.all(
-      images.map(
-        (image) => s3UploadImage({ key, filename: image.imageName, file: image.imageFile, })
+      images.map(image =>
+        s3UploadImage({ key, filename: image.imageName, file: image.imageFile })
           .then(onSuccess, onFail)
-          .catch(onFail)
-      )
+          .catch(onFail),
+      ),
     );
   }
 
@@ -72,6 +75,6 @@ export default function useImageListUpload<T extends OnadUploadedImageData>(
     handleImageUpload,
     handleImageRemove,
     uploadToS3,
-    handleReset
+    handleReset,
   };
 }

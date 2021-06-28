@@ -1,11 +1,10 @@
-import moment from 'moment';
-import React from 'react';
+import dayjs from 'dayjs';
 import ReactTooltip from 'react-tooltip';
 import Heatmap from 'react-calendar-heatmap';
 import getMeanStd from './getMeanStd';
 import './heatmap.css';
 
-type ClickData = {count: number; date: string };
+type ClickData = { count: number; date: string };
 interface ClickHeatmapProps {
   data: ClickData[];
 }
@@ -19,13 +18,13 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     }
     // Configuration for react-tooltip
     return {
-      'data-tip': `${moment(value.date).format('YYYY년 MM월 DD일')}, ${value.count}회 클릭`,
+      'data-tip': `${dayjs(value.date).format('YYYY년 MM월 DD일')}, ${value.count}회 클릭`,
     };
   };
 
-  const { mean, stddev } = getMeanStd(data.map((d) => (d.count)));
+  const { mean, stddev } = getMeanStd(data.map(d => d.count));
 
-  function makeDateOptions(): {startDate: Date; endDate: Date} {
+  function makeDateOptions(): { startDate: Date; endDate: Date } {
     const today = new Date();
     const today2 = new Date();
 
@@ -36,31 +35,50 @@ export default function ClickHeatmap(props: ClickHeatmapProps): JSX.Element {
     return { startDate, endDate };
   }
 
-
   return (
-    <div style={{ height: 220, overflow: 'auto', }}>
-
+    <div style={{ height: 220, overflow: 'auto' }}>
       <Heatmap
         showMonthLabels
         showWeekdayLabels
         startDate={makeDateOptions().startDate}
         endDate={makeDateOptions().endDate}
         weekdayLabels={['일', '월', '화', '수', '목', '금', '토']}
-        monthLabels={['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']}
+        monthLabels={[
+          '1월',
+          '2월',
+          '3월',
+          '4월',
+          '5월',
+          '6월',
+          '7월',
+          '8월',
+          '9월',
+          '10월',
+          '11월',
+          '12월',
+        ]}
         values={data}
         tooltipDataAttrs={getTooltipDataAttrs}
         classForValue={(value): string => {
-          if (!value) { return 'color-empty'; }
-          if (value.count < mean - (2 * stddev)) { return 'color-github-0'; }
-          if (value.count < mean - stddev) { return 'color-github-1'; }
-          if (value.count < mean) { return 'color-github-2'; }
-          if (value.count < mean + stddev) { return 'color-github-3'; }
+          if (!value) {
+            return 'color-empty';
+          }
+          if (value.count < mean - 2 * stddev) {
+            return 'color-github-0';
+          }
+          if (value.count < mean - stddev) {
+            return 'color-github-1';
+          }
+          if (value.count < mean) {
+            return 'color-github-2';
+          }
+          if (value.count < mean + stddev) {
+            return 'color-github-3';
+          }
           return 'color-github-4';
         }}
       />
-      {data.length > 0 && (
-      <ReactTooltip type="success" effect="solid" border={false} />
-      )}
+      {data.length > 0 && <ReactTooltip type="success" effect="solid" border={false} />}
     </div>
   );
 }

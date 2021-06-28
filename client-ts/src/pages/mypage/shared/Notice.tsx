@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useMediaQuery } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
@@ -11,9 +11,8 @@ import NoticeContents from '../../../organisms/mypage/shared/notice/NoticeConten
 
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 
-
 const useStyles = makeStyles(() => ({
-  contentBox: { maxWidth: 1200, margin: '0 auto', }
+  contentBox: { maxWidth: 1200, margin: '0 auto' },
 }));
 
 export default function PublicNotification(): JSX.Element {
@@ -28,20 +27,18 @@ export default function PublicNotification(): JSX.Element {
     setSelectedNotice(notice);
   }
   // 특정 공지사항으로의 history push 처리
-  const location = useLocation<{selectedNotice: string}>();
+  const location = useLocation<{ selectedNotice: string }>();
 
   const mainPanel = document.getElementById('onad-main-panel');
-  React.useEffect(() => {
+  useEffect(() => {
     if (mainPanel) {
       mainPanel.scroll({ top: 0, behavior: 'smooth' });
     }
 
     if (location.state && location.state.selectedNotice && noticeData.data) {
       // 대시보드로부터 선택된 공지사항 찾기
-      const targetNoti = noticeData.data.find(
-        (noti) => noti.code === location.state.selectedNotice
-      );
-      // 선택된 공지사항이 없고, 대시보드로부터 선택된 공지사항이 있는 경우 
+      const targetNoti = noticeData.data.find(noti => noti.code === location.state.selectedNotice);
+      // 선택된 공지사항이 없고, 대시보드로부터 선택된 공지사항이 있는 경우
       if (!selectedNotice && targetNoti) handleNoticeSelect(targetNoti);
     }
   }, [location.state, mainPanel, noticeData.data, selectedNotice]);
@@ -49,11 +46,10 @@ export default function PublicNotification(): JSX.Element {
   return (
     <div className={classes.contentBox}>
       <GridContainer>
-
         <GridItem xs={12}>
           {isDesktopWidth ? (
             <div>
-              {selectedNotice && (<NoticeContents selectedNotice={selectedNotice} />)}
+              {selectedNotice && <NoticeContents selectedNotice={selectedNotice} />}
               <NoticeTable
                 data={noticeData.data || []}
                 loading={noticeData.loading}
@@ -62,7 +58,7 @@ export default function PublicNotification(): JSX.Element {
             </div>
           ) : (
             <div>
-              {noticeData.loading && (<CircularProgress small />)}
+              {noticeData.loading && <CircularProgress small />}
               {!noticeData.loading && noticeData.data && (
                 <NoticeTableMobile data={noticeData.data} />
               )}

@@ -1,9 +1,7 @@
-import React from 'react';
-import shortid from 'shortid';
+import * as React from 'react';
+import { nanoid } from 'nanoid';
 // @material-ui/core components
-import {
-  Table, TableHead, TableRow, TableBody, TableCell, Button
-} from '@material-ui/core';
+import { Table, TableHead, TableRow, TableBody, TableCell, Button } from '@material-ui/core';
 // custom table component
 import CustomTableFooter from './TableFooter';
 import useTableStyles from './Table.style';
@@ -26,18 +24,17 @@ export default function MarketerSettlementLogsTable({
 
   const [page, setPage] = React.useState(0); // 테이블 페이지
   const [rowsPerPage, setRowsPerPage] = React.useState(4); // 테이블 페이지당 행
-  const emptyRows = rowsPerPage - Math.min(
-    rowsPerPage, tableData.length - page * rowsPerPage,
-  );
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
   // page handler
   function handleChangeTablePage(
-    event: React.MouseEvent<HTMLButtonElement> | null, newPage: number
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
   ): void {
     setPage(newPage);
   }
   // page per row handler
   function handleChangeTableRowsPerPage(
-    event: React.ChangeEvent< HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void {
     setRowsPerPage(parseInt(event.target.value, 10));
   }
@@ -47,11 +44,8 @@ export default function MarketerSettlementLogsTable({
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {tableHead.map((value) => (
-              <TableCell
-                className={`${classes.tableCell} ${classes.tableHeadCell}`}
-                key={shortid.generate()}
-              >
+            {tableHead.map(value => (
+              <TableCell className={`${classes.tableCell} ${classes.tableHeadCell}`} key={nanoid()}>
                 {value}
               </TableCell>
             ))}
@@ -60,9 +54,9 @@ export default function MarketerSettlementLogsTable({
 
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((prop, i) => (
-            <TableRow hover key={shortid.generate()}>
-              {prop.map((value) => (
-                <TableCell className={classes.tableCell} key={shortid.generate()}>
+            <TableRow hover key={nanoid()}>
+              {prop.map(value => (
+                <TableCell className={classes.tableCell} key={nanoid()}>
                   <span>{value}</span>
                 </TableCell>
               ))}
@@ -74,7 +68,7 @@ export default function MarketerSettlementLogsTable({
                     size="small"
                     onClick={(): void => {
                       if (handleDialogOpen) {
-                        handleDialogOpen((page * rowsPerPage) + i);
+                        handleDialogOpen(page * rowsPerPage + i);
                       }
                     }}
                   >
@@ -86,11 +80,10 @@ export default function MarketerSettlementLogsTable({
           ))}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 36 * emptyRows }} key={shortid.generate()}>
+            <TableRow style={{ height: 36 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={6} />
             </TableRow>
           )}
-
         </TableBody>
 
         <CustomTableFooter

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 import useCardIconStyle from './CardIcon.style';
@@ -9,11 +9,7 @@ interface CardIconProps {
   [rest: string]: any;
 }
 
-function CardIcon({
-  className,
-  children,
-  ...rest
-}: CardIconProps): JSX.Element {
+function CardIcon({ className, children, ...rest }: CardIconProps): JSX.Element {
   const classes = useCardIconStyle();
 
   const cardIconClasses = classNames({
@@ -27,7 +23,7 @@ function CardIcon({
   });
 
   return (
-    <div className={className === 'yellowBack' ? (cardIconClasses2) : (cardIconClasses)} {...rest}>
+    <div className={className === 'yellowBack' ? cardIconClasses2 : cardIconClasses} {...rest}>
       {children}
     </div>
   );

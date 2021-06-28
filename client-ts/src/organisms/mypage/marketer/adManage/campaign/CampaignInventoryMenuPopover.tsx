@@ -1,10 +1,4 @@
-import {
-  Fade,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@material-ui/core';
-import React from 'react';
+import { Fade, Menu, MenuItem, Typography } from '@material-ui/core';
 import { Build, Delete } from '@material-ui/icons';
 
 export interface CampaignInventoryMenuPopoverProps {
@@ -29,10 +23,12 @@ export default function CampaignInventoryMenuPopover({
       TransitionComponent={Fade}
       keepMounted
       anchorOrigin={{
-        vertical: 'bottom', horizontal: 'right',
+        vertical: 'bottom',
+        horizontal: 'right',
       }}
       transformOrigin={{
-        vertical: 'top', horizontal: 'left',
+        vertical: 'top',
+        horizontal: 'left',
       }}
     >
       <MenuItem onClick={handleUpdateDialogOpen}>
@@ -40,7 +36,6 @@ export default function CampaignInventoryMenuPopover({
           <Build fontSize="small" />
           수정
         </Typography>
-
       </MenuItem>
       <MenuItem onClick={handleDeleteDialogOpen}>
         <Typography color="error" gutterBottom>

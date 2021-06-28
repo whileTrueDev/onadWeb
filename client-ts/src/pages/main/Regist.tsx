@@ -1,17 +1,15 @@
-import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import RegistStepper from '../../organisms/main/regist/Stepper';
 import NavTop from '../../organisms/main/layouts/NavTop';
 import useLoginValue from '../../utils/hooks/useLoginValue';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: theme.palette.background.default,
-    minHeight: '100vh'
+    minHeight: '100vh',
   },
 }));
 

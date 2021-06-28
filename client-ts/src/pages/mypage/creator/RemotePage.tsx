@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Paper from '@material-ui/core/Paper';
 import RemotePageBannerTable from '../../../organisms/mypage/creator/RemotePage/RemotePageBannerTable';
 
@@ -10,9 +8,7 @@ const RemotePage = (): JSX.Element => {
 
   return (
     <Paper>
-      <RemotePageBannerTable
-        pageUrl={thisUrl}
-      />
+      <RemotePageBannerTable pageUrl={thisUrl} />
     </Paper>
   );
 };

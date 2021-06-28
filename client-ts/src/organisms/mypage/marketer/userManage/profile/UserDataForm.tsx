@@ -1,12 +1,7 @@
-import React, {
-  useContext,
-  useEffect
-} from 'react';
+import { useContext, useEffect } from 'react';
 import classnames from 'classnames';
 // @material-ui/core
-import {
-  Grid, makeStyles, Paper,
-} from '@material-ui/core';
+import { Grid, makeStyles, Paper } from '@material-ui/core';
 import EditableTextField from '../../../../../atoms/EditableInput/EditableTextField';
 import EditablePhoneInput from './sub/EditablePhoneInput';
 import { MarketerInfo } from '../../office/interface';
@@ -16,34 +11,30 @@ import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import EditProfileImage from './sub/EditProfileImage';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(4),
     marginTop: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2)
-    }
+      padding: theme.spacing(2),
+    },
   },
   field: { margin: theme.spacing(2, 0) },
   first: { margin: theme.spacing(0, 0, 2) },
-  editable: {
-
-  },
-  value: { margin: theme.spacing(1, 0), },
+  editable: {},
+  value: { margin: theme.spacing(1, 0) },
   textField: {
     maxWidth: 320,
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0),
   },
 }));
 
 export interface UserDataFormProps {
   userData: MarketerInfo;
 }
-const UserDataForm = ({
-  userData
-}: UserDataFormProps): JSX.Element => {
+const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
   const classes = useStyles();
   const marketerInfo = useContext(MarketerInfoContext);
 
@@ -57,14 +48,11 @@ const UserDataForm = ({
     nameValue.setValue(userData.marketerName);
     mailValue.setValue(userData.marketerMail);
     phoneValue.setValue(userData.marketerPhoneNum);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.marketerMail, userData.marketerName, userData.marketerPhoneNum]);
 
-  const {
-    loading, doPatchRequest
-  } = usePatchRequest<{ type: string; value: string | number }, any[]>(
-    '/marketer'
-  );
+  const { loading, doPatchRequest } =
+    usePatchRequest<{ type: string; value: string | number }, any[]>('/marketer');
 
   // **************************************************
   // 성공, 실패 알림을 위한 상태값
@@ -118,7 +106,7 @@ const UserDataForm = ({
             onReset={nameValue.handleReset}
             helperText="방송인과 시청자에게 해당 이름으로 보여집니다."
             inputProps={{
-              maxLength: 15
+              maxLength: 15,
             }}
           />
         </Grid>
@@ -169,11 +157,9 @@ const UserDataForm = ({
               handlePatchSubmit('phone', phoneNum);
             }}
             onReset={phoneValue.handleReset}
-            formControlProps={{
-            }}
+            formControlProps={{}}
           />
         </Grid>
-
       </Grid>
 
       {successSnack.open && (
@@ -195,6 +181,5 @@ const UserDataForm = ({
     </Paper>
   );
 };
-
 
 export default UserDataForm;

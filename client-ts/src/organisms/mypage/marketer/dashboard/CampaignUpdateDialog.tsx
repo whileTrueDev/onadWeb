@@ -1,8 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
-import {
-  Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton
-} from '@material-ui/core';
+import { Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -17,7 +15,6 @@ import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { CampaignInterface } from './interfaces';
 
-
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
     display: 'flex',
@@ -26,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   text: {
     marginTop: theme.spacing(2),
-    minHeight: '90px'
+    minHeight: '90px',
   },
   input: {
     width: '300px',
@@ -40,23 +37,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   contents: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.background.paper
-  }
+    backgroundColor: theme.palette.background.paper,
+  },
 }));
 
 type Action =
-  { key: 'noBudget' } |
-  { key: 'reset' } |
-  { key: 'campaignName'; value: string } |
-  { key: 'budget'; value: string }
-
+  | { key: 'noBudget' }
+  | { key: 'reset' }
+  | { key: 'campaignName'; value: string }
+  | { key: 'budget'; value: string };
 
 interface StateInterface {
   noBudget: boolean;
   budget: string;
   campaignName: string;
 }
-
 
 const reducer = (state: StateInterface, action: Action): StateInterface => {
   switch (action.key) {
@@ -66,7 +61,7 @@ const reducer = (state: StateInterface, action: Action): StateInterface => {
       return {
         ...state,
         noBudget: !state.noBudget,
-        budget: (!state.noBudget) === true ? '' : state.budget
+        budget: !state.noBudget === true ? '' : state.budget,
       };
     }
     case 'budget': {
@@ -74,7 +69,9 @@ const reducer = (state: StateInterface, action: Action): StateInterface => {
     }
     case 'reset': {
       return {
-        noBudget: false, budget: '', campaignName: ''
+        noBudget: false,
+        budget: '',
+        campaignName: '',
       };
     }
     default: {
@@ -95,9 +92,7 @@ interface CampaignUpdateDialogProps {
 const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => {
   const classes = useStyles();
 
-  const {
-    open, selectedCampaign, handleClose, doGetRequest
-  } = props;
+  const { open, selectedCampaign, handleClose, doGetRequest } = props;
 
   const snack = useDialog();
   const [error, setError] = React.useState<string | false>(false); // budget 작성시 한도 체크용 State
@@ -105,7 +100,9 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
   const [duplicate, setDuplicate] = React.useState<boolean>(false);
 
   const [state, dispatch] = React.useReducer(reducer, {
-    noBudget: false, budget: '', campaignName: ''
+    noBudget: false,
+    budget: '',
+    campaignName: '',
   });
 
   const nameData = useGetRequest<string[]>('/marketer/campaign/names');
@@ -128,7 +125,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
   };
 
   const handleChangeName = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void => {
     if (event.target.value.length === 0) {
       setDuplicate(false);
@@ -150,9 +147,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
     dispatch({ key: 'budget', value: value.value });
     if (Number(value.value) < 5000 && value.value !== '') {
       setError(MIN_BUDGET_ERR_MSG);
-    } else if (
-      value.value !== '' && (Number(value.value) < Number(selectedCampaign.dailysum))
-    ) {
+    } else if (value.value !== '' && Number(value.value) < Number(selectedCampaign.dailysum)) {
       // 변경할 예산보다 현재 집행된 금액이 큰 경우
       setError(BUDGET_WARNING_MSG);
     } else {
@@ -233,17 +228,15 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                       />
                     </Grid>
                     <Grid item>
-                      {(checkName && state.campaignName !== '')
-                        && (
-                          <Success>
-                            <Check />
-                          </Success>
-                        )}
+                      {checkName && state.campaignName !== '' && (
+                        <Success>
+                          <Check />
+                        </Success>
+                      )}
                     </Grid>
                     <Grid item>
                       <DangerTypography>
-                        {duplicate
-                          && ('캠페인명이 중복되었습니다.')}
+                        {duplicate && '캠페인명이 중복되었습니다.'}
                       </DangerTypography>
                     </Grid>
                   </Grid>
@@ -299,17 +292,15 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                   <Divider orientation="horizontal" variant="middle" />
                 </Grid>
                 <Grid item className={classes.text}>
-                  {(selectedCampaign.dailyLimit !== -1)
-                    ? (
-                      <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
-                        {new Intl.NumberFormat().format(selectedCampaign.dailyLimit)}
-                      </Typography>
-                    )
-                    : (
-                      <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
-                        ∞
-                      </Typography>
-                    )}
+                  {selectedCampaign.dailyLimit !== -1 ? (
+                    <Typography variant="body1" align="center" style={{ fontWeight: 700 }}>
+                      {new Intl.NumberFormat().format(selectedCampaign.dailyLimit)}
+                    </Typography>
+                  ) : (
+                    <Typography variant="h4" align="center" style={{ fontWeight: 700 }}>
+                      ∞
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -341,12 +332,10 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                             allowNegative={false}
                           />
                         </Grid>
-                        <Grid item>
-                          원
-                        </Grid>
+                        <Grid item>원</Grid>
                         <Grid item>
                           <FormControlLabel
-                            control={(
+                            control={
                               <Checkbox
                                 color="primary"
                                 checked={state.noBudget}
@@ -354,7 +343,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                                 size="small"
                                 style={{ padding: '3px' }}
                               />
-                            )}
+                            }
                             label="미설정"
                             labelPlacement="start"
                           />
@@ -362,15 +351,17 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                       </Grid>
                     </Grid>
                     <Grid item>
-                      {(!error && state.budget !== '')
-                        && (
-                          <Success>
-                            <Check />
-                          </Success>
-                        )}
+                      {!error && state.budget !== '' && (
+                        <Success>
+                          <Check />
+                        </Success>
+                      )}
                     </Grid>
                     <Grid item>
-                      {error && error.split('\n').map((e) => <DangerTypography key={e}>{e}</DangerTypography>)}
+                      {error &&
+                        error
+                          .split('\n')
+                          .map(e => <DangerTypography key={e}>{e}</DangerTypography>)}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -380,7 +371,11 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
                       color="primary"
                       size="small"
                       onClick={(): void => {
-                        if (((error === false || error === BUDGET_WARNING_MSG) && state.budget !== '') || state.noBudget) {
+                        if (
+                          ((error === false || error === BUDGET_WARNING_MSG) &&
+                            state.budget !== '') ||
+                          state.noBudget
+                        ) {
                           handleBudgetUpdate();
                         } else {
                           alert('입력이 올바르지 않습니다.');

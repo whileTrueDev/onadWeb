@@ -1,12 +1,12 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     marginTop: theme.spacing(5),
     marginBottom: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   titleWapper: {
     margin: theme.spacing(3, 0),
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-start',
-    }
+    },
   },
   titleLine: {
     marginRight: theme.spacing(4),
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     background: 'linear-gradient(to bottom, #00e2ff, #5800ff)',
     [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   titleLine2: {
     marginRight: theme.spacing(4),
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     background: 'linear-gradient(to bottom, #54eacd, #5ed7ed)',
     [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   title: {
     marginRight: theme.spacing(2),
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       fontSize: '20px',
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   },
   subTitle: {
     wordBreak: 'keep-all',
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardWrapper: {
     zIndex: 1,
-    width: '100%'
+    width: '100%',
   },
   card: {
     margin: '20px auto',
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       border: '1px solid #0074d8',
       backgroundColor: theme.palette.common.white,
-    }
+    },
   },
   datailContent2: {
     color: theme.palette.common.black,
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       border: '1px solid #54eacd',
       backgroundColor: theme.palette.common.white,
-    }
+    },
   },
   textField: {
     width: '100%',
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '0 16px',
     [theme.breakpoints.down('xs')]: {
       padding: '0 10px',
-    }
+    },
   },
   checked: {},
   button: {
@@ -150,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:hover': {
       background: '#0074d8',
-    }
+    },
   },
   button2: {
     width: '200px',
@@ -165,7 +165,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:hover': {
       background: '#54eacd',
-    }
+    },
   },
   detailTitle: {
     fontFamily: 'Noto Sans KR',
@@ -173,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#0074d8',
     [theme.breakpoints.down('sm')]: {
       fontSize: '15px',
-    }
+    },
   },
   detailTitle2: {
     fontFamily: 'Noto Sans KR',
@@ -181,14 +181,14 @@ const useStyles = makeStyles((theme) => ({
     color: '#54eacd',
     [theme.breakpoints.down('sm')]: {
       fontSize: '15px',
-    }
+    },
   },
   notColoredTitle: {
     fontFamily: 'Noto Sans KR',
     fontWeight: 600,
     [theme.breakpoints.down('sm')]: {
       fontSize: '15px',
-    }
+    },
   },
   inputStyle: {
     boxShadow: '0px 0px 5px #00ace0',

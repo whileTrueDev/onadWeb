@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   rightLink: {
     color: 'black',
     fontSize: 18,

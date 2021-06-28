@@ -30,7 +30,8 @@ export interface StepState {
   name: string;
 }
 
-export type StepAction = { type: 'id'; value: string }
+export type StepAction =
+  | { type: 'id'; value: string }
   | { type: 'password'; value: string }
   | { type: 'repasswd'; value: string }
   | { type: 'email'; value: string }
@@ -39,23 +40,25 @@ export type StepAction = { type: 'id'; value: string }
   | { type: 'domain'; value: string }
   | { type: 'checkDuplication'; value: boolean }
   | { type: 'name'; value: string }
-  | { type: 'reset' }
-
+  | { type: 'reset' };
 
 // reducer를 사용하여 Error를 handling하자
-export function myReducer(
-  state: StepState,
-  action: StepAction
-): StepState {
+export function myReducer(state: StepState, action: StepAction): StepState {
   switch (action.type) {
     case 'id': {
       if (userIdRegex.test(action.value)) {
         return {
-          ...state, id: false, checkDuplication: true, idValue: action.value
+          ...state,
+          id: false,
+          checkDuplication: true,
+          idValue: action.value,
         };
       }
       return {
-        ...state, id: true, checkDuplication: true, idValue: action.value
+        ...state,
+        id: true,
+        checkDuplication: true,
+        idValue: action.value,
       };
     }
     // (?=.*[0-9])

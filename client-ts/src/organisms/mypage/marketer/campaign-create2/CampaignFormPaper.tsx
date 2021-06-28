@@ -1,9 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import {
-  Typography, Table, TableBody, TableCell,
-  TableContainer, TableRow, Paper
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
 } from '@material-ui/core';
 import InputName from './CampaignFormComponents/InputName';
 import SelectBanner from './CampaignFormComponents/SelectBanner';
@@ -24,15 +29,15 @@ import { CampaignCreateAction, CampaignCreateInterface } from './reducers/campai
 import SelectMerchandise from './CampaignFormComponents/SelectMerchandise';
 import MerchandiseUploadDialog from '../shared/MerchandiseUploadDialog';
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCell = withStyles(theme => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
   },
-  body: { fontSize: 14, },
+  body: { fontSize: 14 },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles(theme => ({
   root: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.background.default,
@@ -40,9 +45,9 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   tableContainer: { marginBottom: theme.spacing(2) },
-  table: { },
+  table: {},
 }));
 
 interface CampaignFormPaperProps {
@@ -79,7 +84,7 @@ function CampaignFormPaper({
   const inputsteps: Array<{ title: string; component: JSX.Element } | false> = [
     {
       title: '캠페인 이름 입력',
-      component: <InputName nameInputRef={nameInputRef} />
+      component: <InputName nameInputRef={nameInputRef} />,
     },
     {
       title: '송출 배너 선택',
@@ -90,9 +95,9 @@ function CampaignFormPaper({
           handleDialogOpen={bannerUploadDialog.handleOpen}
           step={step}
         />
-      )
+      ),
     },
-    (optionType === 'option1') && {
+    optionType === 'option1' && {
       title: '랜딩페이지 URL 선택',
       component: (
         <SelectLandingUrl
@@ -101,9 +106,9 @@ function CampaignFormPaper({
           handleDialogOpen={landingUrlUploadDialog.handleOpen}
           landingUrlData={landingUrlData}
         />
-      )
+      ),
     },
-    (optionType === 'option3') && {
+    optionType === 'option3' && {
       title: '판매 상품 선택',
       component: (
         <SelectMerchandise
@@ -112,23 +117,23 @@ function CampaignFormPaper({
           handleDialogOpen={merchandiseUploadDialog.handleOpen}
           merchandiseData={merchandiseData}
         />
-      )
+      ),
     },
     {
       title: '홍보 문구 입력',
-      component: <InputDescription descriptionInputRef={descriptionInputRef} />
+      component: <InputDescription descriptionInputRef={descriptionInputRef} />,
     },
-    (optionType === 'option1') && {
+    optionType === 'option1' && {
       title: '일예산 설정',
-      component: <SelectBudget budgetInputRef={budgetInputRef} />
+      component: <SelectBudget budgetInputRef={budgetInputRef} />,
     },
     {
       title: '송출 기간 설정',
-      component: <SelectDateTerm state={state} dispatch={dispatch} />
+      component: <SelectDateTerm state={state} dispatch={dispatch} />,
     },
     {
       title: '송출 시간 설정',
-      component: <SelectTime state={state} dispatch={dispatch} />
+      component: <SelectTime state={state} dispatch={dispatch} />,
     },
   ];
 
@@ -145,11 +150,11 @@ function CampaignFormPaper({
                 {_step ? (
                   <StyledTableRow>
                     <StyledTableCell style={{ width: 300 }}>
-                      <Typography variant="h6" style={{ fontWeight: 700 }}>{_step.title}</Typography>
+                      <Typography variant="h6" style={{ fontWeight: 700 }}>
+                        {_step.title}
+                      </Typography>
                     </StyledTableCell>
-                    <StyledTableCell>
-                      {_step.component}
-                    </StyledTableCell>
+                    <StyledTableCell>{_step.component}</StyledTableCell>
                   </StyledTableRow>
                 ) : null}
               </React.Fragment>
@@ -158,12 +163,7 @@ function CampaignFormPaper({
         </Table>
       </TableContainer>
 
-      <ButtonSet
-        type="submit"
-        handleBack={handleBack}
-        nextButtonOpen
-        disabled={state.loading}
-      />
+      <ButtonSet type="submit" handleBack={handleBack} nextButtonOpen disabled={state.loading} />
 
       {/* 배너 생성 다이얼로그 */}
       <BannerUploadDialog
@@ -189,7 +189,6 @@ function CampaignFormPaper({
   );
 }
 
-
 /**
  * @description
  해당 캠페인의 입력값을 저장하는 컴포넌트
@@ -210,6 +209,5 @@ function CampaignFormPaper({
  *
  * @author 박찬우
  */
-
 
 export default CampaignFormPaper;

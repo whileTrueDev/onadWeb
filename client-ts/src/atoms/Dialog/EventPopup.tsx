@@ -1,10 +1,16 @@
 import {
-  Checkbox, Dialog, DialogProps, FormControlLabel, IconButton, makeStyles, Typography
+  Checkbox,
+  Dialog,
+  DialogProps,
+  FormControlLabel,
+  IconButton,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-import React from 'react';
+import * as React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   img: {
     height: '100%',
     minWidth: '100%',
@@ -14,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 2, 2),
     textAlign: 'center',
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
   },
   closeButton: { textAlign: 'right', zIndex: 10 },
   closeIcon: { color: theme.palette.common.white },
@@ -27,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
 }));
-
 
 interface EventPopupProps {
   open: boolean;
@@ -48,7 +53,7 @@ export default function EventPopup({
   maxWidth = 'xs',
   noShowKey,
   disableCloseButton = false,
-  disableFullWidth = false
+  disableFullWidth = false,
 }: EventPopupProps): React.ReactElement {
   const classes = useStyles();
   function handleNoShowCheck(): void {
@@ -57,22 +62,17 @@ export default function EventPopup({
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth={maxWidth}
-      fullWidth={!disableFullWidth}
-    >
+    <Dialog open={open} onClose={onClose} maxWidth={maxWidth} fullWidth={!disableFullWidth}>
       <div
         className={classes.img}
         style={{ background: `no-repeat center url(${backgroundImg})`, backgroundSize: 'cover' }}
       >
         {!disableCloseButton && (
-        <div className={classes.closeButton}>
-          <IconButton className={classes.closeIcon} onClick={onClose}>
-            <Close />
-          </IconButton>
-        </div>
+          <div className={classes.closeButton}>
+            <IconButton className={classes.closeIcon} onClick={onClose}>
+              <Close />
+            </IconButton>
+          </div>
         )}
 
         {children}
@@ -81,14 +81,14 @@ export default function EventPopup({
           <FormControlLabel
             className={classes.checkbox}
             labelPlacement="start"
-            control={(
+            control={
               <Checkbox
                 name="checkedB"
                 size="small"
                 className={classes.checkbox}
                 onChange={handleNoShowCheck}
               />
-            )}
+            }
             label={<Typography variant="body2">하루 동안 열지 않기</Typography>}
           />
         </div>

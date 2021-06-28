@@ -12,7 +12,7 @@ const useCardBodyStyles = makeStyles({
   },
   cardBodyProfile: {
     marginTop: '15px',
-  }
+  },
 });
 
 export default useCardBodyStyles;

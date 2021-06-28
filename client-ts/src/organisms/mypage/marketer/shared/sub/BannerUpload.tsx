@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Grid, Hidden, Typography, Button, CircularProgress
-} from '@material-ui/core';
+import { Grid, Hidden, Typography, Button, CircularProgress } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
-
 
 const useStyle = makeStyles((theme: Theme) => ({
   helperText: { margin: theme.spacing(2, 0) },
@@ -19,7 +17,7 @@ const useStyle = makeStyles((theme: Theme) => ({
   imgPreview: {
     width: 'auto',
     height: 350,
-    [theme.breakpoints.down('xs')]: { maxHeight: '200px', },
+    [theme.breakpoints.down('xs')]: { maxHeight: '200px' },
   },
   bannerContainer: { textAlign: 'center' },
   buttonSet: { maginTop: theme.spacing(2) },
@@ -52,14 +50,7 @@ const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
 
 const BannerUpload = (props: ImageUploadProps): JSX.Element => {
   const classes = useStyle();
-  const {
-    image,
-    onSucess,
-    onReset,
-    onExtCheckFailed,
-    onSizeCheckFailed,
-    onLoadError,
-  } = props;
+  const { image, onSucess, onReset, onExtCheckFailed, onSizeCheckFailed, onLoadError } = props;
 
   const [failed, setFailed] = useState('');
   function handleFailedReset(): void {
@@ -94,6 +85,7 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
    * 이미지 업로드 함수
    * @param event Input change React Event
    */
+  // eslint-disable-next-line consistent-return
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     onReset();
     handleFailedReset();
@@ -143,8 +135,12 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
     <div>
       <Alert severity="info" className={classes.helperText}>
         <Typography variant="body2">* 배너이미지의 배경이 있을 때 명확하게 잘 보입니다.</Typography>
-        <Typography variant="body2">* 업로드된 배너는 방송 화면에 320 X 160 크기 (2:1비율)로 보여집니다.</Typography>
-        <Typography variant="body2">* 배너 제작에 어려움이 있는 경우 배너 제작 문의 바랍니다.</Typography>
+        <Typography variant="body2">
+          * 업로드된 배너는 방송 화면에 320 X 160 크기 (2:1비율)로 보여집니다.
+        </Typography>
+        <Typography variant="body2">
+          * 배너 제작에 어려움이 있는 경우 배너 제작 문의 바랍니다.
+        </Typography>
       </Alert>
 
       <div className={classes.bannerContainer}>
@@ -166,10 +162,8 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
         )}
       </div>
 
-      {failed && (
-        <Alert severity="error">{failed}</Alert>
-      )}
-      {imageLoading && (<CircularProgress />)}
+      {failed && <Alert severity="error">{failed}</Alert>}
+      {imageLoading && <CircularProgress />}
 
       <div className="filebox">
         <Grid container direction="row" justify="flex-end">
@@ -182,17 +176,13 @@ const BannerUpload = (props: ImageUploadProps): JSX.Element => {
             <Button component="span" color="primary">
               <label htmlFor="getfile">
                 <input type="file" id="getfile" accept=".mp4,image/*" onChange={readImage} />
-                <Typography className={classes.imgInput}>
-                  파일찾기
-                </Typography>
+                <Typography className={classes.imgInput}>파일찾기</Typography>
               </label>
             </Button>
           </Grid>
         </Grid>
       </div>
-
     </div>
-
   );
 };
 

@@ -5,6 +5,7 @@ import { PaginationDto } from '../../../../dto/paginationDto.dto';
 import { Campaign } from '../../../../entities/Campaign';
 import { MerchandiseMallItems } from '../../../../entities/MerchandiseMallItems';
 import { MerchandiseOptions } from '../../../../entities/MerchandiseOptions';
+import { MerchandisePaymentMethods } from '../../../../entities/MerchandisePaymentMethods';
 import { MerchandisePickupAddresses } from '../../../../entities/MerchandisePickupAddresses';
 import { MerchandiseRegistered } from '../../../../entities/MerchandiseRegistered';
 import { transactionQuery } from '../../../../utils/transactionQuery';
@@ -24,6 +25,8 @@ export class MerchandisesService {
     @InjectRepository(MerchandisePickupAddresses)
     private readonly merchandisePickupAddressRepo: Repository<MerchandisePickupAddresses>,
     @InjectRepository(Campaign) private readonly campaignRepo: Repository<Campaign>,
+    @InjectRepository(MerchandisePaymentMethods)
+    private readonly paymentMethodsRepo: Repository<MerchandisePaymentMethods>,
   ) {}
 
   // * 상품 목록 조회 - 페이지네이션
@@ -202,6 +205,11 @@ export class MerchandisesService {
       .orderBy('createDate', 'ASC')
       .take(2)
       .getMany();
+  }
+
+  // * 결제 수단과 결제 수단별 수수료 정보
+  public findPaymentMethods(): Promise<MerchandisePaymentMethods[]> {
+    return this.paymentMethodsRepo.find();
   }
 
   // *************************************

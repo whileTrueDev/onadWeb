@@ -1,7 +1,9 @@
+/* eslint-disable react/display-name */
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import moment from 'moment';
-import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import * as React from 'react';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
@@ -11,18 +13,17 @@ import { MerchandiseOrder } from '../../adManage/interface';
 import CampaignDetailDialog from '../CampaignDetailDialog';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
   clickable: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline',
-    }
+    },
   },
-  title: { padding: theme.spacing(1) }
+  title: { padding: theme.spacing(1) },
 }));
-
 
 export interface OrderInventoryProps {
   by?: 'marketer' | 'merchandise' | 'campaign';
@@ -41,12 +42,13 @@ export default function OrderInventory({
   const classes = useStyles();
 
   // eslint-disable-next-line max-len
-  const ordersGet = useGetRequest<{ campaignId?: string; merchandiseId?: number }, MerchandiseOrder[]>(
-    '/marketer/orders', {
-      merchandiseId: by === 'merchandise' ? merchandiseId : undefined,
-      campaignId: by === 'campaign' ? campaignId : undefined,
-    }
-  );
+  const ordersGet = useGetRequest<
+    { campaignId?: string; merchandiseId?: number },
+    MerchandiseOrder[]
+  >('/marketer/orders', {
+    merchandiseId: by === 'merchandise' ? merchandiseId : undefined,
+    campaignId: by === 'campaign' ? campaignId : undefined,
+  });
 
   const orderDetailDialog = useDialog();
   const [selectedMerchandise, setSelectedMerchandise] = useState<MerchandiseOrder>();
@@ -76,7 +78,7 @@ export default function OrderInventory({
           loading={ordersGet.loading}
           rows={ordersGet.data || []}
           columns={[
-            { headerName: '주문번호', field: 'id', width: 120, },
+            { headerName: '주문번호', field: 'id', width: 120 },
             {
               headerName: '상품명',
               field: 'name',
@@ -94,7 +96,7 @@ export default function OrderInventory({
                     {data.row.name}
                   </Typography>
                 </Tooltip>
-              )
+              ),
             },
             {
               headerName: '캠페인',
@@ -113,7 +115,7 @@ export default function OrderInventory({
                     {data.row.campaignId}
                   </Typography>
                 </Tooltip>
-              )
+              ),
             },
             {
               headerName: '주문상태',
@@ -121,16 +123,16 @@ export default function OrderInventory({
               width: 130,
               renderCell: (data): React.ReactElement => (
                 <OrderStatusChip status={data.row.status as OrderStatus} />
-              )
+              ),
             },
-            { headerName: '수량', field: 'quantity', width: 130, },
+            { headerName: '수량', field: 'quantity', width: 130 },
             {
               headerName: '주문금액',
               field: 'orderPrice',
               width: 130,
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2">{data.row.orderPrice.toLocaleString()}</Typography>
-              )
+              ),
             },
             {
               headerName: '상품판매금액',
@@ -139,7 +141,9 @@ export default function OrderInventory({
               renderCell: (data): React.ReactElement => {
                 if (data.row.additionalPrice) {
                   return (
-                    <Tooltip title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}>
+                    <Tooltip
+                      title={`${data.row.price.toLocaleString()} (+${data.row.additionalPrice.toLocaleString()})`}
+                    >
                       <Typography variant="body2">
                         {`${data.row.price.toLocaleString()}`}
                         <Typography variant="body2" component="span">
@@ -149,10 +153,8 @@ export default function OrderInventory({
                     </Tooltip>
                   );
                 }
-                return (
-                  <Typography variant="body2">{data.row.price.toLocaleString()}</Typography>
-                );
-              }
+                return <Typography variant="body2">{data.row.price.toLocaleString()}</Typography>;
+              },
             },
             // {
             //   headerName: '남은재고',
@@ -170,28 +172,28 @@ export default function OrderInventory({
               width: 180,
               renderCell: (data): React.ReactElement => (
                 <Typography variant="body2">
-                  {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
+                  {dayjs(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
                 </Typography>
-              )
-            }
+              ),
+            },
           ]}
         />
       </div>
 
       {selectedMerchandise && (
-      <MerchandiseOrderDialog
-        open={orderDetailDialog.open}
-        onClose={(): void => {
-          orderDetailDialog.handleClose();
-          handleMerchandiseSelectReset();
-        }}
-        merchandiseOrder={selectedMerchandise}
-        onStatusChange={(): void => {
-          ordersGet.doGetRequest();
-          orderDetailDialog.handleClose();
-        }}
-        onStatusChangeFail={(): void => orderDetailDialog.handleClose()}
-      />
+        <MerchandiseOrderDialog
+          open={orderDetailDialog.open}
+          onClose={(): void => {
+            orderDetailDialog.handleClose();
+            handleMerchandiseSelectReset();
+          }}
+          merchandiseOrder={selectedMerchandise}
+          onStatusChange={(): void => {
+            ordersGet.doGetRequest();
+            orderDetailDialog.handleClose();
+          }}
+          onStatusChangeFail={(): void => orderDetailDialog.handleClose()}
+        />
       )}
 
       {selectedCampaignId && (

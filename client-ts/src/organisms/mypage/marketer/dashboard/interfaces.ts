@@ -84,8 +84,12 @@ export interface ReportInterface {
 }
 
 export interface ReportInterfaceV2 {
-  campaignName: string; totalCPM: number; totalViewCount: number;
-  totalCPC: number; adchatClick: number; adpanelClick: number;
+  campaignName: string;
+  totalCPM: number;
+  totalViewCount: number;
+  totalCPC: number;
+  adchatClick: number;
+  adpanelClick: number;
 }
 
 export interface CpsAnalysisReportData {
@@ -144,19 +148,21 @@ export interface CreatorDataInterface {
   contentAfreeca?: number;
 }
 
-export interface CreatorDataCPSInterface extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'>{
+export interface CreatorDataCPSInterface
+  extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'> {
   total_sales_amount: number;
 }
 
 export interface CPSChartInterface {
-  date: string; value: number; type: string;
+  date: string;
+  value: number;
+  type: string;
 }
 
 export interface HeatmapInterface {
   date: string;
   count: number;
 }
-
 
 export type GeoInterface = {
   latitude: number;
