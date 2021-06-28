@@ -96,7 +96,7 @@ function getOS(): string|null {
 // }
 
 function dailyMissionTimer (){ 
-  const setDate = new Date("2021-06-28T02:00:00+0900");
+  const setDate = new Date("2021-06-28T11:31:00+0900");
 
   setInterval(function(){
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성

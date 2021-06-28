@@ -34,7 +34,7 @@ const doQuery = (
       // logger.error(`DB연결 관련 오류${err}`);
       reject(new createError[500](err.message));
     } else {
-      conn.query(query, queryArray, (error, result) => {
+      conn.query(query, queryArray, (error:any, result:any) => {
         if (error) {
           conn.release();
           reject(new createError[500](error.sqlMessage));
