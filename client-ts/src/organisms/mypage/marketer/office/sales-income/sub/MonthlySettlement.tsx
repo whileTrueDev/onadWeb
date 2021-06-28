@@ -33,6 +33,7 @@ export default function MonthlySettlement(): React.ReactElement {
           options={settlementLogsYears.data || []}
           loading={settlementLogsYears.loading}
           loadingText="로딩중.."
+          noOptionsText="아직 정산 내역이 없습니다."
           getOptionLabel={option => option}
           value={year}
           onChange={handleYearChange}
