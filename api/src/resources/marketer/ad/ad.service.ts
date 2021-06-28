@@ -44,7 +44,6 @@ export class AdService {
   async findOnOffState(marketerId: string): Promise<boolean> {
     const { marketerContraction } = await this.marketerInfoRepo.findOne({
       where: { marketerId },
-      select: ['marketerContraction'],
     });
     return !!marketerContraction;
   }

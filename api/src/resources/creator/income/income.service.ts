@@ -52,14 +52,19 @@ export class IncomeService {
   }
 
   // * 크리에이터 출금 내역 조회
-  public findWithdrawalHistory(
+  public async findWithdrawalHistory(
     creatorId: string,
   ): Promise<Pick<CreatorWithdrawal, 'date' | 'creatorWithdrawalAmount' | 'withdrawalState'>[]> {
-    return this.creatorWithdrawalRepo.find({
+    const data = await this.creatorWithdrawalRepo.find({
       where: { creatorId },
-      select: ['date', 'creatorWithdrawalAmount', 'withdrawalState'],
       order: { date: 'DESC' },
     });
+
+    return data.map(x => ({
+      date: x.date,
+      creatorWithdrawalAmount: x.creatorWithdrawalAmount,
+      withdrawalState: x.withdrawalState,
+    }));
   }
 
   // * 크리에이터 출금 신청

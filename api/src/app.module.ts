@@ -20,6 +20,7 @@ import { NoticeModule } from './resources/notice/notice.module';
 import { AlimtalkModule } from './resources/alimtalk/alimtalk.module';
 import ormconfig from './setting/ormconfig';
 import { TasksModule } from './tasks/tasks.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

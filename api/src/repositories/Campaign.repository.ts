@@ -69,9 +69,7 @@ export class CampaignRepository extends Repository<Campaign> {
   }
 
   // * 캠페인 배너, 랜딩URL 승인 여부를 조회합니다.
-  public async findCampaignOnOffDetail(
-    campaignId: string,
-  ): Promise<{
+  public async findCampaignOnOffDetail(campaignId: string): Promise<{
     campaignName: string;
     bannerId: string;
     bannerConfirm: number;

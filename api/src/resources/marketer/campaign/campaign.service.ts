@@ -153,7 +153,7 @@ export class CampaignService {
 
   // * 캠페인 이름 목록 반환 - 캠페인 이름 중복 확인을 위해
   async findNames(): Promise<string[]> {
-    const result = await this.campaignRepo.find({ select: ['campaignName'] });
+    const result = await this.campaignRepo.find();
     return result.map(c => c.campaignName);
   }
 
@@ -230,7 +230,10 @@ export class CampaignService {
     }
 
     // * "특정 카테고리 송출" 의 경우
-    if (priorityType === CampaignPriorityType.특정아프리카카테고리송출 || priorityType === CampaignPriorityType.특정트위치카테고리송출) {
+    if (
+      priorityType === CampaignPriorityType.특정아프리카카테고리송출 ||
+      priorityType === CampaignPriorityType.특정트위치카테고리송출
+    ) {
       const needUpdateCategories: CategoryCampaign[] = []; // 이전에 카테고리 송출로 선택된 기록이 있어 Update 필요한 카테고리
       // * "특정 카테고리 송출" - 아프리카 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
       if (priorityType === CampaignPriorityType.특정아프리카카테고리송출) {
@@ -266,7 +269,7 @@ export class CampaignService {
           queryRunner,
         );
       }
-  
+
       // * "특정 카테고리 송출" - 트위치 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
       if (priorityType === CampaignPriorityType.특정트위치카테고리송출) {
         const twitchCategories = await this.twitchGameRepo.find({
@@ -300,7 +303,7 @@ export class CampaignService {
           queryRunner,
         );
       }
-  
+
       // * 기존 categoryCampaign 목록에 있는 경우
       await Promise.all(
         needUpdateCategories.map(categoryCampaign => {

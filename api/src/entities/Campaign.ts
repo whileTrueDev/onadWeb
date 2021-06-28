@@ -37,8 +37,7 @@ export class Campaign {
 
   @Column('int', {
     name: 'optionType',
-    comment:
-      '광고유형 (0=CPM(중단됨), 1=생방송배너광고, 2=CPC(중단됨), 3=판매형 광고)',
+    comment: '광고유형 (0=CPM(중단됨), 1=생방송배너광고, 2=CPC(중단됨), 3=판매형 광고)',
     default: () => "'0'",
   })
   optionType: number;

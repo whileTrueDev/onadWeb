@@ -215,7 +215,6 @@ export class CreatorService {
   public async findPassword(creatorId: string, requestedPassword: string): Promise<boolean> {
     const creator = await this.creatorInfoRepo.findOne({
       where: { creatorId },
-      select: ['password', 'passwordSalt'],
     });
     const isSuccess = encrypto.check(requestedPassword, creator.password, creator.passwordSalt);
     if (isSuccess) return true;
@@ -265,10 +264,8 @@ export class CreatorService {
     const previousRefreshToken = user.creatorTwitchRefreshToken;
 
     // refresh token으로 access token 생성
-    const {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    } = await this.twitchApiService.getAccessToken(previousRefreshToken);
+    const { access_token: accessToken, refresh_token: refreshToken } =
+      await this.twitchApiService.getAccessToken(previousRefreshToken);
 
     // refresh token으로 user profile 요청
     const userProfile = await this.twitchApiService.getUserProfile(
