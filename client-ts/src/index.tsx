@@ -16,7 +16,6 @@ import CreatorList from './pages/main/CreatorList';
 import Door from './pages/main/Door';
 import Introduction from './pages/main/Introduction';
 import Main from './pages/main/Main';
-import Policy from './pages/main/Policy';
 import RegistPage from './pages/main/Regist';
 import RegistCreator from './pages/main/RegistCreator';
 // import NotFound from './pages/others/NotFound';
@@ -31,6 +30,7 @@ dotenv.config();
 // code spliting
 const CreatorDashboard = lazy(() => import('./pages/mypage/layouts/CreatorLayout'));
 const MarketerDashboard = lazy(() => import('./pages/mypage/layouts/MarketerLayout'));
+const Policy = lazy(() => import('./pages/main/Policy'));
 
 const OnadIndex = (): JSX.Element => {
   // *******************************************
@@ -60,6 +60,7 @@ const OnadIndex = (): JSX.Element => {
     <Router history={history}>
       <Switch>
         <ThemeProvider<OnadTheme> theme={onadTheme}>
+          <Route exact path="/test" component={LoadingPage} />
           <Route exact path="/" component={Door} />
           <Route exact path="/marketer" component={Main} />
           <Route exact path="/creator" component={Main} />
@@ -71,9 +72,9 @@ const OnadIndex = (): JSX.Element => {
           <Route path="/regist/:platform" component={RegistPage} />
           <Route exact path="/regist" component={RegistPage} />
           <Route exact path="/introduce/:userType" component={Introduction} />
-          <Route exact path="/policy" component={Policy} />
-          <Route exact path="/policy/:privacy" component={Policy} />
           <Suspense fallback={LoadingPage}>
+            <Route exact path="/policy" component={Policy} />
+            <Route exact path="/policy/:privacy" component={Policy} />
             <Route path="/mypage/creator" component={CreatorDashboard} />
             <Route path="/mypage/marketer" component={MarketerDashboard} />
           </Suspense>
