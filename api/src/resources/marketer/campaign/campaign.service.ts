@@ -92,6 +92,10 @@ export class CampaignService {
             campaignId,
           });
         }
+
+        if (dto.priorityType === CampaignPriorityType.무관송출) {
+          await this.insertCampaignTargetsAnything(queryRunner, campaignId);
+        }
         return campaignObj;
       },
       { errorMessage: `An error occurred during create campaign (${marketerId}) - ` },
@@ -317,5 +321,26 @@ export class CampaignService {
         }),
       );
     }
+  }
+
+  /**
+   * 무관 송출의 경우 categoryCampaign의 "14,무관송출" 에 추가되어야 하므로, 해당 작업 실행
+   */
+  private async insertCampaignTargetsAnything(queryRunner: QueryRunner, campaignId: string) {
+    const ANYTHING_CATEGORY_NAME = '무관';
+    const ANYTHING_CATEGORY_ID = 14;
+
+    const anythingCategory = await this.categoryCampaignRepo.findOne({
+      where: { categoryId: ANYTHING_CATEGORY_ID, categoryName: ANYTHING_CATEGORY_NAME },
+    });
+
+    const campaignListJson = JSON.parse(anythingCategory.campaignList);
+    campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
+
+    return this.categoryCampaignRepo.updateCategoryCampaign(
+      JSON.stringify(campaignListJson),
+      ANYTHING_CATEGORY_NAME,
+      queryRunner,
+    );
   }
 }
