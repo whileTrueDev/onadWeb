@@ -13,7 +13,7 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
-import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../../../creator/shared/StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },

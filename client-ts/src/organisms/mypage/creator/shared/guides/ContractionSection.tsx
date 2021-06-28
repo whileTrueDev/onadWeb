@@ -8,7 +8,7 @@ import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
 import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
 import ContractionTextDialog from './sub/ContractionTextDialog';
-import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },

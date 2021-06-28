@@ -1,10 +1,10 @@
 /* eslint-disable react/display-name */
 // atoms
 import { Typography, Button } from '@material-ui/core';
-import GridContainer from '../../../../atoms/Grid/GridContainer';
-import GridItem from '../../../../atoms/Grid/GridItem';
-import MaterialTable from '../../../../atoms/Table/MaterialTable';
-import Dialog from '../../../../atoms/Dialog/Dialog';
+import GridContainer from '../../src/atoms/Grid/GridContainer';
+import GridItem from '../../src/atoms/Grid/GridItem';
+import MaterialTable from '../../src/atoms/Table/MaterialTable';
+import Dialog from '../../src/atoms/Dialog/Dialog';
 import CPACampaignIcon from './sub/CPACampaignIcon';
 // types
 import {

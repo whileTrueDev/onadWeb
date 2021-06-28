@@ -11,7 +11,7 @@ import {
 import HelpIcon from '@material-ui/icons/Help';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../shared/StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },

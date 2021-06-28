@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import BannerList from '../../../../organisms/mypage/creator/CampaignManage/BannerList';
+import { ContractionDataType } from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { useGetRequest } from '../../../../utils/hooks';
-import { ContractionDataType } from '../CPAManage';
 
 export default function ProgressedCampaigns(): React.ReactElement {
   const history = useHistory();

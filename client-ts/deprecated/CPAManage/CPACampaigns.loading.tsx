@@ -1,7 +1,7 @@
 import Skeleton from '@material-ui/lab/Skeleton';
 
-import GridContainer from '../../../../atoms/Grid/GridContainer';
-import GridItem from '../../../../atoms/Grid/GridItem';
+import GridContainer from '../../src/atoms/Grid/GridContainer';
+import GridItem from '../../src/atoms/Grid/GridItem';
 
 export default function CPACampaignsLoading(): JSX.Element {
   return (

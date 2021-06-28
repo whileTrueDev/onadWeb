@@ -18,10 +18,10 @@ import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 // types
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import UserPopover from './sub/UserPopover';
-import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import MarketerPopover from './sub/MarketerPopover';
 import { MarketerInfo } from '../../marketer/office/interface';
 import MarketerInfoContext from '../../../../context/MarketerInfo.context';
+import { ContractionDataType } from '../../creator/shared/StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) },

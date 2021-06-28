@@ -12,8 +12,9 @@ import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/Chat
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
-import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
-import { ContractionDataType } from '../CPAManage';
+import StartGuideCard, {
+  ContractionDataType,
+} from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import OverlayUrlCard, {
   OverlayUrlRes,
 } from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';

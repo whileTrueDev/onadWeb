@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 import Button from '../../../../atoms/CustomButtons/Button';
 import { useGetRequest } from '../../../../utils/hooks';
 import history from '../../../../history';
-import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../shared/StartGuideCard';
 
 dayjs.extend(relativeTime);
 

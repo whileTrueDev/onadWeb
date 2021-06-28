@@ -5,7 +5,9 @@ import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
 // organisms
-import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import StartGuideCard, {
+  ContractionDataType,
+} from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import UserInfoCard, {
   IncomeCashRes,
@@ -29,7 +31,6 @@ import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfo
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
 import useDialog from '../../../utils/hooks/useDialog';
-import { ContractionDataType } from './CPAManage';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 import history from '../../../history';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';

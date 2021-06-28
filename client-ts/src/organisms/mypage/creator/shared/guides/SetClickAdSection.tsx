@@ -4,7 +4,7 @@ import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 import { useGetRequest } from '../../../../../utils/hooks';
-import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   bannerImg: {

@@ -13,8 +13,8 @@ import HelpIcon from '@material-ui/icons/Help';
 import { Link } from 'react-router-dom';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { ContractionDataType } from '../shared/StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },

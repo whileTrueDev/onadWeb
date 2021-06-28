@@ -12,10 +12,29 @@ import SetSettlementSection from './guides/SetSettlementSection';
 import GuideIntroduction from './guides/GuideIntroduction';
 import SetClickAdSection from './guides/SetClickAdSection';
 import { OverlayUrlRes } from './OverlayUrlCard';
-import { ContractionDataType } from '../../../../pages/mypage/creator/CPAManage';
 import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 import history from '../../../../history';
 import GuideComplete from './guides/GuideComplete';
+
+export interface ContractionDataType {
+  creatorId: string;
+  creatorName: string;
+  loginId: string;
+  creatorIp: string;
+  creatorMail: string;
+  creatorAccountNumber: string;
+  creatorContractionAgreement: number;
+  creatorTwitchId: string;
+  creatorTwitchOriginalId: string;
+  afreecaId: string;
+  afreecaName: string;
+  afreecaLogo: string;
+  realName: string;
+  creatorLogo: string;
+  NowIp: string;
+  CPAAgreement: number;
+  settlementState: number;
+}
 
 const useStyles = makeStyles(theme => ({
   container: {

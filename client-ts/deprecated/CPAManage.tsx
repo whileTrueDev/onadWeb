@@ -1,47 +1,25 @@
 import { useState } from 'react';
-import GridContainer from '../../../atoms/Grid/GridContainer';
-import GridItem from '../../../atoms/Grid/GridItem';
-import useGetRequest from '../../../utils/hooks/useGetRequest';
-import useDialog from '../../../utils/hooks/useDialog';
+import GridContainer from '../src/atoms/Grid/GridContainer';
+import GridItem from '../src/atoms/Grid/GridItem';
+import useGetRequest from '../src/utils/hooks/useGetRequest';
+import useDialog from '../src/utils/hooks/useDialog';
 // organisms
-import CPACampaigns from '../../../organisms/mypage/creator/CPAManage/CPACampaigns';
-import CPAIncomeTableDialog from '../../../organisms/mypage/creator/CPAManage/CPAIncomeTableDialog';
-import CPAConfirmDialog from '../../../organisms/mypage/creator/CPAManage/CPAConfirmDialog';
-import CPACampaignsLoading from '../../../organisms/mypage/creator/CPAManage/CPACampaigns.loading';
-import CPAAgreement from '../../../organisms/mypage/creator/CPAManage/CPAAgreement';
-import CPAIndicator from '../../../organisms/mypage/creator/CPAManage/CPAIndicator';
-import AgreementContentDialog from '../../../organisms/mypage/creator/CPAManage/AgreementContentDialog';
-import MainIndicatorLoading from '../../../organisms/mypage/creator/CPAManage/sub/MainIndicator.loading';
-import HowToCPADialog from '../../../organisms/mypage/creator/CPAManage/HowToCPADialog';
+import CPACampaigns from './CPAManage/CPACampaigns';
+import CPAIncomeTableDialog from './CPAManage/CPAIncomeTableDialog';
+import CPAConfirmDialog from './CPAManage/CPAConfirmDialog';
+import CPACampaignsLoading from './CPAManage/CPACampaigns.loading';
+import CPAAgreement from './CPAManage/CPAAgreement';
+import CPAIndicator from './CPAManage/CPAIndicator';
+import AgreementContentDialog from './CPAManage/AgreementContentDialog';
+import MainIndicatorLoading from './CPAManage/sub/MainIndicator.loading';
+import HowToCPADialog from './CPAManage/HowToCPADialog';
 // source
-import textsource from '../../../organisms/mypage/creator/CPAManage/source/AgreementText';
+import textsource from './CPAManage/source/AgreementText';
 // types
-import {
-  CampaignResult,
-  AdPickIncome,
-  AdPickMetrics,
-} from '../../../organisms/mypage/creator/CPAManage/AdpickTypes';
-import CPAIntroduction from '../../../organisms/mypage/creator/CPAManage/CPAIntroduction';
+import { CampaignResult, AdPickIncome, AdPickMetrics } from './CPAManage/AdpickTypes';
+import CPAIntroduction from './CPAManage/CPAIntroduction';
+import { ContractionDataType } from '../src/organisms/mypage/creator/shared/StartGuideCard';
 
-export interface ContractionDataType {
-  creatorId: string;
-  creatorName: string;
-  loginId: string;
-  creatorIp: string;
-  creatorMail: string;
-  creatorAccountNumber: string;
-  creatorContractionAgreement: number;
-  creatorTwitchId: string;
-  creatorTwitchOriginalId: string;
-  afreecaId: string;
-  afreecaName: string;
-  afreecaLogo: string;
-  realName: string;
-  creatorLogo: string;
-  NowIp: string;
-  CPAAgreement: number;
-  settlementState: number;
-}
 export default function CPAManage(): JSX.Element {
   const contractionGet = useGetRequest<null, ContractionDataType>('/creator');
   const CPAmainData = useGetRequest<null, AdPickMetrics>('/creator/cpa/adpick/mainIndicator');

@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import { Skeleton, Alert } from '@material-ui/lab';
 import { Typography } from '@material-ui/core';
 import { SpeakerNotes } from '@material-ui/icons';
-import GridContainer from '../../../atoms/Grid/GridContainer';
-import GridItem from '../../../atoms/Grid/GridItem';
+import GridContainer from '../src/atoms/Grid/GridContainer';
+import GridItem from '../src/atoms/Grid/GridItem';
 
-import AdPageSetting from '../../../organisms/mypage/creator/AdPageManage/AdPageSetting';
-import AdPageImageUploadForm from '../../../organisms/mypage/creator/AdPageManage/AdPageImageUploadForm';
-import AdPageUrl from '../../../organisms/mypage/creator/AdPageManage/AdPageUrl';
-import AdPageDetail from '../../../organisms/mypage/creator/AdPageManage/AdPageDetail';
-import AdPagePanelBanner from '../../../organisms/mypage/creator/AdPageManage/AdPagePanelBanner';
-import AdPageData from '../../../organisms/mypage/creator/AdPageManage/AdPageData.interfece';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import AdPageSetting from './organisms/AdPageManage/AdPageSetting';
+import AdPageImageUploadForm from './organisms/AdPageManage/AdPageImageUploadForm';
+import AdPageUrl from './organisms/AdPageManage/AdPageUrl';
+import AdPageDetail from './organisms/AdPageManage/AdPageDetail';
+import AdPagePanelBanner from './organisms/AdPageManage/AdPagePanelBanner';
+import AdPageData from './organisms/AdPageManage/AdPageData.interfece';
+// import Snackbar from './src/atoms/Snackbar/Snackbar';
 
-import useDialog from '../../../utils/hooks/useDialog';
-import useGetRequest from '../../../utils/hooks/useGetRequest';
+import useDialog from '../src/utils/hooks/useDialog';
+import useGetRequest from '../src/utils/hooks/useGetRequest';
 
 function AdPageManage(): JSX.Element {
   const landingData = useGetRequest<null, AdPageData>('/creator/ad-page');
@@ -106,7 +106,7 @@ function AdPageManage(): JSX.Element {
         </GridItem>
       </GridContainer>
 
-      <Snackbar
+      {/* <Snackbar
         color="success"
         open={snack.open}
         message="정상적으로 변경되었습니다."
@@ -118,7 +118,7 @@ function AdPageManage(): JSX.Element {
         open={failSnack.open}
         message="변경중 오류가 발생했습니다."
         onClose={failSnack.handleClose}
-      />
+      /> */}
     </>
   );
 }

@@ -17,7 +17,6 @@ import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
 import CreatorReferralCodeManage from './creator/ReferralCodeManage';
-// import CreatorCPAManage from './creator/CPAManage';
 // 마케터 라우터
 import MarketerCampaign from './marketer/AdManage/Campaign';
 import MarketerInventory from './marketer/AdManage/Inventory';
