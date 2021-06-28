@@ -36,6 +36,7 @@ const OnadIndex = (): JSX.Element => {
   // *******************************************
   // Theme Configurations
   const { themeType, handleThemeChange } = useOnadThemeType();
+
   const THEME = responsiveFontSizes(
     createMuiTheme({
       ...theme.rawTheme,

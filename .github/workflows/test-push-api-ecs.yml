@@ -2,9 +2,9 @@ on:
   push:
     branches: [test]
     paths:
-      - "server/**"
+      - "api/**"
 
-name: <test> Deploy to Amazon ECS - "server"
+name: <test> Deploy to Amazon ECS - "api"
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
 
       - name: TS Build
         run: |
-          cd server
+          cd api
           yarn
           yarn build
           cd -
@@ -32,7 +32,7 @@ jobs:
       - name: Build, tag, and push image to Docker Hub
         uses: elgohr/Publish-Docker-Github-Action@2.14
         with:
-          workdir: server
+          workdir: api
           name: ${{ secrets.DOCKER_USERNAME }}/onad_web_api
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -42,7 +42,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: server/test-task-definition.json
+          task-definition: api/test-task-definition.json
           container-name: TEST-onad-web-api
           image: ${{ secrets.DOCKER_USERNAME }}/onad_web_api:${{ github.sha }}
 
