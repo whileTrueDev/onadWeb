@@ -47,7 +47,7 @@ export default function MerchandiseInventory({
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          merchandiseData.handlePage(param.page - 1);
+          merchandiseData.handlePage(param.page);
         }}
         pageSize={pageOffset}
         rowCount={totalPageLength}

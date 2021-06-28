@@ -121,7 +121,7 @@ export default function CampaignInventory({
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          campaignData.handlePage(param.page - 1);
+          campaignData.handlePage(param.page);
         }}
         disableSelectionOnClick
         rows={campaignData.data || []}
