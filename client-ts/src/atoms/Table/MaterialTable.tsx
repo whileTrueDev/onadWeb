@@ -48,12 +48,12 @@ const localization = {
   },
 };
 
-interface CustomMaterialTableProps<T extends object> extends MaterialTableProps<T> {
+interface CustomMaterialTableProps<T extends Record<string, any>> extends MaterialTableProps<T> {
   cellWidth?: number;
   style?: React.CSSProperties;
 }
 
-export default function MaterialTable<RowDataType extends object>(
+export default function MaterialTable<RowDataType extends Record<string, any>>(
   props: CustomMaterialTableProps<RowDataType>,
 ): JSX.Element {
   const { columns, cellWidth, ...rest } = props;

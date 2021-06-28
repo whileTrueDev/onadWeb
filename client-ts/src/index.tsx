@@ -1,4 +1,5 @@
 // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+import { lazy, Suspense } from 'react';
 import {
   createMuiTheme,
   MuiThemeProvider as ThemeProvider,
@@ -20,13 +21,17 @@ import RegistPage from './pages/main/Regist';
 import RegistCreator from './pages/main/RegistCreator';
 // import NotFound from './pages/others/NotFound';
 import RemotePage from './pages/mypage/creator/RemotePage';
-import CreatorDashboard from './pages/mypage/layouts/CreatorLayout';
-import MarketerDashboard from './pages/mypage/layouts/MarketerLayout';
 import reportWebVitals from './reportWebVitals';
 import theme, { OnadTheme } from './theme';
 import useOnadThemeType from './utils/hooks/useOnadThemeType';
+import LoadingPage from './pages/others/LoadingPage';
 
 dotenv.config();
+
+// code spliting
+const CreatorDashboard = lazy(() => import('./pages/mypage/layouts/CreatorLayout'));
+const MarketerDashboard = lazy(() => import('./pages/mypage/layouts/MarketerLayout'));
+
 const OnadIndex = (): JSX.Element => {
   // *******************************************
   // Theme Configurations
@@ -68,8 +73,10 @@ const OnadIndex = (): JSX.Element => {
           <Route exact path="/introduce/:userType" component={Introduction} />
           <Route exact path="/policy" component={Policy} />
           <Route exact path="/policy/:privacy" component={Policy} />
-          <Route path="/mypage/creator" component={CreatorDashboard} />
-          <Route path="/mypage/marketer" component={MarketerDashboard} />
+          <Suspense fallback={LoadingPage}>
+            <Route path="/mypage/creator" component={CreatorDashboard} />
+            <Route path="/mypage/marketer" component={MarketerDashboard} />
+          </Suspense>
           <Route exact path="/marketer/charge" component={ChargeDialog} />
         </ThemeProvider>
       </Switch>

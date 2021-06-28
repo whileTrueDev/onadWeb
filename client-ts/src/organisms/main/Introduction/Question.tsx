@@ -69,7 +69,7 @@ function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   function QnAAccordion({ source: _source, ansData: _ansData }: any): JSX.Element {
     const [expanded, setExpanded] = React.useState<string | false>('one');
 
-    const handleChange = (row: any) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+    const handleChange = (row: any) => (event: React.ChangeEvent<any>, newExpanded: boolean) => {
       setExpanded(newExpanded ? row.id : false);
     };
 
