@@ -45,6 +45,12 @@ app.get('/duplicate', (req, res) => {
 app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
+
+
+// nodemon --expose-gc file_dir
+setInterval(function(){
+  global.gc();
+}, 1000*30);
 interface SocketInfo {
   [key: string]: string;
 }
