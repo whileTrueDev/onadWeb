@@ -209,11 +209,7 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
                 <article>
                   <Typography className={classes.bold}>지역별 클릭 수</Typography>
                   <article className={classes.chartContainer}>
-                    <GeoReport
-                      data-html2canvas-ignore
-                      ipToGeoData={ipToGeoData}
-                      style={{ width: '100%' }}
-                    />
+                    <GeoReport ipToGeoData={ipToGeoData} style={{ width: '100%' }} />
                   </article>
                 </article>
               )}
