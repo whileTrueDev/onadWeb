@@ -48,25 +48,27 @@
     deliveryFee: 6000
   }, ...]
  */
-const generateOptimizedDataSet = (_feeCalculatedTargets) => {
+const generateOptimizedDataSet = _feeCalculatedTargets => {
   const tmp = [];
-  _feeCalculatedTargets.forEach((target) => {
-    const targetIdx = tmp.findIndex((x) => x.marketerId === target.marketerId);
+  _feeCalculatedTargets.forEach(target => {
+    const targetIdx = tmp.findIndex(x => x.marketerId === target.marketerId);
     if (targetIdx > -1) {
       // tmp 어레이에 동일 광고주의 판매이력이 있는 경우, 합친다.
       const already = tmp[targetIdx];
-      if (target.targetCreatorId) { // 수익금이 들어갈 크리에이터가 있는 경우
+      if (target.targetCreatorId) {
+        // 수익금이 들어갈 크리에이터가 있는 경우
         const creatorIdx = already.cashToCreators.findIndex(
-          (x) => x.creatorId === target.targetCreatorId
+          x => x.creatorId === target.targetCreatorId,
         );
-        if (creatorIdx > -1) { // 동일 크리에이터의 경우
+        if (creatorIdx > -1) {
+          // 동일 크리에이터의 경우
           const newCreatorObj = already.cashToCreators[creatorIdx];
           newCreatorObj.amount += target.cashToCreator;
           already.cashToCreators[creatorIdx] = newCreatorObj;
         } else {
           already.cashToCreators.push({
             amount: target.cashToCreator,
-            creatorId: target.targetCreatorId
+            creatorId: target.targetCreatorId,
           });
         }
       }
@@ -77,10 +79,12 @@ const generateOptimizedDataSet = (_feeCalculatedTargets) => {
       tmp.push({
         marketerId: target.marketerId,
         cashToCreators: target.targetCreatorId
-          ? [{
-            amount: target.cashToCreator,
-            creatorId: target.targetCreatorId
-          }]
+          ? [
+              {
+                amount: target.cashToCreator,
+                creatorId: target.targetCreatorId,
+              },
+            ]
           : [],
         salesIncomeToMarketer: target.salesIncomeToMarketer,
         deliveryFee: target.deliveryFee,
