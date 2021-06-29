@@ -1,8 +1,0 @@
-# https://www.robotstxt.org/robotstxt.html
-User-agent: Googlebot
-Disallow:
-allow: /
-User-agent: Yeti
-allow: /
-User-agent: *
-Disallow: /
