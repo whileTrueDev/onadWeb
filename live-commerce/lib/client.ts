@@ -1,10 +1,11 @@
 import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
 
 const socket: any = io({ transports: ['websocket'] });
-const idArray: Array<null|string> = [];
+let idArray: Array<null|string> = [];
 const rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 // const ICON_ARRAY = ['crown', 'second', 'third'];
+let setDate = new Date("2021-06-29T11:46:00+0900");
 
 let messageHtml: string;
 const messageArray: string[] = [];
@@ -96,8 +97,6 @@ function getOS(): string|null {
 // }
 
 function dailyMissionTimer (){ 
-  const setDate = new Date("2021-06-29T11:46:00+0900");
-
   setInterval(function(){
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
     const now = new Date();
@@ -108,12 +107,14 @@ function dailyMissionTimer (){
     let hours: string|number = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
     let minutes: string|number = Math.floor((distance % (1000*60*60))/(1000*60));
     let seconds: string|number = Math.floor((distance % (1000*60))/1000);
-    
+
     hours 	= hours < 10 ? "0" + String(hours) : String(hours);
     minutes = minutes < 10 ? "0" + String(minutes) : String(minutes);
     seconds = seconds < 10 ? "0" + String(seconds) : String(seconds);
 
     if(hours !== '00'){
+      $('#time-hour').show()
+      $('#hour-min-separator').show()
       $('#time-hour').text(hours);
     } else {
       $('#time-hour').css({display:'none'})
@@ -122,18 +123,44 @@ function dailyMissionTimer (){
     $('#time-min').text(minutes);
     $('#time-sec').text(seconds);
 
+    if (hours !== '00' && ($('.bottom-timer').attr('class')?.includes('warning') || $('.bottom-timer').attr('class')?.includes('urgent'))) {
+      if($('.bottom-timer').attr('class')?.includes('warning')) {
+        $('.bottom-timer').removeClass('warning')
+      } else {
+        $('.bottom-timer').removeClass('urgent')
+        $('.bottom-left-icon#clock').removeClass('urgent')
+      }
+    }
+
     if (hours === '00'
           && Number(minutes) < 5
+          && Number(minutes) !== 0
           && !$('.bottom-timer').attr('class')?.includes('urgent')
       ) {
         $('.bottom-timer').addClass('urgent')
         $('.bottom-left-icon#clock').addClass('urgent')
       } else if (hours === '00'
           && Number(minutes) < 10
+          && Number(minutes) !== 0
           && !$('.bottom-timer').attr('class')?.includes('warning')
       ) {
         $('.bottom-timer').addClass('warning')
-      } 
+      } else if (
+          hours === '00' 
+          && $('.bottom-left-icon#clock').attr('class')?.includes('urgent')
+          && Number(minutes) > 5
+          && Number(minutes) < 10
+        ) {
+        $('.urgent').toggleClass('warning')
+        $('.bottom-left-icon#clock').removeClass('warning')
+      } else if (
+        hours === '00' 
+        && $('.bottom-left-icon#clock').attr('class')?.includes('urgent')
+        && Number(minutes) > 10
+      ) {
+        $('.bottom-timer').removeClass('urgent')
+        $('.bottom-left-icon#clock').removeClass('urgent')
+    }
     }, 1000)
     
   }
@@ -190,7 +217,6 @@ function compare(a: SinglePurchase, b: SinglePurchase): number {
 
 socket.on('get top-left ranking', (data: RankingData[]) => {
   const rankingArray = data;
-  console.log(rankingArray)    
   rankingArray.map((value, index) => {
     $(`.ranking-text-area-id#rank-${index}`).text(value.nickname)
     $(`.quantity#rank-${index}`).text(`${value.total}개`)
@@ -205,10 +231,6 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
   const { text } = data;
   const num = data.purchaseNum;
 
-  console.log(data)
-  // <img src="/public/images/${alarmType === '2' ? 'mars-2.gif' : 'mars-1.gif'}" id="donation-image"/>
-  // <video src="/public/videos/${alarmType === '2' ? 'thanos.mp4' : 'thanos.mp4'}" class="donation-image" autoplay muted loop/>
-  // <img src="/public/images/${alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'}" class="donation-image"/>
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
@@ -268,8 +290,9 @@ socket.on('get bottom area message', (data: string) => {
 });
 
 // 응원메세지 marquee
-socket.on('get bottom purchase message', (data: string) => {
-  idArray.push(data);
+socket.on('get bottom purchase message', (data: string[]) => {
+  // idArray.push(data);
+  idArray = data;
 });
 
 // 하단 비우기
@@ -302,7 +325,36 @@ socket.on('clear ranking area', () => {
 
 // 하단 다시 띄우기
 socket.on('show bottom area to client', () => {
-  $('.bottom-area-wrapper').show().fadeIn(2000);
+  $('.bottom-area-wrapper').html(`
+  <div class="bottom-left">
+    <div class="bottom-object">
+      <img src="/public/images/object.png" class="bottom-left-icon" />
+      <div class="bottom-object-quantity">
+        <span id="current-quantity">
+          0
+        </span>
+        <span>
+          /
+        </span>
+        <span id="quantity-object">
+          100
+        </span>
+      </div>
+    </div>
+    <div class="bottom-timer">
+      <img src="/public/images/clock.png" class="bottom-left-icon" id="clock" />
+      <span id="time-hour"></span>
+      <span id="hour-min-separator"> : </span>
+      <span id="time-min"></span>
+      <span id="min-sec-separator"> : </span>
+      <span id="time-sec"></span>
+    </div>
+  </div>
+  <div class="bottom-area">
+    <p class="bottom-area-text">
+    </p>
+</div>
+`).fadeIn(2000);
 });
 
 socket.on('show screen', () => {
@@ -314,21 +366,10 @@ socket.on('clear screen', () => {
 });
 
 socket.on('show virtual ad to client', async () => {
-  $('.virtual-ad').html(
-    `
-    <img 
-      src="/public/images/yori-virtual-ad.gif"
-    />
-    `
-  ).show();
+  $('#virtual-ad-img').attr('src', "/public/images/yori-virtual-ad.gif")
   await setTimeout(() => {
-    $('.virtual-ad').html(`
-    <img 
-      src="/public/images/invisible.png"
-    />
-    `)
-    $('.virtual-ad').empty()
-  }, 10000);
+    $('#virtual-ad-img').attr('src', "/public/images/invisible.png")
+  }, 8980);
 });
 
 socket.on('quantity object from server', (quantityObject:string) => {
@@ -338,5 +379,9 @@ socket.on('quantity object from server', (quantityObject:string) => {
 socket.on('get current quantity', (currentQuantity:number) => {
   $('#current-quantity').text(currentQuantity)
 });
+
+socket.on('d-day from server', (date:string) => {
+  setDate = new Date(date);
+})
 
 export { };

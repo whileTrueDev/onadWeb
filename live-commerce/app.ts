@@ -99,7 +99,8 @@ io.on('connection', (socket: Socket) => {
     const { roomName } = data;
     const { userId } = data;
     const { text } = data;
-    const completeText = `${text} - [${userId}]`;
+    // const completeText = `${text} - [${userId}]`;
+    const bottomTextArray:string[] = []
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
@@ -109,22 +110,27 @@ io.on('connection', (socket: Socket) => {
                           LIMIT 3`
     
     const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
 
-    const [orderedRanking, totalQuantity] = await Promise.all([
+    const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
       doQuery(selectQuery),
-      doQuery(selectTotalQuery)
+      doQuery(selectTotalQuery),
+      doQuery(textSelectQuery)
     ])
+    bottomText.result.map((data:{nickname:string; text:string}) => {
+      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
+    })
 
     io.to(roomName).emit('get right-top purchase message', data);
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
-    io.to(roomName).emit('get bottom purchase message', completeText);
+    io.to(roomName).emit('get bottom purchase message', bottomTextArray);
   });
 
   socket.on('clear bottom area from admin', (data: TextData) => {
     const { roomName } = data;
     io.to(roomName).emit('clear bottom area to client');
-    io.to(roomName).emit('clear ranking area');
+    // io.to(roomName).emit('clear ranking area');
   });
 
   socket.on('show bottom area from admin', (data: TextData) => {
@@ -157,6 +163,8 @@ io.on('connection', (socket: Socket) => {
   })
 
   socket.on('get all data', async (roomName:string) => {
+    const bottomTextArray:string[] = []
+
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
@@ -166,17 +174,36 @@ io.on('connection', (socket: Socket) => {
                           LIMIT 3`
     
     const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
 
-    const [orderedRanking, totalQuantity] = await Promise.all([
+    const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
       doQuery(selectQuery),
-      doQuery(selectTotalQuery)
+      doQuery(selectTotalQuery),
+      doQuery(textSelectQuery)
     ])
+
+    bottomText.result.map((data:{nickname:string; text:string}) => {
+      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
+    })
 
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
+    io.to(roomName).emit('get bottom purchase message', bottomTextArray);
+  })
+  
+  interface DateData{
+    date:string;
+    roomName:string;
+  }
+
+  socket.on('get d-day', (dateData:DateData) => {
+    const { date } = dateData;
+    const { roomName } = dateData;
+    console.log(roomName)
+    io.to(roomName).emit('d-day from server', date)
   })
 });
-
+  
 
 httpServer.listen(PORT, () => {
   console.log(`--LIVE COMMERCE SERVER-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`);
