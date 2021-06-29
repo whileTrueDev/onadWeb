@@ -10,11 +10,11 @@ import socketio, { Socket } from 'socket.io';
 import nodeSchedule from 'node-schedule';
 import doQuery from './models/doQuery';
 import callImg from './public/callImg';
-
+import fs from 'fs'
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = socketio(httpServer, {perMessageDeflate:false});
+const io = socketio(httpServer); //, {perMessageDeflate:false}
 
 const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
@@ -46,11 +46,12 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
   res.render('client.ejs');
 });
 
-
 // nodemon --expose-gc file_dir
+// 1분에 한 번마다 garbage collector
 setInterval(function(){
   global.gc();
-}, 1000*30);
+}, 20000);
+
 interface SocketInfo {
   [key: string]: string;
 }
@@ -67,7 +68,7 @@ interface SocketInfo {
       const rule = new nodeSchedule.RecurrenceRule(); // 스케쥴러 객체 생성
       rule.hour = new nodeSchedule.Range(0, 23); // cronTask 시간지정
       rule.minute = [0, 10, 20, 30, 40, 50]; // cronTask 실행되는 분(minute)
-      // rule.second = [0, 10, 20, 30, 40, 50]; // test second
+      // rule.second = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]; // test second
       // cronTask
       nodeSchedule.scheduleJob(rule, () => { // 스케쥴러를 통해 10분마다 db에 배너정보 전송
         socket.emit('re-render at client', {});
@@ -113,6 +114,9 @@ interface SocketInfo {
       // 송출될 광고 재요청 이벤트 : "re-render" 이벤트 핸들러
       socket.on('re-render', (msg: [string, string, string]) => {
         callImg(socket, msg);
+        // let stream = fs.createWriteStream("clear-log.txt", {flags:'a'});
+        // stream.write(process.memoryUsage().heapUsed + ",");
+        // stream.end();
       });
 
       // ***********************************************************
