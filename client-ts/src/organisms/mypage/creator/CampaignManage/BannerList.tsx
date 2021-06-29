@@ -7,6 +7,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import { useCallback, useEffect, useState } from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
@@ -77,10 +78,7 @@ export default function BannerList(): JSX.Element {
     return str;
   }
   // 에러 스낵바
-  const [errorSnack, setErrorSnack] = useState(false);
-  function handleErrorSnackOpen(): void {
-    setErrorSnack(false);
-  }
+  const { enqueueSnackbar } = useSnackbar();
   // 캠페인목록 크기
   const OFFSET = 4;
   // 로딩
@@ -102,9 +100,11 @@ export default function BannerList(): JSX.Element {
       })
       .catch(() => {
         setLoading(false);
-        setErrorSnack(true);
+        enqueueSnackbar('진행 광고 목록을 불러오는 도중 오류가 발생했습니다.', {
+          variant: 'error',
+        });
       });
-  }, [page]);
+  }, [enqueueSnackbar, page]);
 
   useEffect(() => {
     request();
@@ -216,13 +216,6 @@ export default function BannerList(): JSX.Element {
           </div>
         </Grid>
       )}
-
-      <Snackbar
-        open={errorSnack}
-        message="진행 광고 목록을 불러오는 도중 오류가 발생했습니다."
-        color="error"
-        onClose={handleErrorSnackOpen}
-      />
     </Grid>
   );
 }

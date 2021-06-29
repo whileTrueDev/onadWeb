@@ -1,13 +1,12 @@
 import { Button, TextField, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { useEffect, useState } from 'react';
-import * as React from 'react';
 import { OpenInNew, Refresh } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import HOST from '../../../../../config';
 import axiosInstance from '../../../../../utils/axios';
-import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { useDialog } from '../../../../../utils/hooks';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 
 export interface AfreecaLinkData {
@@ -35,6 +34,7 @@ export default function AfreecaLinkDialog({
   afreecaLinkDataRefetch,
 }: AfreecaLinkDialogProps): JSX.Element {
   const AFREECA_ONAD_ID_LINK_NOTE = '온애드 (kmotiv)';
+  const { enqueueSnackbar } = useSnackbar();
 
   // 아프리카 연동 인증번호
   const [certCode, setCertCode] = useState('');
@@ -48,10 +48,6 @@ export default function AfreecaLinkDialog({
     }
   }, [afreecaLinkData]);
 
-  // 이미 연동된 경우 알림말
-  const alreadyLinkedSnack = useDialog();
-
-  const failsnack = useDialog();
   // 아프리카 연동 요청
   function handleAfreecaClick(): void {
     axiosInstance
@@ -66,7 +62,9 @@ export default function AfreecaLinkDialog({
         const { status } = res.data;
         if (status === 'already-linked') {
           // 이미 다른유저에게 연동 된 경우
-          alreadyLinkedSnack.handleOpen();
+          enqueueSnackbar(`${afreecaId.value}는 이미 다른 유저에게 연동되어있습니다.`, {
+            variant: 'error',
+          });
         } else if (status === 'duplicate-request') {
           // 이미 아프리카 연동 진행을 했다 + 아직 쪽지를 보내지 않은 경우
           handleCertCode(res.data.cert.tempCode);
@@ -76,7 +74,9 @@ export default function AfreecaLinkDialog({
         }
       })
       .catch(() => {
-        failsnack.handleOpen();
+        enqueueSnackbar('인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요', {
+          variant: 'error',
+        });
         console.error('err');
       });
   }
@@ -86,8 +86,6 @@ export default function AfreecaLinkDialog({
   function handleButtonClicked() {
     setIsClicked(!isClicked);
   }
-
-  const copySnack = useDialog();
 
   return (
     <CustomDialog
@@ -160,7 +158,14 @@ export default function AfreecaLinkDialog({
                 value={certCode}
                 id="afreeca-cert-code"
                 helperText="인증번호 클릭시 복사됩니다."
-                onClick={(e): void => copyToClipboard(e, 'afreeca-cert-code', copySnack.handleOpen)}
+                onClick={(e): void =>
+                  copyToClipboard(e, 'afreeca-cert-code', () =>
+                    enqueueSnackbar(
+                      `인증번호가 복사되었습니다. ${AFREECA_ONAD_ID_LINK_NOTE} 에게 복사된 인증번호를 쪽지로 보내주세요.`,
+                      { variant: 'success' },
+                    ),
+                  )
+                }
               />
             </div>
 
@@ -204,41 +209,6 @@ export default function AfreecaLinkDialog({
           </Alert>
         )}
       </div>
-
-      {failsnack.open && (
-        <Snackbar
-          open={failsnack.open}
-          onClose={failsnack.handleClose}
-          color="error"
-          message="인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요"
-        />
-      )}
-
-      {alreadyLinkedSnack.open && (
-        <Snackbar
-          open={alreadyLinkedSnack.open}
-          onClose={alreadyLinkedSnack.handleClose}
-          color="error"
-          message={`${afreecaId.value}는 이미 다른 유저에게 연동되어있습니다.`}
-        />
-      )}
-
-      <Snackbar
-        open={copySnack.open}
-        onClose={copySnack.handleClose}
-        color="success"
-        message={
-          <Typography variant="body2">
-            인증번호가 복사되었습니다. &nbsp;
-            <Typography variant="body2" component="span" style={{ fontWeight: 'bold' }}>
-              &quot;
-              {AFREECA_ONAD_ID_LINK_NOTE}
-              &quot;
-            </Typography>
-            &nbsp; 에게 복사된 인증번호를 쪽지로 보내주세요.
-          </Typography>
-        }
-      />
     </CustomDialog>
   );
 }
