@@ -96,7 +96,7 @@ function getOS(): string|null {
 // }
 
 function dailyMissionTimer (){ 
-  const setDate = new Date("2021-06-29T01:00:00+0900");
+  const setDate = new Date("2021-06-29T11:46:00+0900");
 
   setInterval(function(){
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
@@ -317,12 +317,17 @@ socket.on('show virtual ad to client', async () => {
   $('.virtual-ad').html(
     `
     <img 
-      src="/public/images/virtual-ad.gif"
+      src="/public/images/yori-virtual-ad.gif"
     />
     `
   ).show();
   await setTimeout(() => {
-    $('.virtual-ad').empty();
+    $('.virtual-ad').html(`
+    <img 
+      src="/public/images/invisible.png"
+    />
+    `)
+    $('.virtual-ad').empty()
   }, 10000);
 });
 
