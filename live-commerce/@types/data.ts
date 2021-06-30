@@ -1,3 +1,5 @@
+import { MysqlError } from 'mysql';
+
 export interface UserInfo {
   socketId: string;
   device: string;
@@ -35,4 +37,14 @@ export interface Data {
 export interface SinglePurchase {
   name: string;
   purchaseNumber: number;
+}
+
+export interface QueryResult {
+  error?: MysqlError | null;
+  result: any;
+}
+
+export interface RankingData {
+  nickname:string;
+  total:number;
 }

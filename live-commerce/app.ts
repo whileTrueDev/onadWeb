@@ -4,6 +4,8 @@ import http from 'http';
 import {
   UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData
 } from './@types/data';
+import doQuery from './models/doQuery';
+
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -93,20 +95,42 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('get top-left ranking', data);
   });
 
-  socket.on('right-top-purchase-message', (data: PurchaseMessage) => {
+  socket.on('right-top-purchase-message', async (data: PurchaseMessage) => {
     const { roomName } = data;
     const { userId } = data;
     const { text } = data;
-    const completeText = `${text} - [${userId}]`;
+    // const completeText = `${text} - [${userId}]`;
+    const bottomTextArray:string[] = []
+    const selectQuery = `
+                          SELECT nickname, sum(quantity) AS total 
+                          FROM liveCommerceRanking 
+                          GROUP BY nickname 
+                          ORDER BY total desc,
+                          id
+                          LIMIT 3`
+    
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
+
+    const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
+      doQuery(selectQuery),
+      doQuery(selectTotalQuery),
+      doQuery(textSelectQuery)
+    ])
+    bottomText.result.map((data:{nickname:string; text:string}) => {
+      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
+    })
+
     io.to(roomName).emit('get right-top purchase message', data);
-    io.to(roomName).emit('get top-left ranking', data);
-    io.to(roomName).emit('get bottom purchase message', completeText);
+    io.to(roomName).emit('get top-left ranking', orderedRanking.result);
+    io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
+    io.to(roomName).emit('get bottom purchase message', bottomTextArray);
   });
 
   socket.on('clear bottom area from admin', (data: TextData) => {
     const { roomName } = data;
     io.to(roomName).emit('clear bottom area to client');
-    io.to(roomName).emit('clear ranking area');
+    // io.to(roomName).emit('clear ranking area');
   });
 
   socket.on('show bottom area from admin', (data: TextData) => {
@@ -131,8 +155,55 @@ io.on('connection', (socket: Socket) => {
   socket.on('show virtual ad', (roomName: string) => {
     io.to(roomName).emit('show virtual ad to client');
   });
-});
 
+  socket.on('quantity object', (data:any) => {
+    const {roomName} = data;
+    const {quantityObject} = data;
+    io.to(roomName).emit('quantity object from server', quantityObject)
+  })
+
+  socket.on('get all data', async (roomName:string) => {
+    const bottomTextArray:string[] = []
+
+    const selectQuery = `
+                          SELECT nickname, sum(quantity) AS total 
+                          FROM liveCommerceRanking 
+                          GROUP BY nickname 
+                          ORDER BY total desc,
+                          id
+                          LIMIT 3`
+    
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
+
+    const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
+      doQuery(selectQuery),
+      doQuery(selectTotalQuery),
+      doQuery(textSelectQuery)
+    ])
+
+    bottomText.result.map((data:{nickname:string; text:string}) => {
+      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
+    })
+
+    io.to(roomName).emit('get top-left ranking', orderedRanking.result);
+    io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
+    io.to(roomName).emit('get bottom purchase message', bottomTextArray);
+  })
+  
+  interface DateData{
+    date:string;
+    roomName:string;
+  }
+
+  socket.on('get d-day', (dateData:DateData) => {
+    const { date } = dateData;
+    const { roomName } = dateData;
+    console.log(roomName)
+    io.to(roomName).emit('d-day from server', date)
+  })
+});
+  
 
 httpServer.listen(PORT, () => {
   console.log(`--LIVE COMMERCE SERVER-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`);

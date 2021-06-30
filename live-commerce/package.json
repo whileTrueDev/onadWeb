@@ -9,12 +9,14 @@
     "prebuild": "rimraf ./dist",
     "build": "tsc",
     "postbuild": "browserify ./dist/lib/client.js -o ./dist/lib/bundle.js && cp -r ./views ./dist/views && cp -r ./public ./dist/public",
+    "windowspostbuild": "browserify ./dist/lib/client.js -o ./dist/lib/bundle.js && copy ./views -Recurse -Destination ./dist -Force && copy ./public -Recurse -Destination ./dist -Force",
     "start:debug": "nodemon --watch ./ --exec ts-node ./app.ts",
     "start:production": "node ./dist/app.js"
   },
   "dependencies": {
     "@types/http-errors": "^1.6.3",
     "@types/jquery": "^3.3.33",
+    "@types/mysql": "^2.15.18",
     "@types/node-schedule": "^1.3.0",
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
