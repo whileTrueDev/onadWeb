@@ -1,27 +1,25 @@
-import { useState, useEffect } from 'react';
-import * as React from 'react';
 import { Button, Hidden } from '@material-ui/core';
 // layout 계열 컴포넌트
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import HOST from '../../config';
 import NavTop from '../../organisms/main/layouts/NavTop';
+import Advantage from '../../organisms/main/main/Advantage/Advantage';
+import Contact from '../../organisms/main/main/Contact/Contact';
 // layout 내부 컨텐츠 계열 컴포넌트
 import ProductHero from '../../organisms/main/main/Hero/ProductHero';
-import Contact from '../../organisms/main/main/Contact/Contact';
-import RePasswordDialog from '../../organisms/main/main/login/RePassword';
-import sources from '../../organisms/main/main/source/sources';
-import Indicator from '../../organisms/main/main/Indicators/Indicator';
 import HowToUse from '../../organisms/main/main/HowToUse/HowToUse';
-import Advantage from '../../organisms/main/main/Advantage/Advantage';
+import Indicator from '../../organisms/main/main/Indicators/Indicator';
+import RePasswordDialog from '../../organisms/main/main/login/RePassword';
 import Reference from '../../organisms/main/main/Reference/Reference';
-// utill 계열 컴포넌트
-import useLoginValue from '../../utils/hooks/useLoginValue';
-import history from '../../history';
-import ParallaxScroll from './sub/ParallaxScroll';
+import sources from '../../organisms/main/main/source/sources';
+import ReferralCodeEventDialog from '../../organisms/shared/popup/ReferralCodeEventDialog';
 import axios from '../../utils/axios';
-import HOST from '../../config';
 import { useDialog } from '../../utils/hooks';
 import openKakaoChat from '../../utils/openKakaoChat';
-import ReferralCodeEventDialog from '../../organisms/shared/popup/ReferralCodeEventDialog';
+import ParallaxScroll from './sub/ParallaxScroll';
 
 const useStyles = makeStyles(theme => ({
   parallax: {
@@ -57,8 +55,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Main(): JSX.Element {
-  const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
-
   const classes = useStyles();
   const [psIndex, setPsIndex] = useState(0);
   // const [isDown, setIsDown] = useState(false)
@@ -67,7 +63,8 @@ export default function Main(): JSX.Element {
   const [loading, setLoading] = useState(false);
   // const [timer, setTimer] = useState<NodeJS.Timeout>();
 
-  const MainUserType = history.location.pathname === '/marketer';
+  const location = useLocation();
+
   React.useEffect(() => {
     document.title = '온애드 | 1인 미디어 실시간 광고 플랫폼';
     window.scrollTo(0, 0);
@@ -114,151 +111,63 @@ export default function Main(): JSX.Element {
 
   return (
     <div className={classes.root}>
-      {MainUserType ? (
-        <div>
-          <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
-          <ParallaxScroll
-            isLogin={isLogin}
-            setPsIndex={setPsIndex}
-            psIndex={psIndex}
-            loading={loading}
-            bgfixedRange={[0, 3]}
-            // timer={timer}
-            // setTimer={setTimer}
-            renewalDialog={liveCommerceEventDialog.open}
-            // isDown={isDown}
-            // setIsDown={setIsDown}
-            // offsetY={offsetY}
-            // setOffsetY={setOffsetY}
-          >
-            <div className={classes.parallax} data-parallax="0">
-              {psIndex === 0 && (
-                <ProductHero
-                  source={sources.hero}
-                  isLogin={isLogin}
-                  MainUserType={MainUserType}
-                  logout={logout}
-                />
-              )}
-            </div>
-
-            <div className={classes.parallax} data-parallax="1">
-              {psIndex === 1 && loading && <Indicator nowBroadcast={nowBroadcast} />}
-            </div>
-
-            <div className={classes.parallax} data-parallax="2">
-              {psIndex === 2 && (
-                <HowToUse
-                  source={sources.howTo}
-                  MainUserType={MainUserType}
-                  // timer={timer}
-                />
-              )}
-            </div>
-
-            <div className={classes.parallax} data-parallax="3">
-              {psIndex === 3 && (
-                <Advantage source={sources.advantage} MainUserType={MainUserType} />
-              )}
-            </div>
-
-            <div className={classes.parallax} data-parallax="4">
-              {psIndex === 4 && <Reference />}
-            </div>
-
-            <div className={classes.parallax} data-parallax="5">
-              {psIndex === 5 && (
-                <Contact
-                  source={sources.howitworks}
-                  MainUserType={MainUserType}
-                  isLogin={isLogin}
-                  logout={logout}
-                />
-              )}
-            </div>
-          </ParallaxScroll>
-          <RePasswordDialog
-            repasswordOpen={repasswordOpen}
-            setRepassword={setRepassword}
-            logout={logout}
-          />
+      <NavTop />
+      <ParallaxScroll
+        setPsIndex={setPsIndex}
+        psIndex={psIndex}
+        loading={loading}
+        bgfixedRange={[0, 3]}
+        // timer={timer}
+        // setTimer={setTimer}
+        renewalDialog={liveCommerceEventDialog.open}
+        // isDown={isDown}
+        // setIsDown={setIsDown}
+        // offsetY={offsetY}
+        // setOffsetY={setOffsetY}
+      >
+        <div className={classes.parallax} data-parallax="0">
+          {psIndex === 0 && <ProductHero source={sources.hero} />}
         </div>
-      ) : (
-        <div>
-          <NavTop isLogin={isLogin} logout={logout} MainUserType={MainUserType} />
-          <ParallaxScroll
-            isLogin={isLogin}
-            setPsIndex={setPsIndex}
-            psIndex={psIndex}
-            loading={loading}
-            bgfixedRange={[0, 3]}
-            // timer={timer}
-            // setTimer={setTimer}
-            renewalDialog={liveCommerceEventDialog.open}
-          >
-            <div className={classes.parallax} data-parallax="0">
-              {psIndex === 0 && (
-                <ProductHero
-                  source={sources.hero}
-                  isLogin={isLogin}
-                  MainUserType={MainUserType}
-                  logout={logout}
-                />
-              )}
-            </div>
 
-            <div className={classes.parallax} data-parallax="1">
-              {psIndex === 1 && loading && <Indicator nowBroadcast={nowBroadcast} />}
-            </div>
+        <div className={classes.parallax} data-parallax="1">
+          {psIndex === 1 && loading && <Indicator nowBroadcast={nowBroadcast} />}
+        </div>
 
-            <div className={classes.parallax} data-parallax="2">
-              {psIndex === 2 && (
-                <HowToUse
-                  source={sources.howTo}
-                  MainUserType={MainUserType}
-                  // timer={timer}
-                />
-              )}
-            </div>
-
-            <div className={classes.parallax} data-parallax="3">
-              {psIndex === 3 && (
-                <Advantage source={sources.advantage} MainUserType={MainUserType} />
-              )}
-            </div>
-
-            <div className={classes.parallax} data-parallax="4">
-              {psIndex === 4 && <Reference />}
-            </div>
-
-            <div className={classes.parallax} data-parallax="5">
-              {psIndex === 5 && (
-                <Contact
-                  source={sources.howitworks}
-                  MainUserType={MainUserType}
-                  isLogin={isLogin}
-                  logout={logout}
-                />
-              )}
-            </div>
-          </ParallaxScroll>
-          <RePasswordDialog
-            repasswordOpen={repasswordOpen}
-            setRepassword={setRepassword}
-            logout={logout}
-          />
-
-          {/* CPS  관련 임시 팝업  */}
-          <Hidden xsDown>
-            <ReferralCodeEventDialog
-              open={liveCommerceEventDialog.open}
-              onClose={liveCommerceEventDialog.handleClose}
+        <div className={classes.parallax} data-parallax="2">
+          {psIndex === 2 && (
+            <HowToUse
+              source={sources.howTo}
+              // timer={timer}
             />
-          </Hidden>
-          {/* 온애드 리뉴얼 관련 임시 팝업  */}
-          {/* *******************************  */}
+          )}
         </div>
+
+        <div className={classes.parallax} data-parallax="3">
+          {psIndex === 3 && <Advantage source={sources.advantage} />}
+        </div>
+
+        <div className={classes.parallax} data-parallax="4">
+          {psIndex === 4 && <Reference />}
+        </div>
+
+        <div className={classes.parallax} data-parallax="5">
+          {psIndex === 5 && <Contact source={sources.howitworks} />}
+        </div>
+      </ParallaxScroll>
+
+      {/* CPS  관련 임시 팝업  */}
+      {location.pathname.includes('creator') && (
+        <Hidden xsDown>
+          <ReferralCodeEventDialog
+            open={liveCommerceEventDialog.open}
+            onClose={liveCommerceEventDialog.handleClose}
+          />
+        </Hidden>
       )}
+      {/* 임시로그인시 비밀번호 변경 다이얼로그 */}
+      <RePasswordDialog />
+
+      {/* 카카오 상담 버튼 */}
       <Button className={classes.kakaoContact} onClick={openKakaoChat} />
     </div>
   );

@@ -1,18 +1,21 @@
-import { useState, useLayoutEffect } from 'react';
+import { useMemo, useState, useLayoutEffect } from 'react';
 import { Button, Typography, CircularProgress } from '@material-ui/core';
 import { nanoid } from 'nanoid';
+import { useLocation } from 'react-router-dom';
 import styles from '../style/HowToUse.style';
 
 interface HowToUseProps {
   source: {
     content: string[];
   };
-  MainUserType: boolean;
   // timer: NodeJS.Timeout | undefined;
 }
 
-function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
+function HowToUse({ source }: HowToUseProps): JSX.Element {
   const classes = styles();
+
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
 
   const [loading, setLoading] = useState(false);
   const [iframeLoading, setIframeLoading] = useState(false);
@@ -60,7 +63,7 @@ function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
               {text}
             </Typography>
           ))}
-          <div className={MainUserType ? classes.bottomLine : classes.bottomLine2} />
+          <div className={isMarketerPage ? classes.bottomLine : classes.bottomLine2} />
           <Button
             className={classes.button}
             onClick={() => {

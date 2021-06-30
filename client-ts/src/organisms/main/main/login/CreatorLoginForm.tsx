@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import classnames from 'classnames';
 import {
+  Box,
+  Button,
+  CircularProgress,
   Dialog,
   DialogContent,
-  Button,
-  Typography,
-  CircularProgress,
-  TextField,
   Divider,
   IconButton,
+  TextField,
+  Typography,
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { Close } from '@material-ui/icons';
-import useStyles from '../style/LoginForm.style';
-import axios from '../../../../utils/axios';
-import HOST from '../../../../config';
-import history from '../../../../history';
-import { useEventTargetValue } from '../../../../utils/hooks';
-import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import { Alert } from '@material-ui/lab';
+import classnames from 'classnames';
+import { useState } from 'react';
 import OnadLogo from '../../../../atoms/Logo/OnadLogo';
+import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import history from '../../../../history';
+import { useAuthStore } from '../../../../store/authStore';
+import { useEventTargetValue } from '../../../../utils/hooks';
+import useStyles from '../style/LoginForm.style';
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -30,17 +30,16 @@ export default function CreatorLoginForm({
   handleClose,
 }: CreatorLoginFormProps): JSX.Element {
   const classes = useStyles();
+  const login = useAuthStore(state => state.login);
 
   const [loading, setLoading] = useState(false);
-
   const userid = useEventTargetValue();
   const passwd = useEventTargetValue();
   const [error, setError] = useState<string>();
   const handleLogin = (): void => {
     setLoading(true);
-    axios
-      .post(`${HOST}/login`, { type: 'creator', userid: userid.value, passwd: passwd.value })
-      .then(res => {
+    login({ type: 'creator', userid: userid.value, passwd: passwd.value })
+      .then(async data => {
         setLoading(false);
         passwd.handleReset();
         setTimeout(() => {
@@ -49,14 +48,14 @@ export default function CreatorLoginForm({
           setError('로그인에 일시적인 문제가 발생했습니다.\n잠시후 다시 시도해주세요.');
         }, 1000 * 10); // 15초
 
-        if (res.data[0]) {
-          if (res.data[1]) setError(res.data[1]);
+        if (!data[0] && data[1]) {
+          history.push('/mypage/creator/main');
         }
-        if (res.data === 'success') history.push('/mypage/creator/main');
       })
       .catch(err => {
         setLoading(false);
-        setError(err.response.data.message);
+        console.log(err);
+        setError('로그인 정보가 올바르지 못합니다.');
       });
   };
 
@@ -114,9 +113,11 @@ export default function CreatorLoginForm({
         </form>
 
         {error && (
-          <Alert severity="error" icon={false}>
-            <Typography>{error}</Typography>
-          </Alert>
+          <Box my={1}>
+            <Alert severity="error" icon={false}>
+              <Typography>{error}</Typography>
+            </Alert>
+          </Box>
         )}
 
         {/* new 로그인 */}

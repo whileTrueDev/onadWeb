@@ -7,14 +7,16 @@ import InquiryCreator from '../Inquiry/InquiryCreator';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import CreatorLoginForm from '../login/CreatorLoginForm';
 import MarketerLoginForm from '../login/MarketerLoginForm';
+import { useAuthStore } from '../../../../store/authStore';
 
 interface IntroContactProps {
   MainUserType: boolean;
-  isLogin: boolean;
-  logout: () => void;
 }
 
-function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX.Element {
+function IntroContact({ MainUserType }: IntroContactProps): JSX.Element {
+  const isLogin = useAuthStore(state => state.isLoggedIn);
+  const logout = useAuthStore(state => state.logout);
+
   const classes = styles();
   const [loginValue, setLoginValue] = React.useState('');
 
@@ -98,11 +100,7 @@ function IntroContact({ MainUserType, isLogin, logout }: IntroContactProps): JSX
           <InquiryCreator confirmClose={handleClose} />
         )}
       </Dialog>
-      <MarketerLoginForm
-        open={loginValue === 'marketer'}
-        handleClose={handleDialogClose}
-        logout={logout}
-      />
+      <MarketerLoginForm open={loginValue === 'marketer'} handleClose={handleDialogClose} />
       <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </section>
   );

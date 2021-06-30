@@ -7,12 +7,12 @@ import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import Background from './Background';
 import style from '../style/ParallaxScroll.style';
+import { useAuthStore } from '../../../store/authStore';
 
 interface ParallaxScrollProps {
   children: React.ReactNode[];
   setPsIndex: React.Dispatch<React.SetStateAction<number>>;
   psIndex: number;
-  isLogin: boolean;
   loading: boolean | null;
   bgfixedRange: number[];
   renewalDialog: boolean;
@@ -28,7 +28,6 @@ function ParallaxScroll({
   children,
   psIndex,
   setPsIndex,
-  isLogin,
   loading,
   bgfixedRange,
   renewalDialog,
@@ -36,6 +35,7 @@ function ParallaxScroll({
 // isDown, setIsDown,
 // offsetY, setOffsetY
 ParallaxScrollProps): JSX.Element {
+  const isLogin = useAuthStore(state => state.isLoggedIn);
   const classes = style();
   const [lastTime, setLastTime] = useState(new Date().getTime());
   // Underscore 함수 - resize 연계, 추후 훅으로 만들것 => lodash도 만들것

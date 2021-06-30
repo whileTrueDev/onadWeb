@@ -4,6 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 // types
 import { Notification } from '../NotificationType';
+import { useMypageStore } from '../../../../../store/mypageStore';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contents: {
@@ -31,15 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UNREAD_STATE = 0; // 읽지않음 상태값
 
 export default function NotificationPopover({
-  anchorEl,
   notificationData,
   successCallback,
-  handleAnchorClose,
 }: {
-  anchorEl: HTMLElement;
   notificationData: Notification[];
   successCallback: () => void;
-  handleAnchorClose: () => void;
 }): JSX.Element {
   const userType = window.location.pathname.split('/')[2];
   const classes = useStyles();
@@ -47,11 +44,15 @@ export default function NotificationPopover({
     // 클라이언트 알림 읽음 처리
     successCallback(); // 개인 알림 데이터 리로드
   });
+
+  const notiAnchor = useMypageStore(state => state.notiAnchor);
+  const handleNotiClose = useMypageStore(state => state.handleNotiClose);
+
   return (
     <Popover
-      open={Boolean(anchorEl)}
-      anchorEl={anchorEl}
-      onClose={handleAnchorClose}
+      open={!!notiAnchor}
+      anchorEl={notiAnchor}
+      onClose={handleNotiClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right',

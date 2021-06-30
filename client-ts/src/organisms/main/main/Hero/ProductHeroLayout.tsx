@@ -3,14 +3,14 @@ import useStyles from '../style/ProductHeroLayout.style';
 
 interface ProductHeroLayoutProps {
   children: React.ReactNode;
-  MainUserType: boolean;
+  isMarketerPage: boolean;
 }
 
-function ProductHeroLayout({ children, MainUserType }: ProductHeroLayoutProps): JSX.Element {
+function ProductHeroLayout({ children, isMarketerPage }: ProductHeroLayoutProps): JSX.Element {
   const classes = useStyles();
 
   return (
-    <section className={MainUserType ? classes.marketer : classes.creator}>{children}</section>
+    <section className={isMarketerPage ? classes.marketer : classes.creator}>{children}</section>
   );
 }
 

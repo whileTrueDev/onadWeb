@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import * as React from 'react';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
   Menu,
@@ -17,15 +17,16 @@ import LoginPopover from '../main/login/LoginPopover';
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
+import { useAuthStore } from '../../../store/authStore';
 
-interface NavTopProps {
-  MainUserType?: boolean;
-  logout: () => void;
-  isLogin?: boolean;
-}
-
-function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
+function NavTop(): JSX.Element {
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
   const classes = useStyles();
+  const { isLoggedIn: isLogin, logout, loginCheck } = useAuthStore();
+  useEffect(() => {
+    loginCheck();
+  }, [loginCheck]);
 
   const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
 
@@ -62,7 +63,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" MainUserType={MainUserType} logout={logout} />;
+    return <LoginPopover type="회원가입" />;
   };
 
   // 로그인 버튼
@@ -74,7 +75,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
         </Button>
       );
     }
-    return <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />;
+    return <LoginPopover type="로그인" />;
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -104,13 +105,13 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
           <Button
             className={classes.mobileButton}
             component={Link}
-            to={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
+            to={isMarketerPage ? '/introduce/marketer' : '/introduce/creator'}
           >
             이용 방법
           </Button>
         </MenuItem>
 
-        {MainUserType ? (
+        {isMarketerPage ? (
           <MenuItem className={classes.buttonWraper}>
             <Button className={classes.mobileButton} component={Link} to="/creatorlist">
               방송인 목록
@@ -127,12 +128,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
               마이페이지
             </Button>
           ) : (
-            <LoginPopover
-              type="회원가입"
-              mode="mobile"
-              MainUserType={MainUserType}
-              logout={logout}
-            />
+            <LoginPopover type="회원가입" />
           )}
         </MenuItem>
 
@@ -142,7 +138,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
               로그아웃
             </Button>
           ) : (
-            <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />
+            <LoginPopover type="로그인" />
           )}
         </MenuItem>
       </div>
@@ -167,13 +163,13 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             <Button
               className={classes.tabButton}
               component={Link}
-              to={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
+              to={isMarketerPage ? '/introduce/marketer' : '/introduce/creator'}
             >
               이용방법
             </Button>
 
             {/* 방송인 목록 버튼 */}
-            {MainUserType ? (
+            {isMarketerPage ? (
               <div>
                 <Button className={classes.creatorList} component={Link} to="/creatorlist">
                   방송인 목록

@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import * as React from 'react';
 import { Button, Typography } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 import styles from '../style/Contact.style';
 import Inquiry from '../Inquiry/Inquiry';
 import InquiryCreator from '../Inquiry/InquiryCreator';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import CreatorLoginForm from '../login/CreatorLoginForm';
 import MarketerLoginForm from '../login/MarketerLoginForm';
+import { useAuthStore } from '../../../../store/authStore';
 
 interface ContactProps {
-  MainUserType: boolean;
   source: {
     content: {
       title: string;
@@ -17,11 +18,14 @@ interface ContactProps {
       location: string;
     };
   };
-  isLogin: boolean;
-  logout: () => void;
 }
 
-function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.Element {
+function Contact({ source }: ContactProps): JSX.Element {
+  const isLogin = useAuthStore(state => state.isLoggedIn);
+  const logout = useAuthStore(state => state.logout);
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
+
   const classes = styles();
   const [loginValue, setLoginValue] = React.useState('');
 
@@ -57,7 +61,7 @@ function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.E
   return (
     <section className={classes.root}>
       <div className={classes.top}>
-        <div className={MainUserType ? classes.topLeftLine : classes.topLeftLine2} />
+        <div className={isMarketerPage ? classes.topLeftLine : classes.topLeftLine2} />
         <div>
           <Typography variant="h4" style={{ marginBottom: '8px' }} className={classes.topText}>
             {source.content.title}
@@ -67,13 +71,13 @@ function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.E
           </Typography>
         </div>
       </div>
-      <div className={MainUserType ? classes.bottom : classes.bottom2}>
+      <div className={isMarketerPage ? classes.bottom : classes.bottom2}>
         <Typography variant="h3" className={classes.bottomText}>
           지금 바로 온애드와 시작해보세요
         </Typography>
         <div>
           <Button
-            className={MainUserType ? classes.button : classes.button2}
+            className={isMarketerPage ? classes.button : classes.button2}
             onClick={() => handleOpen('marketer')}
             id="inquiry"
           >
@@ -84,15 +88,15 @@ function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.E
 
           {!isLogin ? (
             <Button
-              className={MainUserType ? classes.button : classes.button2}
-              onClick={() => handleDialogOpenClick(MainUserType ? 'marketer' : 'creator')}
+              className={isMarketerPage ? classes.button : classes.button2}
+              onClick={() => handleDialogOpenClick(isMarketerPage ? 'marketer' : 'creator')}
             >
               <Typography variant="h4" className={classes.bottomText}>
                 시작하기
               </Typography>
             </Button>
           ) : (
-            <Button className={MainUserType ? classes.button : classes.button2} onClick={logout}>
+            <Button className={isMarketerPage ? classes.button : classes.button2} onClick={logout}>
               <Typography variant="h4" className={classes.bottomText} onClick={logout}>
                 로그아웃
               </Typography>
@@ -111,17 +115,13 @@ function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.E
           </div>
         }
       >
-        {MainUserType ? (
+        {isMarketerPage ? (
           <Inquiry confirmClose={handleClose} />
         ) : (
           <InquiryCreator confirmClose={handleClose} />
         )}
       </Dialog>
-      <MarketerLoginForm
-        open={loginValue === 'marketer'}
-        handleClose={handleDialogClose}
-        logout={logout}
-      />
+      <MarketerLoginForm open={loginValue === 'marketer'} handleClose={handleDialogClose} />
       <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </section>
   );

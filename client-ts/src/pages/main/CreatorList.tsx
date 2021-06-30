@@ -1,14 +1,13 @@
 /* eslint-disable react/display-name */
-import { useState, useEffect } from 'react';
-import { Typography, TablePagination, useMediaQuery } from '@material-ui/core';
+import { TablePagination, Typography, useMediaQuery } from '@material-ui/core';
 import { nanoid } from 'nanoid';
-import useStyles from './style/CreatorList.style';
-import NavTop from '../../organisms/main/layouts/NavTop';
-import AppFooter from '../../organisms/main/layouts/AppFooter';
-import RePasswordDialog from '../../organisms/main/main/login/RePassword';
-import useLoginValue from '../../utils/hooks/useLoginValue';
-import useGetRequest from '../../utils/hooks/useGetRequest';
+import { useEffect, useState } from 'react';
 import Table from '../../atoms/Table/MaterialTable';
+import AppFooter from '../../organisms/main/layouts/AppFooter';
+import NavTop from '../../organisms/main/layouts/NavTop';
+import RePasswordDialog from '../../organisms/main/main/login/RePassword';
+import useGetRequest from '../../utils/hooks/useGetRequest';
+import useStyles from './style/CreatorList.style';
 
 export interface ContractedCreatorListData<T> {
   creatorId: T;
@@ -28,7 +27,6 @@ const COLORS = [
 ];
 
 export default function CreatorList(): JSX.Element {
-  const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
   const [LiveCreator, setLiveCreator] = useState<null | ContractedCreatorListData<string>[]>();
   const ContractedCreatorList =
@@ -117,7 +115,7 @@ export default function CreatorList(): JSX.Element {
 
   return (
     <div>
-      <NavTop isLogin={isLogin} logout={logout} MainUserType />
+      <NavTop />
       <div className={classes.root}>
         <div className={classes.containerWrap}>
           <img src="/creatorList/creatorList.svg" alt="creatorList" className={classes.mainImage} />
@@ -189,11 +187,7 @@ export default function CreatorList(): JSX.Element {
         </div>
         <AppFooter />
       </div>
-      <RePasswordDialog
-        repasswordOpen={repasswordOpen}
-        setRepassword={setRepassword}
-        logout={logout}
-      />
+      <RePasswordDialog />
     </div>
   );
 }

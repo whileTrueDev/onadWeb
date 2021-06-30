@@ -1,3 +1,4 @@
+import shallow from 'zustand/shallow';
 import { useReducer } from 'react';
 import * as React from 'react';
 import {
@@ -14,6 +15,7 @@ import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import passwordRegex from '../../../../utils/inputs/regex/password.regex';
+import { useAuthStore } from '../../../../store/authStore';
 
 const initialValue = {
   value: '',
@@ -53,13 +55,8 @@ const myReducer = (state: RepasswordState, action: RepasswordAction) => {
 
 type InputType = React.ChangeEvent<HTMLInputElement>;
 type FormType = React.FormEvent<HTMLFormElement>;
-interface Props {
-  setRepassword: any;
-  logout: () => void;
-  repasswordOpen: boolean;
-}
 
-function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX.Element {
+function RePasswordDialog(): JSX.Element {
   const [state, dispatch] = useReducer(myReducer, initialValue);
   const classes = useStyles();
 
@@ -72,6 +69,15 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
     event.preventDefault();
     dispatch({ type: 'repasswd', value: event.target.value });
   };
+
+  const { logout, repasswordOpen, doneRepassword } = useAuthStore(
+    zustnadState => ({
+      logout: zustnadState.logout,
+      repasswordOpen: zustnadState.needRepassword,
+      doneRepassword: zustnadState.doneRepassword,
+    }),
+    shallow,
+  );
 
   const handleSubmit = (event: FormType) => {
     event.preventDefault();
@@ -88,7 +94,7 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
       .patch(`${HOST}/marketer`, user)
       .then(() => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
-        setRepassword(false);
+        doneRepassword();
         logout();
         history.replace('/');
       })

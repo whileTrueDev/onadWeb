@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 import ProductHeroLayout from './ProductHeroLayout';
 import styles from '../style/ProductHero.style';
 import CreatorLoginForm from '../login/CreatorLoginForm';
 import MarketerLoginForm from '../login/MarketerLoginForm';
+import { useAuthStore } from '../../../../store/authStore';
 
 interface ProductHeroProps {
-  MainUserType: boolean;
   source: {
     text: {
       title: string;
@@ -19,11 +20,13 @@ interface ProductHeroProps {
       subTitle: string;
     };
   };
-  isLogin: boolean;
-  logout: () => void;
 }
 
-function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps): JSX.Element {
+function ProductHero({ source }: ProductHeroProps): JSX.Element {
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
+  const isLogin = useAuthStore(state => state.isLoggedIn);
+  const logout = useAuthStore(state => state.logout);
   const classes = styles();
 
   const [loginValue, setLoginValue] = useState('');
@@ -37,8 +40,8 @@ function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps
   }
 
   return (
-    <ProductHeroLayout MainUserType={MainUserType}>
-      {MainUserType ? (
+    <ProductHeroLayout isMarketerPage={isMarketerPage}>
+      {isMarketerPage ? (
         // 마케터 페이지
         <div className={classes.root}>
           <Typography align="center" variant="h4" className={classes.mainTitle}>
@@ -86,11 +89,7 @@ function ProductHero({ MainUserType, source, isLogin, logout }: ProductHeroProps
           )}
         </div>
       )}
-      <MarketerLoginForm
-        open={loginValue === 'marketer'}
-        handleClose={handleDialogClose}
-        logout={logout}
-      />
+      <MarketerLoginForm open={loginValue === 'marketer'} handleClose={handleDialogClose} />
       <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </ProductHeroLayout>
   );

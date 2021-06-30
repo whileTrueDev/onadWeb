@@ -43,7 +43,6 @@ export class LoginController {
   @UseGuards(LocalAuthGuard)
   @Post()
   localLogin(@Req() req: Request): [boolean, Express.User | string] | string {
-    if (req.user.userType === 'creator') return 'success';
     return [false, req.user];
   }
 

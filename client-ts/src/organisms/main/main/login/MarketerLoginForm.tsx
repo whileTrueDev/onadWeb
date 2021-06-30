@@ -1,32 +1,32 @@
-import { useState } from 'react';
-import * as React from 'react';
-import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 import {
+  Button,
+  CircularProgress,
   Dialog,
   DialogContent,
-  Button,
-  TextField,
   Divider,
-  Typography,
   IconButton,
-  CircularProgress,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-import useStyles from '../style/LoginForm.style';
-import axios from '../../../../utils/axios';
-import FindDialog from './FindDialog';
+import classnames from 'classnames';
+import * as React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 import HOST from '../../../../config';
 import history from '../../../../history';
-import OnadLogo from '../../../../atoms/Logo/OnadLogo';
+import { useAuthStore } from '../../../../store/authStore';
+import useStyles from '../style/LoginForm.style';
+import FindDialog from './FindDialog';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  logout?: () => void;
 }
 // TODO: 비밀번호 암호화하여 전달하기.
 function LoginForm({ open, handleClose }: Props): JSX.Element {
+  const login = useAuthStore(state => state.login);
   // prop를 통해 Marketer 인지 Creator인지 확인.
   // 데이터가 변경되는 것일 때 state로 처리를 한다.
   const classes = useStyles();
@@ -46,24 +46,23 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
 
   const [loading, setLoading] = useState(false);
 
-  const login = (event: React.SyntheticEvent) => {
+  const handleLogin = (event: React.SyntheticEvent) => {
     if (event) {
       event.preventDefault();
     }
     setLoading(true);
-    axios
-      .post(`${HOST}/login`, { userid, passwd, type: 'marketer' })
-      .then(res => {
+    login({ userid, passwd, type: 'marketer' })
+      .then(data => {
         setLoading(false);
-        if (res.data[0]) {
+        if (data[0]) {
           setPasswd('');
-          console.log(res.data);
-          alert(res.data[1]);
-          if (res.data[1] === '이메일 본인인증을 해야합니다.') {
+          console.log(data);
+          alert(data[1]);
+          if (data[1] === '이메일 본인인증을 해야합니다.') {
             handleClose();
           }
         } else {
-          const userData = res.data[1];
+          const userData = data[1];
           if (userData.temporaryLogin) {
             handleClose();
             history.push('/');
@@ -78,7 +77,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         setLoading(false);
         console.log(reason);
         setPasswd(''); // 비밀번호 초기화
-        alert('회원이 아닙니다.');
+        alert('로그인 정보가 올바르지 못합니다.');
       });
   };
 
@@ -119,14 +118,14 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
             onChange={onChange}
             fullWidth
             onKeyPress={e => {
-              if (e.key === 'Enter') login(e);
+              if (e.key === 'Enter') handleLogin(e);
             }}
           />
 
           <Button
             className={classnames(classes.loginButton, classes.socialLoginButton)}
             variant="contained"
-            onClick={login}
+            onClick={handleLogin}
             color="primary"
             fullWidth
             style={{ marginTop: 16, marginBottom: 8 }}

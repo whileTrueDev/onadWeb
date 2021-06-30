@@ -1,22 +1,19 @@
-import { useEffect } from 'react';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import useStyles from './style/Policy.style';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AppFooter from '../../organisms/main/layouts/AppFooter';
 import RePasswordDialog from '../../organisms/main/main/login/RePassword';
-import useLoginValue from '../../utils/hooks/useLoginValue';
 import DefaultPolicy from '../../organisms/main/policy/Policy';
 import PolicyPrivacy from '../../organisms/main/policy/PolicyPrivacy';
+import useStyles from './style/Policy.style';
 
 interface PolicyProps {
   match: { params: { privacy: string } };
 }
 
 export default function Policy({ match }: PolicyProps): JSX.Element {
-  const { repasswordOpen, logout, setRepassword } = useLoginValue();
-
   const { privacy } = match.params;
   const classes = useStyles();
 
@@ -61,11 +58,7 @@ export default function Policy({ match }: PolicyProps): JSX.Element {
         </div>
       </div>
       <AppFooter />
-      <RePasswordDialog
-        repasswordOpen={repasswordOpen}
-        setRepassword={setRepassword}
-        logout={logout}
-      />
+      <RePasswordDialog />
     </div>
   );
 }

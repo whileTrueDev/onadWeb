@@ -22,6 +22,7 @@ import MarketerPopover from './sub/MarketerPopover';
 import { MarketerInfo } from '../../marketer/office/interface';
 import MarketerInfoContext from '../../../../context/MarketerInfo.context';
 import { ContractionDataType } from '../../creator/shared/StartGuideCard';
+import { useMypageStore } from '../../../../store/mypageStore';
 
 const useStyles = makeStyles(theme => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) },
@@ -35,7 +36,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
 
   // 개인 알림
   const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${type}/notification`);
-  const { anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose } = useAnchorEl();
+  const handleNotiOpen = useMypageStore(state => state.handleNotiOpen);
 
   // 공지사항
   const noticeReadFlagGet = useGetRequest<any, { noticeReadState: number }>('/notice/read-flag', {
@@ -52,31 +53,10 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
     });
   }
 
-  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
-  const [isAlreadyRendered, setIsAlreadyRendered] = useState(false);
-  const notificationRef = useRef<HTMLButtonElement | null>(null);
-  useEffect(() => {
-    function handleUnreadNotificationOpen(): void {
-      if (
-        !notificationGet.loading &&
-        notificationGet.data &&
-        notificationGet.data.notifications.filter(noti => noti.readState === 0).length &&
-        !isAlreadyRendered
-      ) {
-        setIsAlreadyRendered(true);
-        handleAnchorOpenWithRef(notificationRef);
-      }
-    }
-    handleUnreadNotificationOpen();
-  }, [handleAnchorOpenWithRef, isAlreadyRendered, notificationGet.data, notificationGet.loading]);
-  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
-
   // 유저 로고 클릭시의 설정 리스트
-  const userLogoAnchor = useAnchorEl();
-
+  const handleUserMenuOpen = useMypageStore(state => state.handleUserMenuOpen);
   // 유저 정보 조회
   const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfo>(`/${type}`);
-
   // ***************************************************
   // 프로필 사진 변경 시, 마이페이지 네비바에서 유저 정보 다시 조회하기 위한 컨텍스트 사용
   const marketerInfo = useContext(MarketerInfoContext);
@@ -85,18 +65,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
     <div>
       {/* notification */}
       <Tooltip title="알림">
-        <IconButton
-          size="medium"
-          aria-label="notifications"
-          ref={notificationRef}
-          onClick={(e): void => {
-            if (anchorEl) {
-              handleAnchorClose();
-            } else {
-              handleAnchorOpen(e);
-            }
-          }}
-        >
+        <IconButton size="medium" aria-label="notifications" onClick={e => handleNotiOpen(e)}>
           <Badge
             badgeContent={
               !notificationGet.loading && notificationGet.data
@@ -110,7 +79,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
         </IconButton>
       </Tooltip>
 
-      <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
+      <IconButton size="small" onClick={handleUserMenuOpen}>
         {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
         {!noticeReadFlagGet.loading &&
         noticeReadFlagGet.data &&
@@ -159,10 +128,8 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       </IconButton>
 
       {/* 알림 popover 모바일 크기 최적화 필요 */}
-      {anchorEl && !notificationGet.loading && notificationGet.data && (
+      {!notificationGet.loading && notificationGet.data && (
         <NotificationPopper
-          anchorEl={anchorEl}
-          handleAnchorClose={handleAnchorClose}
           notificationData={notificationGet.data.notifications}
           successCallback={notificationGet.doGetRequest}
         />
@@ -171,10 +138,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       {/* 유저 설정 리스트 */}
       {type === 'creator' && !userProfileGet.loading && userProfileGet.data && (
         <UserPopover
-          open={userLogoAnchor.open}
           userData={userProfileGet.data}
-          anchorEl={userLogoAnchor.anchorEl}
-          handleAnchorClose={userLogoAnchor.handleAnchorClose}
           handleLogoutClick={handleLogoutClick}
           noticeReadFlagGet={noticeReadFlagGet}
           doNoticePatchRequest={(): void => {
@@ -186,10 +150,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       {/* 유저 설정 리스트 */}
       {type === 'marketer' && !marketerInfo.loading && marketerInfo.user && (
         <MarketerPopover
-          open={userLogoAnchor.open}
           userData={marketerInfo.user}
-          anchorEl={userLogoAnchor.anchorEl}
-          handleAnchorClose={userLogoAnchor.handleAnchorClose}
           handleLogoutClick={handleLogoutClick}
           noticeReadFlagGet={noticeReadFlagGet}
           doNoticePatchRequest={(): void => {

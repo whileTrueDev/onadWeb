@@ -24,39 +24,32 @@ import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
 import { MarketerInfo } from '../../../marketer/office/interface';
 import history from '../../../../../history';
+import { useMypageStore } from '../../../../../store/mypageStore';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },
   icon: { marginRight: theme.spacing(2) },
 }));
 export interface MarketerPopoverProps {
-  open: boolean;
   userData: MarketerInfo;
-  anchorEl?: HTMLElement | null;
-  handleAnchorClose: () => void;
   handleLogoutClick: () => void;
   noticeReadFlagGet: UseGetRequestObject<{ noticeReadState: number }>;
   doNoticePatchRequest: () => void;
 }
 export default function MarketerPopover(props: MarketerPopoverProps): JSX.Element {
-  const {
-    open,
-    userData,
-    anchorEl,
-    handleAnchorClose,
-    handleLogoutClick,
-    noticeReadFlagGet,
-    doNoticePatchRequest,
-  } = props;
+  const { userData, handleLogoutClick, noticeReadFlagGet, doNoticePatchRequest } = props;
+
+  const userMenuAnchor = useMypageStore(state => state.userMenuAnchor);
+  const handleUserMenuClose = useMypageStore(state => state.handleUserMenuClose);
 
   const theme = useTheme<OnadTheme>();
   const classes = useStyles();
 
   return (
     <Popover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleAnchorClose}
+      open={!!userMenuAnchor}
+      anchorEl={userMenuAnchor}
+      onClose={handleUserMenuClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right',

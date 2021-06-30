@@ -1,19 +1,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Divider, Typography } from '@material-ui/core';
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
+import { useLocation } from 'react-router-dom';
 import styles from '../style/Advantage.style';
 import Slider from './sub/index';
 
 interface Props {
-  MainUserType: boolean;
   source: any;
 }
 
-function Advantage({ source, MainUserType }: Props): JSX.Element {
+function Advantage({ source }: Props): JSX.Element {
   const classes = styles();
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
 
   const silderProps = {
     zoomFactor: 20,
@@ -42,8 +44,8 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
 
   return (
     <div className={classes.root}>
-      {MainUserType ? (
-        <Slider {...silderProps} MainUserType={MainUserType}>
+      {isMarketerPage ? (
+        <Slider {...silderProps}>
           {source.marketer.map((content: any, i: number) => (
             <div
               className={classes.contentWrapper}
@@ -81,7 +83,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
           ))}
         </Slider>
       ) : (
-        <Slider {...silderProps} MainUserType={MainUserType}>
+        <Slider {...silderProps}>
           {source.creator.map((content: any, i: number) => (
             <div className={classes.contentWrapper} id="contentWrap" key={nanoid()}>
               <div

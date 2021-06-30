@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
+import { useLocation } from 'react-router-dom';
 import SliderItem from './SliderItems';
 import { StyledSliderWrapper, StyledSlider } from './Slider.style';
 
@@ -10,7 +11,6 @@ interface SliderProps {
   slideMargin: number;
   maxVisibleSlides: number;
   pageTransition: number;
-  MainUserType: boolean;
 }
 
 const numberOfSlides = (maxVisibleSlides: number, windowWidth: number) => {
@@ -28,8 +28,10 @@ function Slider({
   slideMargin,
   maxVisibleSlides,
   pageTransition,
-  MainUserType,
 }: SliderProps): JSX.Element {
+  const { pathname } = useLocation();
+  const isMarketerPage = useMemo(() => pathname.includes('/marketer'), [pathname]);
+
   const [currentPage, setCurrentPage] = useState(0);
   const [transformValue, setTransformValue] = useState(`-${zoomFactor / 2}%`);
   const [scrollSize, setScrollSize] = useState(0);
@@ -40,7 +42,7 @@ function Slider({
   const totalPages: number = Math.ceil(children.length / visibleSlides) - 1;
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const resizeObserver = new ResizeObserver(entries => {
       setScrollSize(entries[0].contentRect.width);
@@ -127,7 +129,7 @@ function Slider({
         <div className="button-wrapper backWrapper">
           <button
             type="button"
-            className={MainUserType ? 'button back' : 'button2 back'}
+            className={isMarketerPage ? 'button back' : 'button2 back'}
             onClick={() => handleSlideMove(false)}
           >
             <ArrowLeft className="buttonArrow" />
@@ -138,7 +140,7 @@ function Slider({
         <div className="button-wrapper forwardWrapper">
           <button
             type="button"
-            className={MainUserType ? 'button forward' : 'button2 forward'}
+            className={isMarketerPage ? 'button forward' : 'button2 forward'}
             onClick={() => handleSlideMove(true)}
           >
             <ArrowRight className="buttonArrow" />

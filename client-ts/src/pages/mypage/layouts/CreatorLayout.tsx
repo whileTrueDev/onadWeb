@@ -1,26 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
-import { Switch, Route } from 'react-router-dom';
-import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
-import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
-import allRoutes from '../routes';
+import { useEffect, useRef } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import '../../../assets/onad.css';
 import history from '../../../history';
-import useLoginValue from '../../../utils/hooks/useLoginValue';
+import Footer from '../../../organisms/mypage/layouts/Footer/Footer';
+import Navbar from '../../../organisms/mypage/layouts/Navbars/Navbar';
+import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
+import { useAuthStore } from '../../../store/authStore';
+import { useMypageStore } from '../../../store/mypageStore';
+import allRoutes from '../routes';
 // css
 import useLayoutStyles from './Layout.style';
-import '../../../assets/onad.css';
-import ResponsiveDrawer from '../../../organisms/mypage/layouts/Sidebar/ResponsiveDrawer';
 
 const CreatorDashboard = (): JSX.Element => {
   const classes = useLayoutStyles();
-  const { userType } = useLoginValue();
-  if (userType === 'marketer') {
-    history.push('/');
-  }
+  const loginCheck = useAuthStore(state => state.loginCheck);
+  useEffect(() => {
+    loginCheck().then(userType => {
+      if (userType !== 'creator') history.push('/');
+    });
+  }, [loginCheck]);
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const handleDrawerToggle = (): void => {
-    setMobileOpen(!mobileOpen);
-  };
+  const isDrawerOpen = useMypageStore(state => state.isDrawerOpen);
+  const toggleDrawer = useMypageStore(state => state.toggleDrawer);
 
   // main ref
   const mainPanel = useRef<HTMLDivElement>(null);
@@ -33,22 +34,18 @@ const CreatorDashboard = (): JSX.Element => {
 
     return (): void => {
       if (history.location.pathname === window.location.pathname) {
-        if (mobileOpen) {
-          setMobileOpen(false);
+        if (isDrawerOpen) {
+          toggleDrawer(false);
         }
       }
     };
-  }, [mobileOpen]);
+  }, [isDrawerOpen, toggleDrawer]);
 
   return (
     <div className={classes.wrapper}>
-      <ResponsiveDrawer
-        routes={allRoutes.creator.filter(r => !r.noTab)}
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-      />
+      <ResponsiveDrawer routes={allRoutes.creator.filter(r => !r.noTab)} />
       <div className={classes.mainPanel} ref={mainPanel} id="onad-main-panel">
-        <Navbar type="creator" handleDrawerToggle={handleDrawerToggle} routes={allRoutes.creator} />
+        <Navbar type="creator" routes={allRoutes.creator} />
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>

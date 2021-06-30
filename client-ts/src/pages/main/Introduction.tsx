@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Typography, Button } from '@material-ui/core';
 import { nanoid } from 'nanoid';
+import { useParams } from 'react-router-dom';
 import styles from './style/Introduction.style';
-import useLoginValue from '../../utils/hooks/useLoginValue';
 import NavTop from '../../organisms/main/layouts/NavTop';
 import HowToUseCreator from '../../organisms/main/Introduction/HowToUseCreator';
 import HowToUseMarketer from '../../organisms/main/Introduction/HowToUseMarketer';
@@ -14,32 +14,27 @@ import Question from '../../organisms/main/Introduction/Question';
 import IntroContact from '../../organisms/main/main/Contact/IntroContact';
 import openKakaoChat from '../../utils/openKakaoChat';
 
-export interface Props {
-  match: {
-    params: { userType: string | boolean };
-  };
-}
-
 // this is layout compoent
-export default function Introduction({ match }: Props): JSX.Element {
-  const { isLogin, logout } = useLoginValue();
+export default function Introduction(): JSX.Element {
   const classes = styles();
-  const { userType } = match.params;
+  const { userType } = useParams<{ userType: string }>();
 
   useEffect(() => {
     const glassElement = document.getElementById('glass');
-    document.addEventListener('mousemove', e => {
-      glassElement!.style.left = `${e.offsetX}px`;
-      glassElement!.style.top = `${e.offsetY}px`;
-      glassElement!.style.display = 'block';
-    });
+    if (glassElement) {
+      document.addEventListener('mousemove', e => {
+        glassElement.style.left = `${e.offsetX}px`;
+        glassElement.style.top = `${e.offsetY}px`;
+        glassElement.style.display = 'block';
+      });
+    }
   }, []);
 
   return (
     <div>
       {userType === 'marketer' ? (
         <div>
-          <NavTop isLogin={isLogin} MainUserType logout={logout} />
+          <NavTop />
           <div className={classes.root}>
             <div className={classes.wrapper}>
               <div className={classes.mainTop}>
@@ -69,12 +64,12 @@ export default function Introduction({ match }: Props): JSX.Element {
               <Question MainUserType="marketer" />
             </div>
           </div>
-          <IntroContact MainUserType isLogin={isLogin} logout={logout} />
+          <IntroContact MainUserType />
           <AppFooter />
         </div>
       ) : (
         <div>
-          <NavTop isLogin={isLogin} MainUserType={false} logout={logout} />
+          <NavTop />
           <div className={classes.root}>
             <div className={classes.wrapper}>
               <div className={classes.mainTop}>
@@ -102,7 +97,7 @@ export default function Introduction({ match }: Props): JSX.Element {
               <Question MainUserType="creator" />
             </div>
           </div>
-          <IntroContact MainUserType={false} isLogin={isLogin} logout={logout} />
+          <IntroContact MainUserType={false} />
           <AppFooter />
         </div>
       )}
