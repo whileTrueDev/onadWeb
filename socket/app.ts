@@ -15,9 +15,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = socketio(httpServer);
 
-const PORT = 3002;
 process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
-const SOCKET_HOST = process.env.SOCKET_HOSTNAME;
 
 app.use('/public', express.static(`${__dirname}/public`)); // 디렉토리 정적으로 고정하는 부분
 // view engine
@@ -56,6 +54,7 @@ interface SocketInfo {
 }
 (
   function () {
+    const SOCKET_HOST = process.env.SOCKET_HOSTNAME;
     const socketInfo: SocketInfo = {};
     io.on('connection', (socket: Socket) => {
       const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
@@ -147,6 +146,6 @@ interface SocketInfo {
     });
   }());
 
-httpServer.listen(PORT, () => {
+httpServer.listen(3002, () => {
   console.log(`node_websocket server on ${process.env.NODE_ENV} mode`);
 });
