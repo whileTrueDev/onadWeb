@@ -1,0 +1,119 @@
+<html>
+
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <script src='/lib/bundle.js'></script>
+  <link href='/public/layout.css' rel='stylesheet'>
+
+  <script>
+    const exports = {};
+  </script>
+</head>
+
+<body>
+  <div class="live-commerce">
+    <div class="left-section">
+      <!--랭킹-->
+      <div class="ranking-area">
+        <div class="ranking-area-inner">
+          <p class="ranking-text-area" id="title">
+            TOP 구매자
+          </p>
+          <p class="ranking-text-area" id="rank-0">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/crown.png" id="ranking-icon" />
+              <span class="ranking-text-area-id">
+                한둘셋넷다여일여아
+              </span>
+            </span>
+            <span>
+              24개
+            </span>
+
+          </p>
+          <p class="ranking-text-area" id="rank-1">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/second.png" id="ranking-icon" />
+              <span class="ranking-text-area-id">
+                가렌
+              </span>
+            </span>
+            <span>
+              5개
+            </span>
+          </p>
+          <p class="ranking-text-area" id="rank-2">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/third.png" id="ranking-icon" />
+              <span class="ranking-text-area-id">
+                임세아
+              </span>
+            </span>
+            <span>
+              2개
+            </span>
+          </p>
+        </div>
+      </div>
+      <!--세로 배너-->
+      <div class="left-banner-area">
+        <img src="/public/images/vertical-banner.gif" class="left-live-commerce" width="100%" height="100%">
+      </div>
+    </div>
+    <!--우측상단 응원메세지-->
+    <div class="top-right">
+      <div class="donation-wrapper">
+        <iframe src="/public/audio/alarm-type-2.mp3" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+        <div class="item">
+          <div class="centered">
+            <img src="/public/images/donation-2.gif" class="donation-image" />
+            <div class="animated heartbeat" id="donation-top">
+              <span id="nickname">
+                <span class="animated heartbeat" id="donation-user-id">자르반 24시</span>
+                <span class="donation-sub">님 한우곰탕</span>
+                <span class="animated heartbeat" id="donation-num">24</span>
+                <span class="donation-sub">개 구매!</span>
+              </span>
+            </div>
+            <div class="animated tada delay-1s" id="donation-message">
+              <span id="message">
+                가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--가상광고 영역-->
+    <div class="virtual-ad">
+      <img src="/public/images/virtual-ad.gif" />
+    </div>
+    <!--하단 영역-->
+    <div class="bottom-area-wrapper">
+      <div class="bottom-left">
+        <div class="bottom-object">
+          <img src="/public/images/object.png" class="bottom-left-icon" />
+          <span>
+            100/300
+          </span>
+        </div>
+        <div class="bottom-timer">
+          <img src="/public/images/clock.png" class="bottom-left-icon" id="clock"/>
+          <!-- <span id="time-hour"></span> -->
+          <span id="time-min"></span>
+          <span> : </span>
+          <span id="time-sec"></span>
+        </div>
+      </div>
+      <div class="bottom-area">
+        <p class="bottom-area-text">
+          가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A가다라마바사아자차A
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
