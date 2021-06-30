@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 
 export default function copyToClipboard(
   e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>,
   elementId: string,
-  callback?: () => void
+  callback?: () => void,
 ): void {
   e.preventDefault();
   const overlayUrl = document.getElementById(elementId) as HTMLInputElement;

@@ -1,17 +1,14 @@
-import React from 'react';
 import Countup from 'react-countup';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import {
-  Grid, Paper, Divider, Typography
-} from '@material-ui/core';
+import { Grid, Paper, Divider, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   container: {
     padding: 16,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
-  innercantainer: { padding: 24 }
+  innercantainer: { padding: 24 },
 }));
 
 interface DescCardProps {
@@ -24,12 +21,9 @@ export default function DescCard(props: DescCardProps): JSX.Element {
   const { data, button, ...rest } = props;
   return (
     <Paper {...rest}>
-
       <div>
         <div className={classes.container}>
-          <Typography variant="h6">
-            {data.title}
-          </Typography>
+          <Typography variant="h6">{data.title}</Typography>
           {button}
         </div>
 
@@ -46,7 +40,6 @@ export default function DescCard(props: DescCardProps): JSX.Element {
           </Grid>
         </Grid>
       </div>
-
     </Paper>
   );
 }

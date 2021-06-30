@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import { useState, useReducer } from 'react';
 import {
   Paper,
   Typography,
@@ -8,11 +8,10 @@ import {
   Button,
   Grid,
 } from '@material-ui/core';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from './style/Paper.style';
 import Dialog from '../../../atoms/Dialog/Dialog';
 import terms from './source/registConfig';
-
 
 interface CheckState<T> {
   checkedA: T;
@@ -21,15 +20,13 @@ interface CheckState<T> {
   [checkType: string]: T;
 }
 
-type CheckAction = { key: 'checkedA'; value: boolean }
+type CheckAction =
+  | { key: 'checkedA'; value: boolean }
   | { key: 'checkedB'; value: boolean }
   | { key: 'checkedC'; value: boolean }
-  | { key: 'reset' }
+  | { key: 'reset' };
 
-const reducer = (
-  state: CheckState<boolean>,
-  action: CheckAction
-): CheckState<boolean> => {
+const reducer = (state: CheckState<boolean>, action: CheckAction): CheckState<boolean> => {
   switch (action.key) {
     case 'checkedA':
       return { ...state, checkedA: !state.checkedA };
@@ -51,14 +48,16 @@ interface Props {
 
 function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(
-    reducer, { checkedA: false, checkedB: false, checkedC: false }
-  );
+  const [state, dispatch] = useReducer(reducer, {
+    checkedA: false,
+    checkedB: false,
+    checkedC: false,
+  });
 
   const [selectTerm, setTerm] = useState({
     text: '',
     title: '',
-    state: ''
+    state: '',
   });
   const [open, setOpen] = useState(false);
 
@@ -84,10 +83,8 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
     }
   }
 
-
   return (
     <div>
-
       <Paper className={classes.root} elevation={1}>
         <Typography variant="h6" component="h6" style={{ textAlign: 'center' }}>
           While:True
@@ -118,16 +115,18 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
                   </Grid>
                   <Grid item>
                     <FormControlLabel
-                      control={(
+                      control={
                         <Checkbox
-                          onChange={(): void => { alert('약관보기를 통해 약관을 모두 읽어야 동의가 가능합니다.'); }}
+                          onChange={(): void => {
+                            alert('약관보기를 통해 약관을 모두 읽어야 동의가 가능합니다.');
+                          }}
                           checked={state[term.state]}
                           classes={{
                             root: classes.checkboxRoot,
                             checked: classes.checked,
                           }}
                         />
-                      )}
+                      }
                       label="동의"
                       style={{ flex: 2, marginRight: 0 }}
                     />
@@ -136,15 +135,11 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
               </Grid>
             </Grid>
           </Paper>
-
         ))}
       </Paper>
       <div className={classes.actionsContainer}>
         <div>
-          <Button
-            onClick={handleBack}
-            className={classes.button}
-          >
+          <Button onClick={handleBack} className={classes.button}>
             뒤로
           </Button>
           <Button
@@ -157,21 +152,20 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
           </Button>
         </div>
       </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        title={selectTerm.title}
-        maxWidth="md"
-      >
+      <Dialog open={open} onClose={handleClose} title={selectTerm.title} maxWidth="md">
         {/* 계약 내용 */}
         <div className={classes.inDialogContent}>
-          {selectTerm.text.split('\n').map((sentence) => (
-            <p key={shortid.generate()} className={classes.names}>{sentence}</p>
+          {selectTerm.text.split('\n').map(sentence => (
+            <p key={nanoid()} className={classes.names}>
+              {sentence}
+            </p>
           ))}
           <Divider />
           <Grid container direction="row" alignContent="center" justify="center">
             <Grid item>
-              <p className={classes.names}>위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.</p>
+              <p className={classes.names}>
+                위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.
+              </p>
             </Grid>
           </Grid>
           <Grid container direction="row" alignContent="center" justify="center">

@@ -1,4 +1,3 @@
-import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';

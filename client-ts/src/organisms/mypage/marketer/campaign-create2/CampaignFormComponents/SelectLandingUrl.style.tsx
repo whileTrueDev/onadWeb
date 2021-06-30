@@ -5,7 +5,7 @@ export default makeStyles((theme: Theme) => ({
     fontSize: '14px',
     fontWeight: 700,
     color: theme.palette.text.primary,
-    margin: '4px'
+    margin: '4px',
   },
   inputName: {
     fontSize: '14px',
@@ -25,6 +25,8 @@ export default makeStyles((theme: Theme) => ({
     overflow: 'auto',
   },
   selectedLanding: {
-    maxWidth: 600, lineBreak: 'anywhere', width: '100%',
+    maxWidth: 600,
+    lineBreak: 'anywhere',
+    width: '100%',
   },
 }));

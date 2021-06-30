@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Slider, { SliderProps } from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -19,10 +19,6 @@ function ValueLabelComponent(props: ValueLabelComponentProps): JSX.Element {
 
 export default function AdLevelSlider(props: SliderProps): JSX.Element {
   return (
-    <Slider
-      ValueLabelComponent={ValueLabelComponent}
-      aria-label="custom thumb label"
-      {...props}
-    />
+    <Slider ValueLabelComponent={ValueLabelComponent} aria-label="custom thumb label" {...props} />
   );
 }

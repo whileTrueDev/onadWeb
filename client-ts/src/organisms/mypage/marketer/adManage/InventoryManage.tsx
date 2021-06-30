@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  makeStyles,
-  Paper, Tab, Tabs
-} from '@material-ui/core';
+import * as React from 'react';
+import { makeStyles, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
 import { useGetRequest } from '../../../../utils/hooks';
@@ -14,14 +11,14 @@ import BannerButtons from './banner/BannerButtons';
 import MerchandiseInventory from './merchandise/MerchandiseInventory';
 import MerchandiseButtons from './merchandise/MerchandiseButtons';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   tabs: {
     padding: theme.spacing(2, 0, 0),
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   detail: {
     marginTop: theme.spacing(2),
-  }
+  },
 }));
 
 const FETCH_PAGE_OFFSET = 5;
@@ -37,24 +34,26 @@ export default function InventoryManage(): JSX.Element {
   // **************************************************************************************
   // 배너 데이터
   const bannerPageLength = useGetRequest('/marketer/banner/length');
-  const bannerData = usePaginatedGetRequest<BannerDataInterface>(
-    '/marketer/banner/list', { offset: FETCH_PAGE_OFFSET, disableConcat: true }
-  );
+  const bannerData = usePaginatedGetRequest<BannerDataInterface>('/marketer/banner/list', {
+    offset: FETCH_PAGE_OFFSET,
+    disableConcat: true,
+  });
 
   // **************************************************************************************
   // URL 데이터
   const urlPageLength = useGetRequest('/marketer/landing-url/length');
-  const urlData = usePaginatedGetRequest<UrlDataInterface>(
-    '/marketer/landing-url/list', { offset: FETCH_PAGE_OFFSET, disableConcat: true }
-  );
+  const urlData = usePaginatedGetRequest<UrlDataInterface>('/marketer/landing-url/list', {
+    offset: FETCH_PAGE_OFFSET,
+    disableConcat: true,
+  });
 
   // **************************************************************************************
   // 상품 데이터
   const merchandisePageLength = useGetRequest('/marketer/merchandises/length');
-  const merchandiseData = usePaginatedGetRequest<Merchandise>(
-    '/marketer/merchandises', { offset: FETCH_PAGE_OFFSET, disableConcat: true }
-  );
-
+  const merchandiseData = usePaginatedGetRequest<Merchandise>('/marketer/merchandises', {
+    offset: FETCH_PAGE_OFFSET,
+    disableConcat: true,
+  });
 
   return (
     <div>
@@ -73,7 +72,6 @@ export default function InventoryManage(): JSX.Element {
 
           {/* 선택된 탭의 컨텐츠 */}
           <div>
-
             {/* 배너 인벤토리 */}
             <TabPanel value="0">
               <BannerButtons bannerData={bannerData} />
@@ -104,7 +102,6 @@ export default function InventoryManage(): JSX.Element {
               />
             </TabPanel>
           </div>
-
         </TabContext>
       </Paper>
     </div>

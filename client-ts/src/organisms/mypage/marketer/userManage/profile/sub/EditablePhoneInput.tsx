@@ -1,27 +1,34 @@
-import React from 'react';
+import * as React from 'react';
 // @material-ui/core
 import {
-  Button, FormControl, FormHelperText, makeStyles, OutlinedInput,
-  FormControlProps, Typography, FormControlLabel, Radio,
+  Button,
+  FormControl,
+  FormHelperText,
+  makeStyles,
+  OutlinedInput,
+  FormControlProps,
+  Typography,
+  FormControlLabel,
+  Radio,
 } from '@material-ui/core';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import { useToggle } from '../../../../../../utils/hooks';
 import phoneNumRegex from '../../../../../../utils/inputs/regex/phoneNum.regex';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   label: {
     fontWeight: 'bold',
   },
   editable: {},
-  value: { margin: theme.spacing(1, 0), },
+  value: { margin: theme.spacing(1, 0) },
   textField: {
     maxWidth: 320,
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0),
   },
   switchLabel: {
-    fontSize: theme.typography.caption.fontSize
+    fontSize: theme.typography.caption.fontSize,
   },
-  button: { margin: theme.spacing(0, 1, 0, 0) }
+  button: { margin: theme.spacing(0, 1, 0, 0) },
 }));
 
 export interface EditableTextField {
@@ -64,7 +71,9 @@ export default function EditableTextField({
       {!editMode.toggle ? (
         <div className={classes.editable}>
           <Typography className={classes.value}>{displayValue}</Typography>
-          <Button onClick={editMode.handleToggle} variant="outlined">편집</Button>
+          <Button onClick={editMode.handleToggle} variant="outlined">
+            편집
+          </Button>
         </div>
       ) : (
         <div className={classes.editable}>
@@ -72,7 +81,7 @@ export default function EditableTextField({
           <div>
             <FormControlLabel
               value="phone"
-              control={(
+              control={
                 <Radio
                   checked={numberType.toggle}
                   onChange={numberType.handleToggle}
@@ -80,14 +89,14 @@ export default function EditableTextField({
                   size="small"
                   color="primary"
                 />
-              )}
+              }
               classes={{ label: classes.switchLabel }}
               label="휴대폰/인터넷전화"
               labelPlacement="bottom"
             />
             <FormControlLabel
               value="tel"
-              control={(
+              control={
                 <Radio
                   checked={!numberType.toggle}
                   onChange={numberType.handleToggle}
@@ -95,7 +104,7 @@ export default function EditableTextField({
                   size="small"
                   color="primary"
                 />
-              )}
+              }
               classes={{ label: classes.switchLabel }}
               label="회사"
               labelPlacement="bottom"
@@ -116,11 +125,7 @@ export default function EditableTextField({
               format={numberType.toggle ? '( ### ) - #### - ####' : '( ### ) - ### - ####'}
               allowNegative={false}
             />
-            {!phoneNumRegex.test(value) && (
-            <FormHelperText>
-              {helperText}
-            </FormHelperText>
-            )}
+            {!phoneNumRegex.test(value) && <FormHelperText>{helperText}</FormHelperText>}
           </FormControl>
 
           {/* 버튼셋 */}

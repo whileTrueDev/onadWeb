@@ -1,9 +1,5 @@
-import React from 'react';
-import {
-  PieChart, Pie, Cell,
-  ResponsiveContainer, Legend, Tooltip
-} from 'recharts';
-import shortid from 'shortid';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { nanoid } from 'nanoid';
 import COLORS from './chartTheme';
 
 interface RenderActiveShapeProps {
@@ -34,7 +30,6 @@ export default function CustomPieChart<DataType>({
   return (
     <div style={{ height, width: '100%' }}>
       <ResponsiveContainer>
-
         <PieChart>
           <Pie
             label
@@ -46,19 +41,13 @@ export default function CustomPieChart<DataType>({
             animationBegin={0}
             animationDuration={1000}
           >
-            {data.map<JSX.Element>(
-              (entry, index) => (
-                <Cell
-                  key={shortid.generate()}
-                  fill={COLORS.pie[index % COLORS.pie.length]}
-                />
-              )
-            )}
+            {data.map<JSX.Element>((entry, index) => (
+              <Cell key={nanoid()} fill={COLORS.pie[index % COLORS.pie.length]} />
+            ))}
           </Pie>
 
           <Tooltip />
-          {legend ? (<Legend />) : null}
-
+          {legend ? <Legend /> : null}
         </PieChart>
       </ResponsiveContainer>
     </div>

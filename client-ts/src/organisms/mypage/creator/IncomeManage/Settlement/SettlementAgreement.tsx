@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import AgreementSource from '../source/source';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 150,
     overflowX: 'hidden',
     overflowY: 'auto',
-    border: 'solid 1px #2771ff'
+    border: 'solid 1px #2771ff',
   },
   checked: {},
   checkboxRoot: {
@@ -19,17 +19,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&$checked': {
       color: theme.palette.success.main,
     },
-    marginLeft: 20
+    marginLeft: 20,
   },
 }));
-
 
 function SettlementAgreement(): JSX.Element {
   const classes = useStyles();
   const [allCheck, setAllCheck] = useState({
     checkA: false,
     checkB: false,
-    checkC: false
+    checkC: false,
   });
   const { checkA, checkB, checkC } = allCheck;
   const handleChange = (name: string) => (): void => {
@@ -48,14 +47,14 @@ function SettlementAgreement(): JSX.Element {
   return (
     <>
       <Grid item className={classes.textField}>
-        {AgreementSource.creatorAgreement.split('\n').map((sentence) => (
-          <p key={shortid.generate()}>{sentence}</p>
+        {AgreementSource.creatorAgreement.split('\n').map(sentence => (
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>
         방송인 서비스 이용약관(필수)
         <FormControlLabel
-          control={(
+          control={
             <Checkbox
               required
               onChange={handleChange('checkA')}
@@ -66,20 +65,20 @@ function SettlementAgreement(): JSX.Element {
                 checked: classes.checked,
               }}
             />
-          )}
+          }
           label="동의"
           style={{ flex: 2, marginRight: 0 }}
         />
       </Grid>
       <Grid item className={classes.textField}>
-        {AgreementSource.privacyAgreement.split('\n').map((sentence) => (
-          <p key={shortid.generate()}>{sentence}</p>
+        {AgreementSource.privacyAgreement.split('\n').map(sentence => (
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>
         정산 등록에 따른 개인정보 수집 및 이용동의(필수)
         <FormControlLabel
-          control={(
+          control={
             <Checkbox
               required
               onChange={handleChange('checkB')}
@@ -90,20 +89,20 @@ function SettlementAgreement(): JSX.Element {
                 checked: classes.checked,
               }}
             />
-          )}
+          }
           label="동의"
           style={{ flex: 2, marginRight: 0 }}
         />
       </Grid>
       <Grid item className={classes.textField}>
-        {AgreementSource.SettlementAgreement.split('\n').map((sentence) => (
-          <p key={shortid.generate()}>{sentence}</p>
+        {AgreementSource.SettlementAgreement.split('\n').map(sentence => (
+          <p key={nanoid()}>{sentence}</p>
         ))}
       </Grid>
       <Grid item>
         정산 등록 신청서 제출에 대한 확인(필수)
         <FormControlLabel
-          control={(
+          control={
             <Checkbox
               required
               onChange={handleChange('checkC')}
@@ -114,7 +113,7 @@ function SettlementAgreement(): JSX.Element {
                 checked: classes.checked,
               }}
             />
-          )}
+          }
           label="동의"
           style={{ flex: 2, marginRight: 0 }}
         />

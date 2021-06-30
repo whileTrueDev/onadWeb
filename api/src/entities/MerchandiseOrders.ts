@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MerchandiseOrderComments } from './MerchandiseOrderComments';
 import { MerchandiseOrderRelease } from './MerchandiseOrderRelease';
+import { MerchandiseOrdersDetail } from './MerchandiseOrdersDetail';
 
 @Entity('merchandiseOrders', { schema: 'onadnode' })
 export class MerchandiseOrders {
@@ -132,4 +133,7 @@ export class MerchandiseOrders {
     merchandiseOrderRelease => merchandiseOrderRelease.order,
   )
   merchandiseOrderReleases: MerchandiseOrderRelease[];
+
+  @OneToOne(() => MerchandiseOrdersDetail, mod => mod.orderId)
+  merchandiseOrderDetails: MerchandiseOrdersDetail[];
 }

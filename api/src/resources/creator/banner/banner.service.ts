@@ -83,9 +83,10 @@ export class BannerService {
     const creator = await this.creatorInfoRepo.findOne({
       where: { creatorId },
     });
-    const advertiseUrl = join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl);
     return {
-      advertiseUrl,
+      advertiseUrl: !creator.advertiseUrl
+        ? ''
+        : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
       creatorContractionAgreement: creator.creatorContractionAgreement,
     };
   }

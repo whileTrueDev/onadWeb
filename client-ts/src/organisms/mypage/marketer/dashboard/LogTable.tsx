@@ -1,9 +1,15 @@
-import React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import {
-  Paper, Grid, Typography, Divider,
-  Tooltip, List, ListItem, ListItemText,
-  IconButton, CircularProgress,
+  Paper,
+  Grid,
+  Typography,
+  Divider,
+  Tooltip,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  CircularProgress,
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +24,6 @@ const styles = makeStyles(() => ({
     flexDirection: 'column',
   },
 }));
-
 
 function makeContents(typeNumber: number, detail: string) {
   const details = JSON.parse(detail);
@@ -89,10 +94,9 @@ function makeContents(typeNumber: number, detail: string) {
   }
 }
 
-
-export default function issueTable(
-  props: { actionLogData: UseGetRequestObject<ActionLogInterface[] | null> }
-): JSX.Element {
+export default function issueTable(props: {
+  actionLogData: UseGetRequestObject<ActionLogInterface[] | null>;
+}): JSX.Element {
   const { actionLogData } = props;
   const classes = styles();
 
@@ -105,7 +109,9 @@ export default function issueTable(
 
         <IconButton
           size="small"
-          onClick={() => { actionLogData.doGetRequest(); }}
+          onClick={() => {
+            actionLogData.doGetRequest();
+          }}
         >
           <Tooltip title="활동내역 새로고침">
             <Refresh />
@@ -119,10 +125,10 @@ export default function issueTable(
         {/* 데이터 있는 경우 */}
         {actionLogData.loading && (
           <Grid item xs={12} className={classes.loading}>
-            <Typography variant="body2">
-              활동내역 데이터를 로드하고 있습니다.
-            </Typography>
-            <div style={{ textAlign: 'center' }}><CircularProgress /></div>
+            <Typography variant="body2">활동내역 데이터를 로드하고 있습니다.</Typography>
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress />
+            </div>
           </Grid>
         )}
         {!actionLogData.loading && actionLogData.data && actionLogData.data.length > 0 && (
@@ -131,15 +137,16 @@ export default function issueTable(
               // eslint-disable-next-line no-nested-ternary
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
-                <div key={shortid.generate()}>
+                <div key={nanoid()}>
                   <ListItem style={{ justifyContent: 'space-between' }}>
                     <ListItemText
                       primary={makeContents(r.type, r.detail)}
                       secondary={new Date(r.date).toLocaleString()}
                     />
                   </ListItem>
-                  {actionLogData.data
-                    && index !== actionLogData.data.length - 1 && (<Divider light />)}
+                  {actionLogData.data && index !== actionLogData.data.length - 1 && (
+                    <Divider light />
+                  )}
                 </div>
               ))}
           </List>
@@ -148,7 +155,10 @@ export default function issueTable(
           // 데이터 없는 경우
           <div
             style={{
-              display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
             }}
           >
             <Typography variant="body2">아직 활동내역이 없습니다.</Typography>

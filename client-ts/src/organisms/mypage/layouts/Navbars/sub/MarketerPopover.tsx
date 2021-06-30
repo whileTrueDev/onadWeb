@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 // @material-ui/core components
 import Badge from '@material-ui/core/Badge';
@@ -10,7 +9,14 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 // core components
 import {
-  Divider, List, ListItem, Popover, Avatar, ListItemText, IconButton, Tooltip,
+  Divider,
+  List,
+  ListItem,
+  Popover,
+  Avatar,
+  ListItemText,
+  IconButton,
+  Tooltip,
 } from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -19,9 +25,9 @@ import { OnadTheme } from '../../../../../theme';
 import { MarketerInfo } from '../../../marketer/office/interface';
 import history from '../../../../../history';
 
-const useStyles = makeStyles((theme) => ({
-  container: { width: 280, },
-  icon: { marginRight: theme.spacing(2) }
+const useStyles = makeStyles(theme => ({
+  container: { width: 280 },
+  icon: { marginRight: theme.spacing(2) },
 }));
 export interface MarketerPopoverProps {
   open: boolean;
@@ -29,7 +35,7 @@ export interface MarketerPopoverProps {
   anchorEl?: HTMLElement | null;
   handleAnchorClose: () => void;
   handleLogoutClick: () => void;
-  noticeReadFlagGet: UseGetRequestObject<{noticeReadState: number}>;
+  noticeReadFlagGet: UseGetRequestObject<{ noticeReadState: number }>;
   doNoticePatchRequest: () => void;
 }
 export default function MarketerPopover(props: MarketerPopoverProps): JSX.Element {
@@ -70,22 +76,14 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
                 <Avatar src={userData.profileImage} />
               </IconButton>
             </Tooltip>
-            <ListItemText
-              primary={userData.marketerName}
-              secondary={userData.marketerMail}
-            />
+            <ListItemText primary={userData.marketerName} secondary={userData.marketerMail} />
           </ListItem>
         </List>
         <Divider />
 
         {/* 설정 */}
         <List>
-          <ListItem
-            button
-            aria-label="User"
-            to="/mypage/marketer/user"
-            component={Link}
-          >
+          <ListItem button aria-label="User" to="/mypage/marketer/user" component={Link}>
             <Person color="action" className={classes.icon} />
             <ListItemText primary="내 정보" />
           </ListItem>
@@ -100,22 +98,30 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
               }
             }}
           >
-            {!noticeReadFlagGet.loading
-                && noticeReadFlagGet.data
-                && noticeReadFlagGet.data.noticeReadState === 0 ? (
-                  <Badge variant="dot" color="primary" className={classes.icon}>
-                    <SpeakerNotes color="action" />
-                  </Badge>
-              ) : (
-                <SpeakerNotes color="action" className={classes.icon} />
-              )}
+            {!noticeReadFlagGet.loading &&
+            noticeReadFlagGet.data &&
+            noticeReadFlagGet.data.noticeReadState === 0 ? (
+              <Badge variant="dot" color="primary" className={classes.icon}>
+                <SpeakerNotes color="action" />
+              </Badge>
+            ) : (
+              <SpeakerNotes color="action" className={classes.icon} />
+            )}
             <ListItemText primary="공지사항으로 이동" />
-
           </ListItem>
 
-          <ListItem button onClick={(): void => { theme.handleThemeChange(); }}>
-            {theme.palette.type === 'light' && (<EmojiObjectsIcon color="action" className={classes.icon} />)}
-            {theme.palette.type === 'dark' && (<NightsStayIcon color="action" className={classes.icon} />)}
+          <ListItem
+            button
+            onClick={(): void => {
+              theme.handleThemeChange();
+            }}
+          >
+            {theme.palette.type === 'light' && (
+              <EmojiObjectsIcon color="action" className={classes.icon} />
+            )}
+            {theme.palette.type === 'dark' && (
+              <NightsStayIcon color="action" className={classes.icon} />
+            )}
             <ListItemText primary="밝은/어두운 테마 변경" />
           </ListItem>
         </List>
@@ -123,11 +129,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
 
         {/* 로그아웃 */}
         <List>
-          <ListItem
-            button
-            onClick={handleLogoutClick}
-            aria-label="logout"
-          >
+          <ListItem button onClick={handleLogoutClick} aria-label="logout">
             <PowerSettingsNew color="action" className={classes.icon} />
             <ListItemText primary="로그아웃" />
           </ListItem>

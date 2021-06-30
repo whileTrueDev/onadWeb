@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-expressions */
 import classnames from 'classnames';
-import React, { useEffect, useState } from 'react';
-import shortid from 'shortid';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
+import { nanoid } from 'nanoid';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import Background from './Background';
@@ -23,13 +25,17 @@ interface ParallaxScrollProps {
 }
 
 function ParallaxScroll({
-  children, psIndex,
-  setPsIndex, isLogin, loading, bgfixedRange,
+  children,
+  psIndex,
+  setPsIndex,
+  isLogin,
+  loading,
+  bgfixedRange,
   renewalDialog,
-  // timer, setTimer
-  // isDown, setIsDown,
-  // offsetY, setOffsetY
-}: ParallaxScrollProps): JSX.Element {
+}: // timer, setTimer
+// isDown, setIsDown,
+// offsetY, setOffsetY
+ParallaxScrollProps): JSX.Element {
   const classes = style();
   const [lastTime, setLastTime] = useState(new Date().getTime());
   // Underscore 함수 - resize 연계, 추후 훅으로 만들것 => lodash도 만들것
@@ -75,114 +81,110 @@ function ParallaxScroll({
       setPsIndex(psIndex - 1);
     }
 
-      nextBtn?.addEventListener('click', nextMove);
-      prevBtn?.addEventListener('click', prevMove);
+    nextBtn?.addEventListener('click', nextMove);
+    prevBtn?.addEventListener('click', prevMove);
 
-      // 클릭한 컨트롤러의 해당 slide로 이동
-      slideController.forEach((point, i) => {
-        point.addEventListener('click', () => {
-          slideSection[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setPsIndex(i);
-        });
+    // 클릭한 컨트롤러의 해당 slide로 이동
+    slideController.forEach((point, i) => {
+      point.addEventListener('click', () => {
+        slideSection[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setPsIndex(i);
       });
+    });
 
-      // 마우스 휠 핸들러 함수
-      function wheelHandler(e: WheelEvent): void {
-        e.preventDefault();
-        const nowTime = new Date().getTime();
+    // 마우스 휠 핸들러 함수
+    function wheelHandler(e: WheelEvent): void {
+      e.preventDefault();
+      const nowTime = new Date().getTime();
 
-        if (nowTime - lastTime < ANIMARIONDURATION) {
-          return;
-        }
-        const delta = e.deltaY;
-
-        if (delta > 0) {
-          // slide 클릭 이벤트 전파
-          const nextBtnClick = new Event('click');
-          if (psIndex > finalSlideNum - 2) return;
-          slideController[psIndex + 1]?.dispatchEvent(nextBtnClick);
-        } else {
-          // slide 클릭 이벤트 전파
-          const prevBtnClick = new Event('click');
-          if (psIndex < 1) return;
-          slideController[psIndex - 1]?.dispatchEvent(prevBtnClick);
-        }
-        setLastTime(new Date().getTime());
+      if (nowTime - lastTime < ANIMARIONDURATION) {
+        return;
       }
+      const delta = e.deltaY;
 
-      // 마우스 휠 전환 효과 탑재
+      if (delta > 0) {
+        // slide 클릭 이벤트 전파
+        const nextBtnClick = new Event('click');
+        if (psIndex > finalSlideNum - 2) return;
+        slideController[psIndex + 1]?.dispatchEvent(nextBtnClick);
+      } else {
+        // slide 클릭 이벤트 전파
+        const prevBtnClick = new Event('click');
+        if (psIndex < 1) return;
+        slideController[psIndex - 1]?.dispatchEvent(prevBtnClick);
+      }
+      setLastTime(new Date().getTime());
+    }
+
+    // 마우스 휠 전환 효과 탑재
+    parallaxWapper?.addEventListener('wheel', wheelHandler, { passive: false });
+
+    const inquiry = document.getElementById('inquiry');
+
+    // 문의하기 클릭시 상위 휠 이벤트 제거
+    inquiry?.addEventListener('click', () => {
+      parallaxWapper?.removeEventListener('wheel', wheelHandler);
+    });
+
+    // 문의하기 비활성화시 상위 휠 이벤트 재생성
+    slideSection[5].addEventListener('mouseover', e => {
+      e.preventDefault();
       parallaxWapper?.addEventListener('wheel', wheelHandler, { passive: false });
+    });
 
-      const inquiry = document.getElementById('inquiry');
+    // function onDown(e: PointerEvent) {
+    //   moveY = 0
+    //   setOffsetY(e.clientY)
+    //   setIsDown(true)
+    // }
+    //
+    // function onMove(e: PointerEvent) {
+    //   // e.preventDefault()
+    //   if (isDown) {
+    //     moveY = e.clientY- offsetY
+    //     const nowTime = new Date().getTime()
+    //     if (nowTime - lastTime < POINTEREVENTDURATION) {
+    //       return;
+    //     }
+    //     if (moveY < 0) {
+    //       const nextBtnClick = new Event('click');
+    //       if (psIndex > finalSlideNum - 2) return;
+    //       slideController[psIndex+1]?.dispatchEvent(nextBtnClick)
+    //       // if (psIndex > finalSlideNum - 2) return;
+    //       // slideSection[psIndex+1].scrollIntoView({behavior: 'smooth', block: 'start'});
+    //       // setPsIndex(psIndex+1)
+    //     } else {
+    //       // if (psIndex < 1) return;
+    //       // slideSection[psIndex].scrollIntoView({behavior: 'smooth', block: 'start'});
+    //       // setPsIndex(psIndex-1)
+    //       const prevBtnClick = new Event('click');
+    //       if (psIndex < 1) return;
+    //       slideController[psIndex-1]?.dispatchEvent(prevBtnClick)
+    //     }
+    //     setLastTime(new Date().getTime())
+    //   }
+    // }
 
-      // 문의하기 클릭시 상위 휠 이벤트 제거
-      inquiry?.addEventListener('click', () => {
-        parallaxWapper?.removeEventListener('wheel', wheelHandler);
-      });
+    // parallaxWapper?.addEventListener('pointerdown', onDown);
+    // parallaxWapper?.addEventListener('pointermove', onMove);
 
-      // 문의하기 비활성화시 상위 휠 이벤트 재생성
-      slideSection[5].addEventListener('mouseover', (e) => {
-        e.preventDefault();
-        parallaxWapper?.addEventListener('wheel', wheelHandler, { passive: false });
-      });
-
-      // function onDown(e: PointerEvent) {
-      //   moveY = 0
-      //   setOffsetY(e.clientY)
-      //   setIsDown(true)
-      // }
-      // 
-      // function onMove(e: PointerEvent) {
-      //   // e.preventDefault()
-      //   if (isDown) {
-      //     moveY = e.clientY- offsetY
-      //     const nowTime = new Date().getTime()
-      //     if (nowTime - lastTime < POINTEREVENTDURATION) {
-      //       return;
-      //     }
-      //     if (moveY < 0) {
-      //       const nextBtnClick = new Event('click');
-      //       if (psIndex > finalSlideNum - 2) return;
-      //       slideController[psIndex+1]?.dispatchEvent(nextBtnClick)
-      //       // if (psIndex > finalSlideNum - 2) return;
-      //       // slideSection[psIndex+1].scrollIntoView({behavior: 'smooth', block: 'start'});
-      //       // setPsIndex(psIndex+1)
-      //     } else {
-      //       // if (psIndex < 1) return;
-      //       // slideSection[psIndex].scrollIntoView({behavior: 'smooth', block: 'start'});
-      //       // setPsIndex(psIndex-1)
-      //       const prevBtnClick = new Event('click');
-      //       if (psIndex < 1) return;
-      //       slideController[psIndex-1]?.dispatchEvent(prevBtnClick)
-      //     }
-      //     setLastTime(new Date().getTime())
-      //   }
-      // }
-
-      // parallaxWapper?.addEventListener('pointerdown', onDown);
-      // parallaxWapper?.addEventListener('pointermove', onMove);
-
-      return () => {
-        // UnMount시 휠, 포인터 이벤트 제거
-        parallaxWapper?.removeEventListener('wheel', wheelHandler);
-        nextBtn?.removeEventListener('click', nextMove);
-        prevBtn?.removeEventListener('click', prevMove);
-        // parallaxWapper?.removeEventListener('pointerdown', onDown);
-        // parallaxWapper?.removeEventListener('pointermove', onMove);
-        // window.removeEventListener('resize', handleHeight)
-      };
+    return () => {
+      // UnMount시 휠, 포인터 이벤트 제거
+      parallaxWapper?.removeEventListener('wheel', wheelHandler);
+      nextBtn?.removeEventListener('click', nextMove);
+      prevBtn?.removeEventListener('click', prevMove);
+      // parallaxWapper?.removeEventListener('pointerdown', onDown);
+      // parallaxWapper?.removeEventListener('pointermove', onMove);
+      // window.removeEventListener('resize', handleHeight)
+    };
   }, [psIndex, isLogin, lastTime, loading, setPsIndex, renewalDialog]);
 
   return (
     <main className={classes.container} id="parallax">
-      { (bgfixedRange[1] >= psIndex) ? (
-        <Background />
-      ) : (
-        null
-      )}
+      {bgfixedRange[1] >= psIndex ? <Background /> : null}
       <div>
         {children.map((component, index) => (
-          <div key={shortid.generate()} className={classes.slide} id="slideContent" data-slideindex={index}>
+          <div key={nanoid()} className={classes.slide} id="slideContent" data-slideindex={index}>
             {component}
           </div>
         ))}
@@ -190,7 +192,12 @@ function ParallaxScroll({
 
       <div className={classes.slideController}>
         {children.map((num, index) => (
-          <div key={shortid.generate()} className={classes.slideNum} id="slideController" data-controllernum={index} />
+          <div
+            key={nanoid()}
+            className={classes.slideNum}
+            id="slideController"
+            data-controllernum={index}
+          />
         ))}
       </div>
 

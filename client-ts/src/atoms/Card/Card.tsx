@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // @material-ui/core components
@@ -13,9 +13,7 @@ interface CardProps {
   [rest: string]: any;
 }
 
-export default function Card({
-  className, children, profile, ...rest
-}: CardProps): JSX.Element {
+export default function Card({ className, children, profile, ...rest }: CardProps): JSX.Element {
   const classes = useCardStyles();
 
   const cardClasses = classNames({

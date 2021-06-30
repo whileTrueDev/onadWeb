@@ -3,14 +3,13 @@ const { getCashesCalculated, getFeeCalculatedTargets } = require('../utils/cps/c
 describe('commission', () => {
   test('[getCashesCalculated] when creator is exists', () => {
     const param = {
-      totalOrderPrice: 10000,
+      orderPrice: 10000,
       isCreatorExists: true,
       creatorCommission: 0.1,
       onadCommission: 0.1,
+      paymentCommissionAmount: 0,
     };
-    const {
-      cashToCreator, salesIncomeToMarketer
-    } = getCashesCalculated(param);
+    const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated(param);
 
     expect(cashToCreator).toBe(1000);
     expect(salesIncomeToMarketer).toBe(8000);
@@ -18,14 +17,12 @@ describe('commission', () => {
 
   test('[getCashesCalculated] when creator is not exists', () => {
     const param = {
-      totalOrderPrice: 10000,
+      orderPrice: 10000,
       isCreatorExists: false,
       creatorCommission: 0.1,
       onadCommission: 0.1,
     };
-    const {
-      cashToCreator, salesIncomeToMarketer
-    } = getCashesCalculated(param);
+    const { cashToCreator, salesIncomeToMarketer } = getCashesCalculated(param);
 
     expect(cashToCreator).toBe(0);
     expect(salesIncomeToMarketer).toBe(9000);
@@ -34,13 +31,25 @@ describe('commission', () => {
   test('[getFeeCalculatedTargets]', () => {
     const param = [
       {
-        orderPrice: 10000, targetCreatorId: '130096343', creatorCommission: 0.3, onadCommission: 0, marketerId: 'gubgoo'
+        orderPrice: 10000,
+        targetCreatorId: '130096343',
+        creatorCommission: 0.3,
+        onadCommission: 0,
+        marketerId: 'gubgoo',
       },
       {
-        orderPrice: 20000, targetCreatorId: '130096343', creatorCommission: 0.1, onadCommission: 0.1, marketerId: 'gubgoo'
+        orderPrice: 20000,
+        targetCreatorId: '130096343',
+        creatorCommission: 0.1,
+        onadCommission: 0.1,
+        marketerId: 'gubgoo',
       },
       {
-        orderPrice: 10000, targetCreatorId: '123456789', creatorCommission: 0.1, onadCommission: 0.1, marketerId: 'gstar'
+        orderPrice: 10000,
+        targetCreatorId: '123456789',
+        creatorCommission: 0.1,
+        onadCommission: 0.1,
+        marketerId: 'gstar',
       },
     ];
     // eslint-disable-next-line max-len

@@ -15,9 +15,11 @@ export class BusinessService {
   ): Promise<Pick<MarketerInfo, 'marketerBusinessRegNum' | 'marketerBusinessRegSrc'>> {
     const user = await this.marketerInfoRepo.findOne({
       where: { marketerId },
-      select: ['marketerBusinessRegNum', 'marketerBusinessRegSrc'],
     });
-    return user;
+    return {
+      marketerBusinessRegNum: user.marketerBusinessRegNum,
+      marketerBusinessRegSrc: user.marketerBusinessRegSrc,
+    };
   }
 
   async updateMarketerBusinessInfo(

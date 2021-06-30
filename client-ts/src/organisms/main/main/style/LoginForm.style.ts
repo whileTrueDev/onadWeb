@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   divider: { margin: theme.spacing(1, 0, 2) },
   loginButton: {
@@ -33,35 +33,35 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     backgroundColor: theme.palette.platform.twitch,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.twitch, 0.07),
-    }
+    },
   },
   afreeca: {
     color: theme.palette.getContrastText(theme.palette.platform.twitch),
     backgroundColor: theme.palette.platform.afreeca,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.afreeca, 0.07),
-    }
+    },
   },
   kakao: {
     color: theme.palette.getContrastText(theme.palette.platform.kakao),
     backgroundColor: theme.palette.platform.kakao,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.kakao, 0.07),
-    }
+    },
   },
   naver: {
     color: theme.palette.getContrastText(theme.palette.platform.naver),
     backgroundColor: theme.palette.platform.naver,
     '&:hover': {
       backgroundColor: darken(theme.palette.platform.naver, 0.07),
-    }
+    },
   },
   google: {
     color: theme.palette.getContrastText(theme.palette.common.white),
     backgroundColor: theme.palette.common.white,
     '&:hover': {
       backgroundColor: darken(theme.palette.common.white, 0.07),
-    }
+    },
   },
   socialLogo: {
     width: 35,
@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
     position: 'absolute',
     left: theme.spacing(2),
   },
-
 }));
 
 export default useStyles;

@@ -1,10 +1,15 @@
 import {
-  Checkbox, Dialog, FormControlLabel, IconButton, makeStyles, Typography,
+  Checkbox,
+  Dialog,
+  FormControlLabel,
+  IconButton,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-import React from 'react';
+import * as React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   img: {
     height: '100%',
     minWidth: '100%',
@@ -15,9 +20,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 2, 2),
     textAlign: 'center',
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
   },
-  closeButton: { textAlign: 'right', },
+  closeButton: { textAlign: 'right' },
   closeIcon: { color: theme.palette.common.white },
   checkboxContainer: {
     textAlign: 'right',
@@ -43,7 +48,6 @@ export default function RenewalDialog({
 }: RenewalDialogProps): JSX.Element {
   const classes = useStyles();
 
-
   function handleNoShowCheck(): void {
     onClose();
     localStorage.setItem('renewal-popup-no-show', new Date().toString());
@@ -64,14 +68,14 @@ export default function RenewalDialog({
         <FormControlLabel
           className={classes.checkbox}
           labelPlacement="start"
-          control={(
+          control={
             <Checkbox
               name="checkedB"
               size="small"
               className={classes.checkbox}
               onChange={handleNoShowCheck}
             />
-            )}
+          }
           label={<Typography variant="body2">하루 동안 열지 않기</Typography>}
         />
       </div>

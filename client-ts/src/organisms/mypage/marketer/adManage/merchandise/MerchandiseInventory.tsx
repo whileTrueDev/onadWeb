@@ -1,8 +1,8 @@
-import moment from 'moment';
-import {
-  IconButton, makeStyles, Tooltip, Typography
-} from '@material-ui/core';
-import React, { useState } from 'react';
+/* eslint-disable react/display-name */
+import dayjs from 'dayjs';
+import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { useState } from 'react';
+import * as React from 'react';
 import { Delete } from '@material-ui/icons';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
@@ -47,7 +47,7 @@ export default function MerchandiseInventory({
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          merchandiseData.handlePage(param.page - 1);
+          merchandiseData.handlePage(param.page);
         }}
         pageSize={pageOffset}
         rowCount={totalPageLength}
@@ -78,14 +78,15 @@ export default function MerchandiseInventory({
               const discountRate = getDiscountPrice(data.row.regularPrice, data.row.price);
               return (
                 <Typography variant="body2">
-                  {data.row.price}
-                  {' '}
+                  {data.row.price}{' '}
                   {discountRate > 0 && (
-                  <Typography variant="caption" component="span">{`(할인율 ${discountRate}%)`}</Typography>
+                    <Typography variant="caption" component="span">
+                      {`(할인율 ${discountRate}%)`}
+                    </Typography>
                   )}
                 </Typography>
               );
-            }
+            },
           },
           {
             field: 'stock',
@@ -109,7 +110,7 @@ export default function MerchandiseInventory({
                   </Tooltip>
                 )}
               </div>
-            )
+            ),
           },
           {
             field: 'createDate',
@@ -117,9 +118,9 @@ export default function MerchandiseInventory({
             headerName: '등록 일자',
             renderCell: (data): React.ReactElement => (
               <Typography variant="body2" noWrap>
-                {moment(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
+                {dayjs(data.row.createDate).format('YYYY/MM/DD HH:mm:ss')}
               </Typography>
-            )
+            ),
           },
           {
             field: '',
@@ -127,30 +128,35 @@ export default function MerchandiseInventory({
             headerName: '삭제',
             disableColumnMenu: true,
             renderCell: (data): React.ReactElement => (
-              <IconButton onClick={(): void => {
-                handleSelect(data.row as Merchandise);
-                merchandiseDeleteDialog.handleOpen();
-              }}
+              <IconButton
+                onClick={(): void => {
+                  handleSelect(data.row as Merchandise);
+                  merchandiseDeleteDialog.handleOpen();
+                }}
               >
                 <Delete fontSize="small" />
               </IconButton>
-            )
-          }
+            ),
+          },
         ]}
       />
 
       {merchandiseDeleteDialog.open && selectedMerchandise && (
-      <MerchandiseDeleteDialog
-        open={merchandiseDeleteDialog.open}
-        selectedMerchandise={selectedMerchandise}
-        handleClose={merchandiseDeleteDialog.handleClose}
-        recallRequest={(): void => {
-          merchandiseData.requestWithoutConcat();
-          successSnack.handleOpen();
-        }}
-      />
+        <MerchandiseDeleteDialog
+          open={merchandiseDeleteDialog.open}
+          selectedMerchandise={selectedMerchandise}
+          handleClose={merchandiseDeleteDialog.handleClose}
+          recallRequest={(): void => {
+            merchandiseData.requestWithoutConcat();
+            successSnack.handleOpen();
+          }}
+        />
       )}
-      <Snackbar message="올바르게 삭제되었습니다." open={successSnack.open} onClose={successSnack.handleClose} />
+      <Snackbar
+        message="올바르게 삭제되었습니다."
+        open={successSnack.open}
+        onClose={successSnack.handleClose}
+      />
     </div>
   );
 }

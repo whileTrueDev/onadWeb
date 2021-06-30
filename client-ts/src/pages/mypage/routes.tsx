@@ -1,32 +1,33 @@
 // 라우터 아이콘 @material-ui/icons
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import Dashboard from '@material-ui/icons/DashboardOutlined';
-import Person from '@material-ui/icons/PersonOutline';
-import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
-import Reorder from '@material-ui/icons/Reorder';
-import Work from '@material-ui/icons/Work';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 // 크리에이터 라우터
 import { HowToReg } from '@material-ui/icons';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import BrandingWatermark from '@material-ui/icons/BrandingWatermarkOutlined';
+import Dashboard from '@material-ui/icons/DashboardOutlined';
+import Person from '@material-ui/icons/PersonOutline';
+import Reorder from '@material-ui/icons/Reorder';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
+import Work from '@material-ui/icons/Work';
 import CreatorMyAds from './creator/campaign/CampaignManage';
-import CreatorProgressedCampaigns from './creator/campaign/ProgressedCampaigns';
 import CreatorCPSManage from './creator/campaign/CPSManage';
+import CreatorProgressedCampaigns from './creator/campaign/ProgressedCampaigns';
 import CreatorDashboard from './creator/Dashboard';
+import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorManual from './creator/Manual';
 import CreatorMyPage from './creator/Mypage';
-import CreatorIncomeManage from './creator/IncomeManage';
 import CreatorReferralCodeManage from './creator/ReferralCodeManage';
-// import CreatorCPAManage from './creator/CPAManage';
 // 마케터 라우터
 import MarketerCampaign from './marketer/AdManage/Campaign';
 import MarketerInventory from './marketer/AdManage/Inventory';
-import MarketerDashboard from './marketer/Dashboard';
-import MarketerMyOffice from './marketer/MyOffice';
-import MarketerMyInfo from './marketer/MyInfo';
-import MarketerCreateCampaign from './marketer/CampaignCreate';
-import MarketerManual from './marketer/Manual';
 import MarketerOrders from './marketer/AdManage/Orders';
+import MarketerCreateCampaign from './marketer/CampaignCreate';
+import MarketerDashboard from './marketer/Dashboard';
+import MarketerManual from './marketer/Manual';
+import MarketerMyInfo from './marketer/MyInfo';
+import MyOfficeCashManage from './marketer/MyOffice/CashManage';
+import MarketerSalesIncomeManage from './marketer/MyOffice/SalesIncomeManage';
+import MyOfficeTaxBill from './marketer/MyOffice/TaxBill';
 // shared 라우터
 import Notice from './shared/Notice';
 
@@ -80,7 +81,7 @@ const dashboardRoutes: MypageRoutes = {
           name: '진행한 광고목록',
           component: CreatorProgressedCampaigns,
         },
-      ]
+      ],
     },
     {
       path: '/income',
@@ -152,14 +153,31 @@ const dashboardRoutes: MypageRoutes = {
           name: '주문 관리',
           component: MarketerOrders,
         },
-      ]
+      ],
     },
     {
       path: '/myoffice',
       name: '내 오피스',
       icon: Work,
-      component: MarketerMyOffice,
       layout: '/mypage/marketer',
+      hasSubRoutes: true,
+      subRoutes: [
+        {
+          path: '/cash',
+          component: MyOfficeCashManage,
+          name: '광고 캐시',
+        },
+        {
+          path: '/settlement',
+          component: MarketerSalesIncomeManage,
+          name: '판매 대금',
+        },
+        {
+          path: '/tax-bill',
+          component: MyOfficeTaxBill,
+          name: '세금계산서',
+        },
+      ],
     },
     {
       path: '/user',
@@ -189,7 +207,7 @@ const dashboardRoutes: MypageRoutes = {
       icon: Work,
       component: MarketerCreateCampaign,
       layout: '/mypage/marketer',
-      noTab: true
+      noTab: true,
     },
   ],
 };

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import {
-  Grid, TextField, Avatar, Typography, Paper
-} from '@material-ui/core';
+import { useState } from 'react';
+import * as React from 'react';
+import { Grid, TextField, Avatar, Typography, Paper } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
@@ -30,7 +29,8 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   // ***************************************************
   // 텍스트필드 컴포넌트
   interface TextFieldWithLabelProps {
-    title: string; children: React.ReactNode;
+    title: string;
+    children: React.ReactNode;
   }
   const TextFieldWithLabel = ({ title, children }: TextFieldWithLabelProps): JSX.Element => (
     <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
@@ -54,7 +54,10 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
           <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>내 정보 관리</Typography>
 
           <TextFieldWithLabel title="프로필사진">
-            <Avatar src={profileData.creatorLogo || profileData.afreecaLogo || ''} style={{ width: 45, height: 45 }} />
+            <Avatar
+              src={profileData.creatorLogo || profileData.afreecaLogo || ''}
+              style={{ width: 45, height: 45 }}
+            />
           </TextFieldWithLabel>
 
           <TextFieldWithLabel title="아이디">
@@ -81,14 +84,10 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
               InputProps={{ readOnly: true, style: { padding: 0 } }}
             />
             {profileData.creatorContractionAgreement === 1 && (
-            <Button
-              size="small"
-              style={{ marginLeft: 16 }}
-              onClick={handleContractionOpen}
-            >
-              <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
-              이용약관 보기
-            </Button>
+              <Button size="small" style={{ marginLeft: 16 }} onClick={handleContractionOpen}>
+                <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
+                이용약관 보기
+              </Button>
             )}
           </TextFieldWithLabel>
         </Grid>

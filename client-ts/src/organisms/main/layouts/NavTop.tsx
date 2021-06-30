@@ -1,10 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import * as React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import {
-  Menu, MenuItem, IconButton, Button,
-  useScrollTrigger, AppBar, Toolbar
+  Menu,
+  MenuItem,
+  IconButton,
+  Button,
+  useScrollTrigger,
+  AppBar,
+  Toolbar,
 } from '@material-ui/core';
 import useStyles from './style/NavTop.style';
 import LoginPopover from '../main/login/LoginPopover';
@@ -12,25 +18,22 @@ import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import history from '../../../history';
 
-
 interface NavTopProps {
   MainUserType?: boolean;
   logout: () => void;
   isLogin?: boolean;
 }
 
-function NavTop({
-  MainUserType,
-  logout, isLogin
-}: NavTopProps): JSX.Element {
+function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
   const classes = useStyles();
 
   const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
 
   // 마이페이지 이동 핸들러
-  const handleClick = useCallback((buttonType) => {
-    axios.get(`${HOST}/login/check`)
-      .then((res) => {
+  const handleClick = useCallback(buttonType => {
+    axios
+      .get(`${HOST}/login/check`)
+      .then(res => {
         const { userType } = res.data;
         if (userType === undefined) {
           if (buttonType) {
@@ -41,7 +44,8 @@ function NavTop({
         } else if (userType === 'creator') {
           history.push('/mypage/creator/main');
         }
-      }).catch((err) => {
+      })
+      .catch(err => {
         console.log(err);
       });
   }, []);
@@ -65,22 +69,12 @@ function NavTop({
   const LoginButton = () => {
     if (isLogin) {
       return (
-        <Button
-          className={classes.tabButton}
-          color="inherit"
-          onClick={logout}
-        >
+        <Button className={classes.tabButton} color="inherit" onClick={logout}>
           로그아웃
         </Button>
       );
     }
-    return (
-      <LoginPopover
-        type="로그인"
-        MainUserType={MainUserType}
-        logout={logout}
-      />
-    );
+    return <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />;
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
@@ -110,7 +104,7 @@ function NavTop({
           <Button
             className={classes.mobileButton}
             component={Link}
-            to={MainUserType ? ('/introduce/marketer') : ('/introduce/creator')}
+            to={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
           >
             이용 방법
           </Button>
@@ -118,11 +112,7 @@ function NavTop({
 
         {MainUserType ? (
           <MenuItem className={classes.buttonWraper}>
-            <Button
-              className={classes.mobileButton}
-              component={Link}
-              to="/creatorlist"
-            >
+            <Button className={classes.mobileButton} component={Link} to="/creatorlist">
               방송인 목록
             </Button>
           </MenuItem>
@@ -136,8 +126,14 @@ function NavTop({
             >
               마이페이지
             </Button>
-          )
-            : <LoginPopover type="회원가입" mode="mobile" MainUserType={MainUserType} logout={logout} />}
+          ) : (
+            <LoginPopover
+              type="회원가입"
+              mode="mobile"
+              MainUserType={MainUserType}
+              logout={logout}
+            />
+          )}
         </MenuItem>
 
         <MenuItem className={classes.buttonWraper}>
@@ -145,10 +141,9 @@ function NavTop({
             <Button className={classes.mobileButton} onClick={logout}>
               로그아웃
             </Button>
-          )
-            : (
-              <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />
-            )}
+          ) : (
+            <LoginPopover type="로그인" MainUserType={MainUserType} logout={logout} />
+          )}
         </MenuItem>
       </div>
     </Menu>
@@ -156,7 +151,10 @@ function NavTop({
 
   return (
     <>
-      <AppBar position="fixed" className={classNames({ [classes.root]: !trigger, [classes.rootTriger]: trigger })}>
+      <AppBar
+        position="fixed"
+        className={classNames({ [classes.root]: !trigger, [classes.rootTriger]: trigger })}
+      >
         <Toolbar className={classes.toolbar}>
           <div className={classes.blank} />
 
@@ -169,7 +167,7 @@ function NavTop({
             <Button
               className={classes.tabButton}
               component={Link}
-              to={MainUserType ? ('/introduce/marketer') : ('/introduce/creator')}
+              to={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
             >
               이용방법
             </Button>
@@ -177,11 +175,7 @@ function NavTop({
             {/* 방송인 목록 버튼 */}
             {MainUserType ? (
               <div>
-                <Button
-                  className={classes.creatorList}
-                  component={Link}
-                  to="/creatorlist"
-                >
+                <Button className={classes.creatorList} component={Link} to="/creatorlist">
                   방송인 목록
                 </Button>
               </div>
@@ -192,7 +186,6 @@ function NavTop({
 
             {/* 로그인 버튼 */}
             <LoginButton />
-
           </div>
 
           <div className={classes.rightMobile}>

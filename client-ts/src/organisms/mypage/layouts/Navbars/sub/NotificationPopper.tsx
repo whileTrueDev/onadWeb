@@ -1,8 +1,5 @@
-import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  Typography, Divider, Badge, Popover, List, ListItem,
-} from '@material-ui/core';
+import { Typography, Divider, Badge, Popover, List, ListItem } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 // types
@@ -17,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[2],
     overflowX: 'hidden',
-    overflowY: 'auto'
+    overflowY: 'auto',
   },
   title: {
     padding: theme.spacing(1),
@@ -26,7 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   message: {
-    marginTop: 4, marginBottom: 4
+    marginTop: 4,
+    marginBottom: 4,
   },
 }));
 
@@ -36,7 +34,7 @@ export default function NotificationPopover({
   anchorEl,
   notificationData,
   successCallback,
-  handleAnchorClose
+  handleAnchorClose,
 }: {
   anchorEl: HTMLElement;
   notificationData: Notification[];
@@ -67,33 +65,42 @@ export default function NotificationPopover({
     >
       {/* 공지 메뉴 컴포넌트 */}
       <List className={classes.contents}>
-        <ListItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <ListItem
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+        >
           <Typography variant="h6">알림</Typography>
-          <Typography variant="caption" align="right">클릭시 읽음처리됩니다.</Typography>
+          <Typography variant="caption" align="right">
+            클릭시 읽음처리됩니다.
+          </Typography>
         </ListItem>
         <Divider />
         <div>
-          {notificationData.map((noti) => (
+          {notificationData.map(noti => (
             <div key={noti.index}>
-              <MenuItem onClick={(): void => {
-                if (noti.readState === UNREAD_STATE) {
-                  notiReadPatch.doPatchRequest({ index: noti.index });
-                }
-              }}
+              <MenuItem
+                onClick={(): void => {
+                  if (noti.readState === UNREAD_STATE) {
+                    notiReadPatch.doPatchRequest({ index: noti.index });
+                  }
+                }}
               >
                 <div className={classes.message}>
                   <Typography>
-                    {noti.readState
-                      ? (<Badge variant="dot" color="default"><span /></Badge>)
-                      : (<Badge variant="dot" color="secondary"><span /></Badge>)}
+                    {noti.readState ? (
+                      <Badge variant="dot" color="default">
+                        <span />
+                      </Badge>
+                    ) : (
+                      <Badge variant="dot" color="secondary">
+                        <span />
+                      </Badge>
+                    )}
                   </Typography>
                   <Typography variant="body1" gutterBottom noWrap>
                     {noti.title}
                   </Typography>
                   <Typography variant="body2" gutterBottom noWrap>
-                    <span style={{ whiteSpace: 'pre-line' }}>
-                      {noti.content}
-                    </span>
+                    <span style={{ whiteSpace: 'pre-line' }}>{noti.content}</span>
                   </Typography>
                   <Typography variant="caption" gutterBottom noWrap>
                     <span>{`${noti.dateform} / ONAD`}</span>
@@ -104,7 +111,6 @@ export default function NotificationPopover({
             </div>
           ))}
         </div>
-
       </List>
     </Popover>
   );

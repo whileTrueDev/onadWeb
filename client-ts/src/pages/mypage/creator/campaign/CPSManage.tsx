@@ -1,12 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
-import CPSChart, { CpsChartData } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSChart';
+import CPSChart, {
+  CpsChartData,
+} from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSChart';
 import CPSReviews from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSReviews';
-import CPSMetaInfo, { CpsMetaInfoRes } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSMetaInfo';
+import CPSMetaInfo, {
+  CpsMetaInfoRes,
+} from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSMetaInfo';
 import { useGetRequest } from '../../../../utils/hooks';
 import { CPSReview } from '../../../../organisms/mypage/creator/CampaignManage/cps/CPSReviewDialog';
-
 
 export default function CPSManage(): React.ReactElement {
   const cpsMetaInfo = useGetRequest<null, CpsMetaInfoRes>('/creator/cps');
@@ -15,13 +18,9 @@ export default function CPSManage(): React.ReactElement {
 
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
-
       <GridContainer>
-
         <GridItem xs={12}>
-          <CPSMetaInfo
-            cpsMetaInfo={cpsMetaInfo}
-          />
+          <CPSMetaInfo cpsMetaInfo={cpsMetaInfo} />
         </GridItem>
 
         <GridItem xs={12}>
@@ -31,9 +30,7 @@ export default function CPSManage(): React.ReactElement {
         <GridItem xs={12}>
           <CPSReviews cpsReviewData={cpsReviewData} />
         </GridItem>
-
       </GridContainer>
-
     </div>
   );
 }

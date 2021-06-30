@@ -1,5 +1,4 @@
-import React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 import useStyles from './style/PolicyMarketer.style';
 import terms from './source/PolicySource';
 
@@ -16,11 +15,11 @@ function PolicyMarketer(): JSX.Element {
       <h2>마케터 서비스 이용약관</h2>
       <div className={classes.content}>
         {terms[1].map((term: Terms) => (
-          <div key={shortid.generate()} className={classes.policyWrapper}>
-            <h3 key={shortid.generate()}>{term.title}</h3>
-            <div key={shortid.generate()} className={classes.text}>
-              {term.text.split('\n').map((sentence) => (
-                <p key={shortid.generate()}>{sentence}</p>
+          <div key={nanoid()} className={classes.policyWrapper}>
+            <h3 key={nanoid()}>{term.title}</h3>
+            <div key={nanoid()} className={classes.text}>
+              {term.text.split('\n').map(sentence => (
+                <p key={nanoid()}>{sentence}</p>
               ))}
             </div>
           </div>

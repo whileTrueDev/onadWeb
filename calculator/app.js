@@ -1,3 +1,5 @@
+const pool = require('./model/connectionPool');
+
 // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
 require('dotenv').config();
 
@@ -10,4 +12,5 @@ require('./javascripts/calculation_v.5')()
   .then(require('./javascripts/cpsCalculator'))
   .then(() => {
     process.exit(0);
-  });
+  })
+  .finally(() => pool.end());

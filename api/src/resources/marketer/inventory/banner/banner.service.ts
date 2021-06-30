@@ -95,7 +95,7 @@ export class BannerService {
 
   // * 배너가 할당된 캠페인 조회
   async findCampaignByBannerId(bannerId: string): Promise<FindCampaignByBannerIdRes> {
-    return this.campaignRepo.find({ where: { bannerId, deletedState: 0 }, select: ['campaignId'] });
+    return this.campaignRepo.find({ where: { bannerId, deletedState: 0 } });
   }
 
   // ******************************************
@@ -120,9 +120,7 @@ export class BannerService {
    * @param base64Banner 배너base64 string
    * @returns {object} { bannerImgBuffer: 배너 이미지버퍼, contentType: data:image 와 같은 타입, fileExt: png, mp4와 같은 확장자}
    */
-  private decodeBase64Banner(
-    base64Banner: string,
-  ): {
+  private decodeBase64Banner(base64Banner: string): {
     bannerImgBuffer: Buffer;
     contentType: string;
     fileExt: string;

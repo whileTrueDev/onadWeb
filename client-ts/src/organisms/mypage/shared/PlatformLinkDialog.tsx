@@ -1,10 +1,8 @@
-import {
-  Button, Dialog, makeStyles, Typography
-} from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { Button, Dialog, makeStyles, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import history from '../../../history';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   image: {
     minHeight: 200,
     backgroundColor: '#929ef8',
@@ -14,9 +12,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundPosition: 'center',
   },
   title: {
-    padding: theme.spacing(2), textAlign: 'center'
+    padding: theme.spacing(2),
+    textAlign: 'center',
   },
-  button: { height: 50, marginTop: theme.spacing(1) }
+  button: { height: 50, marginTop: theme.spacing(1) },
 }));
 
 export interface PlatformLinkDialogProps {
@@ -25,7 +24,9 @@ export interface PlatformLinkDialogProps {
   onClose: () => void;
 }
 export default function PlatformLinkDialog({
-  open, handleOpen, onClose
+  open,
+  handleOpen,
+  onClose,
 }: PlatformLinkDialogProps): JSX.Element {
   const [alreadyOpened, setAlreadyOpened] = useState(false);
   useEffect(() => {
@@ -40,7 +41,9 @@ export default function PlatformLinkDialog({
     <Dialog open={open} fullWidth maxWidth="xs">
       <div className={classes.image} />
       <div className={classes.title}>
-        <Typography variant="h6" color="primary">방송 채널을 연동하고</Typography>
+        <Typography variant="h6" color="primary">
+          방송 채널을 연동하고
+        </Typography>
         <Typography>온애드를 시작하세요!</Typography>
 
         <br />

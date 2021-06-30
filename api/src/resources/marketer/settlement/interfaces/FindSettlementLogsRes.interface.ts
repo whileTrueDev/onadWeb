@@ -1,0 +1,22 @@
+export type FindSettlementLogsData = {
+  VAT: number;
+  actualSendedAmount: number;
+  bigo: string;
+  campaignId: string;
+  campaignName: string;
+  commissionAmount: number;
+  deliveryFee: number;
+  id: number;
+  orderId: number;
+  orderPrice: number;
+  paymentCommissionAmount: number;
+  paymentMethod: string;
+  purchaseChannel: string;
+  settlementLogId: number;
+  createDate: Date;
+  orderDate: Date;
+  cancelDate: Date | null;
+  purchaseConfirmDate: Date;
+  updateDate: Date;
+};
+export type FindSettlementLogsRes = FindSettlementLogsData[];

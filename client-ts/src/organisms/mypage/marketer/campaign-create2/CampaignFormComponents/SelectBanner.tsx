@@ -1,7 +1,5 @@
-import React from 'react';
-import {
-  Grid, CircularProgress, Typography
-} from '@material-ui/core';
+import * as React from 'react';
+import { Grid, CircularProgress, Typography } from '@material-ui/core';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import BannerCarousel from '../../../../../atoms/BannerCarousel';
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -10,10 +8,7 @@ import useDialog from '../../../../../utils/hooks/useDialog';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useStyles from './SelectBanner.style';
-import {
-  CampaignCreateAction,
-} from '../reducers/campaignCreate.reducer';
-
+import { CampaignCreateAction } from '../reducers/campaignCreate.reducer';
 
 interface SelectBannerProps {
   step: number;
@@ -23,9 +18,7 @@ interface SelectBannerProps {
 }
 
 const SelectBanner = (props: SelectBannerProps): JSX.Element => {
-  const {
-    dispatch, handleDialogOpen, bannerData, step
-  } = props;
+  const { dispatch, handleDialogOpen, bannerData, step } = props;
   const classes = useStyles();
   const InquireDialog = useDialog();
   const handleBannerSelect = (bannerId: string): void => {
@@ -38,11 +31,11 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
         <Grid item>
           <StyledItemText
             primary="배너 선택하기"
-            secondary={(
+            secondary={
               <Typography variant="body2" color="textSecondary">
                 선택된 배너는 방송인의 방송화면에 송출됩니다.
               </Typography>
-            )}
+            }
             className={classes.label}
           />
         </Grid>
@@ -58,19 +51,23 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
               handleBannerId={handleBannerSelect}
               registStep={step}
             />
-          ) : (null)}
+          ) : null}
         </Grid>
       </Grid>
       <StyledItemText>새로운 배너를 등록하고 싶으신가요?</StyledItemText>
 
       <Button
-        onClick={(): void => { handleDialogOpen(); }}
+        onClick={(): void => {
+          handleDialogOpen();
+        }}
         color="primary"
       >
         + 배너 등록하기
       </Button>
       <Button
-        onClick={(): void => { InquireDialog.handleOpen(); }}
+        onClick={(): void => {
+          InquireDialog.handleOpen();
+        }}
         color="primary"
       >
         배너가 없으신가요?
@@ -80,13 +77,11 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
         onClose={InquireDialog.handleClose}
         fullWidth
         maxWidth="md"
-        buttons={(
+        buttons={
           <div>
-            <Button onClick={InquireDialog.handleClose}>
-              취소
-            </Button>
+            <Button onClick={InquireDialog.handleClose}>취소</Button>
           </div>
-        )}
+        }
       >
         <Inquire confirmClose={InquireDialog.handleClose} />
       </Dialog>
@@ -105,6 +100,5 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
  *
  * @author 박찬우
  */
-
 
 export default SelectBanner;

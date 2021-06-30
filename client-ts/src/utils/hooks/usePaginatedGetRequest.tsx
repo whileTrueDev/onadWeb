@@ -41,10 +41,10 @@ export default function usePaginatedGetRequest<T = any>(
   // 요청 페이지
   const [page, setPage] = useState(firstPage);
   function handleBackPage(): void {
-    setPage((p) => p - 1);
+    setPage(p => p - 1);
   }
   function handleNextPage(): void {
-    setPage((p) => p + 1);
+    setPage(p => p + 1);
   }
   function handlePage(targetPage: number): void {
     setPage(targetPage);
@@ -55,18 +55,17 @@ export default function usePaginatedGetRequest<T = any>(
    */
   const request = useCallback((): Promise<AxiosResponse<T[]>> => {
     setLoading(true);
-    return axiosInstance.get<T[]>(
-      `${HOST}${url}`, { params: { offset: OFFSET, page } }
-    )
-      .then((res) => {
+    return axiosInstance
+      .get<T[]>(`${HOST}${url}`, { params: { offset: OFFSET, page } })
+      .then(res => {
         setLoading(false);
-        setData((prev) => {
+        setData(prev => {
           if (!prev) return res.data;
           return prev.concat(res.data);
         });
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         throw err;
       });
@@ -77,18 +76,17 @@ export default function usePaginatedGetRequest<T = any>(
    */
   const requestWithoutConcat = useCallback((): Promise<AxiosResponse<T[]>> => {
     setLoading(true);
-    return axiosInstance.get<T[]>(
-      `${HOST}${url}`, { params: { offset: OFFSET, page } }
-    )
-      .then((res) => {
+    return axiosInstance
+      .get<T[]>(`${HOST}${url}`, { params: { offset: OFFSET, page } })
+      .then(res => {
         setLoading(false);
-        setData((prev) => {
+        setData(prev => {
           if (!prev) return res.data;
           return res.data;
         });
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         throw err;
       });
@@ -107,6 +105,6 @@ export default function usePaginatedGetRequest<T = any>(
     request,
     requestWithoutConcat,
     setData,
-    handlePage
+    handlePage,
   };
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
@@ -9,7 +9,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 400,
     flexGrow: 1,
@@ -33,19 +33,17 @@ const useStyles = makeStyles((theme) => ({
 export interface ImageCarouselProps {
   images: string[];
 }
-export default function ImageCarousel({
-  images,
-}: ImageCarouselProps): React.ReactElement {
+export default function ImageCarousel({ images }: ImageCarouselProps): React.ReactElement {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = images.length;
 
   const handleNext = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
   const handleBack = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleStepChange = (step: number): void => {
@@ -54,11 +52,7 @@ export default function ImageCarousel({
 
   return (
     <div className={classes.root}>
-      <AutoPlaySwipeableViews
-        index={activeStep}
-        onChangeIndex={handleStepChange}
-        enableMouseEvents
-      >
+      <AutoPlaySwipeableViews index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
         {images.map((image, index) => (
           <div key={image}>
             {Math.abs(activeStep - index) <= 2 ? (
@@ -72,18 +66,18 @@ export default function ImageCarousel({
         position="static"
         variant={maxSteps > 2 ? 'dots' : 'text'}
         activeStep={activeStep}
-        nextButton={(
+        nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             다음
             <KeyboardArrowRight />
           </Button>
-        )}
-        backButton={(
+        }
+        backButton={
           <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
             <KeyboardArrowLeft />
             이전
           </Button>
-        )}
+        }
       />
     </div>
   );

@@ -1,22 +1,21 @@
 import { CircularProgress, Paper, Typography } from '@material-ui/core';
-import React from 'react';
+import * as React from 'react';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 
-
 export interface CpsMetaInfoRes {
-  income: number; salesCount: number; clickCount: number;
+  income: number;
+  salesCount: number;
+  clickCount: number;
 }
 
 interface CPSMetaInfoProps {
   cpsMetaInfo: UseGetRequestObject<CpsMetaInfoRes>;
 }
-export default function CPSMetaInfo({
-  cpsMetaInfo,
-}: CPSMetaInfoProps): React.ReactElement {
+export default function CPSMetaInfo({ cpsMetaInfo }: CPSMetaInfoProps): React.ReactElement {
   return (
     <Paper style={{ padding: 32, marginTop: 8, minHeight: 60 }}>
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-        {cpsMetaInfo.loading && (<CircularProgress />)}
+        {cpsMetaInfo.loading && <CircularProgress />}
         {!cpsMetaInfo.loading && cpsMetaInfo.data && (
           <>
             <div style={{ textAlign: 'center' }}>
@@ -39,7 +38,6 @@ export default function CPSMetaInfo({
             </div>
           </>
         )}
-
       </div>
     </Paper>
   );

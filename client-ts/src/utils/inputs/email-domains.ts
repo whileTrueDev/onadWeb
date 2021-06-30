@@ -9,5 +9,4 @@ const domains = [
   { value: '직접입력' },
 ];
 
-
 export default domains;

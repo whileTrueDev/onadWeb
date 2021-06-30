@@ -1,8 +1,6 @@
-import React from 'react';
-import shortid from 'shortid';
-import {
-  Grid
-} from '@material-ui/core';
+import * as React from 'react';
+import { nanoid } from 'nanoid';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from '@material-ui/core/Divider';
@@ -30,7 +28,7 @@ const WithdrawalAmount = ({
   stepComplete,
   accountNumber,
   setStepComplete,
-  realName
+  realName,
 }: WithdrawalAmountProps): JSX.Element => {
   const classes = useWithdrawalAmountStyles();
   const { currentCash, selectValue, totalIncome } = state;
@@ -85,30 +83,26 @@ const WithdrawalAmount = ({
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-                {currentCash}
-                {' '}
-                원
+                {currentCash} 원
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        { stepComplete && (
-        <Grid item>
-          <Grid container direction="row" justify="space-between">
-            <Grid item>
-              <Typography className={classes.newContentTitle} variant="h6">
-                출금 후 잔액
-              </Typography>
-            </Grid>
-            <Grid item className={classes.contentTitle}>
-              <Typography className={classes.newContentTitle} variant="h6">
-                {totalIncome}
-                {' '}
-                원
-              </Typography>
+        {stepComplete && (
+          <Grid item>
+            <Grid container direction="row" justify="space-between">
+              <Grid item>
+                <Typography className={classes.newContentTitle} variant="h6">
+                  출금 후 잔액
+                </Typography>
+              </Grid>
+              <Grid item className={classes.contentTitle}>
+                <Typography className={classes.newContentTitle} variant="h6">
+                  {totalIncome} 원
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
         )}
         <Divider />
         <Grid item>
@@ -126,30 +120,21 @@ const WithdrawalAmount = ({
                   value={selectValue}
                   onChange={handleChange}
                 >
-                  {values.map((value) => (
+                  {values.map(value => (
                     <FormControlLabel
                       value={value}
-                      key={shortid.generate()}
+                      key={nanoid()}
                       control={<Radio color="primary" />}
-                      label={(
+                      label={
                         currentCash >= Number(value) ? (
-                          <Typography variant="subtitle1">
-                            {value}
-                            {' '}
-                            원
-                          </Typography>
+                          <Typography variant="subtitle1">{value} 원</Typography>
+                        ) : (
+                          <Typography variant="subtitle1">{value} 원</Typography>
                         )
-                          : (
-                            <Typography variant="subtitle1">
-                              {value}
-                              {' '}
-                              원
-                            </Typography>
-                          ))}
+                      }
                       disabled={!(currentCash >= Number(value))}
                     />
                   ))}
-
                 </RadioGroup>
               </Grid>
               <Grid item className={classes.valueContainer}>
@@ -157,21 +142,23 @@ const WithdrawalAmount = ({
                   <Tooltip title="직접입력 하십시오.">
                     <TextField
                       id="selectValue"
-                      label={(
-                        <Typography variant="subtitle1">
-                          출금 신청할 금액을 입력하세요
-                        </Typography>
-                      )}
+                      label={
+                        <Typography variant="subtitle1">출금 신청할 금액을 입력하세요</Typography>
+                      }
                       type="number"
                       className={classes.textField}
                       value={selectValue}
                       onChange={handleChange}
                       margin="normal"
                       variant="outlined"
-                      error={!((currentCash >= Number(selectValue)))
-                        || !(Number(selectValue) >= 30000)}
-                      helperText={((currentCash >= Number(selectValue))
-                        && (Number(selectValue) >= 30000)) ? null : '올바른 입력 부탁드립니다'}
+                      error={
+                        !(currentCash >= Number(selectValue)) || !(Number(selectValue) >= 30000)
+                      }
+                      helperText={
+                        currentCash >= Number(selectValue) && Number(selectValue) >= 30000
+                          ? null
+                          : '올바른 입력 부탁드립니다'
+                      }
                     />
                   </Tooltip>
                 </div>

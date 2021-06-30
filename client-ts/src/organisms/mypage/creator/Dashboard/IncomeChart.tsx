@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/camelcase */
+import * as React from 'react';
 // components
 import { Paper } from '@material-ui/core';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
@@ -11,13 +12,10 @@ export interface IncomeChartProps {
   incomeChartData: ChartDataBase[];
   title?: React.ReactNode;
 }
-function IncomeChart({
-  incomeChartData,
-  title,
-}: IncomeChartProps): JSX.Element {
+function IncomeChart({ incomeChartData, title }: IncomeChartProps): JSX.Element {
   return (
     <Paper style={{ padding: 32, height: 400, marginTop: 8 }}>
-      {!title ? null : (title)}
+      {!title ? null : title}
       <ReChartBar
         data={incomeChartData}
         dataKey={['cpm_amount', 'cpc_amount', 'cps_amount']}

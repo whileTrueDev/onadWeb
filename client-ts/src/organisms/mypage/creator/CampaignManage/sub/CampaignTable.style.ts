@@ -24,35 +24,35 @@ const useCampaignTableStyles = makeStyles((theme: Theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   head: {
     fontWeight: 500,
     [theme.breakpoints.down('sm')]: {
-      fontSize: '0.80rem'
-    }
+      fontSize: '0.80rem',
+    },
   },
   unit: {
     fontWeight: 700,
-    marginLeft: '3px'
+    marginLeft: '3px',
   },
   level: {
     fontWeight: 700,
-    marginLeft: '3px'
+    marginLeft: '3px',
   },
   grid: {
     justifyContent: 'center',
     // alignItems: 'center'
   },
   textCell: {
-    textAlign: 'left'
+    textAlign: 'left',
   },
   cash: {
     fontSize: '1.8rem',
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.3rem'
-    }
-  }
+      fontSize: '1.3rem',
+    },
+  },
 }));
 
 export default useCampaignTableStyles;

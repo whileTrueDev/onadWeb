@@ -1,6 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing(2),
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.success.light,
     },
   },
-  divider: { width: 2, height: 28, margin: 10, },
+  divider: { width: 2, height: 28, margin: 10 },
   container: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing(1),
@@ -50,11 +50,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   end: {
-    fontSize: '12px'
+    fontSize: '12px',
   },
   buttonStyle: {
     flex: 1,
-  }
+  },
 }));
 
 export default useStyles;

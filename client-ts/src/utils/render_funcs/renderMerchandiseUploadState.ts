@@ -1,4 +1,3 @@
-
 export const MERCHANDISE_UPLOAD_WAITING = null; // 온애드샵 업로드 대기중 상태
 export const MERCHANDISE_UPLOAD_DENYED = 0; // 온애드샵 업로드 거절된 경우
 export const MERCHANDISE_UPLOAD_UPLOADED = 1; // 온애드샵 업로드된 경우

@@ -2,10 +2,12 @@ import {
   IsArray,
   IsDateString,
   IsIn,
+  IsInt,
   IsNotEmpty,
   IsNumberString,
   IsOptional,
   IsString,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateCampaignDto {
@@ -36,11 +38,11 @@ export class CreateCampaignDto {
   dailyLimit: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsNotEmpty()
   startDate: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsNotEmpty()
   finDate: string;
 
   @IsString()
@@ -49,11 +51,13 @@ export class CreateCampaignDto {
   @IsString()
   campaignDescription: string;
 
+  @ValidateIf(o => o.optionType !== '3') // 3 = 상품판매형광고
   @IsOptional()
-  @IsString()
+  @IsNotEmpty()
   connectedLinkId?: string | null;
 
+  @ValidateIf(o => o.optionType === '3') // 3 = 상품판매형광고
   @IsOptional()
-  @IsString()
+  @IsNotEmpty()
   merchandiseId?: number | null;
 }

@@ -1,17 +1,12 @@
-
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  TableRow, TableFooter, TablePagination, IconButton
-} from '@material-ui/core';
-import {
-  LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft,
-} from '@material-ui/icons';
+import { TableRow, TableFooter, TablePagination, IconButton } from '@material-ui/core';
+import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft } from '@material-ui/icons';
 // jss file import
 import useTableStyles from './Table.style';
 
 // Style for footer
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexShrink: 0,
     color: theme.palette.text.secondary,
@@ -26,39 +21,27 @@ interface TablePagenationActionsProps {
   rowsPerPage: number;
   onChangePage: (e: React.MouseEvent<HTMLButtonElement>, page: number) => void;
 }
-function TablePaginationActions(
-  props: TablePagenationActionsProps
-): JSX.Element {
+function TablePaginationActions(props: TablePagenationActionsProps): JSX.Element {
   const classes = useStyles();
-  const {
-    count, page, rowsPerPage, onChangePage,
-  } = props;
+  const { count, page, rowsPerPage, onChangePage } = props;
 
   // 처음 페이지로
-  function handleFirstPageButtonClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void {
+  function handleFirstPageButtonClick(event: React.MouseEvent<HTMLButtonElement>): void {
     onChangePage(event, 0);
   }
 
   // 이전 페이지로
-  function handleBackButtonClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void{
+  function handleBackButtonClick(event: React.MouseEvent<HTMLButtonElement>): void {
     onChangePage(event, page - 1);
   }
 
   // 다음 페이지로
-  function handleNextButtonClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void{
+  function handleNextButtonClick(event: React.MouseEvent<HTMLButtonElement>): void {
     onChangePage(event, page + 1);
   }
 
   // 마지막 페이지로
-  function handleLastPageButtonClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ): void{
+  function handleLastPageButtonClick(event: React.MouseEvent<HTMLButtonElement>): void {
     onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   }
 
@@ -114,7 +97,7 @@ function CustomTableFooter({
     <TableFooter component="tfoot" className={classes.tableFooter}>
       <TableRow>
         <TablePagination
-        // component="tr"
+          // component="tr"
           style={{ paddingTop: 0, paddingBottom: 0 }}
           className={classes.tableFooterPagination}
           rowsPerPageOptions={[3, 5, 10, 15]}

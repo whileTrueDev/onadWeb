@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
 import { Typography, Paper, ButtonBase } from '@material-ui/core';
 import GreenCheckbox from '../../../../../atoms/Checkbox/GreenCheckBox';
@@ -37,7 +37,7 @@ export default function SelectPaper(props: SelectPaperProps): JSX.Element {
     secondaryText,
     disabled,
     children,
-    innerPaperChildren
+    innerPaperChildren,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -45,7 +45,8 @@ export default function SelectPaper(props: SelectPaperProps): JSX.Element {
   function getBackgroudColor(): string {
     if (checked) {
       return theme.palette.primary.light;
-    } if (!checked && disabled) {
+    }
+    if (!checked && disabled) {
       return theme.palette.action.disabledBackground;
     }
     return 'inherit';
@@ -53,38 +54,32 @@ export default function SelectPaper(props: SelectPaperProps): JSX.Element {
 
   return (
     <div className={classes.root}>
-      <ButtonBase
-        className={classes.choiceWrapper}
-        onClick={handleSelect}
-        disabled={disabled}
-      >
+      <ButtonBase className={classes.choiceWrapper} onClick={handleSelect} disabled={disabled}>
         <Paper
           className={classes.choice}
           style={{
             backgroundColor: getBackgroudColor(),
-            color: checked ? theme.palette.common.white : 'inherit'
+            color: checked ? theme.palette.common.white : 'inherit',
           }}
           elevation={checked ? 1 : 4}
         >
           <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <GreenCheckbox
-              checked={checked}
-              onChange={handleSelect}
-            />
-            <Typography variant="h5" style={{ fontWeight: 700, paddingBottom: 16 }}>{primaryText}</Typography>
-            {secondaryText.split('\n').map((t) => (
-              <Typography key={t} variant="body1">{t}</Typography>
+            <GreenCheckbox checked={checked} onChange={handleSelect} />
+            <Typography variant="h5" style={{ fontWeight: 700, paddingBottom: 16 }}>
+              {primaryText}
+            </Typography>
+            {secondaryText.split('\n').map(t => (
+              <Typography key={t} variant="body1">
+                {t}
+              </Typography>
             ))}
 
             {innerPaperChildren || null}
-
           </div>
         </Paper>
       </ButtonBase>
 
-      <div style={{ width: '100%' }}>
-        {children}
-      </div>
+      <div style={{ width: '100%' }}>{children}</div>
     </div>
   );
 }

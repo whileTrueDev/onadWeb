@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // style
@@ -12,7 +12,11 @@ interface CardAvaterProps {
 }
 
 function CardAvatar({
-  children, className, plain, profile, ...rest
+  children,
+  className,
+  plain,
+  profile,
+  ...rest
 }: CardAvaterProps): JSX.Element {
   const classes = useCardAvaterStyles();
   const cardAvatarClasses = classNames({

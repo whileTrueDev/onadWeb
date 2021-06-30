@@ -1,9 +1,15 @@
 import {
-  Button, CircularProgress, Divider, makeStyles, Tooltip, Typography
+  Button,
+  CircularProgress,
+  Divider,
+  makeStyles,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import classnames from 'classnames';
-import React, { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
+import * as React from 'react';
 import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import DataText from '../../../../../atoms/DataText/DataText';
@@ -13,12 +19,16 @@ import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
 import {
-  OrderStatus, 주문상태_상품준비, 주문상태_주문취소, 주문상태_출고완료, 주문상태_출고준비
+  OrderStatus,
+  주문상태_상품준비,
+  주문상태_주문취소,
+  주문상태_출고완료,
+  주문상태_출고준비,
 } from '../../../../../utils/render_funcs/renderOrderStatus';
 import { Merchandise, MerchandiseOrder } from '../../adManage/interface';
 import OrderStateChangeDialog, { OrderCourierDTO } from './OrderStateChangeDialog';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   buttonSet: {
     display: 'flex',
     alignItems: 'stretch',
@@ -27,11 +37,11 @@ const useStyles = makeStyles((theme) => ({
   },
   success: {
     backgroundColor: theme.palette.success.main,
-    '&:hover': { backgroundColor: theme.palette.success.light, },
+    '&:hover': { backgroundColor: theme.palette.success.light },
   },
   error: {
     backgroundColor: theme.palette.error.main,
-    '&:hover': { backgroundColor: theme.palette.error.light, },
+    '&:hover': { backgroundColor: theme.palette.error.light },
   },
   actionbutton: {
     // margin: theme.spacing(1),
@@ -51,8 +61,8 @@ function MerchandiseOrderDialog({
   open,
   onClose,
   onStatusChange,
-  // onStatusChangeFail,
-}: MerchandiseDetailDialogProps): React.ReactElement {
+}: // onStatusChangeFail,
+MerchandiseDetailDialogProps): React.ReactElement {
   const classes = useStyles();
   const marketerInfo = useContext(MarketerInfoContext);
   const merchandiseDetailGet = useGetRequest<null, Merchandise>(
@@ -63,7 +73,9 @@ function MerchandiseOrderDialog({
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
     if (marketerInfo.user) {
       return getReadableS3MerchandiseImagePath(
-        marketerInfo.user.marketerId, merchandiseId, imageName
+        marketerInfo.user.marketerId,
+        merchandiseId,
+        imageName,
       );
     }
     return imageName;
@@ -72,23 +84,21 @@ function MerchandiseOrderDialog({
   // 남은 재고 수량 변수
   const availableStock = useMemo(
     () => merchandiseOrder.stock - (merchandiseOrder.merchandiseSoldCount || 0),
-    [merchandiseOrder.merchandiseSoldCount, merchandiseOrder.stock]
+    [merchandiseOrder.merchandiseSoldCount, merchandiseOrder.stock],
   );
 
   // 상태 변경 요청 핸들링
   const orderStatusPatch = usePatchRequest('/marketer/orders');
   const snack = useDialog(); // 스낵바
   // 스낵바 내용
-  const [snackMsg, setSnackMsg] = useState<{msg: string; color: 'error' | 'success'}>();
+  const [snackMsg, setSnackMsg] = useState<{ msg: string; color: 'error' | 'success' }>();
   function handleSnackMsg(msg: string, color: 'error' | 'success'): void {
     setSnackMsg({ msg, color });
   }
 
   const confirmDialog = useDialog();
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>();
-  function handleStatusSelect(
-    status: OrderStatus
-  ): void {
+  function handleStatusSelect(status: OrderStatus): void {
     setSelectedStatus(status);
     confirmDialog.handleOpen();
   }
@@ -98,69 +108,70 @@ function MerchandiseOrderDialog({
 
   // 상태 변경 요청 함수
   type StatusChangeParams = { status: OrderStatus; dto?: OrderCourierDTO; denialReason?: string };
-  function handleStatusChange({
-    status, dto, denialReason
-  }: StatusChangeParams): void {
-    orderStatusPatch.doPatchRequest({
-      orderId: merchandiseOrder.id,
-      status,
-      denialReason,
-      courierCompany: dto ? dto.courierCompany : null,
-      trackingNumber: dto ? dto.trackingNumber : null,
-    })
+  function handleStatusChange({ status, dto, denialReason }: StatusChangeParams): void {
+    orderStatusPatch
+      .doPatchRequest({
+        orderId: merchandiseOrder.id,
+        status,
+        denialReason,
+        courierCompany: dto ? dto.courierCompany : null,
+        trackingNumber: dto ? dto.trackingNumber : null,
+      })
       .then(() => {
-        handleSnackMsg(
-          '주문 상태를 변경이 완료되었습니다.', 'success'
-        );
+        handleSnackMsg('주문 상태를 변경이 완료되었습니다.', 'success');
         snack.handleOpen();
         confirmDialog.handleClose();
         if (onStatusChange) onStatusChange();
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
         handleSnackMsg(
-          '주문 상태를 변경하는 도중 오류가 발생했습니다. 문제가 지속적으로 발견될 시 support@onad.io로 문의바랍니다.', 'error'
+          '주문 상태를 변경하는 도중 오류가 발생했습니다. 문제가 지속적으로 발견될 시 support@onad.io로 문의바랍니다.',
+          'error',
         );
         snack.handleOpen();
       });
   }
 
-
   return (
     <>
-      <CustomDialog
-        open={open}
-        onClose={onClose}
-        maxWidth="xs"
-        fullWidth
-        title="주문 정보"
-      >
-        {merchandiseDetailGet.loading && (<div style={{ textAlign: 'center', width: '100%' }}><CircularProgress /></div>)}
+      <CustomDialog open={open} onClose={onClose} maxWidth="xs" fullWidth title="주문 정보">
+        {merchandiseDetailGet.loading && (
+          <div style={{ textAlign: 'center', width: '100%' }}>
+            <CircularProgress />
+          </div>
+        )}
         {!merchandiseDetailGet.loading && (
           <>
             {merchandiseDetailGet.data && merchandiseDetailGet.data.imagesRes && (
-            <SwipeableTextMobileStepper
-              images={merchandiseDetailGet.data.imagesRes
-                .map((image) => getMerchandiseS3Url(image, merchandiseOrder.merchandiseId))}
-            />
+              <SwipeableTextMobileStepper
+                images={merchandiseDetailGet.data.imagesRes.map(image =>
+                  getMerchandiseS3Url(image, merchandiseOrder.merchandiseId),
+                )}
+              />
             )}
             <DataText name="상품 명" value={merchandiseOrder.name} />
             {merchandiseOrder.optionId && (
-            <DataText
-              name="선택 옵션"
-              value={(
-                <Typography component="span">
-                  {`${merchandiseOrder.optionType} - ${merchandiseOrder.optionValue}`}
-                  {merchandiseOrder.additionalPrice ? `(+${merchandiseOrder.additionalPrice.toLocaleString()}원)` : ''}
-                </Typography>
-              )}
-            />
+              <DataText
+                name="선택 옵션"
+                value={
+                  <Typography component="span">
+                    {`${merchandiseOrder.optionType} - ${merchandiseOrder.optionValue}`}
+                    {merchandiseOrder.additionalPrice
+                      ? `(+${merchandiseOrder.additionalPrice.toLocaleString()}원)`
+                      : ''}
+                  </Typography>
+                }
+              />
             )}
             <DataText name="주문 수량" value={merchandiseOrder.quantity} />
-            <DataText name="남은 상품 재고" value={`남은 재고 ${availableStock} / 총 재고 ${merchandiseOrder.stock}`} />
+            <DataText
+              name="남은 상품 재고"
+              value={`남은 재고 ${availableStock} / 총 재고 ${merchandiseOrder.stock}`}
+            />
             <DataText
               name="총 주문 금액"
-              value={`${(merchandiseOrder.orderPrice).toLocaleString()} 원`}
+              value={`${merchandiseOrder.orderPrice.toLocaleString()} 원`}
             />
 
             <Divider />
@@ -179,15 +190,10 @@ function MerchandiseOrderDialog({
 
             <DataText
               name="주문상태"
-              value={(
-                <OrderStatusChip status={merchandiseOrder.status} />
-              )}
+              value={<OrderStatusChip status={merchandiseOrder.status} />}
             />
             {merchandiseOrder.status === 주문상태_주문취소 && merchandiseOrder.denialReason && (
-              <DataText
-                name="취소 사유"
-                value={merchandiseOrder.denialReason}
-              />
+              <DataText name="취소 사유" value={merchandiseOrder.denialReason} />
             )}
             {merchandiseOrder.releaseId && (
               <DataText
@@ -198,8 +204,12 @@ function MerchandiseOrderDialog({
               />
             )}
             <Typography className={classes.bold}>상태변경</Typography>
-            <Typography color="error" variant="body2">변경한 상태는 되돌릴 수 없습니다.</Typography>
-            <Typography color="error" variant="body2">주문취소는 주문접수 상태에서만 가능합니다.</Typography>
+            <Typography color="error" variant="body2">
+              변경한 상태는 되돌릴 수 없습니다.
+            </Typography>
+            <Typography color="error" variant="body2">
+              주문취소는 주문접수 상태에서만 가능합니다.
+            </Typography>
 
             <div className={classes.buttonSet}>
               <Button
@@ -236,12 +246,14 @@ function MerchandiseOrderDialog({
                     onClick={(): void => handleStatusSelect(주문상태_주문취소)}
                     disabled={merchandiseOrder.status !== 0}
                   >
-                  주문취소
+                    주문취소
                   </Button>
                 </div>
               </Tooltip>
             </div>
-            <Button fullWidth variant="contained" onClick={onClose}>닫기</Button>
+            <Button fullWidth variant="contained" onClick={onClose}>
+              닫기
+            </Button>
           </>
         )}
       </CustomDialog>
@@ -261,12 +273,12 @@ function MerchandiseOrderDialog({
       )}
 
       {snackMsg && (
-      <Snackbar
-        message={snackMsg.msg}
-        open={snack.open}
-        onClose={snack.handleClose}
-        color={snackMsg.color}
-      />
+        <Snackbar
+          message={snackMsg.msg}
+          open={snack.open}
+          onClose={snack.handleClose}
+          color={snackMsg.color}
+        />
       )}
     </>
   );

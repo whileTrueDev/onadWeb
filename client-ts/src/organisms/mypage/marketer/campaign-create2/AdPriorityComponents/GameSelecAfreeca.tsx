@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid, CircularProgress, Typography, Divider,
-  Chip, List, ListItem, Collapse, Button,
+  Grid,
+  CircularProgress,
+  Typography,
+  Divider,
+  Chip,
+  List,
+  ListItem,
+  Collapse,
+  Button,
 } from '@material-ui/core';
 import { CheckCircle, ExpandMore } from '@material-ui/icons';
 import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
@@ -20,9 +28,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   formControl: { margin: theme.spacing(1), minWidth: 120, maxWidth: 300 },
-  categoryTitle: { cursor: 'pointer', '&:hover': { color: theme.palette.primary.main, textDecoration: 'underline' } },
+  categoryTitle: {
+    cursor: 'pointer',
+    '&:hover': { color: theme.palette.primary.main, textDecoration: 'underline' },
+  },
   categoryTitleSelected: {
-    color: theme.palette.primary.main, textDecoration: 'underline'
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
   },
   chipContainer: { marginTop: theme.spacing(1) },
   chip: { margin: theme.spacing(0.5) },
@@ -44,9 +56,7 @@ interface GameSelectProps {
 }
 
 const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
-  const {
-    state, dispatch, handleComplete, handleIncomplete
-  } = props;
+  const { state, dispatch, handleComplete, handleIncomplete } = props;
   const classes = useStyles();
 
   // **********************************************************
@@ -88,7 +98,7 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
    * @param categoryId 하위 카테고리가 있는 지 확인할 카테고리
    */
   function hasChildCategory(lst: AfreecaCategory[], categoryId: string): boolean {
-    return lst.findIndex((g) => g.parentCategoryId === categoryId) > -1;
+    return lst.findIndex(g => g.parentCategoryId === categoryId) > -1;
   }
 
   // 아프리카 부모카테고리 열기 상태
@@ -129,116 +139,139 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
         )}
         {!gamesData.loading && gamesData.data && (
           <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
-            <List style={{
-              maxHeight: 500, overflow: 'auto', width: 500, margin: '16px auto'
-            }}
+            <List
+              style={{
+                maxHeight: 500,
+                overflow: 'auto',
+                width: 500,
+                margin: '16px auto',
+              }}
             >
               {gamesData.data
-                .filter((cate) => !cate.isSub)
-                .map((game: AfreecaCategory): React.ReactNode => (
-                  <ListItem key={game.categoryId}>
-                    <div style={{ display: 'block' }}>
-                      {/* 카테고리 타이틀 */}
-                      <Typography
-                        className={classnames({
-                          [classes.categoryTitle]: true,
-                          [classes.categoryTitleSelected]: state.selectedGames.includes(
-                            game.categoryNameKr
-                          ),
-                        })}
-                        variant="body1"
-                        component="span"
-                        onClick={(): void => {
-                          if (gamesData.data) {
-                            if (hasChildCategory(gamesData.data, game.categoryId)) {
-                              // child cateogry가 있는 경우 세부사항 오픈
-                              handleCategoryCollapseOpen(game.categoryId);
-                            } else {
-                              // child cateogry가 없는 경우 카테고리 선택
-                              handleGameClick(game.categoryNameKr);
+                .filter(cate => !cate.isSub)
+                .map(
+                  (game: AfreecaCategory): React.ReactNode => (
+                    <ListItem key={game.categoryId}>
+                      <div style={{ display: 'block' }}>
+                        {/* 카테고리 타이틀 */}
+                        <Typography
+                          className={classnames({
+                            [classes.categoryTitle]: true,
+                            [classes.categoryTitleSelected]: state.selectedGames.includes(
+                              game.categoryNameKr,
+                            ),
+                          })}
+                          variant="body1"
+                          component="span"
+                          onClick={(): void => {
+                            if (gamesData.data) {
+                              if (hasChildCategory(gamesData.data, game.categoryId)) {
+                                // child cateogry가 있는 경우 세부사항 오픈
+                                handleCategoryCollapseOpen(game.categoryId);
+                              } else {
+                                // child cateogry가 없는 경우 카테고리 선택
+                                handleGameClick(game.categoryNameKr);
+                              }
                             }
-                          }
-                        }}
-                      >
-                        {game.categoryNameKr}
+                          }}
+                        >
+                          {game.categoryNameKr}
 
-                        {state.selectedGames.includes(game.categoryNameKr) && (
-                          <CheckCircle color="primary" fontSize="small" className={classes.icon} />
-                        )}
+                          {state.selectedGames.includes(game.categoryNameKr) && (
+                            <CheckCircle
+                              color="primary"
+                              fontSize="small"
+                              className={classes.icon}
+                            />
+                          )}
 
-                        {gamesData.data && hasChildCategory(gamesData.data, game.categoryId)
-                          && (
+                          {gamesData.data && hasChildCategory(gamesData.data, game.categoryId) && (
                             <ExpandMore fontSize="small" className={classes.icon} />
                           )}
-                      </Typography>
+                        </Typography>
 
-                      {/* 모두선택 / 모두해제 버튼 */}
-                      {gamesData.data && hasChildCategory(gamesData.data, game.categoryId)
-                          && (
-                            <>
-                              {/* 모두 선택 */}
+                        {/* 모두선택 / 모두해제 버튼 */}
+                        {gamesData.data && hasChildCategory(gamesData.data, game.categoryId) && (
+                          <>
+                            {/* 모두 선택 */}
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={(): void => {
+                                if (gamesData.data) {
+                                  if (openedCategory !== game.categoryId) {
+                                    // 방금 선택한 카테고리 collapse가 안열려 있다면 열기
+                                    handleCategoryCollapseOpen(game.categoryId);
+                                  }
+                                  const targetGameList = gamesData.data
+                                    .filter(cate => cate.parentCategoryId === game.categoryId)
+                                    .map(cate => cate.categoryNameKr);
+                                  handleParentCategoryClick(targetGameList);
+                                }
+                              }}
+                            >
+                              모두선택
+                            </Button>
+
+                            {/* 모두 해제 */}
+                            {arrayIncludeCheck(
+                              state.selectedGames,
+                              gamesData.data
+                                .filter(cate => cate.parentCategoryId === game.categoryId)
+                                .map(cate => cate.categoryNameKr),
+                            ) && (
                               <Button
                                 size="small"
                                 variant="outlined"
                                 onClick={(): void => {
                                   if (gamesData.data) {
-                                    if (openedCategory !== game.categoryId) {
-                                    // 방금 선택한 카테고리 collapse가 안열려 있다면 열기
-                                      handleCategoryCollapseOpen(game.categoryId);
-                                    }
-                                    const targetGameList = gamesData.data
-                                      .filter((cate) => cate.parentCategoryId === game.categoryId)
-                                      .map((cate) => cate.categoryNameKr);
-                                    handleParentCategoryClick(targetGameList);
+                                    handleParentCategoryRemove(
+                                      gamesData.data
+                                        .filter(cate => cate.parentCategoryId === game.categoryId)
+                                        .map(cate => cate.categoryNameKr),
+                                    );
                                   }
                                 }}
                               >
-                                모두선택
+                                모두해제
                               </Button>
-
-                              {/* 모두 해제 */}
-                              {arrayIncludeCheck(state.selectedGames, gamesData.data
-                                .filter((cate) => cate.parentCategoryId === game.categoryId)
-                                .map((cate) => cate.categoryNameKr)) && (
-                                <Button
-                                  size="small"
-                                  variant="outlined"
-                                  onClick={(): void => {
-                                    if (gamesData.data) {
-                                      handleParentCategoryRemove(gamesData.data
-                                        .filter((cate) => cate.parentCategoryId === game.categoryId)
-                                        .map((cate) => cate.categoryNameKr));
-                                    }
-                                  }}
-                                >
-                                  모두해제
-                                </Button>
-                              )}
-                            </>
-                          )}
-                      <div>
-                        <Collapse in={openedCategory === game.categoryId}>
-                          <div className={classes.chipContainer}>
-                            {gamesData.data && gamesData.data
-                              .filter((cate) => cate.parentCategoryId === game.categoryId)
-                              .map((cate) => (
-                                <Chip
-                                  className={classes.chip}
-                                  clickable
-                                  icon={state.selectedGames.includes(cate.categoryNameKr)
-                                    ? <CheckCircle /> : undefined}
-                                  onClick={(): void => { handleGameClick(cate.categoryNameKr); }}
-                                  color={state.selectedGames.includes(cate.categoryNameKr) ? 'primary' : 'default'}
-                                  label={cate.categoryNameKr}
-                                  key={cate.categoryId}
-                                />
-                              ))}
-                          </div>
-                        </Collapse>
+                            )}
+                          </>
+                        )}
+                        <div>
+                          <Collapse in={openedCategory === game.categoryId}>
+                            <div className={classes.chipContainer}>
+                              {gamesData.data &&
+                                gamesData.data
+                                  .filter(cate => cate.parentCategoryId === game.categoryId)
+                                  .map(cate => (
+                                    <Chip
+                                      className={classes.chip}
+                                      clickable
+                                      icon={
+                                        state.selectedGames.includes(cate.categoryNameKr) ? (
+                                          <CheckCircle />
+                                        ) : undefined
+                                      }
+                                      onClick={(): void => {
+                                        handleGameClick(cate.categoryNameKr);
+                                      }}
+                                      color={
+                                        state.selectedGames.includes(cate.categoryNameKr)
+                                          ? 'primary'
+                                          : 'default'
+                                      }
+                                      label={cate.categoryNameKr}
+                                      key={cate.categoryId}
+                                    />
+                                  ))}
+                            </div>
+                          </Collapse>
+                        </div>
                       </div>
-                    </div>
-                  </ListItem>
-                ))}
+                    </ListItem>
+                  ),
+                )}
             </List>
           </Grid>
         )}
@@ -247,13 +280,15 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
           <Grid item xs={12}>
             <Typography variant="h6">선택된 카테고리</Typography>
             <div style={{ padding: 16 }}>
-              {state.selectedGames.map((game) => (
+              {state.selectedGames.map(game => (
                 <Chip
                   key={`selected_${game}`}
                   label={game}
                   color="primary"
                   variant="outlined"
-                  onDelete={(): void => { handleGameClick(game); }}
+                  onDelete={(): void => {
+                    handleGameClick(game);
+                  }}
                   style={{ margin: 4 }}
                 />
               ))}

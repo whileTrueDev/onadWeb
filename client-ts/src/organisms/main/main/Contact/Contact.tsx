@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 import { Button, Typography } from '@material-ui/core';
 import styles from '../style/Contact.style';
 import Inquiry from '../Inquiry/Inquiry';
@@ -20,9 +21,7 @@ interface ContactProps {
   logout: () => void;
 }
 
-function Contact({
-  source, MainUserType, isLogin, logout
-}: ContactProps): JSX.Element {
+function Contact({ source, MainUserType, isLogin, logout }: ContactProps): JSX.Element {
   const classes = styles();
   const [loginValue, setLoginValue] = React.useState('');
 
@@ -46,13 +45,14 @@ function Contact({
       setOpen(false);
     }
     return {
-      open, isMarketer, handleOpen, handleClose,
+      open,
+      isMarketer,
+      handleOpen,
+      handleClose,
     };
   }
 
-  const {
-    open, handleOpen, handleClose
-  } = useDialog();
+  const { open, handleOpen, handleClose } = useDialog();
 
   return (
     <section className={classes.root}>
@@ -82,7 +82,7 @@ function Contact({
             </Typography>
           </Button>
 
-          { !isLogin ? (
+          {!isLogin ? (
             <Button
               className={MainUserType ? classes.button : classes.button2}
               onClick={() => handleDialogOpenClick(MainUserType ? 'marketer' : 'creator')}
@@ -92,10 +92,7 @@ function Contact({
               </Typography>
             </Button>
           ) : (
-            <Button
-              className={MainUserType ? classes.button : classes.button2}
-              onClick={logout}
-            >
+            <Button className={MainUserType ? classes.button : classes.button2} onClick={logout}>
               <Typography variant="h4" className={classes.bottomText} onClick={logout}>
                 로그아웃
               </Typography>
@@ -108,27 +105,24 @@ function Contact({
         onClose={handleClose}
         fullWidth
         maxWidth="md"
-        buttons={(
+        buttons={
           <div>
-            <Button onClick={handleClose}>
-              취소
-            </Button>
+            <Button onClick={handleClose}>취소</Button>
           </div>
-          )}
+        }
       >
-        { MainUserType
-          ? (<Inquiry confirmClose={handleClose} />)
-          : (<InquiryCreator confirmClose={handleClose} />)}
+        {MainUserType ? (
+          <Inquiry confirmClose={handleClose} />
+        ) : (
+          <InquiryCreator confirmClose={handleClose} />
+        )}
       </Dialog>
       <MarketerLoginForm
         open={loginValue === 'marketer'}
         handleClose={handleDialogClose}
         logout={logout}
       />
-      <CreatorLoginForm
-        open={loginValue === 'creator'}
-        handleClose={handleDialogClose}
-      />
+      <CreatorLoginForm open={loginValue === 'creator'} handleClose={handleDialogClose} />
     </section>
   );
 }

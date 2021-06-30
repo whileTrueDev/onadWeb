@@ -1,7 +1,5 @@
-import React from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts';
+import * as React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { useTheme } from '@material-ui/core/styles';
 
 interface ReChartBarProps<T> {
@@ -13,7 +11,9 @@ interface ReChartBarProps<T> {
   xAxisDataKey?: string;
   yAxisDataKey?: string;
   tooltipFormatter?: (
-    value: string | number | Array<string | number>, name: string) => React.ReactNode;
+    value: string | number | Array<string | number>,
+    name: string,
+  ) => React.ReactNode;
   tooltipLabelFormatter?: (label: string | number) => React.ReactNode;
   // legendFormatter?: (value: string | number | Array<string | number>) => string;
   nopreprocessing?: boolean;
@@ -30,9 +30,10 @@ export default function ReChartBar<DataType>({
   xAxisDataKey,
   yAxisDataKey,
   tooltipLabelFormatter = (label: string | number): string | number => label,
-  tooltipFormatter = (
-    value: string | number | Array<string | number>, name: string
-  ) => [value, name],
+  tooltipFormatter = (value: string | number | Array<string | number>, name: string) => [
+    value,
+    name,
+  ],
   // legendFormatter = (value: string | number | Array<string | number>): string => {
   //   if (value === 'cpm_amount') { return '배너광고'; } return '클릭광고';
   // },
@@ -48,7 +49,10 @@ export default function ReChartBar<DataType>({
         data={data}
         stackOffset="sign"
         margin={{
-          top: 20, right: 30, left: 20, bottom: 5
+          top: 20,
+          right: 30,
+          left: 20,
+          bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -60,19 +64,8 @@ export default function ReChartBar<DataType>({
           labelFormatter={tooltipLabelFormatter}
           formatter={tooltipFormatter}
         />
-        {legend && (
-        <Legend
-          iconType="circle"
-        />
-        )}
-        {dataKey
-            && (
-            <Bar
-              dataKey={dataKey}
-              stackId="a"
-              fill={theme.palette.primary.light}
-            />
-            )}
+        {legend && <Legend iconType="circle" />}
+        {dataKey && <Bar dataKey={dataKey} stackId="a" fill={theme.palette.primary.light} />}
       </BarChart>
     </div>
   );

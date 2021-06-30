@@ -1,4 +1,3 @@
-import React from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import ManualContents from '../../../organisms/mypage/shared/ManualContents';

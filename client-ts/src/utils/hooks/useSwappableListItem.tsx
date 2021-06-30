@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as React from 'react';
 
 export interface SwapableListItemResult<T> {
   items: T[];
-  handleChange: (idx: number, key: keyof T,) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (
+    idx: number,
+    key: keyof T,
+  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   addItem: (item: T) => void;
   removeItem: (targetIdx: number) => void;
   upItemPosition: (targetIdx: number) => void;
@@ -23,27 +26,27 @@ export default function useSwapableListItem<T = any>(
    * @returns {void}
    * @author hwasurr
    */
-  const handleChange = (idx: number, key: keyof T,) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    e.persist(); // Because of event pooling by React
-    // This is documentations of event pooling
-    // React SyntheticEvent => https://ko.reactjs.org/docs/events.html
-    // React Event Pooling https://ko.reactjs.org/docs/legacy-event-pooling.html
-    setItems((prev) => {
-      const tmp = [...prev];
-      const changed = { ...tmp[idx], [key]: e.target.value };
-      tmp[idx] = changed;
-      return tmp;
-    });
-  };
+  const handleChange =
+    (idx: number, key: keyof T) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+      e.persist(); // Because of event pooling by React
+      // This is documentations of event pooling
+      // React SyntheticEvent => https://ko.reactjs.org/docs/events.html
+      // React Event Pooling https://ko.reactjs.org/docs/legacy-event-pooling.html
+      setItems(prev => {
+        const tmp = [...prev];
+        const changed = { ...tmp[idx], [key]: e.target.value };
+        tmp[idx] = changed;
+        return tmp;
+      });
+    };
 
   /**
    * 목록에 아이템을 추가합니다
    * @param item 추가할 Item
    */
   function addItem(item: T): void {
-    setItems((prev) => prev.concat(item));
+    setItems(prev => prev.concat(item));
   }
 
   /**
@@ -51,7 +54,7 @@ export default function useSwapableListItem<T = any>(
    * @param targetIdx 삭제할 목표의 인덱스
    */
   function removeItem(targetIdx: number): void {
-    setItems((prev) => prev.filter((_, idx) => idx !== targetIdx));
+    setItems(prev => prev.filter((_, idx) => idx !== targetIdx));
   }
 
   /**
@@ -91,9 +94,9 @@ export default function useSwapableListItem<T = any>(
    * @returns {boolean}
    */
   function checkItemsEmpty(): boolean {
-    const filtered = items.filter((item) => {
+    const filtered = items.filter(item => {
       let isEmpty = false;
-      Object.keys(item).forEach((key) => {
+      Object.keys(item).forEach(key => {
         if (!item[key as keyof T]) isEmpty = true;
       });
       if (isEmpty) return false;

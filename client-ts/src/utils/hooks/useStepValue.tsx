@@ -23,6 +23,10 @@ export default function useStepValue(defaultStep = 0): UseStepValueResult {
   }
 
   return {
-    step, handleNext, handleBack, handleReset, handleJump
+    step,
+    handleNext,
+    handleBack,
+    handleReset,
+    handleJump,
   };
 }

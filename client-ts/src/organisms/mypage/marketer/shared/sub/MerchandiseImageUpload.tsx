@@ -1,12 +1,11 @@
 import classnames from 'classnames';
-import {
-  Button, Chip, Dialog, makeStyles, Typography
-} from '@material-ui/core';
-import React, { useRef, useState } from 'react';
+import { Button, Chip, Dialog, makeStyles, Typography } from '@material-ui/core';
+import { useRef, useState } from 'react';
+import * as React from 'react';
 import { useDialog } from '../../../../../utils/hooks';
 import { MerchandiseImage } from '../../adManage/interface';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   uploadImageList: {
     maxWidth: '100%',
   },
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1, 1, 1, 0),
   },
   rightSpace: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   previewTitle: {
     padding: theme.spacing(2),
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   previewButtonSet: {
     textAlign: 'right',
     marginBottom: theme.spacing(1),
-  }
+  },
 }));
 
 export interface MerchandiseImageUploadProps {
@@ -32,22 +31,26 @@ export interface MerchandiseImageUploadProps {
   limitMb?: number;
 }
 export default function MerchandiseImageUpload({
-  images, onImageUpload, onImageRemove, limitMb = 5,
+  images,
+  onImageUpload,
+  onImageRemove,
+  limitMb = 5,
 }: MerchandiseImageUploadProps): React.ReactElement {
   const classes = useStyles();
 
   const imagePreviewDialog = useDialog();
 
-  // 미리보기를 위한 선택된 이미지 변수 
+  // 미리보기를 위한 선택된 이미지 변수
   const [selectedImage, setSelectedImage] = useState<MerchandiseImage>();
   function handleSelectedImage(imageName: string): void {
-    const imageData = images.find((ima) => ima.imageName === imageName);
+    const imageData = images.find(ima => ima.imageName === imageName);
     if (imageData) {
       setSelectedImage(imageData);
     }
   }
 
   // 이미지 업로드 핸들러
+  // eslint-disable-next-line consistent-return
   const readImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length !== 0 && event.target.files.length < 5) {
       const uploadedImage = event.target.files[0];
@@ -78,7 +81,10 @@ export default function MerchandiseImageUpload({
           onImageUpload(imageData);
         }
       };
-      reader.onerror = (): void => alert('이미지를 읽는 과정에서 오류가 발생했습니다. 동일 현상이 지속되는 경우, support@onad.io에 문의 바랍니다.');
+      reader.onerror = (): void =>
+        alert(
+          '이미지를 읽는 과정에서 오류가 발생했습니다. 동일 현상이 지속되는 경우, support@onad.io에 문의 바랍니다.',
+        );
     }
   };
 
@@ -90,7 +96,6 @@ export default function MerchandiseImageUpload({
       uploadInputRef.current.value = '';
     }
   }
-
 
   return (
     <div>
@@ -109,7 +114,8 @@ export default function MerchandiseImageUpload({
 
       <div className={classes.uploadImageList}>
         {images
-          .map((image) => image.imageName).map((name) => (
+          .map(image => image.imageName)
+          .map(name => (
             <div key={name} className={classes.chipContainer}>
               <Chip label={name} className={classes.rightSpace} />
               <Button
@@ -138,34 +144,35 @@ export default function MerchandiseImageUpload({
 
       {/* 사진 미리보기 */}
       {selectedImage && (
-      <Dialog maxWidth="xs" fullWidth open={imagePreviewDialog.open} onClose={imagePreviewDialog.handleClose}>
-        <div>
-          <div className={classes.previewTitle} style={{ padding: 16 }}>
-            <Typography>{selectedImage.imageName}</Typography>
-          </div>
-          <img src={selectedImage.imageBase64} alt="selectedImage.imageName" width="100%" />
+        <Dialog
+          maxWidth="xs"
+          fullWidth
+          open={imagePreviewDialog.open}
+          onClose={imagePreviewDialog.handleClose}
+        >
+          <div>
+            <div className={classes.previewTitle} style={{ padding: 16 }}>
+              <Typography>{selectedImage.imageName}</Typography>
+            </div>
+            <img src={selectedImage.imageBase64} alt="selectedImage.imageName" width="100%" />
 
-          <div className={classnames(classes.rightSpace, classes.previewButtonSet)}>
-            <Button
-              variant="contained"
-              onClick={(): void => {
-                onImageRemove(selectedImage.imageName);
-                imagePreviewDialog.handleClose();
-              }}
-              className={classes.rightSpace}
-            >
-              사진 제거
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={imagePreviewDialog.handleClose}
-            >
-              확인
-            </Button>
+            <div className={classnames(classes.rightSpace, classes.previewButtonSet)}>
+              <Button
+                variant="contained"
+                onClick={(): void => {
+                  onImageRemove(selectedImage.imageName);
+                  imagePreviewDialog.handleClose();
+                }}
+                className={classes.rightSpace}
+              >
+                사진 제거
+              </Button>
+              <Button variant="contained" color="primary" onClick={imagePreviewDialog.handleClose}>
+                확인
+              </Button>
+            </div>
           </div>
-        </div>
-      </Dialog>
+        </Dialog>
       )}
     </div>
   );

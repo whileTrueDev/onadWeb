@@ -1,6 +1,6 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.common.white,
     width: '100%',
@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
   blank: {
     [theme.breakpoints.up('xs')]: {
       width: 48,
-      height: 48
-    }
+      height: 48,
+    },
   },
   toolbar: {
     display: 'flex',
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    padding: theme.spacing(0, 0)
+    padding: theme.spacing(0, 0),
   },
   logo: {
     marginTop: theme.spacing(0.5),
@@ -94,8 +94,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: theme.spacing(1)
-  }
+    padding: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

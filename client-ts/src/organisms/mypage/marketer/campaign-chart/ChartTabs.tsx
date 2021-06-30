@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -6,7 +6,7 @@ import Tab from '@material-ui/core/Tab';
 const useStyles = makeStyles(() => ({
   wrapper: { alignItems: 'start' },
   labelIcon: { display: 'flex' },
-  tab: { minWidth: 0, fontSize: 17 }
+  tab: { minWidth: 0, fontSize: 17 },
 }));
 
 interface ReportTabsProps {
@@ -27,11 +27,7 @@ export default function ReportTabs(props: ReportTabsProps): JSX.Element {
       scrollButtons="auto"
       aria-label="scrollable auto tabs example"
     >
-      <Tab
-        className={classes.tab}
-        label="비용"
-        classes={{ wrapper: classes.wrapper }}
-      />
+      <Tab className={classes.tab} label="비용" classes={{ wrapper: classes.wrapper }} />
       <Tab
         className={classes.tab}
         label="송출방송인"

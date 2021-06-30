@@ -69,10 +69,11 @@ export class LandingUrlService {
     marketerId: string,
     landingUrlId: string,
   ): Promise<Pick<Campaign, 'campaignId'>[]> {
-    return this.campaignRepo.find({
-      select: ['campaignId'],
+    const campaigns = await this.campaignRepo.find({
       where: { connectedLinkId: landingUrlId, marketerId, deletedState: 0 },
     });
+
+    return campaigns.map(x => ({ campaignId: x.campaignId }));
   }
 
   // *************************************

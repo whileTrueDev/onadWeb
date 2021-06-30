@@ -1,5 +1,4 @@
-import React from 'react';
-import shortid from 'shortid';
+import { nanoid } from 'nanoid';
 // core ../../../atoms
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -13,7 +12,7 @@ import CardHeader from '../../../atoms/Card/CardHeader';
 import CardBody from '../../../atoms/Card/CardBody';
 import { ManualSelect } from './ManualTypes';
 
-const useButtonStyle = makeStyles((theme) => ({
+const useButtonStyle = makeStyles(theme => ({
   root: {
     background: theme.palette.background.paper,
     borderRadius: 3,
@@ -50,8 +49,8 @@ const ManualSelector = ({
 
       <CardBody>
         <Stepper orientation="vertical" activeStep={activeStep ? activeStep - 1 : undefined}>
-          { sources.map((source, index) => (
-            <Step key={shortid.generate()}>
+          {sources.map((source, index) => (
+            <Step key={nanoid()}>
               <StepLabel>
                 <Button
                   onClick={(): void => handleButton(index + 1)}
@@ -67,10 +66,8 @@ const ManualSelector = ({
               </StepLabel>
             </Step>
           ))}
-
         </Stepper>
       </CardBody>
-
     </Card>
   );
 };

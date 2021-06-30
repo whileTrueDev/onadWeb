@@ -35,6 +35,9 @@ export default makeStyles((theme: Theme) => ({
     },
   },
   loading: {
-    height: 200, paddingLeft: theme.spacing(8), display: 'flex', alignItems: 'center'
-  }
+    height: 200,
+    paddingLeft: theme.spacing(8),
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));

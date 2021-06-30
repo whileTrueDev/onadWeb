@@ -31,24 +31,24 @@ export interface StateInterface {
   totalDebit: number;
 }
 
-export type Action = {
-  key: 'currentCash';
-  value: number;
-} |
-{
-  key: 'selectValue';
-  value: string;
-} |
-{
-  key: 'checked';
-  value: boolean;
-} |
-{
-  key: 'totalDebit';
-  value: number;
-} |
-{ key: 'reset' }
-
+export type Action =
+  | {
+      key: 'currentCash';
+      value: number;
+    }
+  | {
+      key: 'selectValue';
+      value: string;
+    }
+  | {
+      key: 'checked';
+      value: boolean;
+    }
+  | {
+      key: 'totalDebit';
+      value: number;
+    }
+  | { key: 'reset' };
 
 // key ,value를 이용하여 state의 값에 접근
 export const stepReducer = (state: StateInterface, action: Action): StateInterface => {
@@ -82,21 +82,25 @@ export interface ChargeInterface {
 }
 
 export type ChargeAction =
-  {
-    key: 'currentCash'; value: string;
-  } |
-  {
-    key: 'selectValue'; value: string;
-  } |
-  {
-    key: 'totalDebit'; value: string;
-  } |
-  {
-    key: 'chargeType'; value: string;
-  } |
-  {
-    key: 'reset';
-  }
+  | {
+      key: 'currentCash';
+      value: string;
+    }
+  | {
+      key: 'selectValue';
+      value: string;
+    }
+  | {
+      key: 'totalDebit';
+      value: string;
+    }
+  | {
+      key: 'chargeType';
+      value: string;
+    }
+  | {
+      key: 'reset';
+    };
 
 // key ,value를 이용하여 state의 값에 접근
 export const chargeReducer = (state: ChargeInterface, action: ChargeAction) => {
@@ -122,7 +126,6 @@ export const chargeReducer = (state: ChargeInterface, action: ChargeAction) => {
   }
 };
 
-
 export interface VbankInterface {
   vbankNum: string;
   vbankHolder: string;
@@ -130,7 +133,6 @@ export interface VbankInterface {
   vbanDate: string;
   vbankAmount: string;
 }
-
 
 export interface MarketerSalesIncome {
   id: number;

@@ -1,20 +1,17 @@
-import React from 'react';
 import classnames from 'classnames';
-import {
-  CircularProgress,
-  Input, makeStyles, Paper, Typography
-} from '@material-ui/core';
+import { CircularProgress, Input, makeStyles, Paper, Typography } from '@material-ui/core';
 import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 import { useGetRequest } from '../../../../../utils/hooks';
-import { ContractionDataType } from '../../../../../pages/mypage/creator/CPAManage';
+import { ContractionDataType } from '../StartGuideCard';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   bannerImg: {
-    width: '100%', border: `1px solid ${theme.palette.divider}`,
+    width: '100%',
+    border: `1px solid ${theme.palette.divider}`,
   },
-  horizontal: { maxWidth: 320, },
+  horizontal: { maxWidth: 320 },
   vertical: { maxWidth: 80 },
 }));
 
@@ -23,7 +20,8 @@ export interface SetClickAdSectionnProps {
   handleSnackOpen: () => void;
 }
 export default function SetClickAdSection({
-  handleSnackOpen, contractionData
+  handleSnackOpen,
+  contractionData,
 }: SetClickAdSectionnProps): JSX.Element {
   const classes = useStyles();
   // Landing url
@@ -38,7 +36,9 @@ export default function SetClickAdSection({
 
         <br />
         <Typography>클릭광고는 클릭할 수 있는 패널의 형태입니다.</Typography>
-        <Typography style={{ fontWeight: 'bold' }}>아프리카TV의 경우 방송국 내 플로팅배너에, 트위치의 경우 방송화면 하단 패널에 설정합니다.</Typography>
+        <Typography style={{ fontWeight: 'bold' }}>
+          아프리카TV의 경우 방송국 내 플로팅배너에, 트위치의 경우 방송화면 하단 패널에 설정합니다.
+        </Typography>
 
         <br />
         <Typography>방송국/채널에 패널을 생성한 뒤,</Typography>
@@ -46,45 +46,57 @@ export default function SetClickAdSection({
 
         {/* 트위치 클릭광고 주소 */}
         {contractionData.creatorTwitchOriginalId && (
-        <div style={{ margin: 32 }}>
-          <Paper
-            style={{
-              padding: 16, marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between'
-            }}
-          >
-            <Typography style={{ marginRight: 8, fontWeight: 'bold' }}>
-              <img alt="" height={25} src="/pngs/logo/twitch/TwitchGlitchPurple.png" style={{ marginRight: 8 }} />
-              트위치 클릭광고 URL
-            </Typography>
-            {landingUrlGet.loading && (<CircularProgress />)}
-            {!landingUrlGet.loading && landingUrlGet.data && (
-            <Input
-              style={{ maxWidth: 300, marginRight: 16 }}
-              id="ad-page-url"
-              value={contractionData.creatorContractionAgreement === 1
-                ? landingUrlGet.data.url : '[온애드 이용 동의] 가 필요합니다.'}
-              disabled={!contractionData.creatorContractionAgreement}
-              readOnly
-              fullWidth
-            />
-            )}
-            <div>
-              <Button
-                color="primary"
-                onClick={(e): void => {
-                  copyToClipboard(e, 'ad-page-url', () => {
-                    handleSnackOpen();
-                  });
-                }}
-                disabled={contractionData.creatorContractionAgreement !== 1}
-                size="small"
-              >
-                <InsertLinkOutlined />
-                주소 복사
-              </Button>
-            </div>
-          </Paper>
-        </div>
+          <div style={{ margin: 32 }}>
+            <Paper
+              style={{
+                padding: 16,
+                marginTop: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography style={{ marginRight: 8, fontWeight: 'bold' }}>
+                <img
+                  alt=""
+                  height={25}
+                  src="/pngs/logo/twitch/TwitchGlitchPurple.png"
+                  style={{ marginRight: 8 }}
+                />
+                트위치 클릭광고 URL
+              </Typography>
+              {landingUrlGet.loading && <CircularProgress />}
+              {!landingUrlGet.loading && landingUrlGet.data && (
+                <Input
+                  style={{ maxWidth: 300, marginRight: 16 }}
+                  id="ad-page-url"
+                  value={
+                    contractionData.creatorContractionAgreement === 1
+                      ? landingUrlGet.data.url
+                      : '[온애드 이용 동의] 가 필요합니다.'
+                  }
+                  disabled={!contractionData.creatorContractionAgreement}
+                  readOnly
+                  fullWidth
+                />
+              )}
+              <div>
+                <Button
+                  color="primary"
+                  onClick={(e): void => {
+                    copyToClipboard(e, 'ad-page-url', () => {
+                      handleSnackOpen();
+                    });
+                  }}
+                  disabled={contractionData.creatorContractionAgreement !== 1}
+                  size="small"
+                >
+                  <InsertLinkOutlined />
+                  주소 복사
+                </Button>
+              </div>
+            </Paper>
+          </div>
         )}
 
         {/* 아프리카 클릭광고 주소 */}
@@ -92,24 +104,36 @@ export default function SetClickAdSection({
           <div style={{ margin: 32 }}>
             <Paper
               style={{
-                padding: 16, marginTop: 8, display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                padding: 16,
+                marginTop: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
               <Typography style={{ marginRight: 8, fontWeight: 'bold' }}>
-                <img alt="" height={25} src="/pngs/logo/afreeca/onlyFace.png" style={{ marginRight: 8 }} />
+                <img
+                  alt=""
+                  height={25}
+                  src="/pngs/logo/afreeca/onlyFace.png"
+                  style={{ marginRight: 8 }}
+                />
                 아프리카TV 클릭광고 URL
               </Typography>
-              {afreecaLandingUrlGet.loading && (<CircularProgress />)}
+              {afreecaLandingUrlGet.loading && <CircularProgress />}
               {!afreecaLandingUrlGet.loading && afreecaLandingUrlGet.data && (
-              <Input
-                style={{ maxWidth: 300, marginRight: 16 }}
-                id="ad-page-afreeca-url"
-                value={contractionData.creatorContractionAgreement === 1
-                  ? afreecaLandingUrlGet.data.url : '[온애드 이용 동의] 가 필요합니다.'}
-                disabled={!contractionData.creatorContractionAgreement}
-                readOnly
-                fullWidth
-              />
+                <Input
+                  style={{ maxWidth: 300, marginRight: 16 }}
+                  id="ad-page-afreeca-url"
+                  value={
+                    contractionData.creatorContractionAgreement === 1
+                      ? afreecaLandingUrlGet.data.url
+                      : '[온애드 이용 동의] 가 필요합니다.'
+                  }
+                  disabled={!contractionData.creatorContractionAgreement}
+                  readOnly
+                  fullWidth
+                />
               )}
               <div>
                 <Button
@@ -122,7 +146,7 @@ export default function SetClickAdSection({
                   size="small"
                 >
                   <InsertLinkOutlined />
-                주소 복사
+                  주소 복사
                 </Button>
               </div>
             </Paper>
@@ -131,11 +155,20 @@ export default function SetClickAdSection({
 
         {(contractionData.creatorTwitchOriginalId || contractionData.afreecaId) && (
           <>
-            <Typography>온애드에서는 기본으로 다음과 같은 패널 이미지를 제공해 드립니다.</Typography>
-            <Typography variant="body2" color="textSecondary">*이미지는 클릭시 곧바로 다운로드됩니다.</Typography>
-            <div style={{
-              margin: 32, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'
-            }}
+            <Typography>
+              온애드에서는 기본으로 다음과 같은 패널 이미지를 제공해 드립니다.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              *이미지는 클릭시 곧바로 다운로드됩니다.
+            </Typography>
+            <div
+              style={{
+                margin: 32,
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
             >
               {contractionData.creatorTwitchOriginalId && (
                 <>
@@ -153,7 +186,10 @@ export default function SetClickAdSection({
               {contractionData.afreecaId && (
                 <>
                   <br />
-                  <a href="/pngs/landing/아프리카_플로팅배너.png" download="온애드_아프리카_플로팅배너">
+                  <a
+                    href="/pngs/landing/아프리카_플로팅배너.png"
+                    download="온애드_아프리카_플로팅배너"
+                  >
                     <img
                       src="/pngs/landing/아프리카_플로팅배너.png"
                       alt="온애드_아프리카_플로팅배너"

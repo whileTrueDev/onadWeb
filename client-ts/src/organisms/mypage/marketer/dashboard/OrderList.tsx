@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import OrderInventory from '../shared/merchandiseOrder/OrderInventory';
@@ -8,9 +8,7 @@ export default function OrderList(): React.ReactElement {
   return (
     <Paper style={{ minHeight: 220 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: 16 }}>
-        <Typography variant="h6">
-          상품 주문 현황
-        </Typography>
+        <Typography variant="h6">상품 주문 현황</Typography>
 
         <Button
           variant="outlined"
@@ -25,7 +23,6 @@ export default function OrderList(): React.ReactElement {
       </div>
 
       <OrderInventory by="marketer" height={345} withoutTitle />
-
     </Paper>
   );
 }

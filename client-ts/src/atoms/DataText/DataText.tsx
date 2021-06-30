@@ -1,18 +1,18 @@
 import classnames from 'classnames';
 import { makeStyles, Typography } from '@material-ui/core';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import React from 'react';
+import * as React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dataText: {
-    margin: theme.spacing(0.5, 0)
+    margin: theme.spacing(0.5, 0),
   },
   bold: {
     fontWeight: 'bold',
   },
   success: {
-    color: theme.palette.success.dark
-  }
+    color: theme.palette.success.dark,
+  },
 }));
 
 interface DataTextProps {
@@ -38,9 +38,9 @@ export default function DataText({
             fontSize="small"
             color={iconColor !== 'success' ? iconColor : 'action'}
             className={classnames({
-              [classes.success]: iconColor === 'success'
+              [classes.success]: iconColor === 'success',
             })}
-            style={{ verticalAlign: 'middle', }}
+            style={{ verticalAlign: 'middle' }}
           />
         ) : null}
         {name}

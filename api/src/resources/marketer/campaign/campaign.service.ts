@@ -92,6 +92,10 @@ export class CampaignService {
             campaignId,
           });
         }
+
+        if (dto.priorityType === CampaignPriorityType.무관송출) {
+          await this.insertCampaignTargetsAnything(queryRunner, campaignId);
+        }
         return campaignObj;
       },
       { errorMessage: `An error occurred during create campaign (${marketerId}) - ` },
@@ -153,7 +157,7 @@ export class CampaignService {
 
   // * 캠페인 이름 목록 반환 - 캠페인 이름 중복 확인을 위해
   async findNames(): Promise<string[]> {
-    const result = await this.campaignRepo.find({ select: ['campaignName'] });
+    const result = await this.campaignRepo.find();
     return result.map(c => c.campaignName);
   }
 
@@ -230,69 +234,113 @@ export class CampaignService {
     }
 
     // * "특정 카테고리 송출" 의 경우
-    // 요청된 카테고리들에 대한 기존 categoryCampaign 데이터 가져오기
-    const categoryCampaigns = await this.categoryCampaignRepo.find({
-      where: { categoryName: In(priorityList) },
-    });
-    const needInsertCategories: string[] = []; // 카테고리 송출로 선택된 기록이 없어 Insert 필요한 카테고리
-    const needUpdateCategories: CategoryCampaign[] = []; // 이전에 카테고리 송출로 선택된 기록이 있어 Update 필요한 카테고리
-    priorityList.forEach(categoryName => {
-      const item = categoryCampaigns.find(cc => cc.categoryName === categoryName);
-      if (!item) {
-        needInsertCategories.push(categoryName);
-      } else {
-        needUpdateCategories.push(item);
-      }
-    });
+    if (
+      priorityType === CampaignPriorityType.특정아프리카카테고리송출 ||
+      priorityType === CampaignPriorityType.특정트위치카테고리송출
+    ) {
+      const needUpdateCategories: CategoryCampaign[] = []; // 이전에 카테고리 송출로 선택된 기록이 있어 Update 필요한 카테고리
+      // * "특정 카테고리 송출" - 아프리카 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
+      if (priorityType === CampaignPriorityType.특정아프리카카테고리송출) {
+        // 요청된 카테고리이름들에 대한 categoryId 또는 gameId 가져오기
+        const afreecaCategories = await this.afreecaCategoryRepo.find({
+          where: { categoryNameKr: In(priorityList) },
+        });
 
-    // * "특정 카테고리 송출" - 아프리카 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
-    if (priorityType === CampaignPriorityType.특정아프리카카테고리송출) {
-      // 요청된 카테고리이름들에 대한 categoryId 또는 gameId 가져오기
-      const afreecaCategories = await this.afreecaCategoryRepo.find({
-        where: { categoryNameKr: In(priorityList) },
-      });
-      await this.categoryCampaignRepo.insertCategoryCampaign(
-        needInsertCategories.map(categoryName => ({
-          categoryId: afreecaCategories.find(x => x.categoryNameKr === categoryName).categoryId,
-          categoryName,
-          campaignList: JSON.stringify({ campaignList: [campaignId] }),
-          state: 0,
-          platform: 'afreeca',
-          emoji: '',
-        })),
-        queryRunner,
-      );
-    }
+        // 요청된 카테고리들에 대한 기존 categoryCampaign 데이터 가져오기
+        const categoryCampaigns = await this.categoryCampaignRepo.find({
+          where: { categoryId: In(afreecaCategories.map(x => x.categoryId)) },
+        });
 
-    // * "특정 카테고리 송출" - 트위치 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
-    if (priorityType === CampaignPriorityType.특정트위치카테고리송출) {
-      const twitchCategory = await this.twitchGameRepo.find({
-        where: { gameName: In(priorityList) },
-      });
-      await this.categoryCampaignRepo.insertCategoryCampaign(
-        needInsertCategories.map(categoryName => ({
-          categoryId: twitchCategory.find(x => x.gameName === categoryName).gameId,
-          categoryName,
-          campaignList: JSON.stringify({ campaignList: [campaignId] }),
-          state: 0,
-          platform: 'twitch',
-          emoji: '',
-        })),
-        queryRunner,
-      );
-    }
+        const needInsertCategories: AfreecaCategory[] = []; // 카테고리 송출로 선택된 기록이 없어 Insert 필요한 카테고리
+        afreecaCategories.forEach(afcategory => {
+          const item = categoryCampaigns.find(cc => cc.categoryId === afcategory.categoryId);
+          if (!item) {
+            needInsertCategories.push(afcategory);
+          } else {
+            needUpdateCategories.push(item);
+          }
+        });
 
-    // * 기존 categoryCampaign 목록에 있는 경우
-    await Promise.all(
-      needUpdateCategories.map(categoryCampaign => {
-        const campaignListJson = JSON.parse(categoryCampaign.campaignList);
-        campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
-        return this.categoryCampaignRepo.updateCategoryCampaign(
-          JSON.stringify(campaignListJson),
-          categoryCampaign.categoryName,
+        await this.categoryCampaignRepo.insertCategoryCampaign(
+          needInsertCategories.map(afcategory => ({
+            categoryId: afcategory.categoryId,
+            categoryName: afcategory.categoryNameKr,
+            campaignList: JSON.stringify({ campaignList: [campaignId] }),
+            state: 0,
+            platform: 'afreeca',
+            emoji: '',
+          })),
           queryRunner,
         );
-      }),
+      }
+
+      // * "특정 카테고리 송출" - 트위치 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
+      if (priorityType === CampaignPriorityType.특정트위치카테고리송출) {
+        const twitchCategories = await this.twitchGameRepo.find({
+          where: { gameName: In(priorityList) },
+        });
+
+        // 요청된 카테고리들에 대한 기존 categoryCampaign 데이터 가져오기
+        const categoryCampaigns = await this.categoryCampaignRepo.find({
+          where: { categoryId: In(twitchCategories.map(x => x.gameId)) },
+        });
+
+        const needInsertCategories: TwitchGame[] = []; // 카테고리 송출로 선택된 기록이 없어 Insert 필요한 카테고리
+        twitchCategories.forEach(twitchCate => {
+          const item = categoryCampaigns.find(cc => cc.categoryId === twitchCate.gameId);
+          if (!item) {
+            needInsertCategories.push(twitchCate);
+          } else {
+            needUpdateCategories.push(item);
+          }
+        });
+
+        await this.categoryCampaignRepo.insertCategoryCampaign(
+          needInsertCategories.map(twitchCate => ({
+            categoryId: twitchCate.gameId,
+            categoryName: twitchCate.gameNameKr || twitchCate.gameName,
+            campaignList: JSON.stringify({ campaignList: [campaignId] }),
+            state: 0,
+            platform: 'twitch',
+            emoji: '',
+          })),
+          queryRunner,
+        );
+      }
+
+      // * 기존 categoryCampaign 목록에 있는 경우
+      await Promise.all(
+        needUpdateCategories.map(categoryCampaign => {
+          const campaignListJson = JSON.parse(categoryCampaign.campaignList);
+          campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
+          return this.categoryCampaignRepo.updateCategoryCampaign(
+            JSON.stringify(campaignListJson),
+            categoryCampaign.categoryName,
+            queryRunner,
+          );
+        }),
+      );
+    }
+  }
+
+  /**
+   * 무관 송출의 경우 categoryCampaign의 "14,무관송출" 에 추가되어야 하므로, 해당 작업 실행
+   */
+  private async insertCampaignTargetsAnything(queryRunner: QueryRunner, campaignId: string) {
+    const ANYTHING_CATEGORY_NAME = '무관';
+    const ANYTHING_CATEGORY_ID = 14;
+
+    const anythingCategory = await this.categoryCampaignRepo.findOne({
+      where: { categoryId: ANYTHING_CATEGORY_ID, categoryName: ANYTHING_CATEGORY_NAME },
+    });
+
+    const campaignListJson = JSON.parse(anythingCategory.campaignList);
+    campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
+
+    return this.categoryCampaignRepo.updateCategoryCampaign(
+      JSON.stringify(campaignListJson),
+      ANYTHING_CATEGORY_NAME,
+      queryRunner,
     );
   }
 }

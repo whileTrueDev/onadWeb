@@ -1,4 +1,3 @@
-import React from 'react';
 import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -16,7 +15,7 @@ interface WithdrawalConfirmProps {
 const WithdrawalConfirm = ({
   state,
   accountNumber,
-  realName
+  realName,
 }: WithdrawalConfirmProps): JSX.Element => {
   const classes = useWithdrawalConfirmStyles();
   const { selectValue, totalIncome } = state;
@@ -57,13 +56,15 @@ const WithdrawalConfirm = ({
         <Grid item>
           <Grid container direction="row" justify="space-between">
             <Grid item>
-              <StyledSelectText primary="실입금될 금액" secondary="소득세 제함" className={classes.contentTitle} />
+              <StyledSelectText
+                primary="실입금될 금액"
+                secondary="소득세 제함"
+                className={classes.contentTitle}
+              />
             </Grid>
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.contentTitle} variant="h6">
-                {parseInt(String(Number(selectValue) * 0.967), 10)}
-                {' '}
-                원
+                {parseInt(String(Number(selectValue) * 0.967), 10)} 원
               </Typography>
             </Grid>
           </Grid>
@@ -79,13 +80,7 @@ const WithdrawalConfirm = ({
             <Grid item className={classes.contentTitle}>
               <Typography className={classes.newContentTitle} variant="h6">
                 &#45;
-                {selectValue}
-                {' '}
-                &rarr;
-                {' '}
-                {totalIncome}
-                {' '}
-                원
+                {selectValue} &rarr;{totalIncome} 원
               </Typography>
             </Grid>
           </Grid>

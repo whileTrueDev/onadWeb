@@ -1,16 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import classnames from 'classnames';
-import {
-  Avatar,
-  Button,
-  CircularProgress,
-  makeStyles,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Button, CircularProgress, makeStyles, Typography } from '@material-ui/core';
 import { CameraAlt } from '@material-ui/icons';
 import { useDialog } from '../../utils/hooks';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   avatarButton: {
     margin: theme.spacing(1, 2, 1, 0),
   },
@@ -26,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   avatarBackdrop: {
     width: '100%',
@@ -39,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   backdropText: {
     color: theme.palette.common.white,
-  }
+  },
 }));
 
 export interface EditableAvatarProps {
@@ -72,11 +66,7 @@ export default function EditableAvatar({
       {!changeLoading ? (
         <Avatar
           variant="circular"
-          className={classnames(
-            classes.avatar,
-            avatarClassName,
-            { [classes.small]: small }
-          )}
+          className={classnames(classes.avatar, avatarClassName, { [classes.small]: small })}
           src={changeLoading ? '' : src}
         />
       ) : (
@@ -84,15 +74,8 @@ export default function EditableAvatar({
           <CircularProgress />
         </Avatar>
       )}
-      <input
-        type="file"
-        accept="image/jpeg,image/png"
-        tabIndex={-1}
-        hidden
-      />
-      {isAvatarHover.open && (
-        <div className={classes.avatarBackgroundOnHover} />
-      )}
+      <input type="file" accept="image/jpeg,image/png" tabIndex={-1} hidden />
+      {isAvatarHover.open && <div className={classes.avatarBackgroundOnHover} />}
       {isAvatarHover.open && (
         <div
           className={classes.avatarBackdrop}

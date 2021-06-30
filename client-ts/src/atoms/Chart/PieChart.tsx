@@ -1,4 +1,3 @@
-import React from 'react';
 import { Pie, ChartComponentProps } from 'react-chartjs-2';
 import chartTheme from './chartTheme';
 
@@ -16,10 +15,12 @@ export default function PieChart(props: PieChartProps): JSX.Element {
       redraw
       data={{
         labels,
-        datasets: [{
-          data,
-          backgroundColor: chartTheme.pie
-        }],
+        datasets: [
+          {
+            data,
+            backgroundColor: chartTheme.pie,
+          },
+        ],
       }}
     />
   );
