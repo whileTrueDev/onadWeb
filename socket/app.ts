@@ -44,7 +44,7 @@ app.get('/banner/:id', (req, res, next) => { // /banner/:id로 라우팅
 });
 
 // nodemon --expose-gc file_dir
-// 1분에 한 번마다 garbage collector
+// 20초에 한 번마다 garbage collector
 setInterval(function(){
   global.gc();
 }, 20000);
@@ -57,7 +57,6 @@ interface SocketInfo {
     const SOCKET_HOST = process.env.SOCKET_HOSTNAME;
     const socketInfo: SocketInfo = {};
     io.on('connection', (socket: Socket) => {
-      const roomInfo: {} = socket.adapter.rooms; // 현재 웹소켓에 접속중이 room들과 그 접속자들의 정보 얻음
       let SOCKET_ID: string = socket.id;
       const urlArray: Array<string> = Object.values(socketInfo);
 
