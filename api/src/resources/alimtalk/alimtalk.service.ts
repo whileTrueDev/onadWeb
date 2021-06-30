@@ -70,7 +70,6 @@ export class AlimtalkService {
     };
 
     const { marketerName, marketerPhoneNum } = await this.marketerInfoRepo.findOne({
-      select: ['marketerName', 'marketerPhoneNum'],
       where: { marketerId },
     });
     const phonenum = marketerPhoneNum.replace(/[^0-9]/g, '');

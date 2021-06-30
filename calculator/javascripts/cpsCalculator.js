@@ -61,7 +61,7 @@ const getLiveCommerceTargets = async () => {
   JOIN merchandiseOrdersDetail AS DETAIL ON MO.id = DETAIL.orderId
   WHERE statusString = ? AND calculateDoneFlag = ? AND isLiveCommerce = ?`;
 
-  const { result } = await doQuery(query, ['테스트', false, true]) // 실 구동시, "구매확정"
+  const { result } = await doQuery(query, ['구매확정', false, true]) // 실 구동시, "구매확정"
     .catch(err => `error occurred during run getTargets - ${err}`);
 
   return result.map(res => ({

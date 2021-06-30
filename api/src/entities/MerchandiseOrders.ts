@@ -134,9 +134,6 @@ export class MerchandiseOrders {
   )
   merchandiseOrderReleases: MerchandiseOrderRelease[];
 
-  @OneToOne(
-    () => MerchandiseOrdersDetail,
-    mod => mod.orderId,
-  )
+  @OneToOne(() => MerchandiseOrdersDetail, mod => mod.orderId)
   merchandiseOrderDetails: MerchandiseOrdersDetail[];
 }

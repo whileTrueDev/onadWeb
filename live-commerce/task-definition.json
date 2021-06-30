@@ -30,7 +30,32 @@
       "dnsServers": null,
       "mountPoints": [],
       "workingDirectory": null,
-      "secrets": [],
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_CHARSET",
+          "name": "DB_CHARSET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_HOST",
+          "name": "DB_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PASSWORD",
+          "name": "DB_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_PORT",
+          "name": "DB_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_USER",
+          "name": "DB_USER"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/DB_DATABASE",
+          "name": "DB_DATABASE"
+        }
+      ],
       "dockerSecurityOptions": null,
       "memory": null,
       "memoryReservation": 500,

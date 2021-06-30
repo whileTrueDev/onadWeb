@@ -49,8 +49,8 @@ const getCalculateCreatorIncome = ({ creatorId, cashToCreator }) => {
     INSERT INTO creatorIncome (creatorId, creatorTotalIncome, creatorReceivable)
     SELECT
       creatorId,
-      IFNULL(MAX(creatorTotalIncome), 0) + ? AS creatorTotalIncome,
-      IFNULL(MAX(creatorReceivable), 0) + ? AS creatorReceivable
+      IFNULL(creatorTotalIncome, 0) + ? AS creatorTotalIncome,
+      IFNULL(creatorReceivable, 0) + ? AS creatorReceivable
     FROM creatorIncome AS a WHERE creatorId = ? ORDER BY date DESC LIMIT 1
     `;
     const queryArray = [cashToCreator, cashToCreator, creatorIdStr];
@@ -69,10 +69,10 @@ const getCalculateMarketerSalesIncome = ({ marketerId, salesIncomeToMarketer, de
     INSERT INTO marketerSalesIncome (marketerId, totalIncome, receivable, totalDeliveryFee, receivableDeliveryFee) 
     SELECT
       marketerId,
-      IFNULL(MAX(totalIncome), 0) + ? AS totalIncome,
-      IFNULL(MAX(receivable), 0) + ? AS receivable,
-      IFNULL(MAX(totalDeliveryFee), 0) + ? AS totalDeliveryFee,
-      IFNULL(MAX(receivableDeliveryFee), 0) + ? AS receivableDeliveryFee
+      IFNULL(totalIncome, 0) + ? AS totalIncome,
+      IFNULL(receivable, 0) + ? AS receivable,
+      IFNULL(totalDeliveryFee, 0) + ? AS totalDeliveryFee,
+      IFNULL(receivableDeliveryFee, 0) + ? AS receivableDeliveryFee
     FROM marketerSalesIncome AS a WHERE marketerId = ? ORDER BY createDate DESC LIMIT 1`;
   const queryArray = [
     salesIncomeToMarketer,

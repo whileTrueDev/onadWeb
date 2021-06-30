@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { MarketerDebit } from '../../entities/MarketerDebit';
@@ -110,10 +110,11 @@ export class MarketerService {
    * @returns marketerInfo
    */
   async findMarketerId(dto: FindMarketerIdDto): Promise<Pick<MarketerInfo, 'marketerId'>> {
-    return this.marketerInfoRepo.findOne({
+    const data = await this.marketerInfoRepo.findOne({
       where: { marketerMail: dto.marketerMail, marketerName: dto.marketerName },
-      select: ['marketerId'],
     });
+
+    return { marketerId: data.marketerId };
   }
 
   /**
