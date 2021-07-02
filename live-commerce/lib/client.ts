@@ -23,14 +23,6 @@ setInterval(() => {
   $('.bottom-area-text').text(`${idArray[idx]}`)
   $('.bottom-area-text').css({ display: 'flex' });
   idx += 1;}
-  // if (idx >= idArray.length) {
-  //   idx = 0;
-  // }
-  // if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
-  //   $('.bottom-area-text').text(`${idArray[idx]}`)
-  //   $('.bottom-area-text').css({ display: 'flex' });
-  //   idx += 1;
-  // }
 }, 10000);
 
 // 우측상단 응원문구 이벤트
@@ -69,42 +61,6 @@ function getOS(): string|null {
 
   return os;
 }
-
-// function dailyMissionTimer(duration:number) {
-    
-//   let timer = duration * 60;
-//   let hours, minutes, seconds;
-  
-//   const interval = setInterval(function(){
-//       hours	= parseInt(String(timer / 3600), 10);
-//       minutes = parseInt(String(timer / 60 % 60), 10);
-//       seconds = parseInt(String(timer % 60), 10);
-  
-//       hours 	= hours < 10 ? "0" + hours : hours;
-//       minutes = minutes < 10 ? "0" + minutes : minutes;
-//       seconds = seconds < 10 ? "0" + seconds : seconds;
-  
-//       $('#time-hour').text(hours);
-//       $('#time-min').text(minutes);
-//       $('#time-sec').text(seconds);
-//       if (hours === '00' 
-//           && Number(minutes) < 5
-//           && !$('.bottom-timer').attr('class')?.includes('urgent')
-//       ) {
-//         $('.bottom-timer').addClass('urgent')
-//         $('.bottom-left-icon#clock').addClass('urgent')
-//       } else if (hours === '00' 
-//           && Number(minutes) < 10
-//           && !$('.bottom-timer').attr('class')?.includes('warning')
-//       ) {
-//         $('.bottom-timer').addClass('warning')
-//       } 
-//       if (--timer < 0) {
-//           timer = 0;
-//           clearInterval(interval);
-//       }
-//   }, 1000);
-// }
 
 function dailyMissionTimer (){ 
   setInterval(function(){
@@ -386,9 +342,9 @@ socket.on('clear screen', () => {
   $(document.body).fadeOut(1000);
 });
 
-socket.on('show virtual ad to client', async () => {
+socket.on('show virtual ad to client', () => {
   $('#virtual-ad-img').attr('src', "/public/images/yori-virtual-ad.gif")
-  await setTimeout(() => {
+  setTimeout(() => {
     $('#virtual-ad-img').attr('src', "/public/images/invisible.png")
   }, 8980);
 });
