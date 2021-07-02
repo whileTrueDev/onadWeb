@@ -1,19 +1,26 @@
-import { useState } from 'react';
-import * as React from 'react';
-import { Grid, TextField, Avatar, Typography, Paper } from '@material-ui/core';
+import { Avatar, Button, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import Button from '../../../../atoms/CustomButtons/Button';
+import React, { useState } from 'react';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
-
-import Contract from './Contract/Contract';
-import { ProfileDataType } from './ProfileData.type';
-import PasswordDialog from './ProfileChangeDIalog/PasswordDialog';
 import { useDialog } from '../../../../utils/hooks';
+import Contract from './Contract/Contract';
+import PasswordDialog from './ProfileChangeDIalog/PasswordDialog';
+import { ProfileDataType } from './ProfileData.type';
+import SignoutConfirmDialog from './SignoutConfirmDialog/SignoutConfirmDialog';
 
+const useStyles = makeStyles(() => ({
+  linkText: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+}));
 interface ProfileCardProps {
   profileData: ProfileDataType;
 }
 function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
+  const classes = useStyles();
   // ***************************************************
   // 계약서 보기
   const [ContractionOpen, setContractionOpen] = useState(false);
@@ -47,6 +54,10 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   // 비밀번호 변경 성공 알림 스낵바
   const successSnack = useDialog();
 
+  // ***************************************************
+  // 회원 탈퇴 확인 다이얼로그
+  const signoutConfirmDialog = useDialog();
+
   return (
     <>
       <Paper style={{ padding: 32, marginTop: 8 }}>
@@ -70,7 +81,12 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="비밀번호">
             <TextField InputProps={{ style: { padding: 0 } }} value="****" disabled />
-            <Button size="small" style={{ marginLeft: 16 }} onClick={passwordDialog.handleOpen}>
+            <Button
+              variant="outlined"
+              size="small"
+              style={{ marginLeft: 16 }}
+              onClick={passwordDialog.handleOpen}
+            >
               <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
               변경하기
             </Button>
@@ -84,12 +100,26 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
               InputProps={{ readOnly: true, style: { padding: 0 } }}
             />
             {profileData.creatorContractionAgreement === 1 && (
-              <Button size="small" style={{ marginLeft: 16 }} onClick={handleContractionOpen}>
+              <Button
+                variant="outlined"
+                size="small"
+                style={{ marginLeft: 16 }}
+                onClick={handleContractionOpen}
+              >
                 <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
                 이용약관 보기
               </Button>
             )}
           </TextFieldWithLabel>
+
+          <Typography
+            className={classes.linkText}
+            color="textSecondary"
+            variant="caption"
+            onClick={() => signoutConfirmDialog.handleOpen()}
+          >
+            회원 탈퇴
+          </Typography>
         </Grid>
       </Paper>
 
@@ -109,6 +139,12 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
       {/* 계약서 다이얼로그 */}
       <Contract open={ContractionOpen} handleClose={handleContractionClose} />
+
+      <SignoutConfirmDialog
+        open={signoutConfirmDialog.open}
+        onClose={signoutConfirmDialog.handleClose}
+        profileData={profileData}
+      />
     </>
   );
 }
