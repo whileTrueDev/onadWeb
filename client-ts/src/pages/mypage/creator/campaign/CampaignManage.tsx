@@ -2,27 +2,26 @@ import { Typography } from '@material-ui/core';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
-// hooks
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import useDialog from '../../../../utils/hooks/useDialog';
+import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
+import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
+import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import NowBroadCard, {
   CurrentBannerRes,
 } from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
-import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
-import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
-import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
-import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
-import StartGuideCard, {
-  ContractionDataType,
-} from '../../../../organisms/mypage/creator/shared/StartGuideCard';
-import OverlayUrlCard, {
-  OverlayUrlRes,
-} from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
-import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 import IncomeChart, {
   IncomeChartParams,
 } from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import { ProfileDataType } from '../../../../organisms/mypage/creator/Mypage/ProfileData.type';
+import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
+import OverlayUrlCard, {
+  OverlayUrlRes,
+} from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
+import useDialog from '../../../../utils/hooks/useDialog';
+// hooks
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 
 interface LanidngUrlRes {
   url: string;
@@ -51,7 +50,7 @@ const CampaignManage = (): JSX.Element => {
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 계약 정보 조회
-  const profileGet = useGetRequest<null, ContractionDataType>('/creator');
+  const profileGet = useGetRequest<null, ProfileDataType>('/creator');
   // 배너 송출 URL 정보 조회
   const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
 

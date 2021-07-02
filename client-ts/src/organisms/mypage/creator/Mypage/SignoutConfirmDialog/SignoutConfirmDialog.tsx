@@ -5,23 +5,23 @@ import { useHistory } from 'react-router-dom';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import { useDeleteRequest, useDialog, usePostRequest } from '../../../../../utils/hooks';
-import { ProfileDataType } from '../ProfileData.type';
+import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
 import PasswordConfirmDialog from './PasswordConfirmDialog';
 
 interface SignoutConfirmDialogProps {
   open: boolean;
   onClose: () => void;
-  profileData: ProfileDataType;
 }
 
 export default function SignoutConfirmDialog({
   open,
   onClose,
-  profileData,
 }: SignoutConfirmDialogProps): React.ReactElement {
   const history = useHistory();
+  const profile = useCreatorProfile();
   const signout = useDeleteRequest('/creator');
   const logout = usePostRequest('/logout');
+
   const checkPwDialog = useDialog();
   const failsnack = useDialog();
 
@@ -49,7 +49,7 @@ export default function SignoutConfirmDialog({
           <Box mr={1}>
             <Button
               onClick={checkPwDialog.handleOpen}
-              disabled={!!profileData.creatorTwitchOriginalId || !!profileData.afreecaId}
+              disabled={!!profile.data?.creatorTwitchOriginalId || !!profile.data?.afreecaId}
             >
               확인
             </Button>
@@ -64,7 +64,7 @@ export default function SignoutConfirmDialog({
         <Typography>회원탈퇴시 보유한 수익금은 모두 사라지며, 되돌릴 수 없습니다.</Typography>
       </Box>
 
-      {(!!profileData.creatorTwitchOriginalId || !!profileData.afreecaId) && (
+      {(!!profile.data?.creatorTwitchOriginalId || !!profile.data?.afreecaId) && (
         <Alert severity="error">
           플랫폼(트위치/아프리카) 연동되어 있는 경우 탈퇴가 불가능합니다.
         </Alert>

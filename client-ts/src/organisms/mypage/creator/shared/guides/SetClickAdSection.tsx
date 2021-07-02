@@ -4,7 +4,7 @@ import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 import { useGetRequest } from '../../../../../utils/hooks';
-import { ContractionDataType } from '../StartGuideCard';
+import { ProfileDataType } from '../../Mypage/ProfileData.type';
 
 const useStyles = makeStyles(theme => ({
   bannerImg: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface SetClickAdSectionnProps {
-  contractionData: ContractionDataType;
+  contractionData: ProfileDataType;
   handleSnackOpen: () => void;
 }
 export default function SetClickAdSection({

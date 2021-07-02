@@ -5,8 +5,6 @@ import { Check, Refresh } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
-
-import { ProfileDataType } from './ProfileData.type';
 import HOST from '../../../../config';
 import { OnadTheme } from '../../../../theme';
 import history from '../../../../history';
@@ -16,6 +14,8 @@ import axiosInstance from '../../../../utils/axios';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import openKakaoChat from '../../../../utils/openKakaoChat';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -31,15 +31,11 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
   },
 }));
 
-interface PlatformLinkCardProps {
-  profileData: ProfileDataType;
-  profileRefetch: () => void;
-}
-export default function PlatformLinkCard({
-  profileData,
-  profileRefetch,
-}: PlatformLinkCardProps): JSX.Element {
+export default function PlatformLinkCard(): JSX.Element {
   const classes = useStyles();
+
+  // 프로필 유저 데이터
+  const profile = useCreatorProfile();
 
   // **************************************************
   // 연동 에러 처리
@@ -78,7 +74,7 @@ export default function PlatformLinkCard({
       .then(res => {
         if (res.data) {
           afreecaCancelConfirmDialog.handleClose();
-          profileRefetch();
+          profile.refetch();
         }
       });
   }
@@ -97,7 +93,7 @@ export default function PlatformLinkCard({
       .then(res => {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
-          profileRefetch();
+          profile.refetch();
           linkDeleteSuccessSnack.handleOpen();
         }
       })
@@ -116,7 +112,7 @@ export default function PlatformLinkCard({
       .then(res => {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
-          profileRefetch();
+          profile.refetch();
           linkDeleteSuccessSnack.handleOpen();
         }
       })
@@ -125,6 +121,9 @@ export default function PlatformLinkCard({
         console.error(err);
       });
   }
+
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
 
   return (
     <Paper style={{ padding: 32 }}>
@@ -188,7 +187,7 @@ export default function PlatformLinkCard({
             src="/pngs/logo/twitch/TwitchGlitchPurple.png"
             style={{ marginRight: 16 }}
           />
-          {!profileData.creatorTwitchOriginalId ? (
+          {!profile.data?.creatorTwitchOriginalId ? (
             <Button
               variant="contained"
               size="small"
@@ -208,9 +207,11 @@ export default function PlatformLinkCard({
                 트위치 연동완료
                 <Check className={classes.success} />
               </Button>
-              <Typography style={{ marginLeft: 8 }}>
-                {`${profileData.creatorName}, ${profileData.creatorTwitchId}`}
-              </Typography>
+              {profile.data && (
+                <Typography style={{ marginLeft: 8 }}>
+                  {`${profile.data.creatorName}, ${profile.data.creatorTwitchId}`}
+                </Typography>
+              )}
               <Button
                 size="small"
                 variant="text"
@@ -230,7 +231,7 @@ export default function PlatformLinkCard({
             src="/pngs/logo/afreeca/onlyFace.png"
             style={{ marginRight: 16 }}
           />
-          {!profileData.afreecaId ? (
+          {!profile.data?.afreecaId ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button
                 variant="contained"
@@ -249,7 +250,7 @@ export default function PlatformLinkCard({
                     color="primary"
                     size="small"
                     onClick={(): void => {
-                      profileRefetch();
+                      profile.refetch();
                       afreecaLinkData.doGetRequest();
                     }}
                   >
@@ -277,9 +278,11 @@ export default function PlatformLinkCard({
                 아프리카TV 연동완료
                 <Check className={classes.success} />
               </Button>
-              <Typography style={{ marginLeft: 8 }}>
-                {`${profileData.afreecaName}, ${profileData.afreecaId}`}
-              </Typography>
+              {profile.data && (
+                <Typography style={{ marginLeft: 8 }}>
+                  {`${profile.data.afreecaName}, ${profile.data.afreecaId}`}
+                </Typography>
+              )}
               <Button
                 size="small"
                 variant="text"
@@ -324,7 +327,7 @@ export default function PlatformLinkCard({
       </CustomDialog>
 
       {/* 아프리카 연동 해제 확인 다이얼로그 */}
-      {profileData && profileData.afreecaId && (
+      {profile.data && profile.data.afreecaId && (
         <CustomDialog
           open={afreecaLinkDeleteDialog.open}
           onClose={afreecaLinkDeleteDialog.handleClose}
@@ -352,7 +355,7 @@ export default function PlatformLinkCard({
       )}
 
       {/* 트위치 연동 해제 확인 다이얼로그 */}
-      {profileData && profileData.creatorTwitchOriginalId && (
+      {profile.data && profile.data.creatorTwitchOriginalId && (
         <CustomDialog
           open={twitchLinkDeleteDialog.open}
           onClose={twitchLinkDeleteDialog.handleClose}

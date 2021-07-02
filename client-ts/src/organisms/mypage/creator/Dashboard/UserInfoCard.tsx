@@ -1,13 +1,13 @@
+import { Avatar, Chip, Divider, Grow, Paper, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Divider, Paper, Avatar, Chip, Grow } from '@material-ui/core';
 import { nanoid } from 'nanoid';
 import Button from '../../../../atoms/CustomButtons/Button';
-import { useGetRequest } from '../../../../utils/hooks';
 import history from '../../../../history';
-import { ContractionDataType } from '../shared/StartGuideCard';
+import { useGetRequest } from '../../../../utils/hooks';
+import { ProfileDataType } from '../Mypage/ProfileData.type';
 
 dayjs.extend(relativeTime);
 
@@ -80,7 +80,7 @@ export interface IncomeCashRes {
   settlementState: number;
 }
 interface UserInfoCardProps {
-  userProfileData: ContractionDataType;
+  userProfileData: ProfileDataType;
   incomeData: IncomeCashRes;
   withdrawalData: WithdrawalRes[];
   handleWithdrawalDialogOpen: () => void;

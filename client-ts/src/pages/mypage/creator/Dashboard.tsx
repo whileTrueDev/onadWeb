@@ -1,46 +1,45 @@
-import { useState } from 'react';
 // atoms
 import { Hidden } from '@material-ui/core';
+import { useState } from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
 import Snackbar from '../../../atoms/Snackbar/Snackbar';
-// organisms
-import StartGuideCard, {
-  ContractionDataType,
-} from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import history from '../../../history';
+import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
-import UserInfoCard, {
-  IncomeCashRes,
-} from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
+import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import ClickAdCard, {
   ClicksRes,
   LevelRes,
 } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
+import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
+import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 import IncomeChart, {
   IncomeChartParams,
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
-import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
+import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
+import UserInfoCard, {
+  IncomeCashRes,
+} from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
 import OverlayUrlCard, {
   OverlayUrlRes,
 } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
-import MypageLoading from './Mypage.loading';
-import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
-import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
-import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
+// organisms
+import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
+import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
+import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
+import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
+import { useCreatorProfile } from '../../../utils/hooks/query/useCreatorProfile';
+import useDialog from '../../../utils/hooks/useDialog';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
-import useDialog from '../../../utils/hooks/useDialog';
-import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
-import history from '../../../history';
-import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
-import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
+import MypageLoading from './Mypage.loading';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
-  const profileGet = useGetRequest<null, ContractionDataType>('/creator');
+  const profile = useCreatorProfile();
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
@@ -87,7 +86,7 @@ const Dashboard = (): JSX.Element => {
   return (
     <>
       <div style={{ margin: '0 auto', maxWidth: 1430 }}>
-        {profileGet.loading ||
+        {profile.isLoading ||
         incomeCashGet.loading ||
         clicksGet.loading ||
         levelGet.loading ||
@@ -111,9 +110,9 @@ const Dashboard = (): JSX.Element => {
               )}
 
             {/* 배너 권장 크기 및 무효화 공지 */}
-            {!profileGet.loading &&
-              profileGet.data &&
-              Boolean(profileGet.data.creatorContractionAgreement) && (
+            {!profile.isLoading &&
+              profile.data &&
+              Boolean(profile.data.creatorContractionAgreement) && (
                 <Hidden smDown>
                   <GridItem xs={12}>
                     <AlertCard />
@@ -125,14 +124,14 @@ const Dashboard = (): JSX.Element => {
             <GridItem xs={12} lg={6}>
               {!overlayUrlGet.loading &&
                 overlayUrlGet.data &&
-                !profileGet.loading &&
-                profileGet.data && (
+                !profile.isLoading &&
+                profile.data && (
                   <StartGuideCard
-                    doContractionDataRequest={profileGet.doGetRequest}
+                    doContractionDataRequest={profile.refetch}
                     doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
                     doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
                     overlayUrlData={overlayUrlGet.data}
-                    contractionData={profileGet.data}
+                    contractionData={profile.data}
                     handleSnackOpen={snack.handleOpen}
                   />
                 )}
@@ -152,11 +151,11 @@ const Dashboard = (): JSX.Element => {
             <GridItem xs={12} lg={6}>
               {!incomeCashGet.loading &&
                 incomeCashGet.data &&
-                !profileGet.loading &&
-                profileGet.data &&
+                !profile.isLoading &&
+                profile.data &&
                 !withdrawalData.loading && (
                   <UserInfoCard
-                    userProfileData={profileGet.data}
+                    userProfileData={profile.data}
                     withdrawalData={withdrawalData.data}
                     incomeData={incomeCashGet.data}
                     handleWithdrawalDialogOpen={handleOpen}
@@ -206,10 +205,10 @@ const Dashboard = (): JSX.Element => {
         )}
       </div>
 
-      {!profileGet.loading &&
-        profileGet.data &&
-        !profileGet.data.creatorTwitchOriginalId &&
-        !profileGet.data.afreecaId && (
+      {!profile.isLoading &&
+        profile.data &&
+        !profile.data.creatorTwitchOriginalId &&
+        !profile.data.afreecaId && (
           <PlatformLinkDialog
             open={platformLinkDialog.open}
             handleOpen={platformLinkDialog.handleOpen}

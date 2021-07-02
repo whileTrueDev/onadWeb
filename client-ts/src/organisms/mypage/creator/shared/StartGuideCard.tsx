@@ -15,6 +15,7 @@ import { OverlayUrlRes } from './OverlayUrlCard';
 import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
 import history from '../../../../history';
 import GuideComplete from './guides/GuideComplete';
+import { ProfileDataType } from '../Mypage/ProfileData.type';
 
 export interface ContractionDataType {
   creatorId: string;
@@ -54,7 +55,7 @@ interface ContractionCardProps {
   doContractionDataRequest: () => void;
   doOverlayUrlDataRequest: () => void;
   doRemoteControllerUrlRequest?: () => void;
-  contractionData: ContractionDataType;
+  contractionData: ProfileDataType;
   overlayUrlData: OverlayUrlRes;
   handleSnackOpen: () => void;
 }

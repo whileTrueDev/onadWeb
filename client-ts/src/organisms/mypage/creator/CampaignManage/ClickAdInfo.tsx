@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ContractionDataType } from '../shared/StartGuideCard';
+import { ProfileDataType } from '../Mypage/ProfileData.type';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface ClickAdInfoProps {
-  profileData: UseGetRequestObject<ContractionDataType>;
+  profileData: UseGetRequestObject<ProfileDataType>;
 }
 export default function ClickAdInfo({ profileData }: ClickAdInfoProps): JSX.Element {
   const classes = useStyles();

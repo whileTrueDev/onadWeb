@@ -11,7 +11,7 @@ import {
 import HelpIcon from '@material-ui/icons/Help';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ContractionDataType } from '../shared/StartGuideCard';
+import { ProfileDataType } from '../Mypage/ProfileData.type';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -32,7 +32,7 @@ export interface AdChatRes {
   adChatAgreement: 1 | 0;
 }
 export interface ChatAdInfoProps {
-  contracitonAgreementData: UseGetRequestObject<ContractionDataType>;
+  contracitonAgreementData: UseGetRequestObject<ProfileDataType>;
   adChatData: UseGetRequestObject<AdChatRes>;
   doGetReqeustOnOff: () => void;
   successSnackOpen: () => void;

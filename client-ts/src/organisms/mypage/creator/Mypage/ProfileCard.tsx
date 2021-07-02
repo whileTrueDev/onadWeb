@@ -1,11 +1,22 @@
-import { Avatar, Button, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import {
+  Box,
+  CircularProgress,
+  Avatar,
+  Button,
+  Grid,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import React, { useState } from 'react';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import { useDialog } from '../../../../utils/hooks';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import Contract from './Contract/Contract';
 import PasswordDialog from './ProfileChangeDIalog/PasswordDialog';
-import { ProfileDataType } from './ProfileData.type';
 import SignoutConfirmDialog from './SignoutConfirmDialog/SignoutConfirmDialog';
 
 const useStyles = makeStyles(() => ({
@@ -16,16 +27,16 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
-interface ProfileCardProps {
-  profileData: ProfileDataType;
-}
-function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
+function ProfileCard(): React.ReactElement {
+  // 프로필 유저 데이터
+  const profile = useCreatorProfile();
+
   const classes = useStyles();
   // ***************************************************
   // 계약서 보기
   const [ContractionOpen, setContractionOpen] = useState(false);
   function handleContractionOpen(): void {
-    if (profileData.creatorContractionAgreement === 1) {
+    if (profile.data?.creatorContractionAgreement === 1) {
       setContractionOpen(true);
     }
   }
@@ -58,6 +69,9 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   // 회원 탈퇴 확인 다이얼로그
   const signoutConfirmDialog = useDialog();
 
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
+
   return (
     <>
       <Paper style={{ padding: 32, marginTop: 8 }}>
@@ -66,7 +80,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="프로필사진">
             <Avatar
-              src={profileData.creatorLogo || profileData.afreecaLogo || ''}
+              src={profile.data.creatorLogo || profile.data.afreecaLogo || ''}
               style={{ width: 45, height: 45 }}
             />
           </TextFieldWithLabel>
@@ -74,7 +88,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
           <TextFieldWithLabel title="아이디">
             <TextField
               InputProps={{ style: { padding: 0 } }}
-              value={profileData.loginId}
+              value={profile.data.loginId}
               disabled
             />
           </TextFieldWithLabel>
@@ -94,12 +108,12 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="이용동의상태">
             <TextField
-              value={profileData.creatorContractionAgreement === 1 ? '이용동의완료✔️' : '미동의'}
+              value={profile.data.creatorContractionAgreement === 1 ? '이용동의완료✔️' : '미동의'}
               margin="normal"
               disabled
               InputProps={{ readOnly: true, style: { padding: 0 } }}
             />
-            {profileData.creatorContractionAgreement === 1 && (
+            {profile.data.creatorContractionAgreement === 1 && (
               <Button
                 variant="outlined"
                 size="small"
@@ -143,7 +157,6 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
       <SignoutConfirmDialog
         open={signoutConfirmDialog.open}
         onClose={signoutConfirmDialog.handleClose}
-        profileData={profileData}
       />
     </>
   );

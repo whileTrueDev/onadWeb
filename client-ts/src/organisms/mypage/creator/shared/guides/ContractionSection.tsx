@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import classnames from 'classnames';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
-import { Done, Clear, CheckCircleOutline } from '@material-ui/icons';
+import { CheckCircleOutline, Clear, Done } from '@material-ui/icons';
+import classnames from 'classnames';
+import { useState } from 'react';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import terms from '../../Dashboard/source/contractTerms';
-import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
+import SuccessTypo from '../../../../../atoms/Typography/Success';
 import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
+import terms from '../../Dashboard/source/contractTerms';
+import { ProfileDataType } from '../../Mypage/ProfileData.type';
 import ContractionTextDialog from './sub/ContractionTextDialog';
-import { ContractionDataType } from '../StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 export interface ContractionSectionProps {
   doReRequest: () => void;
-  contractionData: ContractionDataType;
+  contractionData: ProfileDataType;
   handleSuccess: () => void;
 }
 export default function ContractionSection({
