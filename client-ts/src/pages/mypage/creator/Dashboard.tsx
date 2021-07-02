@@ -1,9 +1,9 @@
 // atoms
 import { Hidden } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import history from '../../../history';
 import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
@@ -66,7 +66,7 @@ const Dashboard = (): JSX.Element => {
   const platformLinkDialog = useDialog();
 
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
-  const snack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
@@ -122,19 +122,20 @@ const Dashboard = (): JSX.Element => {
 
             {/* 온애드 시작 가이드 */}
             <GridItem xs={12} lg={6}>
-              {!overlayUrlGet.loading &&
-                overlayUrlGet.data &&
-                !profile.isLoading &&
-                profile.data && (
-                  <StartGuideCard
-                    doContractionDataRequest={profile.refetch}
-                    doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
-                    doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
-                    overlayUrlData={overlayUrlGet.data}
-                    contractionData={profile.data}
-                    handleSnackOpen={snack.handleOpen}
-                  />
-                )}
+              {!overlayUrlGet.loading && overlayUrlGet.data && !profile.isLoading && profile.data && (
+                <StartGuideCard
+                  doContractionDataRequest={profile.refetch}
+                  doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
+                  doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
+                  overlayUrlData={overlayUrlGet.data}
+                  contractionData={profile.data}
+                  handleSnackOpen={() =>
+                    enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
+                      variant: 'success',
+                    })
+                  }
+                />
+              )}
             </GridItem>
 
             {/* 배너 광고 송출 URL */}
@@ -142,7 +143,11 @@ const Dashboard = (): JSX.Element => {
               {!overlayUrlGet.loading && overlayUrlGet.data && (
                 <OverlayUrlCard
                   overlayUrlData={overlayUrlGet.data}
-                  handleSnackOpen={snack.handleOpen}
+                  handleSnackOpen={() =>
+                    enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
+                      variant: 'success',
+                    })
+                  }
                 />
               )}
             </GridItem>
@@ -215,13 +220,6 @@ const Dashboard = (): JSX.Element => {
             onClose={platformLinkDialog.handleClose}
           />
         )}
-
-      <Snackbar
-        color="success"
-        message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
-        open={snack.open}
-        onClose={snack.handleClose}
-      />
     </>
   );
 };

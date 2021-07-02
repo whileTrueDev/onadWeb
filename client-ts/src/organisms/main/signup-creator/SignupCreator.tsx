@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import {
   Button,
   CircularProgress,
@@ -12,21 +11,21 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Check, HowToReg, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
-import { useCallback, useEffect, useState } from 'react';
-import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Alert } from '@material-ui/lab';
-import axiosInstance from '../../../utils/axios';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import HOST from '../../../config';
-import IndentityVerificationDialog from './IdentityVerification';
 import history from '../../../history';
 import { OnadTheme } from '../../../theme';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
-import { useDialog } from '../../../utils/hooks';
-import userIdRegex from '../../../utils/inputs/regex/userId.regex';
+import axiosInstance from '../../../utils/axios';
 import passwordRegex from '../../../utils/inputs/regex/password.regex';
+import userIdRegex from '../../../utils/inputs/regex/userId.regex';
+import IndentityVerificationDialog from './IdentityVerification';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   socialLoginButton: {
@@ -112,8 +111,7 @@ export default function SignupCreator(): JSX.Element {
   }
 
   // 스낵바
-  const failSnack = useDialog();
-  const [snackErrMsg, setSnackErrMsg] = useState<string>();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Parse search parpameter
   function parseParams(params: string) {
@@ -147,8 +145,9 @@ export default function SignupCreator(): JSX.Element {
         history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
       .catch(() => {
-        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
-        failSnack.handleOpen();
+        enqueueSnackbar('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   }
 
@@ -167,8 +166,9 @@ export default function SignupCreator(): JSX.Element {
         history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
       .catch(() => {
-        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
-        failSnack.handleOpen();
+        enqueueSnackbar('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   }
 
@@ -178,7 +178,7 @@ export default function SignupCreator(): JSX.Element {
   const [loadingCheckReferralCode, setLoadingCheckReferralCode] = useState(false);
   const [referredCreator, setReferredCreator] = useState('');
   const [referredCreatorError, setReferredCreatorError] = useState('');
-  const needReferredCreatorSnack = useDialog();
+
   // 추천인 확인 함수
   function checkReferralCode(): void {
     const errorMsg =
@@ -307,7 +307,7 @@ export default function SignupCreator(): JSX.Element {
           } else if (signupInfo.referralCode) {
             if (!referredCreator || !!referredCreatorError) {
               // 추천인 확인 필요하다는 문구 처리
-              needReferredCreatorSnack.handleOpen();
+              enqueueSnackbar('추천인 확인이 올바르게 끝나지 않았어요!', { variant: 'error' });
             } else handleNext();
           } else {
             handleNext();
@@ -708,16 +708,6 @@ export default function SignupCreator(): JSX.Element {
           )}
         </Paper>
       </Grid>
-
-      <Snackbar color="error" message={snackErrMsg} onClose={failSnack.handleClose} />
-      {needReferredCreatorSnack.open && (
-        <Snackbar
-          open={needReferredCreatorSnack.open}
-          color="error"
-          message="추천인 확인이 올바르게 끝나지 않았어요!"
-          onClose={needReferredCreatorSnack.handleClose}
-        />
-      )}
     </Grid>
   );
 }

@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
 import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
@@ -18,7 +18,6 @@ import OverlayUrlCard, {
 } from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
-import useDialog from '../../../../utils/hooks/useDialog';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
@@ -40,8 +39,7 @@ interface LevelRes {
 }
 
 const CampaignManage = (): JSX.Element => {
-  // 배너광고 그만하기 성공시 스낵바
-  const banSuccessSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   // Adchat agreement
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
@@ -63,29 +61,23 @@ const CampaignManage = (): JSX.Element => {
     { dateRange: '30' },
   );
 
-  // For Onoff success snackbar
-  const snack = useDialog();
-  const failSnack = useDialog();
-  const overlayUrlCopySnack = useDialog();
-
   useMypageScrollToTop();
   return (
     <div style={{ margin: '0 auto', maxWidth: 1430 }}>
       <GridContainer>
         {/* 광고 시작 가이드 */}
         <GridItem xs={12} lg={6}>
-          {!overlayUrlGet.loading &&
-            overlayUrlGet.data &&
-            !profileGet.loading &&
-            profileGet.data && (
-              <StartGuideCard
-                doContractionDataRequest={profileGet.doGetRequest}
-                doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
-                overlayUrlData={overlayUrlGet.data}
-                contractionData={profileGet.data}
-                handleSnackOpen={snack.handleOpen}
-              />
-            )}
+          {!overlayUrlGet.loading && overlayUrlGet.data && !profileGet.loading && profileGet.data && (
+            <StartGuideCard
+              doContractionDataRequest={profileGet.doGetRequest}
+              doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
+              overlayUrlData={overlayUrlGet.data}
+              contractionData={profileGet.data}
+              handleSnackOpen={() => {
+                enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' });
+              }}
+            />
+          )}
         </GridItem>
 
         {/* 배너 광고 오버레이 URL */}
@@ -96,13 +88,21 @@ const CampaignManage = (): JSX.Element => {
                 advertiseUrl: '',
                 creatorContractionAgreement: 0,
               }}
-              handleSnackOpen={overlayUrlCopySnack.handleOpen}
+              handleSnackOpen={() => {
+                enqueueSnackbar('클립보드에 복사되었어요! 방송도구에 등록해주세요', {
+                  variant: 'success',
+                });
+              }}
             />
           )}
           {!overlayUrlGet.loading && overlayUrlGet.data && (
             <OverlayUrlCard
               overlayUrlData={overlayUrlGet.data}
-              handleSnackOpen={overlayUrlCopySnack.handleOpen}
+              handleSnackOpen={() => {
+                enqueueSnackbar('클립보드에 복사되었어요! 방송도구에 등록해주세요', {
+                  variant: 'success',
+                });
+              }}
             />
           )}
         </GridItem>
@@ -126,8 +126,12 @@ const CampaignManage = (): JSX.Element => {
             contracitonAgreementData={profileGet}
             adChatData={adchatGet}
             doGetReqeustOnOff={adchatGet.doGetRequest}
-            successSnackOpen={snack.handleOpen}
-            failSnackOpen={failSnack.handleOpen}
+            successSnackOpen={() => {
+              enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' });
+            }}
+            failSnackOpen={() => {
+              enqueueSnackbar('변경중 오류가 발생했습니다.', { variant: 'error' });
+            }}
           />
         </GridItem>
 
@@ -148,34 +152,6 @@ const CampaignManage = (): JSX.Element => {
             />
           )}
         </GridItem>
-
-        <Snackbar
-          color="success"
-          open={snack.open}
-          message="정상적으로 변경되었습니다."
-          onClose={snack.handleClose}
-        />
-
-        <Snackbar
-          color="error"
-          open={failSnack.open}
-          message="변경중 오류가 발생했습니다."
-          onClose={failSnack.handleClose}
-        />
-
-        <Snackbar
-          open={banSuccessSnack.open}
-          message="배너광고 거절을 완료하였습니다."
-          color="success"
-          onClose={banSuccessSnack.handleClose}
-        />
-
-        <Snackbar
-          open={overlayUrlCopySnack.open}
-          message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
-          color="success"
-          onClose={overlayUrlCopySnack.handleClose}
-        />
       </GridContainer>
     </div>
   );

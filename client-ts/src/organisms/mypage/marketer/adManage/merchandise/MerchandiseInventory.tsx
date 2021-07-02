@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePagi
 import { Merchandise } from '../interface';
 import MerchandiseDeleteDialog from './MerchandiseDeleteDialog';
 import { useDialog } from '../../../../../utils/hooks';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import renderMerchandiseUploadState from '../../../../../utils/render_funcs/renderMerchandiseUploadState';
 import getDiscountPrice from '../../../../../utils/getDiscountPrice';
 
@@ -36,7 +36,7 @@ export default function MerchandiseInventory({
   }
 
   const merchandiseDeleteDialog = useDialog();
-  const successSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div className={classes.datagrid}>
@@ -148,15 +148,10 @@ export default function MerchandiseInventory({
           handleClose={merchandiseDeleteDialog.handleClose}
           recallRequest={(): void => {
             merchandiseData.requestWithoutConcat();
-            successSnack.handleOpen();
+            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
           }}
         />
       )}
-      <Snackbar
-        message="올바르게 삭제되었습니다."
-        open={successSnack.open}
-        onClose={successSnack.handleClose}
-      />
     </div>
   );
 }

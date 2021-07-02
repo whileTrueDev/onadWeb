@@ -1,4 +1,5 @@
 // 환경변수를 위해. dev환경: .env 파일 / production환경: docker run의 --env-file인자로 넘김.
+import { SnackbarProvider } from 'notistack';
 import {
   createMuiTheme,
   MuiThemeProvider as ThemeProvider,
@@ -66,25 +67,31 @@ const OnadIndex = (): JSX.Element => {
       <Switch>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider<OnadTheme> theme={onadTheme}>
-            <Route exact path="/test" component={LoadingPage} />
-            <Route exact path="/" component={Door} />
-            <Route exact path="/marketer" component={Main} />
-            <Route exact path="/creator" component={Main} />
-            <Route path="/creator/remote/:id" component={RemotePage} />
-            <Route exact path="/creator/signup" component={RegistCreator} />
-            <Route exact path="/creator/signup/complete" component={RegistCreator} />
-            <Route exact path="/creator/signup/pre-user" component={RegistCreator} />
-            <Route exact path="/creatorlist" component={CreatorList} />
-            <Route path="/regist/:platform" component={RegistPage} />
-            <Route exact path="/regist" component={RegistPage} />
-            <Route exact path="/introduce/:userType" component={Introduction} />
-            <Suspense fallback={LoadingPage}>
-              <Route exact path="/policy" component={Policy} />
-              <Route exact path="/policy/:privacy" component={Policy} />
-              <Route path="/mypage/creator" component={CreatorDashboard} />
-              <Route path="/mypage/marketer" component={MarketerDashboard} />
-            </Suspense>
-            <Route exact path="/marketer/charge" component={ChargeDialog} />
+            <SnackbarProvider
+              maxSnack={2}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              preventDuplicate
+            >
+              <Route exact path="/test" component={LoadingPage} />
+              <Route exact path="/" component={Door} />
+              <Route exact path="/marketer" component={Main} />
+              <Route exact path="/creator" component={Main} />
+              <Route path="/creator/remote/:id" component={RemotePage} />
+              <Route exact path="/creator/signup" component={RegistCreator} />
+              <Route exact path="/creator/signup/complete" component={RegistCreator} />
+              <Route exact path="/creator/signup/pre-user" component={RegistCreator} />
+              <Route exact path="/creatorlist" component={CreatorList} />
+              <Route path="/regist/:platform" component={RegistPage} />
+              <Route exact path="/regist" component={RegistPage} />
+              <Route exact path="/introduce/:userType" component={Introduction} />
+              <Suspense fallback={LoadingPage}>
+                <Route exact path="/policy" component={Policy} />
+                <Route exact path="/policy/:privacy" component={Policy} />
+                <Route path="/mypage/creator" component={CreatorDashboard} />
+                <Route path="/mypage/marketer" component={MarketerDashboard} />
+              </Suspense>
+              <Route exact path="/marketer/charge" component={ChargeDialog} />
+            </SnackbarProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </Switch>

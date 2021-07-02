@@ -1,4 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import MerchandiseUploadDialog from '../../shared/MerchandiseUploadDialog';
 import { useDialog } from '../../../../../utils/hooks';
 import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
@@ -16,14 +17,10 @@ export default function MerchandiseButtons({
   merchandiseData,
 }: MerchandiseButtonsProps): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   // 상품 등록 다이얼로그
   const merchandiseUploadDialog = useDialog();
-
-  // 상품 등록 성공 스낵바
-  const successSnack = useDialog();
-  // 상품 등록 실패 스낵바
-  const failSnack = useDialog();
 
   return (
     <div className={classes.container}>
@@ -35,24 +32,15 @@ export default function MerchandiseButtons({
         open={merchandiseUploadDialog.open}
         onClose={merchandiseUploadDialog.handleClose}
         onSuccess={() => {
-          successSnack.handleOpen();
+          enqueueSnackbar('상품 등록을 완료하였습니다.', { variant: 'success' });
           merchandiseUploadDialog.handleClose();
           merchandiseData.requestWithoutConcat();
         }}
         onFail={() => {
-          failSnack.handleOpen();
+          enqueueSnackbar('상품 등록 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+            variant: 'error',
+          });
         }}
-      />
-
-      <Snackbar
-        message="상품 등록을 완료하였습니다."
-        open={successSnack.open}
-        onClose={successSnack.handleClose}
-      />
-      <Snackbar
-        message="상품 등록 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        open={failSnack.open}
-        onClose={failSnack.handleClose}
       />
     </div>
   );

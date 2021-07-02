@@ -1,21 +1,21 @@
-import { Grid, Typography, Paper, darken } from '@material-ui/core';
+import { darken, Grid, Paper, Typography } from '@material-ui/core';
 import MuiButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Check, Refresh } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
-import HOST from '../../../../config';
-import { OnadTheme } from '../../../../theme';
-import history from '../../../../history';
-import { useDialog, useGetRequest, useEventTargetValue } from '../../../../utils/hooks';
-import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
-import axiosInstance from '../../../../utils/axios';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import HOST from '../../../../config';
+import history from '../../../../history';
+import { OnadTheme } from '../../../../theme';
+import axiosInstance from '../../../../utils/axios';
+import { useDialog, useEventTargetValue, useGetRequest } from '../../../../utils/hooks';
 import openKakaoChat from '../../../../utils/openKakaoChat';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 
 export default function PlatformLinkCard(): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   // 프로필 유저 데이터
   const profile = useCreatorProfile();
@@ -79,13 +80,8 @@ export default function PlatformLinkCard(): JSX.Element {
       });
   }
 
-  // *********************************************
-  // 아프리카 연동 제거 스낵바 오픈 상태
+  // 아프리카 연동 상태 다이얼로그
   const afreecaLinkDeleteDialog = useDialog();
-  // 아프리카 연동 제거 성공 스낵바 오픈 상태
-  const linkDeleteSuccessSnack = useDialog();
-  // 아프리카 연동 제거 실패 스낵바 오픈 상태
-  const linkDeleteFailSnack = useDialog();
   // 아프리카 연동 해제
   function handleDeleteLinkAfreeca(): void {
     axiosInstance
@@ -94,11 +90,13 @@ export default function PlatformLinkCard(): JSX.Element {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
           profile.refetch();
-          linkDeleteSuccessSnack.handleOpen();
+          enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
       .catch(err => {
-        linkDeleteFailSnack.handleOpen();
+        enqueueSnackbar('연동 해제 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          variant: 'error',
+        });
         console.error(err);
       });
   }
@@ -113,11 +111,14 @@ export default function PlatformLinkCard(): JSX.Element {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
           profile.refetch();
-          linkDeleteSuccessSnack.handleOpen();
+          enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
       .catch(err => {
-        linkDeleteFailSnack.handleOpen();
+        enqueueSnackbar('연동 해제 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          variant: 'error',
+        });
+
         console.error(err);
       });
   }
@@ -381,22 +382,6 @@ export default function PlatformLinkCard(): JSX.Element {
           <Typography>정말로 Twitch 연동을 해제하시겠습니까?</Typography>
         </CustomDialog>
       )}
-
-      {/* 플랫폼 연동 해제 성공 스낵바 */}
-      <Snackbar
-        color="success"
-        open={linkDeleteSuccessSnack.open}
-        message="성공적으로 연동이 해제 되었습니다."
-        onClose={linkDeleteSuccessSnack.handleClose}
-      />
-
-      {/* 플랫폼 연동 해제 실패 스낵바 */}
-      <Snackbar
-        color="error"
-        open={linkDeleteFailSnack.open}
-        message="연동 해제 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        onClose={linkDeleteFailSnack.handleClose}
-      />
     </Paper>
   );
 }

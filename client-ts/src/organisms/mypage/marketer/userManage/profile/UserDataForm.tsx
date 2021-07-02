@@ -1,15 +1,15 @@
-import { useContext, useEffect } from 'react';
-import classnames from 'classnames';
 // @material-ui/core
 import { Grid, makeStyles, Paper } from '@material-ui/core';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useContext, useEffect } from 'react';
 import EditableTextField from '../../../../../atoms/EditableInput/EditableTextField';
-import EditablePhoneInput from './sub/EditablePhoneInput';
-import { MarketerInfo } from '../../office/interface';
-import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
-import EditablePasswordInput from './sub/EditablePasswordInput';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
-import EditProfileImage from './sub/EditProfileImage';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
+import { useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
+import { MarketerInfo } from '../../office/interface';
+import EditablePasswordInput from './sub/EditablePasswordInput';
+import EditablePhoneInput from './sub/EditablePhoneInput';
+import EditProfileImage from './sub/EditProfileImage';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,6 +35,7 @@ export interface UserDataFormProps {
   userData: MarketerInfo;
 }
 const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const marketerInfo = useContext(MarketerInfoContext);
 
@@ -54,11 +55,6 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
   const { loading, doPatchRequest } =
     usePatchRequest<{ type: string; value: string | number }, any[]>('/marketer');
 
-  // **************************************************
-  // 성공, 실패 알림을 위한 상태값
-  const successSnack = useDialog();
-  const failSnack = useDialog();
-
   /**
    * 내 정보 수정 핸들러
    * @param type 변경할 필드
@@ -70,13 +66,13 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
   ): void {
     doPatchRequest({ type, value })
       .then(() => {
-        successSnack.handleOpen();
+        enqueueSnackbar('성공적으로 수정하였습니다.', { variant: 'success' });
         setTimeout(() => {
           marketerInfo.doGetRequest();
         }, 1000);
       })
       .catch(() => {
-        failSnack.handleOpen();
+        enqueueSnackbar('수정중 오류가 발생했습니다. 문의바랍니다.', { variant: 'error' });
       });
   }
 
@@ -161,23 +157,6 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
           />
         </Grid>
       </Grid>
-
-      {successSnack.open && (
-        <Snackbar
-          message="성공적으로 수정하였습니다."
-          color="success"
-          onClose={successSnack.handleClose}
-          open={successSnack.open}
-        />
-      )}
-      {failSnack.open && (
-        <Snackbar
-          message="수정중 오류가 발생했습니다. 문의바랍니다."
-          color="error"
-          onClose={failSnack.handleClose}
-          open={failSnack.open}
-        />
-      )}
     </Paper>
   );
 };

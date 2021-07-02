@@ -1,18 +1,9 @@
-import {
-  Box,
-  CircularProgress,
-  Avatar,
-  Button,
-  Grid,
-  makeStyles,
-  Paper,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { Avatar, Button, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
+import { useSnackbar } from 'notistack';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+
 import { useDialog } from '../../../../utils/hooks';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import Contract from './Contract/Contract';
@@ -48,7 +39,7 @@ function ProfileCard(): React.ReactElement {
   // 텍스트필드 컴포넌트
   interface TextFieldWithLabelProps {
     title: string;
-    children: React.ReactNode;
+    children: ReactNode;
   }
   const TextFieldWithLabel = ({ title, children }: TextFieldWithLabelProps): JSX.Element => (
     <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
@@ -63,7 +54,7 @@ function ProfileCard(): React.ReactElement {
 
   // ***************************************************
   // 비밀번호 변경 성공 알림 스낵바
-  const successSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   // ***************************************************
   // 회원 탈퇴 확인 다이얼로그
@@ -141,14 +132,9 @@ function ProfileCard(): React.ReactElement {
       <PasswordDialog
         open={passwordDialog.open}
         onClose={passwordDialog.handleClose}
-        handleSnackOpen={successSnack.handleOpen}
-      />
-      {/* 비밀번호 변경 성공 스낵바 */}
-      <Snackbar
-        message="성공적으로 비밀번호를 변경했습니다."
-        color="success"
-        open={successSnack.open}
-        onClose={successSnack.handleClose}
+        handleSnackOpen={() =>
+          enqueueSnackbar('성공적으로 비밀번호를 변경했습니다.', { variant: 'success' })
+        }
       />
 
       {/* 계약서 다이얼로그 */}
