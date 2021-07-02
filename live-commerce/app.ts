@@ -202,6 +202,10 @@ io.on('connection', (socket: Socket) => {
     console.log(roomName)
     io.to(roomName).emit('d-day from server', date)
   })
+
+  socket.on('refresh', (roomName:string) => {
+    io.to(roomName).emit('refresh signal', roomName)
+  })
 });
   
 
