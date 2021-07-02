@@ -5,9 +5,10 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { nanoid } from 'nanoid';
 import Button from '../../../../atoms/CustomButtons/Button';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import history from '../../../../history';
 import { useGetRequest } from '../../../../utils/hooks';
-import { ProfileDataType } from '../Mypage/ProfileData.type';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 dayjs.extend(relativeTime);
 
@@ -80,18 +81,17 @@ export interface IncomeCashRes {
   settlementState: number;
 }
 interface UserInfoCardProps {
-  userProfileData: ProfileDataType;
   incomeData: IncomeCashRes;
   withdrawalData: WithdrawalRes[];
   handleWithdrawalDialogOpen: () => void;
 }
 const UserInfoCard = ({
-  userProfileData,
   incomeData,
   handleWithdrawalDialogOpen,
   withdrawalData = [],
 }: UserInfoCardProps): JSX.Element => {
   const classes = useStyles();
+  const profile = useCreatorProfile();
 
   // 배너 광고 첫 수익 여부 정보
   const bannerAdStartData = useGetRequest('/creator/banner/start-check');
@@ -117,6 +117,9 @@ const UserInfoCard = ({
     return result;
   }
 
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
+
   return (
     <Paper className={classes.container}>
       {/* 유저 정보 섹션 */}
@@ -124,14 +127,14 @@ const UserInfoCard = ({
         <Avatar
           variant="circular"
           className={classes.avatar}
-          src={userProfileData.creatorLogo || userProfileData.afreecaLogo || ''}
+          src={profile.data.creatorLogo || profile.data.afreecaLogo || ''}
         />
         <div>
           <div>
             <Typography variant="h5" className={classes.bold}>
-              {userProfileData.loginId}
+              {profile.data.loginId}
               &nbsp;
-              {userProfileData.afreecaId && (
+              {profile.data.afreecaId && (
                 <img
                   alt=""
                   height={25}
@@ -139,7 +142,7 @@ const UserInfoCard = ({
                   style={{ marginRight: 8 }}
                 />
               )}
-              {userProfileData.creatorTwitchOriginalId && (
+              {profile.data.creatorTwitchOriginalId && (
                 <img
                   alt=""
                   height={25}
@@ -149,8 +152,8 @@ const UserInfoCard = ({
               )}
             </Typography>
             <Typography variant="body2">
-              {`${userProfileData.creatorName || userProfileData.afreecaName || ''} ${
-                userProfileData.creatorMail || userProfileData.afreecaId || ''
+              {`${profile.data.creatorName || profile.data.afreecaName || ''} ${
+                profile.data.creatorMail || profile.data.afreecaId || ''
               }`}
             </Typography>
           </div>
@@ -161,7 +164,7 @@ const UserInfoCard = ({
               size="small"
               color="primary"
               label={
-                userProfileData.creatorContractionAgreement === 1 ? '이용 동의완료' : '이용 미동의'
+                profile.data.creatorContractionAgreement === 1 ? '이용 동의완료' : '이용 미동의'
               }
             />
           </Grow>
@@ -169,7 +172,7 @@ const UserInfoCard = ({
             <Chip
               className={classnames(classes.chip, classes.success)}
               size="small"
-              label={getSettlementString(userProfileData.settlementState)}
+              label={getSettlementString(profile.data.settlementState)}
             />
           </Grow>
           {/* 한번이라도 배너 송출 로그가 찍혀있는 경우 설정 완료로 처리 */}

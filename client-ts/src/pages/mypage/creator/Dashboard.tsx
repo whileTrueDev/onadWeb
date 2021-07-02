@@ -1,6 +1,5 @@
 // atoms
 import { Hidden } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
@@ -21,15 +20,14 @@ import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 import UserInfoCard, {
   IncomeCashRes,
 } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import OverlayUrlCard, {
-  OverlayUrlRes,
-} from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import OverlayUrlCard from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
 // organisms
 import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
+import { useCreatorBannerOverlay } from '../../../utils/hooks/query/useCreatorBannerOverlay';
 import { useCreatorProfile } from '../../../utils/hooks/query/useCreatorProfile';
 import useDialog from '../../../utils/hooks/useDialog';
 // hooks
@@ -40,6 +38,8 @@ import MypageLoading from './Mypage.loading';
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
   const profile = useCreatorProfile();
+  // 배너 송출 URL 정보 조회
+  const overlayUrl = useCreatorBannerOverlay();
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
@@ -53,8 +53,6 @@ const Dashboard = (): JSX.Element => {
   );
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
-  // 배너 송출 URL 정보 조회
-  const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
   // 공지사항 정보 조회
   const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
   // 출금 내역 정보
@@ -64,9 +62,6 @@ const Dashboard = (): JSX.Element => {
 
   // 채널 연동 유도 다이얼로그
   const platformLinkDialog = useDialog();
-
-  // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
-  const { enqueueSnackbar } = useSnackbar();
 
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
@@ -92,7 +87,7 @@ const Dashboard = (): JSX.Element => {
         levelGet.loading ||
         incomeChartGet.loading ||
         currentBannerGet.loading ||
-        overlayUrlGet.loading ? (
+        overlayUrl.isLoading ? (
           <MypageLoading />
         ) : (
           <GridContainer direction="row">
@@ -122,34 +117,14 @@ const Dashboard = (): JSX.Element => {
 
             {/* 온애드 시작 가이드 */}
             <GridItem xs={12} lg={6}>
-              {!overlayUrlGet.loading && overlayUrlGet.data && !profile.isLoading && profile.data && (
-                <StartGuideCard
-                  doContractionDataRequest={profile.refetch}
-                  doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
-                  doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
-                  overlayUrlData={overlayUrlGet.data}
-                  contractionData={profile.data}
-                  handleSnackOpen={() =>
-                    enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
-                      variant: 'success',
-                    })
-                  }
-                />
+              {!overlayUrl.isLoading && overlayUrl.data && !profile.isLoading && profile.data && (
+                <StartGuideCard />
               )}
             </GridItem>
 
             {/* 배너 광고 송출 URL */}
             <GridItem xs={12} lg={6}>
-              {!overlayUrlGet.loading && overlayUrlGet.data && (
-                <OverlayUrlCard
-                  overlayUrlData={overlayUrlGet.data}
-                  handleSnackOpen={() =>
-                    enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
-                      variant: 'success',
-                    })
-                  }
-                />
-              )}
+              {!overlayUrl.isLoading && overlayUrl.data && <OverlayUrlCard />}
             </GridItem>
 
             {/* 유저 정보 및 수익금 카드 */}
@@ -160,7 +135,6 @@ const Dashboard = (): JSX.Element => {
                 profile.data &&
                 !withdrawalData.loading && (
                   <UserInfoCard
-                    userProfileData={profile.data}
                     withdrawalData={withdrawalData.data}
                     incomeData={incomeCashGet.data}
                     handleWithdrawalDialogOpen={handleOpen}

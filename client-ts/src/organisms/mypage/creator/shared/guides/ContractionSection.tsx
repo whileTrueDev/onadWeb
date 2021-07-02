@@ -1,3 +1,5 @@
+import { useSnackbar } from 'notistack';
+import { useQueryClient } from 'react-query';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import { CheckCircleOutline, Clear, Done } from '@material-ui/icons';
 import classnames from 'classnames';
@@ -6,8 +8,8 @@ import Button from '../../../../../atoms/CustomButtons/Button';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
 import SuccessTypo from '../../../../../atoms/Typography/Success';
 import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
+import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
 import terms from '../../Dashboard/source/contractTerms';
-import { ProfileDataType } from '../../Mypage/ProfileData.type';
 import ContractionTextDialog from './sub/ContractionTextDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -25,25 +27,23 @@ const useStyles = makeStyles(theme => ({
   textRightSpace: { marginRight: theme.spacing(1) },
   section: { margin: `${theme.spacing(2)}px 0px` },
 }));
-export interface ContractionSectionProps {
-  doReRequest: () => void;
-  contractionData: ProfileDataType;
-  handleSuccess: () => void;
-}
-export default function ContractionSection({
-  doReRequest,
-  contractionData,
-  handleSuccess,
-}: ContractionSectionProps): JSX.Element {
+
+export default function ContractionSection(): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar(); // 계약완료 스낵바를 위해
+  const queryClient = useQueryClient();
+  const profile = useCreatorProfile();
+
   // ****************************************
   // 계약 정보 업데이트 요청
   const contractionPatch = usePatchRequest(
     '/creator', // 계약정보 업데이트
     () => {
-      doReRequest();
+      queryClient.invalidateQueries('creatorBannerOverlay');
+      queryClient.invalidateQueries('creatorProfile');
+
       // 성공 스낵 오픈
-      handleSuccess();
+      enqueueSnackbar('성공적으로 계약이 완료되었습니다.', { variant: 'success' });
     },
   );
 
@@ -83,7 +83,7 @@ export default function ContractionSection({
         </Typography>
       </div>
 
-      {contractionData.creatorContractionAgreement === 1 ? (
+      {profile.data?.creatorContractionAgreement === 1 ? (
         <div className={classnames(classes.container, classes.section)}>
           <CheckCircleOutline style={{ fontSize: 48 * 2 }} color="primary" />
           <Typography className={classes.bold}>이용 동의가 완료된 상태입니다!</Typography>
@@ -138,7 +138,7 @@ export default function ContractionSection({
       )}
 
       {/* 계약 내용 보기 다이얼로그 */}
-      {!contractionData.creatorContractionAgreement && (
+      {!profile.data?.creatorContractionAgreement && (
         <ContractionTextDialog
           open={contractionTextDialog.open}
           onClose={contractionTextDialog.handleClose}

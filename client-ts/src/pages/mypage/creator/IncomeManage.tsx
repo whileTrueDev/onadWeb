@@ -10,11 +10,11 @@ import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard'
 import { useAnchorEl } from '../../../utils/hooks';
 import SettlementDescPopover from '../../../organisms/mypage/creator/IncomeManage/SettlementDescPopover';
 import SummaryCard from '../../../organisms/mypage/creator/IncomeManage/SummaryCard';
-import { ProfileDataType } from '../../../organisms/mypage/creator/Mypage/ProfileData.type';
 import CenterLoading from '../../../atoms/Loading/CenterLoading';
 import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalRequestCard';
 import WithdrawDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import { ProfileDataType } from '../../../utils/hooks/query/useCreatorProfile';
 
 export default function IncomeManage(): JSX.Element {
   // 프로필 유저 데이터
@@ -72,10 +72,7 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 정산 등록 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && <CenterLoading />}
-          {!(profileData.loading || withdrawalData.loading) && profileData.data && (
-            <SettlementCard profileData={profileData.data} />
-          )}
+          <SettlementCard />
         </GridItem>
       </GridContainer>
 

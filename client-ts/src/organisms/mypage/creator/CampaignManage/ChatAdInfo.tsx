@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import classnames from 'classnames';
 import {
   FormControlLabel,
@@ -11,7 +12,7 @@ import {
 import HelpIcon from '@material-ui/icons/Help';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ProfileDataType } from '../Mypage/ProfileData.type';
+import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -35,16 +36,14 @@ export interface ChatAdInfoProps {
   contracitonAgreementData: UseGetRequestObject<ProfileDataType>;
   adChatData: UseGetRequestObject<AdChatRes>;
   doGetReqeustOnOff: () => void;
-  successSnackOpen: () => void;
-  failSnackOpen: () => void;
 }
 export default function ChatAdInfo({
   contracitonAgreementData,
   adChatData,
   doGetReqeustOnOff,
-  successSnackOpen,
-  failSnackOpen,
 }: ChatAdInfoProps): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
   const descAnchor = useAnchorEl();
 
@@ -55,8 +54,8 @@ export default function ChatAdInfo({
   const handleSwitch = (): void => {
     onOffUpdate
       .doPatchRequest({ targetOnOffState: !adChatData.data?.adChatAgreement })
-      .then(() => successSnackOpen())
-      .catch(() => failSnackOpen());
+      .then(() => enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' }))
+      .catch(() => enqueueSnackbar('변경중 오류가 발생했습니다.', { variant: 'error' }));
   };
 
   return (

@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ProfileDataType } from '../Mypage/ProfileData.type';
+import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },

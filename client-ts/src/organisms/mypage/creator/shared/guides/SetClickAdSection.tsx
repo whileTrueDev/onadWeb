@@ -1,10 +1,11 @@
+import { useSnackbar } from 'notistack';
 import classnames from 'classnames';
 import { CircularProgress, Input, makeStyles, Paper, Typography } from '@material-ui/core';
 import { InsertLinkOutlined } from '@material-ui/icons';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
 import { useGetRequest } from '../../../../../utils/hooks';
-import { ProfileDataType } from '../../Mypage/ProfileData.type';
+import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bannerImg: {
@@ -15,15 +16,10 @@ const useStyles = makeStyles(theme => ({
   vertical: { maxWidth: 80 },
 }));
 
-export interface SetClickAdSectionnProps {
-  contractionData: ProfileDataType;
-  handleSnackOpen: () => void;
-}
-export default function SetClickAdSection({
-  handleSnackOpen,
-  contractionData,
-}: SetClickAdSectionnProps): JSX.Element {
+export default function SetClickAdSection(): JSX.Element {
   const classes = useStyles();
+  const profile = useCreatorProfile();
+  const { enqueueSnackbar } = useSnackbar();
   // Landing url
   const landingUrlGet = useGetRequest('/creator/landing-url', { type: 'twitch' });
   const afreecaLandingUrlGet = useGetRequest('/creator/landing-url', { type: 'afreeca' });
@@ -45,7 +41,7 @@ export default function SetClickAdSection({
         <Typography>아래의 링크를 복사하여 해당 패널에 링크해 주세요.</Typography>
 
         {/* 트위치 클릭광고 주소 */}
-        {contractionData.creatorTwitchOriginalId && (
+        {profile.data?.creatorTwitchOriginalId && (
           <div style={{ margin: 32 }}>
             <Paper
               style={{
@@ -71,11 +67,11 @@ export default function SetClickAdSection({
                   style={{ maxWidth: 300, marginRight: 16 }}
                   id="ad-page-url"
                   value={
-                    contractionData.creatorContractionAgreement === 1
+                    profile.data?.creatorContractionAgreement === 1
                       ? landingUrlGet.data.url
                       : '[온애드 이용 동의] 가 필요합니다.'
                   }
-                  disabled={!contractionData.creatorContractionAgreement}
+                  disabled={!profile.data?.creatorContractionAgreement}
                   readOnly
                   fullWidth
                 />
@@ -85,10 +81,16 @@ export default function SetClickAdSection({
                   color="primary"
                   onClick={(e): void => {
                     copyToClipboard(e, 'ad-page-url', () => {
-                      handleSnackOpen();
+                      // 스낵바 오픈
+                      enqueueSnackbar(
+                        '트위치 클릭광고 URL이 클립보드에 복사되었습니다. 방송도구에 등록해주세요',
+                        {
+                          variant: 'success',
+                        },
+                      );
                     });
                   }}
-                  disabled={contractionData.creatorContractionAgreement !== 1}
+                  disabled={profile.data?.creatorContractionAgreement !== 1}
                   size="small"
                 >
                   <InsertLinkOutlined />
@@ -100,7 +102,7 @@ export default function SetClickAdSection({
         )}
 
         {/* 아프리카 클릭광고 주소 */}
-        {contractionData.afreecaId && (
+        {profile.data?.afreecaId && (
           <div style={{ margin: 32 }}>
             <Paper
               style={{
@@ -126,11 +128,11 @@ export default function SetClickAdSection({
                   style={{ maxWidth: 300, marginRight: 16 }}
                   id="ad-page-afreeca-url"
                   value={
-                    contractionData.creatorContractionAgreement === 1
+                    profile.data?.creatorContractionAgreement === 1
                       ? afreecaLandingUrlGet.data.url
                       : '[온애드 이용 동의] 가 필요합니다.'
                   }
-                  disabled={!contractionData.creatorContractionAgreement}
+                  disabled={!profile.data?.creatorContractionAgreement}
                   readOnly
                   fullWidth
                 />
@@ -140,7 +142,12 @@ export default function SetClickAdSection({
                   color="primary"
                   onClick={(e): void => {
                     copyToClipboard(e, 'ad-page-afreeca-url', () => {
-                      handleSnackOpen();
+                      enqueueSnackbar(
+                        '아프리카 TV 클릭광고 URL이 클립보드에 복사되었습니다. 방송도구에 등록해주세요',
+                        {
+                          variant: 'success',
+                        },
+                      );
                     });
                   }}
                   size="small"
@@ -153,7 +160,7 @@ export default function SetClickAdSection({
           </div>
         )}
 
-        {(contractionData.creatorTwitchOriginalId || contractionData.afreecaId) && (
+        {(profile.data?.creatorTwitchOriginalId || profile.data?.afreecaId) && (
           <>
             <Typography>
               온애드에서는 기본으로 다음과 같은 패널 이미지를 제공해 드립니다.
@@ -170,7 +177,7 @@ export default function SetClickAdSection({
                 alignItems: 'center',
               }}
             >
-              {contractionData.creatorTwitchOriginalId && (
+              {profile.data?.creatorTwitchOriginalId && (
                 <>
                   <a href="/pngs/landing/트위치_패널배너.png" download="온애드_트위치_패널배너">
                     <img
@@ -183,7 +190,7 @@ export default function SetClickAdSection({
                 </>
               )}
 
-              {contractionData.afreecaId && (
+              {profile.data?.afreecaId && (
                 <>
                   <br />
                   <a

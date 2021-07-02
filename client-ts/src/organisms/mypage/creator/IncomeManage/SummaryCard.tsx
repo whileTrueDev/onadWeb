@@ -6,7 +6,7 @@ import { Help } from '@material-ui/icons';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { IncomeCashRes } from '../Dashboard/UserInfoCard';
-import { ProfileDataType } from '../Mypage/ProfileData.type';
+import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
 
 dayjs.extend(relativeTime);
 export interface SummaryCardProps {

@@ -1,5 +1,4 @@
 import { Typography } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
@@ -11,20 +10,19 @@ import NowBroadCard, {
 import IncomeChart, {
   IncomeChartParams,
 } from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
-import { ProfileDataType } from '../../../../organisms/mypage/creator/Mypage/ProfileData.type';
 import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
-import OverlayUrlCard, {
-  OverlayUrlRes,
-} from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
+import OverlayUrlCard from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
+import {
+  OverlayUrlRes,
+  useCreatorBannerOverlay,
+} from '../../../../utils/hooks/query/useCreatorBannerOverlay';
+import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 
-interface LanidngUrlRes {
-  url: string;
-}
 interface AdChatRes {
   adChatAgreement: 1 | 0;
 }
@@ -32,15 +30,8 @@ interface ClicksRes {
   adpanel: number;
   adchat: number;
 }
-interface LevelRes {
-  creatorId: string;
-  level: number;
-  exp: number;
-}
 
 const CampaignManage = (): JSX.Element => {
-  const { enqueueSnackbar } = useSnackbar();
-
   // Adchat agreement
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
   // Creator click data
@@ -50,7 +41,7 @@ const CampaignManage = (): JSX.Element => {
   // 계약 정보 조회
   const profileGet = useGetRequest<null, ProfileDataType>('/creator');
   // 배너 송출 URL 정보 조회
-  const overlayUrlGet = useGetRequest<null, OverlayUrlRes>('/creator/banner/overlay');
+  const overlayUrl = useCreatorBannerOverlay();
 
   // 리모트 컨트롤러 URL 정보
   const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
@@ -67,43 +58,23 @@ const CampaignManage = (): JSX.Element => {
       <GridContainer>
         {/* 광고 시작 가이드 */}
         <GridItem xs={12} lg={6}>
-          {!overlayUrlGet.loading && overlayUrlGet.data && !profileGet.loading && profileGet.data && (
-            <StartGuideCard
-              doContractionDataRequest={profileGet.doGetRequest}
-              doOverlayUrlDataRequest={overlayUrlGet.doGetRequest}
-              overlayUrlData={overlayUrlGet.data}
-              contractionData={profileGet.data}
-              handleSnackOpen={() => {
-                enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' });
-              }}
-            />
+          {!overlayUrl.isLoading && overlayUrl.data && !profileGet.loading && profileGet.data && (
+            <StartGuideCard />
           )}
         </GridItem>
 
         {/* 배너 광고 오버레이 URL */}
         <GridItem xs={12} lg={6}>
-          {overlayUrlGet.loading && (
+          {overlayUrl.isLoading && (
             <OverlayUrlCard
               overlayUrlData={{
                 advertiseUrl: '',
                 creatorContractionAgreement: 0,
               }}
-              handleSnackOpen={() => {
-                enqueueSnackbar('클립보드에 복사되었어요! 방송도구에 등록해주세요', {
-                  variant: 'success',
-                });
-              }}
             />
           )}
-          {!overlayUrlGet.loading && overlayUrlGet.data && (
-            <OverlayUrlCard
-              overlayUrlData={overlayUrlGet.data}
-              handleSnackOpen={() => {
-                enqueueSnackbar('클립보드에 복사되었어요! 방송도구에 등록해주세요', {
-                  variant: 'success',
-                });
-              }}
-            />
+          {!overlayUrl.isLoading && overlayUrl.data && (
+            <OverlayUrlCard overlayUrlData={overlayUrl.data} />
           )}
         </GridItem>
 
@@ -126,12 +97,6 @@ const CampaignManage = (): JSX.Element => {
             contracitonAgreementData={profileGet}
             adChatData={adchatGet}
             doGetReqeustOnOff={adchatGet.doGetRequest}
-            successSnackOpen={() => {
-              enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' });
-            }}
-            failSnackOpen={() => {
-              enqueueSnackbar('변경중 오류가 발생했습니다.', { variant: 'error' });
-            }}
           />
         </GridItem>
 
