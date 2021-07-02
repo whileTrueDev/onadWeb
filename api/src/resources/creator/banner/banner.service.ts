@@ -84,7 +84,9 @@ export class BannerService {
       where: { creatorId },
     });
     return {
-      advertiseUrl: !creator.advertiseUrl ? '' : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
+      advertiseUrl: !creator.advertiseUrl
+        ? ''
+        : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
       creatorContractionAgreement: creator.creatorContractionAgreement,
     };
   }

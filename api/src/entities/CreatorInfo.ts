@@ -155,6 +155,9 @@ export class CreatorInfo {
   @Column('varchar', { name: 'afreecaLogo', nullable: true, length: 200 })
   afreecaLogo: string | null;
 
+  @Column('tinyint', { nullable: true, default: 0 })
+  deleteFlag: boolean | null;
+
   constructor(partial: Partial<CreatorInfo>) {
     Object.assign(this, partial);
   }

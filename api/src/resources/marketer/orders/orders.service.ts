@@ -126,8 +126,7 @@ export class OrdersService {
 
           this.slackService.jsonMessage({
             summary: '[온애드 CPS] 상품 출고 완료 알림',
-            text:
-              '광고주가 주문상품을 출고하였습니다. 온애드샵에서 출고 정보를 입력하고, 출고완료 처리를 진행해주세요.',
+            text: '광고주가 주문상품을 출고하였습니다. 온애드샵에서 출고 정보를 입력하고, 출고완료 처리를 진행해주세요.',
             fields: [
               { title: '상품명', value: order.merchandiseName, short: true },
               { title: '주문자', value: order.ordererName, short: true },

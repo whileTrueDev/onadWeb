@@ -70,7 +70,6 @@ export class RemoteService {
   // * 크리에이터 캠페인 pause 처리 (remote 페이지에서 토글버튼으로 제어)
   public async updateRemoteOnOff(dto: UpdateRemoteOnOffDto): Promise<boolean> {
     const { creatorId } = await this.creatorInfoRepo.findOne({
-      select: ['creatorId'],
       where: { remoteControllerUrl: this.__getCorrectRemoteControllerUrl(dto.url) },
     });
 

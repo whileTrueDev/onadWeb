@@ -1,27 +1,27 @@
-import { useState, useContext, useEffect, useRef } from 'react';
-// @material-ui/core components
-import Tooltip from '@material-ui/core/Tooltip';
+// core components
+import { Avatar, Hidden, makeStyles } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
+// @material-ui/core components
+import Tooltip from '@material-ui/core/Tooltip';
 // @material-ui/icons
 import Notifications from '@material-ui/icons/Notifications';
-// core components
-import { Avatar, makeStyles } from '@material-ui/core';
-import NotificationPopper from './sub/NotificationPopper';
+import { useContext } from 'react';
+import HOST from '../../../../config';
+import MarketerInfoContext from '../../../../context/MarketerInfo.context';
+import history from '../../../../history';
 // utils
 import axios from '../../../../utils/axios';
-import history from '../../../../history';
-import HOST from '../../../../config';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import { ContractionDataType } from '../../creator/shared/StartGuideCard';
+import { MarketerInfo } from '../../marketer/office/interface';
 // types
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
-import UserPopover from './sub/UserPopover';
 import MarketerPopover from './sub/MarketerPopover';
-import { MarketerInfo } from '../../marketer/office/interface';
-import MarketerInfoContext from '../../../../context/MarketerInfo.context';
-import { ContractionDataType } from '../../creator/shared/StartGuideCard';
+import NotificationPopper from './sub/NotificationPopper';
+import UserPopover from './sub/UserPopover';
 
 const useStyles = makeStyles(theme => ({
   avatar: { width: theme.spacing(4), height: theme.spacing(4) },
@@ -35,7 +35,22 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
 
   // 개인 알림
   const notificationGet = useGetRequest<NoticeDataParam, NoticeDataRes>(`/${type}/notification`);
-  const { anchorEl, handleAnchorOpen, handleAnchorOpenWithRef, handleAnchorClose } = useAnchorEl();
+  const { anchorEl, handleAnchorOpen, handleAnchorClose } = useAnchorEl();
+  // 개인알림 읽음 렌더링 처리
+  function onNotificationUpdate(updatedId: number): void {
+    if (notificationGet.data) {
+      const targetIdx = notificationGet.data.notifications.findIndex(x => x.index === updatedId);
+      const newNotis = notificationGet.data.notifications;
+      newNotis[targetIdx] = {
+        ...newNotis[targetIdx],
+        readState: 1,
+      };
+      notificationGet.setData({
+        unReadCount: notificationGet.data.unReadCount - 1,
+        notifications: newNotis,
+      });
+    }
+  }
 
   // 공지사항
   const noticeReadFlagGet = useGetRequest<any, { noticeReadState: number }>('/notice/read-flag', {
@@ -52,25 +67,6 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
     });
   }
 
-  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
-  const [isAlreadyRendered, setIsAlreadyRendered] = useState(false);
-  const notificationRef = useRef<HTMLButtonElement | null>(null);
-  useEffect(() => {
-    function handleUnreadNotificationOpen(): void {
-      if (
-        !notificationGet.loading &&
-        notificationGet.data &&
-        notificationGet.data.notifications.filter(noti => noti.readState === 0).length &&
-        !isAlreadyRendered
-      ) {
-        setIsAlreadyRendered(true);
-        handleAnchorOpenWithRef(notificationRef);
-      }
-    }
-    handleUnreadNotificationOpen();
-  }, [handleAnchorOpenWithRef, isAlreadyRendered, notificationGet.data, notificationGet.loading]);
-  // ------ For 읽지않은 알림 존재 시 알림 컴포넌트 열어두기 ------
-
   // 유저 로고 클릭시의 설정 리스트
   const userLogoAnchor = useAnchorEl();
 
@@ -84,31 +80,32 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
   return (
     <div>
       {/* notification */}
-      <Tooltip title="알림">
-        <IconButton
-          size="medium"
-          aria-label="notifications"
-          ref={notificationRef}
-          onClick={(e): void => {
-            if (anchorEl) {
-              handleAnchorClose();
-            } else {
-              handleAnchorOpen(e);
-            }
-          }}
-        >
-          <Badge
-            badgeContent={
-              !notificationGet.loading && notificationGet.data
-                ? notificationGet.data.notifications.filter(noti => noti.readState === 0).length
-                : null
-            }
-            color="secondary"
+      <Hidden xsDown>
+        <Tooltip title="알림">
+          <IconButton
+            size="medium"
+            aria-label="notifications"
+            onClick={(e): void => {
+              if (anchorEl) {
+                handleAnchorClose();
+              } else {
+                handleAnchorOpen(e);
+              }
+            }}
           >
-            <Notifications fontSize="default" />
-          </Badge>
-        </IconButton>
-      </Tooltip>
+            <Badge
+              badgeContent={
+                !notificationGet.loading && notificationGet.data
+                  ? notificationGet.data.notifications.filter(noti => noti.readState === 0).length
+                  : null
+              }
+              color="secondary"
+            >
+              <Notifications fontSize="default" />
+            </Badge>
+          </IconButton>
+        </Tooltip>
+      </Hidden>
 
       <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
         {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
@@ -164,7 +161,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
           anchorEl={anchorEl}
           handleAnchorClose={handleAnchorClose}
           notificationData={notificationGet.data.notifications}
-          successCallback={notificationGet.doGetRequest}
+          successCallback={onNotificationUpdate}
         />
       )}
 
