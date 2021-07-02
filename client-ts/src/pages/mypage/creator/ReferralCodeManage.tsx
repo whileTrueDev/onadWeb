@@ -12,9 +12,9 @@ import {
 } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
 import { useDialog, useGetRequest } from '../../../utils/hooks';
 import copyToClipboard from '../../../utils/copyToClipboard';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
 import ReferralCodeEventDialog from '../../../organisms/shared/popup/ReferralCodeEventDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -40,11 +40,10 @@ export interface ReferralCodeRes {
 
 const CALCULATE_DONE_STATE = 2;
 export default function ReferralCodeManage(): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
   const referralCodeReq = useGetRequest<null, ReferralCodeRes>('/creator/referral-code/my');
-
-  const copySnack = useDialog();
 
   // **************************************************
   // 리뉴얼 추가 작업 - 리뉴얼 알림창 및 크리에이터 로그인 다이얼로그 오픈 토글
@@ -110,7 +109,9 @@ export default function ReferralCodeManage(): JSX.Element {
                     color="primary"
                     variant="contained"
                     onClick={e =>
-                      copyToClipboard(e, 'referral-code-textfield', copySnack.handleOpen)
+                      copyToClipboard(e, 'referral-code-textfield', () => {
+                        enqueueSnackbar('추천인 코드가 복사되었습니다.', { variant: 'success' });
+                      })
                     }
                     disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
                   >
@@ -150,15 +151,6 @@ export default function ReferralCodeManage(): JSX.Element {
       <Hidden xsDown>
         <ReferralCodeEventDialog open={eventDialog.open} onClose={eventDialog.handleClose} />
       </Hidden>
-
-      {copySnack.open && (
-        <Snackbar
-          color="success"
-          open={copySnack.open}
-          onClose={copySnack.handleClose}
-          message="추천인 코드가 복사되었습니다."
-        />
-      )}
     </div>
   );
 }

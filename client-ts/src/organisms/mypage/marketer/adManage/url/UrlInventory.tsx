@@ -1,17 +1,17 @@
 /* eslint-disable react/display-name */
-import * as React from 'react';
-import dayjs from 'dayjs';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
-import { UrlDataInterface, UrlLink } from '../interface';
-import UrlDeleteDialog from './UrlDeleteDialog';
-import { useDialog } from '../../../../../utils/hooks';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import { useDialog } from '../../../../../utils/hooks';
 import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import renderUrlConfirmState, {
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderUrlConfirmState';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import { UrlDataInterface, UrlLink } from '../interface';
+import UrlDeleteDialog from './UrlDeleteDialog';
 
 const useStyles = makeStyles(() => ({
   clickableText: {
@@ -37,7 +37,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
   }
 
   // 삭제 성공 알림
-  const successSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div>
@@ -162,16 +162,10 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           handleClose={urlDeleteDialog.handleClose}
           recallRequest={(): void => {
             urlData.requestWithoutConcat();
-            successSnack.handleOpen();
+            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
           }}
         />
       )}
-
-      <Snackbar
-        message="올바르게 삭제되었습니다."
-        open={successSnack.open}
-        onClose={successSnack.handleClose}
-      />
     </div>
   );
 }

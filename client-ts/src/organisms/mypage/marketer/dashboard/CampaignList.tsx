@@ -1,10 +1,9 @@
 import { Button, CircularProgress, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import { useSnackbar } from 'notistack';
 import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
 import history from '../../../../history';
 import { useGetRequest } from '../../../../utils/hooks';
-import useDialog from '../../../../utils/hooks/useDialog';
 import { CONFIRM_STATE_REJECTED } from '../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignMetaInfoCard from '../adManage/campaign/sub/CampaignMetaInfoCard';
 import { CampaignInterface } from './interfaces';
@@ -38,8 +37,7 @@ export default function CampaignList(): JSX.Element {
     { page: 0, offset: OFFSET },
   );
 
-  const snack = useDialog();
-  const failSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Paper style={{ minHeight: 400 }}>
@@ -84,10 +82,13 @@ export default function CampaignList(): JSX.Element {
                       campaign={campaign}
                       onSuccess={(): void => {
                         campaignData.doGetRequest();
-                        snack.handleOpen();
+                        enqueueSnackbar('캠페인 On/Off 상태 변경 완료', { variant: 'success' });
                       }}
                       onFail={(): void => {
-                        failSnack.handleOpen();
+                        enqueueSnackbar(
+                          '캠페인 On/Off 상태 변경에 실패했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견될 시 support@onad.io로 문의바랍니다.',
+                          { variant: 'error' },
+                        );
                       }}
                     />
                   }
@@ -125,20 +126,6 @@ export default function CampaignList(): JSX.Element {
           </Grid>
         </Grid>
       )}
-
-      <Snackbar
-        open={snack.open}
-        onClose={snack.handleClose}
-        color="success"
-        message="캠페인 On/Off 상태 변경 완료"
-      />
-
-      <Snackbar
-        open={failSnack.open}
-        onClose={failSnack.handleClose}
-        color="error"
-        message="캠페인 On/Off 상태 변경에 실패했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견될 시 support@onad.io로 문의바랍니다."
-      />
     </Paper>
   );
 }

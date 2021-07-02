@@ -1,42 +1,42 @@
-import { useState } from 'react';
 // atoms
 import { Hidden } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
-// organisms
-import StartGuideCard, {
-  ContractionDataType,
-} from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import history from '../../../history';
+import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
-import UserInfoCard, {
-  IncomeCashRes,
-} from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
+import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import ClickAdCard, {
   ClicksRes,
   LevelRes,
 } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
+import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
+import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 import IncomeChart, {
   IncomeChartParams,
 } from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
-import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
+import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
+import UserInfoCard, {
+  IncomeCashRes,
+} from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
 import OverlayUrlCard, {
   OverlayUrlRes,
 } from '../../../organisms/mypage/creator/shared/OverlayUrlCard';
-import MypageLoading from './Mypage.loading';
-import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
-import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
-import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
+// organisms
+import StartGuideCard, {
+  ContractionDataType,
+} from '../../../organisms/mypage/creator/shared/StartGuideCard';
+import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
+import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
+import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
+import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
+import useDialog from '../../../utils/hooks/useDialog';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
-import useDialog from '../../../utils/hooks/useDialog';
-import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
-import history from '../../../history';
-import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
-import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
+import MypageLoading from './Mypage.loading';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -67,7 +67,7 @@ const Dashboard = (): JSX.Element => {
   const platformLinkDialog = useDialog();
 
   // 오버레이 url 복사 성공 알림 스낵바를 위한 객체
-  const snack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
 
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
@@ -133,7 +133,11 @@ const Dashboard = (): JSX.Element => {
                     doRemoteControllerUrlRequest={remoteControllerUrlGet.doGetRequest}
                     overlayUrlData={overlayUrlGet.data}
                     contractionData={profileGet.data}
-                    handleSnackOpen={snack.handleOpen}
+                    handleSnackOpen={() =>
+                      enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
+                        variant: 'success',
+                      })
+                    }
                   />
                 )}
             </GridItem>
@@ -143,7 +147,11 @@ const Dashboard = (): JSX.Element => {
               {!overlayUrlGet.loading && overlayUrlGet.data && (
                 <OverlayUrlCard
                   overlayUrlData={overlayUrlGet.data}
-                  handleSnackOpen={snack.handleOpen}
+                  handleSnackOpen={() =>
+                    enqueueSnackbar('클립보드에 복사되었습니다. 방송도구에 등록해주세요', {
+                      variant: 'success',
+                    })
+                  }
                 />
               )}
             </GridItem>
@@ -216,13 +224,6 @@ const Dashboard = (): JSX.Element => {
             onClose={platformLinkDialog.handleClose}
           />
         )}
-
-      <Snackbar
-        color="success"
-        message="클립보드에 복사되었어요! 방송도구에 등록해주세요"
-        open={snack.open}
-        onClose={snack.handleClose}
-      />
     </>
   );
 };
