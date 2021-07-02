@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import HOST from '../../../../config';
 import MarketerInfoContext from '../../../../context/MarketerInfo.context';
 import history from '../../../../history';
+import { useMypageStore } from '../../../../store/mypageStore';
 // utils
 import axios from '../../../../utils/axios';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
@@ -68,7 +69,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
   }
 
   // 유저 로고 클릭시의 설정 리스트
-  const userLogoAnchor = useAnchorEl();
+  const handleUserMenuOpen = useMypageStore(x => x.handleUserMenuOpen);
 
   // 유저 정보 조회
   const userProfileGet = useGetRequest<null, ContractionDataType & MarketerInfo>(`/${type}`);
@@ -107,7 +108,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
         </Tooltip>
       </Hidden>
 
-      <IconButton size="small" onClick={userLogoAnchor.handleAnchorOpen}>
+      <IconButton size="small" onClick={handleUserMenuOpen}>
         {/* 읽지않은 공지사항이 있는 경우 뱃지 표시 */}
         {!noticeReadFlagGet.loading &&
         noticeReadFlagGet.data &&
@@ -168,10 +169,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       {/* 유저 설정 리스트 */}
       {type === 'creator' && !userProfileGet.loading && userProfileGet.data && (
         <UserPopover
-          open={userLogoAnchor.open}
           userData={userProfileGet.data}
-          anchorEl={userLogoAnchor.anchorEl}
-          handleAnchorClose={userLogoAnchor.handleAnchorClose}
           handleLogoutClick={handleLogoutClick}
           noticeReadFlagGet={noticeReadFlagGet}
           doNoticePatchRequest={(): void => {
@@ -183,10 +181,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       {/* 유저 설정 리스트 */}
       {type === 'marketer' && !marketerInfo.loading && marketerInfo.user && (
         <MarketerPopover
-          open={userLogoAnchor.open}
           userData={marketerInfo.user}
-          anchorEl={userLogoAnchor.anchorEl}
-          handleAnchorClose={userLogoAnchor.handleAnchorClose}
           handleLogoutClick={handleLogoutClick}
           noticeReadFlagGet={noticeReadFlagGet}
           doNoticePatchRequest={(): void => {

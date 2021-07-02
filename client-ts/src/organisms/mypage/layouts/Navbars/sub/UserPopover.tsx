@@ -14,6 +14,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
 import { ContractionDataType } from '../../../creator/shared/StartGuideCard';
+import { useMypageStore } from '../../../../../store/mypageStore';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },
@@ -21,33 +22,25 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface UserPopoverProps {
-  open: boolean;
   userData: ContractionDataType;
-  anchorEl?: HTMLElement | null;
-  handleAnchorClose: () => void;
   handleLogoutClick: () => void;
   noticeReadFlagGet: UseGetRequestObject<{ noticeReadState: number }>;
   doNoticePatchRequest: () => void;
 }
 export default function UserPopover(props: UserPopoverProps): JSX.Element {
-  const {
-    open,
-    userData,
-    anchorEl,
-    handleAnchorClose,
-    handleLogoutClick,
-    noticeReadFlagGet,
-    doNoticePatchRequest,
-  } = props;
+  const { userData, handleLogoutClick, noticeReadFlagGet, doNoticePatchRequest } = props;
+
+  const userMenuAnchor = useMypageStore(x => x.userMenuAnchor);
+  const handleUserMenuClose = useMypageStore(x => x.handleUserMenuClose);
 
   const theme = useTheme<OnadTheme>();
   const classes = useStyles();
 
   return (
     <Popover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleAnchorClose}
+      open={!!userMenuAnchor}
+      anchorEl={userMenuAnchor}
+      onClose={handleUserMenuClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right',
