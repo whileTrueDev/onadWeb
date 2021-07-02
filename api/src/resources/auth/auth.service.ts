@@ -81,6 +81,8 @@ export class AuthService {
         .catch(err => console.error(`아프리카 연동 정보 최신화 실패 - ${err}`));
     }
 
+    this.creatorLoginStamp(creator.creatorId);
+
     return user;
   }
 
@@ -263,13 +265,27 @@ export class AuthService {
     }
   }
 
+  // **********************************************
+  // * Private Methods
+  // **********************************************
+
   /**
    * 마케터 로그인 기록을 남기는 메서드
    * @param marketerId 마케터 아이디
    * @returns LoginStamp
    */
   private marketerLoginStamp(marketerId: string): Promise<LoginStamp> {
-    const stamp = this.loginStampRepo.create({ userId: marketerId, userIp: '', userType: 1 });
+    const stamp = this.loginStampRepo.create({ userId: marketerId, userIp: '', userType: 1 }); // 1 = 광고주
+    return this.loginStampRepo.save(stamp);
+  }
+
+  /**
+   * 방송인 로그인 기록을 남기는 메서드
+   * @param creatorId 방송인 아이디
+   * @returns LoginStamp
+   */
+  private creatorLoginStamp(marketerId: string): Promise<LoginStamp> {
+    const stamp = this.loginStampRepo.create({ userId: marketerId, userIp: '', userType: 0 }); // 0 = 방송인
     return this.loginStampRepo.save(stamp);
   }
 

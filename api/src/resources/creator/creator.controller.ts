@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Ip,
   Patch,
@@ -152,5 +153,11 @@ export class CreatorController {
     @Body(ValidationPipe) dto: UpdatePasswordDto,
   ): Promise<boolean> {
     return this.creatorService.updatePassword(creatorId, dto.password);
+  }
+
+  @UseGuards(IsAuthGuard)
+  @Delete()
+  creatorSignOut(@Creator() { creatorId }: CreatorSession): Promise<boolean> {
+    return this.creatorService.creatorSignOut(creatorId);
   }
 }

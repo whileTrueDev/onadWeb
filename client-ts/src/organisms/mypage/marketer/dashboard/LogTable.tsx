@@ -139,10 +139,7 @@ export default function issueTable(props: {
               .map((r, index) => (
                 <div key={nanoid()}>
                   <ListItem style={{ justifyContent: 'space-between' }}>
-                    <ListItemText
-                      primary={makeContents(r.type, r.detail)}
-                      secondary={new Date(r.date).toLocaleString()}
-                    />
+                    <ListItemText primary={makeContents(r.type, r.detail)} secondary={r.date} />
                   </ListItem>
                   {actionLogData.data && index !== actionLogData.data.length - 1 && (
                     <Divider light />
