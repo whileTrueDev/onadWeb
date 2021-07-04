@@ -174,12 +174,6 @@ body {
   align-items: center;
 }
 
-.bottom-area-text#bottom-admin {
-  margin-right: 0;
-  color: #ffffff;
-  font-size: 23px;
-}
-
 .bottom-area p:after {
   content: '';
   white-space: nowrap;
@@ -192,6 +186,12 @@ body {
   font-size: 23px;
   color: #ffffff;
   -webkit-text-stroke: 1px #000000;
+}
+
+.bottom-admin {
+  z-index:3;
+  color: yellow;
+  font-size: 23px;
 }
 
 .bottom-area p {
