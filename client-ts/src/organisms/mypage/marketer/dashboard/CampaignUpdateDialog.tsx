@@ -1,16 +1,15 @@
-import * as React from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Grid, Checkbox, FormControlLabel, Divider, Snackbar, IconButton } from '@material-ui/core';
-import Check from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import { Checkbox, Divider, FormControlLabel, Grid } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Check from '@material-ui/icons/Check';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
-import Dialog from '../../../../atoms/Dialog/Dialog';
 import Button from '../../../../atoms/CustomButtons/Button';
+import Dialog from '../../../../atoms/Dialog/Dialog';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
 import Success from '../../../../atoms/Typography/Success';
-import useDialog from '../../../../utils/hooks/useDialog';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { CampaignInterface } from './interfaces';
@@ -91,10 +90,10 @@ interface CampaignUpdateDialogProps {
 }
 const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { open, selectedCampaign, handleClose, doGetRequest } = props;
 
-  const snack = useDialog();
   const [error, setError] = React.useState<string | false>(false); // budget 작성시 한도 체크용 State
   const [checkName, setCheckName] = React.useState<boolean>(false);
   const [duplicate, setDuplicate] = React.useState<boolean>(false);
@@ -159,14 +158,14 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
     const data = { campaignId: selectedCampaign.campaignId, type: 'name', data: state };
     doPatchRequest(data);
     dispatch({ key: 'reset' });
-    snack.handleOpen();
+    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
   };
 
   const handleBudgetUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'budget', data: state };
     doPatchRequest(data);
     dispatch({ key: 'reset' });
-    snack.handleOpen();
+    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
   };
 
   return (
@@ -397,37 +396,6 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
           </Grid>
         </Grid>
       </Grid>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={snack.open}
-        autoHideDuration={400}
-        onClose={(): void => {
-          snack.handleClose();
-          handleClose();
-        }}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        // variant="success"
-        message={<Typography id="message-id">성공적으로 반영되었습니다.</Typography>}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="close"
-            color="inherit"
-            // className={classes.close}
-            onClick={(): void => {
-              snack.handleClose();
-              handleClose();
-            }}
-          >
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
     </Dialog>
   );
 };

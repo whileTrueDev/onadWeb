@@ -38,15 +38,12 @@ export default function NotificationPopover({
 }: {
   anchorEl: HTMLElement;
   notificationData: Notification[];
-  successCallback: () => void;
+  successCallback: (targetIdx: number) => void;
   handleAnchorClose: () => void;
 }): JSX.Element {
   const userType = window.location.pathname.split('/')[2];
   const classes = useStyles();
-  const notiReadPatch = usePatchRequest(`/${userType}/notification`, () => {
-    // 클라이언트 알림 읽음 처리
-    successCallback(); // 개인 알림 데이터 리로드
-  });
+  const notiReadPatch = usePatchRequest(`/${userType}/notification`);
   return (
     <Popover
       open={Boolean(anchorEl)}
@@ -78,9 +75,13 @@ export default function NotificationPopover({
           {notificationData.map(noti => (
             <div key={noti.index}>
               <MenuItem
-                onClick={(): void => {
+                onClick={async (): Promise<void> => {
                   if (noti.readState === UNREAD_STATE) {
-                    notiReadPatch.doPatchRequest({ index: noti.index });
+                    // 알림 읽음 처리
+                    notiReadPatch
+                      .doPatchRequest({ index: noti.index })
+                      // 개인 알림 데이터 리로드
+                      .then(() => successCallback(noti.index));
                   }
                 }}
               >

@@ -1,28 +1,27 @@
 /* eslint-disable react/display-name */
-import { useState } from 'react';
-
-import * as React from 'react';
-import dayjs from 'dayjs';
 import { Badge, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { MoreVert, OpenInNew } from '@material-ui/icons';
-import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
-import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
-import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
-import BannerInfoPopover from './BannerInfoPopover';
-import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
-import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
-import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useState } from 'react';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
-import { UrlLink } from '../interface';
+import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
+import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
+import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
+import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
+import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
 import {
   CONFIRM_STATE_CONFIRMED,
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderUrlConfirmState';
-import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
+import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
+import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
+import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
+import { UrlLink } from '../interface';
+import BannerInfoPopover from './BannerInfoPopover';
+import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -53,17 +52,16 @@ export default function CampaignInventory({
   handleCampaignSelect,
 }: CampaignInventoryProps): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
-  const [failSnackMessage, setFailSnackMessage] = useState<string>(
-    '캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.',
-  );
-  const failSnack = useDialog();
   function onOnOffSuccess(resData: any): void {
     // on/off 변경에 실패한 경우 (캠페인의 url / banner 중 하나라도 심의 통과하지 못한 경우)
     if (!resData[0]) {
-      failSnack.handleOpen();
-      setFailSnackMessage(resData[1]);
+      enqueueSnackbar(
+        resData[1] || '캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        { variant: 'error' },
+      );
     } else {
       handleCampaignSelect(undefined);
       campaignData.requestWithoutConcat();
@@ -71,7 +69,9 @@ export default function CampaignInventory({
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
   function onOnOffFail(): void {
-    failSnack.handleOpen();
+    enqueueSnackbar('캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.', {
+      variant: 'error',
+    });
   }
 
   // *****************************************
@@ -370,15 +370,6 @@ export default function CampaignInventory({
           open={anchor.open}
           anchorEl={anchor.anchorEl}
           onClose={anchor.handleAnchorClose}
-        />
-      )}
-
-      {failSnack.open && (
-        <Snackbar
-          open={failSnack.open}
-          onClose={failSnack.handleClose}
-          message={failSnackMessage}
-          color="error"
         />
       )}
     </div>

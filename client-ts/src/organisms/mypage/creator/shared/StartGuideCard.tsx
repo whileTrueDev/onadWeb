@@ -1,20 +1,20 @@
-import { useEffect } from 'react';
-import * as React from 'react';
-import { Paper, Typography, Stepper, Step, StepLabel, makeStyles, Button } from '@material-ui/core';
+import { Button, makeStyles, Paper, Step, StepLabel, Stepper, Typography } from '@material-ui/core';
 // components
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useEffect } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
+import history from '../../../../history';
 // utils
 import useDialog from '../../../../utils/hooks/useDialog';
 import ContractionSection from './guides/ContractionSection';
-import SetOverlaySection from './guides/SetOverlaySection';
-import SetSettlementSection from './guides/SetSettlementSection';
+import GuideComplete from './guides/GuideComplete';
 import GuideIntroduction from './guides/GuideIntroduction';
 import SetClickAdSection from './guides/SetClickAdSection';
+import SetOverlaySection from './guides/SetOverlaySection';
+import SetSettlementSection from './guides/SetSettlementSection';
 import { OverlayUrlRes } from './OverlayUrlCard';
-import StyledTooltip from '../../../../atoms/Tooltip/StyledTooltip';
-import history from '../../../../history';
-import GuideComplete from './guides/GuideComplete';
 
 export interface ContractionDataType {
   creatorId: string;
@@ -69,7 +69,7 @@ const ContractionCard = ({
   const classes = useStyles();
 
   const guideDialog = useDialog(); // 가이드 진행을 위해
-  const snack = useDialog(); // 계약완료 스낵바를 위해
+  const { enqueueSnackbar } = useSnackbar(); // 계약완료 스낵바를 위해
 
   // ********************************
   // 온애드 시작 가이드 소개 렌더링 여부
@@ -106,7 +106,7 @@ const ContractionCard = ({
             if (doRemoteControllerUrlRequest) doRemoteControllerUrlRequest();
           }}
           handleSuccess={(): void => {
-            snack.handleOpen();
+            enqueueSnackbar('성공적으로 계약이 완료되었습니다.', { variant: 'success' });
           }}
         />
       ),
@@ -240,13 +240,6 @@ const ContractionCard = ({
           </div>
         )}
       </Dialog>
-
-      <Snackbar
-        color="success"
-        message="성공적으로 계약이 완료되었습니다."
-        open={snack.open}
-        onClose={snack.handleClose}
-      />
     </>
   );
 };

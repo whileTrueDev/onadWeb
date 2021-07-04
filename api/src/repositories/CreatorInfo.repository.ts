@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreatorInfo } from '../entities/CreatorInfo';
 import { TwitchProfile } from '../interfaces/TwitchProfile.interface';
@@ -117,6 +117,53 @@ export class CreatorInfoRepository extends Repository<CreatorInfo> {
     newPwSalt: string,
   ): Promise<boolean> {
     return this.__update(creatorId, { password: newPw, passwordSalt: newPwSalt });
+  }
+
+  public async _signOut(creatorId: string): Promise<boolean> {
+    const user = await this.findOne({ where: { creatorId } });
+    if (!user) throw new UnauthorizedException('creatorId 가 올바르지 못합니다.');
+    const result = await this.createQueryBuilder()
+      .update()
+      .set({
+        creatorName: null,
+        creatorIp: null,
+        creatorMail: null,
+        realName: null,
+        creatorAccountNumber: null,
+        advertiseUrl: null,
+        creatorAlarmAgreement: 0,
+        creatorContractionAgreement: 0,
+        creatorTwitchId: null,
+        creatorLogo: null,
+        arrested: null,
+        noticeReadState: null,
+        adChatAgreement: 0,
+        settlementState: null,
+        identificationNumber: null,
+        name: null,
+        phoneNumber: null,
+        creatorType: 0,
+        identificationImg: null,
+        accountImg: null,
+        bussinessRegiImg: null,
+        cpaAgreement: 0,
+        remoteControllerUrl: null,
+        loginId: null,
+        password: null,
+        passwordSalt: null,
+        creatorTwitchOriginalId: null,
+        creatorTwitchRefreshToken: null,
+        afreecaId: null,
+        afreecaName: null,
+        afreecaRefreshToken: null,
+        afreecaLogo: null,
+        deleteFlag: true,
+      })
+      .where('creatorId = :creatorId', { creatorId })
+      .execute();
+
+    if (result.affected > 0) return true;
+    return false;
   }
 
   // ****************************

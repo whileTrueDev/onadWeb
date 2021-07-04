@@ -323,6 +323,11 @@ export class CreatorService {
     return this.creatorInfoRepo._replaceTwitchRefreshToken(creatorId, refreshToken);
   }
 
+  public async creatorSignOut(creatorId: string): Promise<boolean> {
+    // 개인정보 지우는 등 update 처리
+    return this.creatorInfoRepo._signOut(creatorId);
+  }
+
   // ***************************************
   // * Private Methods
   // ***************************************

@@ -1,24 +1,23 @@
-import { useReducer, MouseEvent } from 'react';
-import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Button, Collapse, Grid, Paper, useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Paper, Collapse, useMediaQuery, Button } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { MouseEvent, useReducer } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+// others
+import HOST from '../../../config';
+import history from '../../../history';
+import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 // organisms
 import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/AdPriorityPaper';
-import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/CampaignFormPaper';
 import {
   CampaignCreateReducer,
   defaultState as step3DefaultState,
 } from '../../../organisms/mypage/marketer/campaign-create2/reducers/campaignCreate.reducer';
-// others
-import HOST from '../../../config';
 import axios from '../../../utils/axios';
-import history from '../../../history';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
-import { useDialog } from '../../../utils/hooks';
-import parseParams from '../../../utils/parseParams';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import parseParams from '../../../utils/parseParams';
 
 const useStyles = makeStyles((_theme: Theme) => ({
   root: {
@@ -80,7 +79,8 @@ const CampaignCreate = (): JSX.Element => {
   };
 
   // *****************************************************
-  const errorSnack = useDialog();
+  // 스낵바
+  const { enqueueSnackbar } = useSnackbar();
 
   // *****************************************************
   // 캠페인정보 - 이름, 홍보문구, 예산 ref
@@ -203,21 +203,15 @@ const CampaignCreate = (): JSX.Element => {
       })
       .catch(err => {
         console.error(err);
-        errorSnack.handleOpen();
+        enqueueSnackbar('캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   };
 
   useMypageScrollToTop();
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-      {/* 요청 실패 스낵바 */}
-      <Snackbar
-        open={errorSnack.open}
-        onClose={errorSnack.handleClose}
-        color="error"
-        message="캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      />
-
       {isDesktop ? (
         <Grid item xs={12}>
           <Paper>
