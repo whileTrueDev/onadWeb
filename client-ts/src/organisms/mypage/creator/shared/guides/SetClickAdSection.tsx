@@ -1,10 +1,10 @@
-import { useSnackbar } from 'notistack';
-import classnames from 'classnames';
 import { CircularProgress, Input, makeStyles, Paper, Typography } from '@material-ui/core';
 import { InsertLinkOutlined } from '@material-ui/icons';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
-import { useGetRequest } from '../../../../../utils/hooks';
+import { useCreatorLandingUrl } from '../../../../../utils/hooks/query/useCreatorLandingUrl';
 import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
@@ -21,8 +21,8 @@ export default function SetClickAdSection(): JSX.Element {
   const profile = useCreatorProfile();
   const { enqueueSnackbar } = useSnackbar();
   // Landing url
-  const landingUrlGet = useGetRequest('/creator/landing-url', { type: 'twitch' });
-  const afreecaLandingUrlGet = useGetRequest('/creator/landing-url', { type: 'afreeca' });
+  const landingUrl = useCreatorLandingUrl('twitch');
+  const afreecaLandingUrl = useCreatorLandingUrl('afreeca');
 
   return (
     <div>
@@ -61,14 +61,14 @@ export default function SetClickAdSection(): JSX.Element {
                 />
                 트위치 클릭광고 URL
               </Typography>
-              {landingUrlGet.loading && <CircularProgress />}
-              {!landingUrlGet.loading && landingUrlGet.data && (
+              {landingUrl.isLoading && <CircularProgress />}
+              {!landingUrl.isLoading && landingUrl.data && (
                 <Input
                   style={{ maxWidth: 300, marginRight: 16 }}
                   id="ad-page-url"
                   value={
                     profile.data?.creatorContractionAgreement === 1
-                      ? landingUrlGet.data.url
+                      ? landingUrl.data.url
                       : '[온애드 이용 동의] 가 필요합니다.'
                   }
                   disabled={!profile.data?.creatorContractionAgreement}
@@ -122,14 +122,14 @@ export default function SetClickAdSection(): JSX.Element {
                 />
                 아프리카TV 클릭광고 URL
               </Typography>
-              {afreecaLandingUrlGet.loading && <CircularProgress />}
-              {!afreecaLandingUrlGet.loading && afreecaLandingUrlGet.data && (
+              {afreecaLandingUrl.isLoading && <CircularProgress />}
+              {!afreecaLandingUrl.isLoading && afreecaLandingUrl.data && (
                 <Input
                   style={{ maxWidth: 300, marginRight: 16 }}
                   id="ad-page-afreeca-url"
                   value={
                     profile.data?.creatorContractionAgreement === 1
-                      ? afreecaLandingUrlGet.data.url
+                      ? afreecaLandingUrl.data.url
                       : '[온애드 이용 동의] 가 필요합니다.'
                   }
                   disabled={!profile.data?.creatorContractionAgreement}

@@ -1,22 +1,14 @@
 import { CircularProgress, Paper, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { useCreatorCPS } from '../../../../../utils/hooks/query/useCreatorCps';
 
-export interface CpsMetaInfoRes {
-  income: number;
-  salesCount: number;
-  clickCount: number;
-}
-
-interface CPSMetaInfoProps {
-  cpsMetaInfo: UseGetRequestObject<CpsMetaInfoRes>;
-}
-export default function CPSMetaInfo({ cpsMetaInfo }: CPSMetaInfoProps): React.ReactElement {
+export default function CPSMetaInfo(): React.ReactElement {
+  const cpsMetaInfo = useCreatorCPS();
   return (
     <Paper style={{ padding: 32, marginTop: 8, minHeight: 60 }}>
       <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-        {cpsMetaInfo.loading && <CircularProgress />}
-        {!cpsMetaInfo.loading && cpsMetaInfo.data && (
+        {cpsMetaInfo.isLoading && <CircularProgress />}
+        {!cpsMetaInfo.isLoading && cpsMetaInfo.data && (
           <>
             <div style={{ textAlign: 'center' }}>
               <Typography>판매 누적 수익금</Typography>

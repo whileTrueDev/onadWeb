@@ -5,25 +5,15 @@ import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdC
 import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import NowBroadCard from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
-import IncomeChart, {
-  IncomeChartParams,
-} from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
+import IncomeChart from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCard';
 import OverlayUrlCard from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
-import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
 import { useCreatorBannerOverlay } from '../../../../utils/hooks/query/useCreatorBannerOverlay';
 // hooks
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 
-interface AdChatRes {
-  adChatAgreement: 1 | 0;
-}
-
 const CampaignManage = (): JSX.Element => {
-  // Adchat agreement
-  const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
   // 배너 송출 URL 정보 조회
   const overlayUrl = useCreatorBannerOverlay();
 
@@ -53,7 +43,7 @@ const CampaignManage = (): JSX.Element => {
 
         {/* 채팅광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ChatAdInfo adChatData={adchatGet} doGetReqeustOnOff={adchatGet.doGetRequest} />
+          <ChatAdInfo />
         </GridItem>
 
         <GridItem xs={12} lg={6}>

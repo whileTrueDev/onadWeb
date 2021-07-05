@@ -10,9 +10,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
+import { useQueryClient } from 'react-query';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
+import { useCreatorAdchatAgreement } from '../../../../utils/hooks/query/useCreatorAdChatAgreement';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -29,18 +30,10 @@ const useStyles = makeStyles(theme => ({
   alignCenter: { textAlign: 'center' },
 }));
 
-export interface AdChatRes {
-  adChatAgreement: 1 | 0;
-}
-export interface ChatAdInfoProps {
-  adChatData: UseGetRequestObject<AdChatRes>;
-  doGetReqeustOnOff: () => void;
-}
-export default function ChatAdInfo({
-  adChatData,
-  doGetReqeustOnOff,
-}: ChatAdInfoProps): JSX.Element {
+export default function ChatAdInfo(): JSX.Element {
+  const queryClient = useQueryClient();
   const creatorProfile = useCreatorProfile();
+  const adchatAgreement = useCreatorAdchatAgreement();
   const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
@@ -48,11 +41,11 @@ export default function ChatAdInfo({
 
   // OnOff toggle
   const onOffUpdate = usePatchRequest('/creator/adchat/agreement', () => {
-    doGetReqeustOnOff();
+    queryClient.invalidateQueries('creatorAdchatAgreement');
   });
   const handleSwitch = (): void => {
     onOffUpdate
-      .doPatchRequest({ targetOnOffState: !adChatData.data?.adChatAgreement })
+      .doPatchRequest({ targetOnOffState: !adchatAgreement.data?.adChatAgreement })
       .then(() => enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' }))
       .catch(() => enqueueSnackbar('변경중 오류가 발생했습니다.', { variant: 'error' }));
   };
@@ -91,14 +84,14 @@ export default function ChatAdInfo({
               control={
                 <Switch
                   color="primary"
-                  checked={Boolean(adChatData.data?.adChatAgreement)}
+                  checked={Boolean(adchatAgreement.data?.adChatAgreement)}
                   onChange={(): void => {
                     handleSwitch();
                   }}
                 />
               }
             />
-            {Boolean(adChatData.data?.adChatAgreement) && (
+            {Boolean(adchatAgreement.data?.adChatAgreement) && (
               <Typography variant="body2" color="textSecondary">
                 채팅창에서
                 <Typography variant="body2" color="primary" component="span">

@@ -12,7 +12,8 @@ import HelpIcon from '@material-ui/icons/Help';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
+import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorLandingUrl } from '../../../../utils/hooks/query/useCreatorLandingUrl';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
@@ -50,9 +51,9 @@ export default function ClickAdInfo(): JSX.Element {
   const creatorProfile = useCreatorProfile();
 
   // Landing url
-  const landingUrlGet = useGetRequest('/creator/landing-url', { type: 'twitch' });
+  const landingUrl = useCreatorLandingUrl('twitch');
   // afreeca Landing url
-  const afreecaLandingUrlGet = useGetRequest('/creator/landing-url', { type: 'afreeca' });
+  const afreecaLandingUrl = useCreatorLandingUrl('afreeca');
 
   return (
     <Paper className={classes.container}>
@@ -75,40 +76,40 @@ export default function ClickAdInfo(): JSX.Element {
           이 링크 클릭으로 수익이 창출됩니다.
         </Typography>
 
-        {landingUrlGet.loading || afreecaLandingUrlGet.loading ? (
+        {landingUrl.isLoading || afreecaLandingUrl.isLoading ? (
           <CircularProgress />
         ) : (
           <div>
-            {landingUrlGet.data && (
+            {landingUrl.data && (
               <TextField
                 label="트위치 링크"
                 className={classes.overlayUrl}
                 fullWidth
                 id="ad-page-url"
-                value={landingUrlGet.data ? landingUrlGet.data.url : ''}
-                disabled={landingUrlGet.loading || !landingUrlGet.data}
+                value={landingUrl.data ? landingUrl.data.url : ''}
+                disabled={landingUrl.isLoading || !landingUrl.data}
                 inputProps={{
                   readOnly: true,
-                  className: landingUrlGet.data ? classes.overlayUrlInput : undefined,
+                  className: landingUrl.data ? classes.overlayUrlInput : undefined,
                 }}
               />
             )}
-            {afreecaLandingUrlGet.data && (
+            {afreecaLandingUrl.data && (
               <TextField
                 label="아프리카TV 링크"
                 className={classes.overlayUrl}
                 fullWidth
                 id="ad-page-url"
-                value={afreecaLandingUrlGet.data ? afreecaLandingUrlGet.data.url : ''}
-                disabled={afreecaLandingUrlGet.loading || !afreecaLandingUrlGet.data}
+                value={afreecaLandingUrl.data ? afreecaLandingUrl.data.url : ''}
+                disabled={afreecaLandingUrl.isLoading || !afreecaLandingUrl.data}
                 inputProps={{
                   readOnly: true,
-                  className: afreecaLandingUrlGet.data ? classes.overlayUrlInput : undefined,
+                  className: afreecaLandingUrl.data ? classes.overlayUrlInput : undefined,
                 }}
               />
             )}
 
-            {!landingUrlGet.data && !afreecaLandingUrlGet.data && (
+            {!landingUrl.data && !afreecaLandingUrl.data && (
               <div style={{ textAlign: 'center', marginTop: 32 }}>
                 <Typography variant="body2" color="textSecondary">
                   플랫폼 연동이 필요합니다!

@@ -11,7 +11,8 @@ import {
 } from '@material-ui/core';
 import { Help } from '@material-ui/icons';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
-import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
+import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorIncomeRatio } from '../../../../utils/hooks/query/useCreatorIncomeRatio';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -49,14 +50,9 @@ const useStyles = makeStyles(theme => ({
   tooltip: { padding: theme.spacing(4), maxWidth: 300, textAlign: 'center' },
 }));
 
-export interface IncomeRatio {
-  creatorId: string;
-  type: 'CPM' | 'CPC' | 'CPA';
-  cashAmount: number;
-}
 export default function AdIncomeCard(): JSX.Element {
   // 출금 비율 정보 조회
-  const incomeRatioGet = useGetRequest<null, IncomeRatio[]>('/creator/income/ratio');
+  const incomeRatio = useCreatorIncomeRatio();
   const theme = useTheme();
   const classes = useStyles();
 
@@ -127,14 +123,14 @@ export default function AdIncomeCard(): JSX.Element {
     <Paper className={classes.container}>
       <Grid container justify="space-around">
         {/* 로딩중 */}
-        {incomeRatioGet.loading && (
+        {incomeRatio.isLoading && (
           <Grid item className={classes.loading}>
             <CircularProgress />
           </Grid>
         )}
 
         {/* 수익데이터가없는 경우 */}
-        {!incomeRatioGet.loading && incomeRatioGet.data && incomeRatioGet.data.length === 0 && (
+        {!incomeRatio.isLoading && incomeRatio.data && incomeRatio.data.length === 0 && (
           <Grid item className={classes.emptySection}>
             <div className={classes.emptySectionContents}>
               <Typography variant="body1" className={classes.bold}>
@@ -144,12 +140,12 @@ export default function AdIncomeCard(): JSX.Element {
           </Grid>
         )}
 
-        {!incomeRatioGet.loading && incomeRatioGet.data && incomeRatioGet.data.length > 0 && (
+        {!incomeRatio.isLoading && incomeRatio.data && incomeRatio.data.length > 0 && (
           <>
             <Grid item xs={12} sm={6}>
               <Typography className={classes.title}>광고 수익 정보</Typography>
               <Grid container alignItems="center">
-                {incomeRatioGet.data
+                {incomeRatio.data
                   .sort((a, b) => b.type.localeCompare(a.type))
                   .map(d => (
                     <Grid item xs={6} key={d.type + d.cashAmount} className={classes.fields}>
@@ -186,7 +182,7 @@ export default function AdIncomeCard(): JSX.Element {
               <div className={classes.chartSection}>
                 <PieChart width={270} height={200}>
                   <Pie
-                    data={incomeRatioGet.data.map(d => ({
+                    data={incomeRatio.data.map(d => ({
                       cashAmount: d.cashAmount,
                       type: renderType(d.type),
                     }))}
@@ -198,7 +194,7 @@ export default function AdIncomeCard(): JSX.Element {
                     label={renderCustomizedLabel}
                     outerRadius={70}
                   >
-                    {incomeRatioGet.data.map((entry, index) => (
+                    {incomeRatio.data.map((entry, index) => (
                       <Cell key={`cell-${entry.type}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

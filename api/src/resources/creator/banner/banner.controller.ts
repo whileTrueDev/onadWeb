@@ -29,11 +29,15 @@ export class BannerController {
   }
 
   @Get('list')
-  findBannerList(
+  async findBannerList(
     @Creator() { creatorId }: CreatorSession,
-    @Query(ValidationPipe) dto: PaginationDto,
+    @Query() dto: PaginationDto,
   ): Promise<FindBannerListRes> {
-    return this.bannerService.findBannerList(creatorId, dto);
+    const banners = await this.bannerService.findBannerList(creatorId, {
+      ...dto,
+      offset: dto.offset || 4,
+    });
+    return { banners, nextPage: Number(dto.page) + 1 };
   }
 
   @Get('overlay')

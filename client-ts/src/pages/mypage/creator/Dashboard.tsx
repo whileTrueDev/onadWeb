@@ -22,10 +22,9 @@ import { useCreatorBannerOverlay } from '../../../utils/hooks/query/useCreatorBa
 import { useCreatorClicks } from '../../../utils/hooks/query/useCreatorClicks';
 import { useCreatorIncome } from '../../../utils/hooks/query/useCreatorIncome';
 import { useCreatorProfile } from '../../../utils/hooks/query/useCreatorProfile';
-import { useNoticeList } from '../../../utils/hooks/query/useNoticeList';
 import useDialog from '../../../utils/hooks/useDialog';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-import MypageLoading from './Mypage.loading';
+import MypageLoading from './Dashboard.loading';
 
 const Dashboard = (): JSX.Element => {
   // 계약 정보 조회
@@ -38,8 +37,6 @@ const Dashboard = (): JSX.Element => {
   const clicks = useCreatorClicks();
   // 현재 송출중 배너 정보 조회
   const currentBanner = useCreatorBannerActive();
-  // 공지사항 정보 조회
-  const noticeList = useNoticeList();
   // 채널 연동 유도 다이얼로그
   const platformLinkDialog = useDialog();
 

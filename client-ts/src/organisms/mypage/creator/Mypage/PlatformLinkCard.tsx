@@ -4,17 +4,19 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Check, Refresh } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
+import { useQueryClient } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import { OnadTheme } from '../../../../theme';
 import axiosInstance from '../../../../utils/axios';
-import { useDialog, useEventTargetValue, useGetRequest } from '../../../../utils/hooks';
-import openKakaoChat from '../../../../utils/openKakaoChat';
+import { useDialog, useEventTargetValue } from '../../../../utils/hooks';
+import { useCreatorLinkAfreecaCert } from '../../../../utils/hooks/query/useCreatorLinkAfreecaCert';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
-import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+import openKakaoChat from '../../../../utils/openKakaoChat';
 import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
@@ -33,6 +35,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 
 export default function PlatformLinkCard(): JSX.Element {
   const classes = useStyles();
+  const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   // 프로필 유저 데이터
@@ -59,7 +62,7 @@ export default function PlatformLinkCard(): JSX.Element {
   // 연동하고자 하는 아프리카 ID (사용자입력)
   const afreecaId = useEventTargetValue();
 
-  const afreecaLinkData = useGetRequest('/link/afreeca/cert');
+  const afreecaLink = useCreatorLinkAfreecaCert();
 
   // 아프리카 연동 다이얼로그
   const afreecaLinkDialog = useDialog();
@@ -75,7 +78,7 @@ export default function PlatformLinkCard(): JSX.Element {
       .then(res => {
         if (res.data) {
           afreecaCancelConfirmDialog.handleClose();
-          profile.refetch();
+          queryClient.invalidateQueries('creatorProfile');
         }
       });
   }
@@ -89,7 +92,7 @@ export default function PlatformLinkCard(): JSX.Element {
       .then(res => {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
-          profile.refetch();
+          queryClient.invalidateQueries('creatorProfile');
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
@@ -110,7 +113,7 @@ export default function PlatformLinkCard(): JSX.Element {
       .then(res => {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
-          profile.refetch();
+          queryClient.invalidateQueries('creatorProfile');
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
@@ -242,17 +245,17 @@ export default function PlatformLinkCard(): JSX.Element {
               >
                 아프리카TV 연동하기
               </Button>
-              {!afreecaLinkData.loading && afreecaLinkData.data && (
+              {!afreecaLink.isLoading && afreecaLink.data && (
                 <>
                   <Typography style={{ marginLeft: 8 }}>
-                    {`${afreecaLinkData.data.afreecaId} 연동 진행중`}
+                    {`${afreecaLink.data.afreecaId} 연동 진행중`}
                   </Typography>
                   <MuiButton
                     color="primary"
                     size="small"
                     onClick={(): void => {
-                      profile.refetch();
-                      afreecaLinkData.doGetRequest();
+                      queryClient.invalidateQueries('creatorProfile');
+                      queryClient.invalidateQueries('creatorLinkAfreecaCert');
                     }}
                   >
                     새로고침
@@ -300,8 +303,6 @@ export default function PlatformLinkCard(): JSX.Element {
       {/* 아프리카 연동진행 다이얼로그 */}
       <AfreecaLinkDialog
         afreecaId={afreecaId}
-        afreecaLinkData={afreecaLinkData.data}
-        afreecaLinkDataRefetch={afreecaLinkData.doGetRequest}
         open={afreecaLinkDialog.open}
         onClose={afreecaLinkDialog.handleClose}
       />

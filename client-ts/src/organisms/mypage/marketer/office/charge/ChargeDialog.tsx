@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { useReducer, useEffect, useState } from 'react';
 
 import * as React from 'react';

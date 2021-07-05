@@ -15,8 +15,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { OpenInNew } from '@material-ui/icons';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
+import { useQueryClient } from 'react-query';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { useCreatorRemoteCampaigns } from '../../../../utils/hooks/query/useCreatorRemoteCampaigns';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { CPS_OPTION_TYPE } from '../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
@@ -59,20 +60,15 @@ interface RemotePageBannerTableProps {
   pageUrl: string;
 }
 
-interface Params {
-  remoteControllerUrl: string;
-}
 const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element => {
   const { pageUrl } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const remoteCampaignTableGet = useGetRequest<Params, BannerStatus[]>(
-    '/creator/remote/campaigns',
-    { remoteControllerUrl: pageUrl },
-  );
+  const queryClient = useQueryClient();
+  const remoteCampaigns = useCreatorRemoteCampaigns({ remoteControllerUrl: pageUrl });
 
   const onOffUpdate = usePatchRequest('/creator/remote/onoff', () => {
-    remoteCampaignTableGet.doGetRequest();
+    queryClient.invalidateQueries('creatorRemoteCampaigns');
   });
 
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
@@ -86,9 +82,9 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
   const rowsPerPage = 8; // 테이블 페이지당 행
 
   const emptyRows =
-    !remoteCampaignTableGet.loading &&
-    remoteCampaignTableGet.data &&
-    rowsPerPage - Math.min(rowsPerPage, remoteCampaignTableGet.data.length - page * rowsPerPage);
+    !remoteCampaigns.isLoading &&
+    remoteCampaigns.data &&
+    rowsPerPage - Math.min(rowsPerPage, remoteCampaigns.data.length - page * rowsPerPage);
 
   const categorySwitch = (
     category: number,
@@ -155,93 +151,97 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
           </TableRow>
         </TableHead>
         <TableBody>
-          {remoteCampaignTableGet.data?.map((value: BannerStatus) => (
-            <TableRow key={value.index}>
-              <TableCell
-                style={{
-                  flexDirection: 'column',
-                  textAlign: 'center',
-                  padding: '5px',
-                }}
-              >
-                <Typography variant="body1">{value.marketerName}</Typography>
-                <FormControlLabel
-                  label=""
-                  control={
-                    <Switch
-                      checked={Boolean(value.state)}
-                      color="secondary"
-                      onChange={(): void => {
-                        handleSwitch(value.campaignId, value.state, pageUrl);
-                      }}
-                      disabled={Boolean(remoteCampaignTableGet.loading)}
-                    />
-                  }
-                />
-                <Typography variant="body1">{value.date.split('T')[0]}</Typography>
-              </TableCell>
+          {remoteCampaigns.data &&
+            remoteCampaigns.data.map(value => (
+              <TableRow key={value.index}>
+                <TableCell
+                  style={{
+                    flexDirection: 'column',
+                    textAlign: 'center',
+                    padding: '5px',
+                  }}
+                >
+                  <Typography variant="body1">{value.marketerName}</Typography>
+                  <FormControlLabel
+                    label=""
+                    control={
+                      <Switch
+                        checked={Boolean(value.state)}
+                        color="secondary"
+                        onChange={(): void => {
+                          handleSwitch(value.campaignId, value.state, pageUrl);
+                        }}
+                        disabled={Boolean(remoteCampaigns.isLoading)}
+                      />
+                    }
+                  />
+                  <Typography variant="body1">{value.date.split('T')[0]}</Typography>
+                </TableCell>
 
-              {/* 카테고리 렌더링 */}
-              {value.optionType === CPS_OPTION_TYPE && value.merchandiseId ? (
+                {/* 카테고리 렌더링 */}
+                {value.optionType === CPS_OPTION_TYPE && value.merchandiseId ? (
+                  <TableCell>
+                    <div>
+                      <Chip size="small" className={classes.chip} label="판매형광고" />
+                      <Chip size="small" className={classes.chip} label="10%" />
+                    </div>
+                    <Typography variant="body2">상품 판매 리워드형 광고입니다.</Typography>
+                    {value.merchandiseName && value.itemSiteUrl && (
+                      <Typography
+                        className={classes.linkText}
+                        variant="body2"
+                        color="primary"
+                        onClick={(): void => {
+                          window.open(value.itemSiteUrl, '_blank');
+                        }}
+                      >
+                        {value.merchandiseName}
+                        <OpenInNew
+                          fontSize="small"
+                          color="primary"
+                          style={{ verticalAlign: 'middle' }}
+                        />
+                      </Typography>
+                    )}
+                    {value.merchandisePrice ? (
+                      <div>
+                        <Typography variant="body2">
+                          {'상품가격: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {value.merchandisePrice.toLocaleString()}
+                          </Typography>
+                        </Typography>
+                        <Typography variant="body2">
+                          {'판매수익: '}
+                          <Typography variant="body2" component="span" className={classes.bold}>
+                            {Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}
+                          </Typography>
+                        </Typography>
+                      </div>
+                    ) : null}
+                  </TableCell>
+                ) : (
+                  categorySwitch(value.priorityType, value.targetList, value.creatorName)
+                )}
+
                 <TableCell>
                   <div>
-                    <Chip size="small" className={classes.chip} label="판매형광고" />
-                    <Chip size="small" className={classes.chip} label="10%" />
+                    <OnadBanner
+                      src={value.bannerSrc}
+                      style={{ maxHeight: '75px', width: '150px' }}
+                    />
                   </div>
-                  <Typography variant="body2">상품 판매 리워드형 광고입니다.</Typography>
-                  {value.merchandiseName && value.itemSiteUrl && (
-                    <Typography
-                      className={classes.linkText}
-                      variant="body2"
-                      color="primary"
-                      onClick={(): void => {
-                        window.open(value.itemSiteUrl, '_blank');
-                      }}
-                    >
-                      {value.merchandiseName}
-                      <OpenInNew
-                        fontSize="small"
-                        color="primary"
-                        style={{ verticalAlign: 'middle' }}
-                      />
-                    </Typography>
-                  )}
-                  {value.merchandisePrice ? (
-                    <div>
-                      <Typography variant="body2">
-                        {'상품가격: '}
-                        <Typography variant="body2" component="span" className={classes.bold}>
-                          {value.merchandisePrice.toLocaleString()}
-                        </Typography>
-                      </Typography>
-                      <Typography variant="body2">
-                        {'판매수익: '}
-                        <Typography variant="body2" component="span" className={classes.bold}>
-                          {Math.ceil(value.merchandisePrice * 0.1).toLocaleString()}
-                        </Typography>
-                      </Typography>
-                    </div>
-                  ) : null}
                 </TableCell>
-              ) : (
-                categorySwitch(value.priorityType, value.targetList, value.creatorName)
-              )}
-
-              <TableCell>
-                <div>
-                  <OnadBanner src={value.bannerSrc} style={{ maxHeight: '75px', width: '150px' }} />
-                </div>
-              </TableCell>
-              <TableCell>{value.campaignDescription}</TableCell>
-            </TableRow>
-          ))}
+                <TableCell>{value.campaignDescription}</TableCell>
+              </TableRow>
+            ))}
           {emptyRows && emptyRows > 0 && (
             <TableRow style={{ height: 48 * emptyRows }} key={nanoid()}>
               <TableCell colSpan={4} />
             </TableRow>
           )}
         </TableBody>
-        {remoteCampaignTableGet.loading && (
+        {remoteCampaigns.isLoading && (
           <TableCell align="center" colSpan={4}>
             <CircularProgress />
           </TableCell>

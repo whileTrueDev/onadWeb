@@ -14,5 +14,6 @@ const getCreatorClicks = async () => {
 export const useCreatorClicks = () => {
   return useQuery('creatorClicks', getCreatorClicks, {
     staleTime: 1000 * 60 * 5, // 5분
+    refetchOnWindowFocus: true,
   });
 };

@@ -18,5 +18,6 @@ export const useCreatorIncomeChart = () => {
   return useQuery('creatorIncomeChart', getCreatorIncomeChart, {
     // staleTime 1시간
     staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: true,
   });
 };

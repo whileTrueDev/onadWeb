@@ -16,7 +16,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
 import { useAnchorEl } from '../../../../utils/hooks';
 import { useCreatorClicks } from '../../../../utils/hooks/query/useCreatorClicks';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { useCreatorClicksCurrent } from '../../../../utils/hooks/query/useCreatorClicksCurrent';
 
 dayjs.extend(relativeTime);
 
@@ -72,12 +72,12 @@ export default function AdClickCard(): JSX.Element {
       setCurrentClicksPage(prev => prev - 1);
     }
   }
-  // 최근 클릭 로그 조회
   const CURRENT_CLICK_OFFSET = 3;
-  const currentClickGet = useGetRequest<{ offset: number; page: number }, CurrentClickRes[]>(
-    '/creator/clicks/current',
-    { offset: CURRENT_CLICK_OFFSET, page: 0 },
-  );
+  // 최근 클릭 로그 조회
+  const currentClicks = useCreatorClicksCurrent({
+    offset: CURRENT_CLICK_OFFSET,
+    page: currentClicksPage,
+  });
 
   const renderClickChannel = (type: string): string => {
     if (type === 'adchat') return '채팅광고';
@@ -143,15 +143,15 @@ export default function AdClickCard(): JSX.Element {
           </Hidden>
 
           <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>최근 광고 클릭</Typography>
-          {currentClickGet.loading && <CircularProgress style={{ marginTop: 16 }} />}
-          {!currentClickGet.loading && currentClickGet.data && currentClickGet.data.length === 0 && (
+          {currentClicks.isLoading && <CircularProgress style={{ marginTop: 16 }} />}
+          {!currentClicks.isLoading && currentClicks.data && currentClicks.data.length === 0 && (
             <Typography variant="body2" style={{ marginTop: 16 }}>
               최근 광고 클릭 내역이 없어요..
             </Typography>
           )}
-          {!currentClickGet.loading &&
-            currentClickGet.data &&
-            currentClickGet.data.map(click => (
+          {!currentClicks.isLoading &&
+            currentClicks.data &&
+            currentClicks.data.map(click => (
               <div key={click.id} style={{ maxWidth: 270 }}>
                 <Typography
                   className={classnames(classes.buttonText, classes.line)}
@@ -172,7 +172,7 @@ export default function AdClickCard(): JSX.Element {
               </div>
             ))}
           {/* 이전/다음 버튼 */}
-          {currentClickGet.data && currentClickGet.data.length > 0 && (
+          {currentClicks.data && currentClicks.data.length > 0 && (
             <div style={{ display: 'flex' }}>
               <Button
                 variant="outlined"
@@ -182,10 +182,6 @@ export default function AdClickCard(): JSX.Element {
                 onClick={(): void => {
                   if (currentClicksPage > 0) {
                     handleBack();
-                    currentClickGet.doGetRequest({
-                      offset: CURRENT_CLICK_OFFSET,
-                      page: currentClicksPage - 1,
-                    });
                   }
                 }}
               >
@@ -195,14 +191,10 @@ export default function AdClickCard(): JSX.Element {
                 variant="outlined"
                 size="small"
                 style={{ maxWidth: 16 }}
-                disabled={!(currentClickGet.data && currentClickGet.data.length > 2)}
+                disabled={!(currentClicks.data && currentClicks.data.length > 2)}
                 onClick={(): void => {
-                  if (currentClickGet.data && currentClickGet.data.length > 2) {
+                  if (currentClicks.data && currentClicks.data.length > 2) {
                     handleNext();
-                    currentClickGet.doGetRequest({
-                      offset: CURRENT_CLICK_OFFSET,
-                      page: currentClicksPage + 1,
-                    });
                   }
                 }}
               >

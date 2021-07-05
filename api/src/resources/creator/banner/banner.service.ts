@@ -16,7 +16,6 @@ import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign
 import { CreatorInfoRepository } from '../../../repositories/CreatorInfo.repository';
 import {
   FindBannerIncomeListResult,
-  FindBannerListRes,
   FindBannerListResObj,
   FindBannerListResult,
 } from './interfaces/findBannerListRes.interface';
@@ -65,7 +64,10 @@ export class BannerService {
   }
 
   // * 크리에이터 배너 목록 정보
-  public async findBannerList(creatorId: string, dto: PaginationDto): Promise<FindBannerListRes> {
+  public async findBannerList(
+    creatorId: string,
+    dto: PaginationDto,
+  ): Promise<FindBannerListResObj[]> {
     const realOffset = Number(dto.offset);
     const startNum = Number(dto.page) * realOffset;
 
@@ -159,7 +161,7 @@ export class BannerService {
   private async __findIncomePerCampaign(
     campaignList: FindBannerListResult[],
     banList: string[],
-  ): Promise<FindBannerListRes> {
+  ): Promise<FindBannerListResObj[]> {
     const newList = await Promise.all(
       campaignList.map(async campaign => {
         const newCampaignData: FindBannerListResObj = { ...campaign, CPC: 0, CPM: 0, cash: 0 };
