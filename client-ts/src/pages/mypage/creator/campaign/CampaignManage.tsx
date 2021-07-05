@@ -4,9 +4,7 @@ import GridItem from '../../../../atoms/Grid/GridItem';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
 import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
-import NowBroadCard, {
-  CurrentBannerRes,
-} from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
+import NowBroadCard from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import IncomeChart, {
   IncomeChartParams,
 } from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
@@ -22,29 +20,12 @@ import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 interface AdChatRes {
   adChatAgreement: 1 | 0;
 }
-interface ClicksRes {
-  adpanel: number;
-  adchat: number;
-}
 
 const CampaignManage = (): JSX.Element => {
   // Adchat agreement
   const adchatGet = useGetRequest<null, AdChatRes>('/creator/adchat/agreement');
-  // Creator click data
-  const clicksSummaryGet = useGetRequest<null, ClicksRes>('/creator/clicks');
-  // 현재 송출중 배너 정보 조회
-  const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 배너 송출 URL 정보 조회
   const overlayUrl = useCreatorBannerOverlay();
-
-  // 리모트 컨트롤러 URL 정보
-  const remoteControllerUrlGet = useGetRequest<null, string>('/creator/remote/page-url');
-
-  // 수익금 차트 정보 조회
-  const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
-    '/creator/income/chart',
-    { dateRange: '30' },
-  );
 
   useMypageScrollToTop();
   return (
@@ -62,10 +43,7 @@ const CampaignManage = (): JSX.Element => {
 
         {/* 현재 송출 배너 광고 정보 */}
         <GridItem xs={12} lg={6}>
-          <NowBroadCard
-            currentBannerGet={currentBannerGet}
-            remoteControllerUrlGet={remoteControllerUrlGet}
-          />
+          <NowBroadCard />
         </GridItem>
 
         {/* 클릭광고 정보 */}
@@ -82,18 +60,15 @@ const CampaignManage = (): JSX.Element => {
           <AdIncomeCard />
         </GridItem>
         <GridItem xs={12} lg={6}>
-          <AdClickCard clicksSummaryData={clicksSummaryGet} />
+          <AdClickCard />
         </GridItem>
 
         <GridItem xs={12}>
-          {!incomeChartGet.loading && (
-            <IncomeChart
-              title={
-                <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>광고 현황</Typography>
-              }
-              incomeChartData={incomeChartGet.data ? incomeChartGet.data : []}
-            />
-          )}
+          <IncomeChart
+            title={
+              <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>광고 현황</Typography>
+            }
+          />
         </GridItem>
       </GridContainer>
     </div>

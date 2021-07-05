@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import classnames from 'classnames';
 import {
   Button,
   Chip,
@@ -13,9 +10,13 @@ import {
   Popover,
   Typography,
 } from '@material-ui/core';
+import classnames from 'classnames';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
-import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorClicks } from '../../../../utils/hooks/query/useCreatorClicks';
+import useGetRequest from '../../../../utils/hooks/useGetRequest';
 
 dayjs.extend(relativeTime);
 
@@ -41,15 +42,6 @@ const useStyles = makeStyles(theme => ({
   buttonText: { cursor: 'pointer', '&:hover': { textDecoration: 'underline' } },
 }));
 
-interface LevelRes {
-  creatorId: string;
-  level: number;
-  exp: number;
-}
-interface ClicksRes {
-  adpanel: number;
-  adchat: number;
-}
 export interface CurrentClickRes {
   id: string;
   clickedTime: string;
@@ -67,11 +59,9 @@ export interface CurrentClickRes {
   merchandiseId?: number;
   itemSiteUrl?: string;
 }
-export interface AdClickCardProps {
-  clicksSummaryData: UseGetRequestObject<ClicksRes>;
-}
-export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JSX.Element {
+export default function AdClickCard(): JSX.Element {
   const classes = useStyles();
+  const clicks = useCreatorClicks();
 
   const [currentClicksPage, setCurrentClicksPage] = useState(0);
   function handleNext(): void {
@@ -125,38 +115,19 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
           <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>광고 클릭 정보</Typography>
 
           <Grid container spacing={2} justify="center">
-            {/* 레벨 / 경험치 정보 */}
-            {/* 삭제요청 from scott 2021.02.08 */}
-            {/* {!levelData.loading && levelData.data && (
-            <Grid item>
-              <div style={{ marginBottom: 8, }}>
-                <Typography>광고 레벨</Typography>
-                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                  {`Lv. ${levelData.data.level}`}
-                </Typography>
-              </div>
-              <div style={{ marginTop: 8 }}>
-                <Typography>광고 경험치</Typography>
-                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                  {levelData.data.exp || 0}
-                </Typography>
-              </div>
-            </Grid>
-            )} */}
-
             {/* 클릭 수 정보 */}
-            {!clicksSummaryData.loading && clicksSummaryData.data && (
+            {!clicks.isLoading && clicks.data && (
               <Grid item>
                 <div style={{ marginBottom: 8 }}>
                   <Typography>클릭광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicksSummaryData.data.adpanel || 0} 회
+                    {clicks.data.adpanel || 0} 회
                   </Typography>
                 </div>
                 <div style={{ marginTop: 8 }}>
                   <Typography>채팅광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicksSummaryData.data.adchat || 0} 회
+                    {clicks.data.adchat || 0} 회
                   </Typography>
                 </div>
               </Grid>

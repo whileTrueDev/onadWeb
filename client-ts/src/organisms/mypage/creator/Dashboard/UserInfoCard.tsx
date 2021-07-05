@@ -1,4 +1,4 @@
-import { Avatar, Chip, Divider, Grow, Paper, Typography } from '@material-ui/core';
+import { Avatar, Box, Chip, Divider, Grow, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import dayjs from 'dayjs';
@@ -7,7 +7,10 @@ import { nanoid } from 'nanoid';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import history from '../../../../history';
-import { useGetRequest } from '../../../../utils/hooks';
+import { useCreatorClickStartCheck } from '../../../../utils/hooks/query/useCreatorBannerStartCheck';
+import { useCreatorBannerStartCheck } from '../../../../utils/hooks/query/useCreatorClickStartCheck';
+import { useCreatorIncome } from '../../../../utils/hooks/query/useCreatorIncome';
+import { useCreatorIncomeWithdrawal } from '../../../../utils/hooks/query/useCreatorIncomeWithdrawal';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 dayjs.extend(relativeTime);
@@ -71,32 +74,18 @@ export interface WithdrawalRes {
   creatorWithdrawalAmount: number;
   withdrawalState: number;
 }
-export interface IncomeCashRes {
-  creatorTotalIncome: number;
-  creatorReceivable: number;
-  creatorAccountNumber: string;
-  date: string;
-  creatorContractionAgreement: number;
-  realName: string;
-  settlementState: number;
-}
 interface UserInfoCardProps {
-  incomeData: IncomeCashRes;
-  withdrawalData: WithdrawalRes[];
   handleWithdrawalDialogOpen: () => void;
 }
-const UserInfoCard = ({
-  incomeData,
-  handleWithdrawalDialogOpen,
-  withdrawalData = [],
-}: UserInfoCardProps): JSX.Element => {
+const UserInfoCard = ({ handleWithdrawalDialogOpen }: UserInfoCardProps): JSX.Element => {
   const classes = useStyles();
   const profile = useCreatorProfile();
-
+  const income = useCreatorIncome();
+  const withdrawal = useCreatorIncomeWithdrawal();
   // 배너 광고 첫 수익 여부 정보
-  const bannerAdStartData = useGetRequest('/creator/banner/start-check');
+  const bannerAdStart = useCreatorBannerStartCheck();
   // 클릭 광고 첫 수익 여부 정보
-  const clickAdStartData = useGetRequest('/creator/clicks/start-check');
+  const clickAdStart = useCreatorClickStartCheck();
 
   function getSettlementString(settlementState: number): string {
     let result;
@@ -176,7 +165,7 @@ const UserInfoCard = ({
             />
           </Grow>
           {/* 한번이라도 배너 송출 로그가 찍혀있는 경우 설정 완료로 처리 */}
-          {!bannerAdStartData.loading && bannerAdStartData.data && (
+          {!bannerAdStart.isLoading && bannerAdStart.data && (
             <Grow in>
               <Chip
                 className={classnames(classes.chip)}
@@ -187,7 +176,7 @@ const UserInfoCard = ({
             </Grow>
           )}
           {/* 클릭 로그가 찍혀 있는 경우  처리 */}
-          {!clickAdStartData.loading && clickAdStartData.data && (
+          {!clickAdStart.isLoading && clickAdStart.data && (
             <Grow in>
               <Chip
                 className={classnames(classes.chip, classes.info)}
@@ -204,18 +193,24 @@ const UserInfoCard = ({
         <Typography gutterBottom variant="body1">
           출금가능한 수익금
         </Typography>
-        <Typography gutterBottom variant="h4" className={classes.bold}>
-          <Typography component="span" variant="body2" color="textSecondary">
-            {`누적 수익 ${incomeData.creatorTotalIncome.toLocaleString()}원`}
-          </Typography>
-          &nbsp;
-          {`${incomeData.creatorReceivable.toLocaleString()} 원`}
-        </Typography>
-        <Typography color="textSecondary" variant="caption">
-          {`최근 수익 반영: ${dayjs(incomeData.date).fromNow()}`}
-        </Typography>
 
-        {incomeData && incomeData.creatorAccountNumber && (
+        {income.isLoading && <CenterLoading />}
+        {!income.isLoading && income.data && (
+          <Box>
+            <Typography gutterBottom variant="h4" className={classes.bold}>
+              <Typography component="span" variant="body2" color="textSecondary">
+                {`누적 수익 ${income.data.creatorTotalIncome.toLocaleString()}원`}
+              </Typography>
+              &nbsp;
+              {`${income.data.creatorReceivable.toLocaleString()} 원`}
+            </Typography>
+            <Typography color="textSecondary" variant="caption">
+              {`최근 수익 반영: ${dayjs(income.data.date).fromNow()}`}
+            </Typography>
+          </Box>
+        )}
+
+        {income.data && income.data.creatorAccountNumber && income.data.creatorReceivable > 0 && (
           <div className={classes.right}>
             <Button
               color="primary"
@@ -233,15 +228,17 @@ const UserInfoCard = ({
       <Divider />
 
       <div className={classes.withdrawalSection}>
-        {(!withdrawalData || withdrawalData.length === 0) && (
+        {withdrawal.isLoading && <CenterLoading height={25} />}
+
+        {(!withdrawal.data || withdrawal.data.length === 0) && (
           <div className={classes.flex} style={{ marginTop: 32 }}>
             <Typography variant="body2" className={classes.ellipsis}>
               아직 출금 신청 내역이 없어요..
             </Typography>
           </div>
         )}
-        {withdrawalData &&
-          withdrawalData.slice(0, 2).map(withdrawalRequest => (
+        {withdrawal.data &&
+          withdrawal.data.slice(0, 2).map(withdrawalRequest => (
             <div className={classes.withdrawalItem} key={nanoid()}>
               <Typography className={classes.ellipsis}>
                 {`${withdrawalRequest.creatorWithdrawalAmount.toLocaleString()}원 출금신청 `}
@@ -261,7 +258,7 @@ const UserInfoCard = ({
               />
             </div>
           ))}
-        {!(withdrawalData.length === 0) && (
+        {withdrawal.data && !(withdrawal.data.length === 0) && (
           <div className={classes.right}>
             <Typography
               variant="caption"

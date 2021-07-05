@@ -1,25 +1,20 @@
 import { useState } from 'react';
-
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import WithdrawalCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalCard';
 import SettlementCard from '../../../organisms/mypage/creator/IncomeManage/SettlementCard';
-import useGetRequest from '../../../utils/hooks/useGetRequest';
-import { IncomeCashRes } from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';
-import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard';
-import { useAnchorEl } from '../../../utils/hooks';
 import SettlementDescPopover from '../../../organisms/mypage/creator/IncomeManage/SettlementDescPopover';
 import SummaryCard from '../../../organisms/mypage/creator/IncomeManage/SummaryCard';
-import CenterLoading from '../../../atoms/Loading/CenterLoading';
+import WithdrawalCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalCard';
 import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalRequestCard';
+import AdIncomeCard from '../../../organisms/mypage/creator/shared/AdIncomeCard';
 import WithdrawDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
+import { useAnchorEl } from '../../../utils/hooks';
+import { useCreatorIncome } from '../../../utils/hooks/query/useCreatorIncome';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 export default function IncomeManage(): JSX.Element {
   // 수익금 정보 조회
-  const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
-  // 출금 내역 데이터
-  const withdrawalData = useGetRequest('/creator/income/withdrawal');
+  const income = useCreatorIncome();
 
   // 설명 anchor
   const descAnchor = useAnchorEl();
@@ -27,7 +22,7 @@ export default function IncomeManage(): JSX.Element {
   // 출금 신청 다이얼로그
   const [open, setOpen] = useState(false);
   const handleDialogOpen = (): void => {
-    if (incomeCashGet.data && !(incomeCashGet.data.settlementState === 2)) {
+    if (income.data && !(income.data.settlementState === 2)) {
       alert('정산등록 신청이 승인되지 않았습니다. 내 수익 관리 탭에서 정산 등록을 진행해주세요.');
     } else {
       setOpen(true);
@@ -48,22 +43,13 @@ export default function IncomeManage(): JSX.Element {
 
         {/* 수익금 정보 및 출금신청 */}
         <GridItem xs={12} lg={6}>
-          <SummaryCard
-            descAnchor={descAnchor.open}
-            descAnchorOpen={descAnchor.handleAnchorOpen}
-            incomeCashGet={incomeCashGet}
-          />
+          <SummaryCard descAnchor={descAnchor.open} descAnchorOpen={descAnchor.handleAnchorOpen} />
         </GridItem>
 
         {/* 출금 신청 내역 */}
         <GridItem xs={12} lg={6}>
-          {withdrawalData.loading && <CenterLoading />}
-          {!withdrawalData.loading && (
-            <div>
-              <WithdrawalRequestCard handleDialogOpen={handleDialogOpen} />
-              <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />
-            </div>
-          )}
+          <WithdrawalRequestCard handleDialogOpen={handleDialogOpen} />
+          <WithdrawalCard />
         </GridItem>
 
         {/* 정산 등록 */}
@@ -80,15 +66,15 @@ export default function IncomeManage(): JSX.Element {
       />
 
       {/* 출금신청 다이얼로그 */}
-      {incomeCashGet.data &&
-        Boolean(incomeCashGet.data.creatorContractionAgreement) &&
-        incomeCashGet.data.creatorAccountNumber && (
+      {income.data &&
+        Boolean(income.data.creatorContractionAgreement) &&
+        income.data.creatorAccountNumber && (
           <WithdrawDialog
             open={open}
             handleClose={handleDialogClose}
-            realName={incomeCashGet.data.realName}
-            accountNumber={incomeCashGet.data.creatorAccountNumber}
-            receivable={incomeCashGet.data.creatorReceivable}
+            realName={income.data.realName}
+            accountNumber={income.data.creatorAccountNumber}
+            receivable={income.data.creatorReceivable}
           />
         )}
     </div>

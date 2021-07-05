@@ -3,6 +3,8 @@ import { Box, Grid, Typography, Divider, Paper, makeStyles } from '@material-ui/
 // utils
 import numFormatter from '../../../../utils/numFormatter';
 import history from '../../../../history';
+import { useCreatorClicks } from '../../../../utils/hooks/query/useCreatorClicks';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 
 const useStyles = makeStyles(theme => ({
   flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
@@ -21,22 +23,15 @@ const useStyles = makeStyles(theme => ({
     '&:hover': { textDecoration: 'underline' },
   },
 }));
-
-export interface ClicksRes {
-  adpanel: number;
-  adchat: number;
-}
 export interface LevelRes {
   creatorId: string;
   level: number;
   exp: number;
 }
 
-interface ClickAdCardProps {
-  clicksData: ClicksRes;
-}
-const ClickAdCard = ({ clicksData }: ClickAdCardProps): JSX.Element => {
+const ClickAdCard = (): JSX.Element => {
   const classes = useStyles();
+  const clicks = useCreatorClicks();
 
   return (
     <Paper className={classes.container}>
@@ -47,46 +42,53 @@ const ClickAdCard = ({ clicksData }: ClickAdCardProps): JSX.Element => {
       </div>
 
       <Grid container direction="column" justify="center">
-        <Grid item>
-          <Box className={classes.flex} mt={2}>
-            <Typography gutterBottom variant="body1">
-              채팅광고 클릭
-            </Typography>
-          </Box>
-          <div className={classes.flex}>
-            <Typography
-              gutterBottom
-              variant="h5"
-              className={classnames(classes.text, classes.bold)}
-            >
-              {`${numFormatter(clicksData.adchat ? clicksData.adchat : 0)} 회`}
-            </Typography>
-          </div>
-        </Grid>
-
-        <Grid item>
-          <Divider component="hr" orientation="vertical" />
-        </Grid>
-
-        <Grid item>
-          <div className={classes.flex}>
+        {clicks.isLoading ? (
+          <CenterLoading />
+        ) : (
+          <>
             <Grid item>
-              <Typography gutterBottom variant="body1">
-                패널광고 클릭
-              </Typography>
+              <Box className={classes.flex} mt={2}>
+                <Typography gutterBottom variant="body1">
+                  채팅광고 클릭
+                </Typography>
+              </Box>
+              <div className={classes.flex}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  className={classnames(classes.text, classes.bold)}
+                >
+                  {`${numFormatter(clicks.data?.adchat ? clicks.data.adchat : 0)} 회`}
+                </Typography>
+              </div>
             </Grid>
-          </div>
-          <div className={classes.flex}>
-            <Typography
-              gutterBottom
-              variant="h5"
-              className={classnames(classes.text, classes.bold)}
-            >
-              {`${numFormatter(clicksData.adpanel ? clicksData.adpanel : 0)} 회`}
-            </Typography>
-          </div>
-        </Grid>
+
+            <Grid item>
+              <Divider component="hr" orientation="vertical" />
+            </Grid>
+
+            <Grid item>
+              <div className={classes.flex}>
+                <Grid item>
+                  <Typography gutterBottom variant="body1">
+                    패널광고 클릭
+                  </Typography>
+                </Grid>
+              </div>
+              <div className={classes.flex}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  className={classnames(classes.text, classes.bold)}
+                >
+                  {`${numFormatter(clicks.data?.adpanel ? clicks.data.adpanel : 0)} 회`}
+                </Typography>
+              </div>
+            </Grid>
+          </>
+        )}
       </Grid>
+
       <div className={classes.right}>
         <Typography
           className={classes.moreButton}
