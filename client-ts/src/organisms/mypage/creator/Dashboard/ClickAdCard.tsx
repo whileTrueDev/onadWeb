@@ -1,7 +1,5 @@
 import classnames from 'classnames';
-import { Grid, Typography, Divider, Paper, makeStyles } from '@material-ui/core';
-// components
-import AdLevelSlider from '../../../../atoms/AdLevelSlider';
+import { Box, Grid, Typography, Divider, Paper, makeStyles } from '@material-ui/core';
 // utils
 import numFormatter from '../../../../utils/numFormatter';
 import history from '../../../../history';
@@ -36,9 +34,8 @@ export interface LevelRes {
 
 interface ClickAdCardProps {
   clicksData: ClicksRes;
-  levelData: LevelRes;
 }
-const ClickAdCard = ({ clicksData, levelData }: ClickAdCardProps): JSX.Element => {
+const ClickAdCard = ({ clicksData }: ClickAdCardProps): JSX.Element => {
   const classes = useStyles();
 
   return (
@@ -49,28 +46,13 @@ const ClickAdCard = ({ clicksData, levelData }: ClickAdCardProps): JSX.Element =
         <Typography variant="caption">내 광고관리 탭에서 자세히 확인할 수 있습니다.</Typography>
       </div>
 
-      <div className={classes.right}>
-        {/* 삭제요청 from scott 2021.02.08 */}
-        {/* <Typography>내 광고레벨</Typography>
-        <Typography gutterBottom variant="h4" className={classes.bold}>
-          {`LV. ${levelData.level}`}
-        </Typography> */}
-        <AdLevelSlider
-          valueLabelFormat={(x): string => `광고 경험치: ${x}`}
-          className={classes.slider}
-          max={500}
-          valueLabelDisplay="auto"
-          aria-label="pretto slider creator-ad-level"
-          value={levelData.exp}
-        />
-      </div>
-      <Grid container direction="row" justify="space-evenly">
+      <Grid container direction="column" justify="center">
         <Grid item>
-          <div className={classes.flex}>
+          <Box className={classes.flex} mt={2}>
             <Typography gutterBottom variant="body1">
               채팅광고 클릭
             </Typography>
-          </div>
+          </Box>
           <div className={classes.flex}>
             <Typography
               gutterBottom

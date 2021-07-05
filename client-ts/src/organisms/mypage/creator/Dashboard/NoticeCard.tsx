@@ -4,7 +4,8 @@ import classnames from 'classnames';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import history from '../../../../history';
 import { usePatchRequest } from '../../../../utils/hooks';
-import { NoticeData } from '../../shared/notice/NoticeTable';
+import { useNoticeList } from '../../../../utils/hooks/query/useNoticeList';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 
 dayjs.extend(relativeTime);
 
@@ -30,10 +31,9 @@ const useStyles = makeStyles(theme => ({
     '&:hover': { textDecoration: 'underline' },
   },
 }));
-export interface NoticeCardProps {
-  noticeData: NoticeData[];
-}
-export default function NoticeCard({ noticeData }: NoticeCardProps): JSX.Element {
+
+export default function NoticeCard(): JSX.Element {
+  const noticeList = useNoticeList();
   const classes = useStyles();
   const noticeReadFlagPatch = usePatchRequest('/notice/read-flag');
 
@@ -42,30 +42,32 @@ export default function NoticeCard({ noticeData }: NoticeCardProps): JSX.Element
       <Typography className={classes.bold}>최근 공지사항</Typography>
 
       <div className={classes.section}>
-        {noticeData
-          .sort((x, y) => new Date(y.regiDate).getTime() - new Date(x.regiDate).getTime())
-          .slice(0, 5)
-          .map(noti => (
-            <div key={noti.code} className={classes.noticeItem}>
-              <Typography
-                onClick={(): void => {
-                  noticeReadFlagPatch.doPatchRequest();
-                  history.push('/mypage/creator/notice', { selectedNotice: noti.code });
-                }}
-                className={classnames(classes.link, classes.ellipsis)}
-              >
-                {noti.title}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="textSecondary"
-                align="right"
-                className={classes.noticeDate}
-              >
-                {dayjs(noti.regiDate).fromNow()}
-              </Typography>
-            </div>
-          ))}
+        {noticeList.isLoading && <CenterLoading />}
+        {noticeList.data &&
+          noticeList.data
+            .sort((x, y) => new Date(y.regiDate).getTime() - new Date(x.regiDate).getTime())
+            .slice(0, 5)
+            .map(noti => (
+              <div key={noti.code} className={classes.noticeItem}>
+                <Typography
+                  onClick={(): void => {
+                    noticeReadFlagPatch.doPatchRequest();
+                    history.push('/mypage/creator/notice', { selectedNotice: noti.code });
+                  }}
+                  className={classnames(classes.link, classes.ellipsis)}
+                >
+                  {noti.title}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  align="right"
+                  className={classes.noticeDate}
+                >
+                  {dayjs(noti.regiDate).fromNow()}
+                </Typography>
+              </div>
+            ))}
       </div>
 
       <div className={classes.right}>

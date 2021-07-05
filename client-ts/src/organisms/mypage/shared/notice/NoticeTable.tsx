@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import FiberNew from '@material-ui/icons/FiberNew';
 import { lighten, makeStyles, Paper } from '@material-ui/core';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
+import { NoticeData } from '../../../../utils/hooks/query/useNoticeList';
 
 const useStyles = makeStyles(theme => ({
   new: { color: theme.palette.primary.main },
@@ -35,16 +36,6 @@ export interface NoticeTableProps {
   data: NoticeData[];
   loading?: boolean;
   onNoticeClick: (notice: NoticeData) => void;
-}
-export interface NoticeData {
-  id: string;
-  code: string;
-  topic: string;
-  headerName: string;
-  regiDate: string;
-  title: string;
-  contents?: string;
-  target: string;
 }
 
 export default function NoticeTable({

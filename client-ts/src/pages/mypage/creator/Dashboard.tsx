@@ -7,10 +7,7 @@ import history from '../../../history';
 import { CurrentBannerRes } from '../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
-import ClickAdCard, {
-  ClicksRes,
-  LevelRes,
-} from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
+import ClickAdCard, { ClicksRes } from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
 import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
 import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 import IncomeChart, {
@@ -24,11 +21,11 @@ import OverlayUrlCard from '../../../organisms/mypage/creator/shared/OverlayUrlC
 // organisms
 import StartGuideCard from '../../../organisms/mypage/creator/shared/StartGuideCard';
 import WithdrawalDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
-import { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
 import PlatformLinkDialog from '../../../organisms/mypage/shared/PlatformLinkDialog';
 import { ChartDataBase } from '../../../utils/chart/makeBarChartData';
 import { useCreatorBannerOverlay } from '../../../utils/hooks/query/useCreatorBannerOverlay';
 import { useCreatorProfile } from '../../../utils/hooks/query/useCreatorProfile';
+import { useNoticeList } from '../../../utils/hooks/query/useNoticeList';
 import useDialog from '../../../utils/hooks/useDialog';
 // hooks
 import useGetRequest from '../../../utils/hooks/useGetRequest';
@@ -44,8 +41,6 @@ const Dashboard = (): JSX.Element => {
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 광고페이지 정보 조회
   const clicksGet = useGetRequest<null, ClicksRes>('/creator/clicks');
-  // 크리에이터 광고 레벨 정보 조회
-  const levelGet = useGetRequest<null, LevelRes>('/creator/level');
   // 수익금 차트 정보 조회
   const incomeChartGet = useGetRequest<IncomeChartParams, ChartDataBase[]>(
     '/creator/income/chart',
@@ -54,7 +49,7 @@ const Dashboard = (): JSX.Element => {
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
   // 공지사항 정보 조회
-  const noticeGet = useGetRequest<null, NoticeData[]>('/notice');
+  const noticeList = useNoticeList();
   // 출금 내역 정보
   const withdrawalData = useGetRequest('/creator/income/withdrawal');
   // 리모트 컨트롤러 URL 정보
@@ -84,7 +79,6 @@ const Dashboard = (): JSX.Element => {
         {profile.isLoading ||
         incomeCashGet.loading ||
         clicksGet.loading ||
-        levelGet.loading ||
         incomeChartGet.loading ||
         currentBannerGet.loading ||
         overlayUrl.isLoading ? (
@@ -124,7 +118,9 @@ const Dashboard = (): JSX.Element => {
 
             {/* 배너 광고 송출 URL */}
             <GridItem xs={12} lg={6}>
-              {!overlayUrl.isLoading && overlayUrl.data && <OverlayUrlCard />}
+              {!overlayUrl.isLoading && overlayUrl.data && (
+                <OverlayUrlCard overlayUrlData={overlayUrl.data} />
+              )}
             </GridItem>
 
             {/* 유저 정보 및 수익금 카드 */}
@@ -161,14 +157,12 @@ const Dashboard = (): JSX.Element => {
 
             {/* 클릭광고 카드 */}
             <GridItem xs={12} lg={6}>
-              {!levelGet.loading && levelGet.data && !clicksGet.loading && clicksGet.data && (
-                <ClickAdCard levelData={levelGet.data} clicksData={clicksGet.data} />
-              )}
+              {!clicksGet.loading && clicksGet.data && <ClickAdCard clicksData={clicksGet.data} />}
             </GridItem>
 
             {/* 공지사항 카드 */}
             <GridItem xs={12} sm={6}>
-              {!noticeGet.loading && noticeGet.data && <NoticeCard noticeData={noticeGet.data} />}
+              {!noticeList.isLoading && noticeList.data && <NoticeCard />}
             </GridItem>
 
             {/* 고객센터 카드 */}

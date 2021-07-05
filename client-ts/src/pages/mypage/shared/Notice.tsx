@@ -5,26 +5,25 @@ import { useLocation } from 'react-router-dom';
 import CircularProgress from '../../../atoms/Progress/CircularProgress';
 import GridItem from '../../../atoms/Grid/GridItem';
 import GridContainer from '../../../atoms/Grid/GridContainer';
-import NoticeTable, { NoticeData } from '../../../organisms/mypage/shared/notice/NoticeTable';
+import NoticeTable from '../../../organisms/mypage/shared/notice/NoticeTable';
 import NoticeTableMobile from '../../../organisms/mypage/shared/notice/NoticeTableMobile';
 import NoticeContents from '../../../organisms/mypage/shared/notice/NoticeContents';
-
-import useGetRequest from '../../../utils/hooks/useGetRequest';
+import { NoticeData, useNoticeList } from '../../../utils/hooks/query/useNoticeList';
 
 const useStyles = makeStyles(() => ({
   contentBox: { maxWidth: 1200, margin: '0 auto' },
 }));
 
-export default function PublicNotification(): JSX.Element {
+export default function PublicNoticeList(): JSX.Element {
   const classes = useStyles();
   const isDesktopWidth = useMediaQuery('(min-width:990px)');
   // 공지사항 데이터 요청
-  const noticeData = useGetRequest<null, NoticeData[]>('/notice');
+  const notice = useNoticeList();
 
   // 공지사항 선택 스테이트
   const [selectedNotice, setSelectedNotice] = useState<NoticeData>();
-  function handleNoticeSelect(notice: NoticeData): void {
-    setSelectedNotice(notice);
+  function handleNoticeSelect(_notice: NoticeData): void {
+    setSelectedNotice(_notice);
   }
   // 특정 공지사항으로의 history push 처리
   const location = useLocation<{ selectedNotice: string }>();
@@ -35,13 +34,13 @@ export default function PublicNotification(): JSX.Element {
       mainPanel.scroll({ top: 0, behavior: 'smooth' });
     }
 
-    if (location.state && location.state.selectedNotice && noticeData.data) {
+    if (location.state && location.state.selectedNotice && notice.data) {
       // 대시보드로부터 선택된 공지사항 찾기
-      const targetNoti = noticeData.data.find(noti => noti.code === location.state.selectedNotice);
+      const targetNoti = notice.data.find(noti => noti.code === location.state.selectedNotice);
       // 선택된 공지사항이 없고, 대시보드로부터 선택된 공지사항이 있는 경우
       if (!selectedNotice && targetNoti) handleNoticeSelect(targetNoti);
     }
-  }, [location.state, mainPanel, noticeData.data, selectedNotice]);
+  }, [location.state, mainPanel, notice.data, selectedNotice]);
 
   return (
     <div className={classes.contentBox}>
@@ -51,17 +50,15 @@ export default function PublicNotification(): JSX.Element {
             <div>
               {selectedNotice && <NoticeContents selectedNotice={selectedNotice} />}
               <NoticeTable
-                data={noticeData.data || []}
-                loading={noticeData.loading}
+                data={notice.data || []}
+                loading={notice.isLoading}
                 onNoticeClick={handleNoticeSelect}
               />
             </div>
           ) : (
             <div>
-              {noticeData.loading && <CircularProgress small />}
-              {!noticeData.loading && noticeData.data && (
-                <NoticeTableMobile data={noticeData.data} />
-              )}
+              {notice.isLoading && <CircularProgress small />}
+              {!notice.isLoading && notice.data && <NoticeTableMobile data={notice.data} />}
             </div>
           )}
         </GridItem>
