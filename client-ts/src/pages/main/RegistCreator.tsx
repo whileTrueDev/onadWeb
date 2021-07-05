@@ -10,6 +10,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
 }));
+
 export default function RegistCreator(): JSX.Element {
   const classes = useStyles();
   const { logout } = useLoginValue();
