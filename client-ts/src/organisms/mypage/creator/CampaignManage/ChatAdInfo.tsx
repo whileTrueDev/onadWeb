@@ -12,7 +12,7 @@ import {
 import HelpIcon from '@material-ui/icons/Help';
 import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -33,15 +33,14 @@ export interface AdChatRes {
   adChatAgreement: 1 | 0;
 }
 export interface ChatAdInfoProps {
-  contracitonAgreementData: UseGetRequestObject<ProfileDataType>;
   adChatData: UseGetRequestObject<AdChatRes>;
   doGetReqeustOnOff: () => void;
 }
 export default function ChatAdInfo({
-  contracitonAgreementData,
   adChatData,
   doGetReqeustOnOff,
 }: ChatAdInfoProps): JSX.Element {
+  const creatorProfile = useCreatorProfile();
   const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
@@ -80,14 +79,14 @@ export default function ChatAdInfo({
           현재 트위치만 가능합니다.
         </Typography>
 
-        {!contracitonAgreementData.loading && contracitonAgreementData.data && (
+        {!creatorProfile.isLoading && creatorProfile.data && (
           <div className={classes.onoffButton}>
             <FormControlLabel
               label="끄기/켜기"
               // 온애드 이용 동의를 안했거나, 트위치 연동을 안한 경우
               disabled={
-                !contracitonAgreementData.data.creatorContractionAgreement ||
-                !contracitonAgreementData.data.creatorTwitchOriginalId
+                !creatorProfile.data.creatorContractionAgreement ||
+                !creatorProfile.data.creatorTwitchOriginalId
               }
               control={
                 <Switch
@@ -110,13 +109,13 @@ export default function ChatAdInfo({
                 </Typography>
               </Typography>
             )}
-            {!contracitonAgreementData.data.creatorContractionAgreement && (
+            {!creatorProfile.data.creatorContractionAgreement && (
               <Typography variant="body2" color="textSecondary">
                 이용동의가 필요합니다.
               </Typography>
             )}
-            {contracitonAgreementData.data.creatorContractionAgreement &&
-              !contracitonAgreementData.data.creatorTwitchOriginalId && (
+            {creatorProfile.data.creatorContractionAgreement &&
+              !creatorProfile.data.creatorTwitchOriginalId && (
                 <Typography variant="body2" color="textSecondary">
                   트위치TV 연동이 필요합니다.
                 </Typography>

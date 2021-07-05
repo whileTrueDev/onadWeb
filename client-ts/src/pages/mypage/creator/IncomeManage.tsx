@@ -14,11 +14,8 @@ import CenterLoading from '../../../atoms/Loading/CenterLoading';
 import WithdrawalRequestCard from '../../../organisms/mypage/creator/IncomeManage/WithdrawalRequestCard';
 import WithdrawDialog from '../../../organisms/mypage/creator/shared/WithdrawalDialog';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
-import { ProfileDataType } from '../../../utils/hooks/query/useCreatorProfile';
 
 export default function IncomeManage(): JSX.Element {
-  // 프로필 유저 데이터
-  const profileData = useGetRequest<null, ProfileDataType>('/creator');
   // 수익금 정보 조회
   const incomeCashGet = useGetRequest<null, IncomeCashRes>('/creator/income');
   // 출금 내역 데이터
@@ -54,15 +51,14 @@ export default function IncomeManage(): JSX.Element {
           <SummaryCard
             descAnchor={descAnchor.open}
             descAnchorOpen={descAnchor.handleAnchorOpen}
-            profileData={profileData}
             incomeCashGet={incomeCashGet}
           />
         </GridItem>
 
         {/* 출금 신청 내역 */}
         <GridItem xs={12} lg={6}>
-          {(profileData.loading || withdrawalData.loading) && <CenterLoading />}
-          {!(profileData.loading || withdrawalData.loading) && (
+          {withdrawalData.loading && <CenterLoading />}
+          {!withdrawalData.loading && (
             <div>
               <WithdrawalRequestCard handleDialogOpen={handleDialogOpen} />
               <WithdrawalCard withdrawalData={withdrawalData.data ? withdrawalData.data : []} />

@@ -42,17 +42,17 @@ const useStyles = makeStyles(theme => ({
 const ContractionCard = (): JSX.Element => {
   const classes = useStyles();
 
-  const profile = useCreatorProfile();
+  const creatorProfile = useCreatorProfile();
 
   const guideDialog = useDialog(); // 가이드 진행을 위해
 
   // 첫 사용자 도움 popper
   const tooltip = useDialog();
   useEffect(() => {
-    if (!profile.data?.creatorContractionAgreement) {
+    if (!creatorProfile.isLoading && !creatorProfile.data?.creatorContractionAgreement) {
       tooltip.handleOpen();
     }
-  }, [tooltip, profile.data?.creatorContractionAgreement]);
+  }, [tooltip, creatorProfile.data?.creatorContractionAgreement, creatorProfile.isLoading]);
 
   return (
     <>

@@ -6,21 +6,20 @@ import { Help } from '@material-ui/icons';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { IncomeCashRes } from '../Dashboard/UserInfoCard';
-import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 dayjs.extend(relativeTime);
 export interface SummaryCardProps {
   descAnchor: boolean;
   descAnchorOpen: (event: React.MouseEvent<HTMLElement>) => void;
-  profileData: UseGetRequestObject<ProfileDataType>;
   incomeCashGet: UseGetRequestObject<IncomeCashRes>;
 }
 export default function SummaryCard({
   descAnchor,
   descAnchorOpen,
-  profileData,
   incomeCashGet,
 }: SummaryCardProps): JSX.Element {
+  const creatorProfile = useCreatorProfile();
   function renderSettlementState(state: number): string {
     let settlementState;
     switch (state) {
@@ -50,7 +49,7 @@ export default function SummaryCard({
           <Typography style={{ fontWeight: 'bold' }}>수익금 정보 및 정산 정보</Typography>
           <Grid container alignItems="center" style={{ marginTop: 32 }}>
             <Grid item xs={6} md={4}>
-              {!profileData.loading && profileData.data && (
+              {!creatorProfile.isLoading && creatorProfile.data && (
                 <div>
                   <Typography>
                     정산 등록 여부
@@ -65,8 +64,8 @@ export default function SummaryCard({
                     </Typography>
                   </Typography>
                   <Chip
-                    label={renderSettlementState(profileData.data.settlementState)}
-                    color={profileData.data.settlementState === 2 ? 'primary' : 'default'}
+                    label={renderSettlementState(creatorProfile.data.settlementState)}
+                    color={creatorProfile.data.settlementState === 2 ? 'primary' : 'default'}
                   />
                 </div>
               )}

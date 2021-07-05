@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import {
   Button,
   Divider,
@@ -10,11 +9,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
+import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
+import { useAnchorEl, useGetRequest } from '../../../../utils/hooks';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -45,12 +44,10 @@ const useStyles = makeStyles(theme => ({
   vertical: { maxWidth: 80 },
 }));
 
-export interface ClickAdInfoProps {
-  profileData: UseGetRequestObject<ProfileDataType>;
-}
-export default function ClickAdInfo({ profileData }: ClickAdInfoProps): JSX.Element {
+export default function ClickAdInfo(): JSX.Element {
   const classes = useStyles();
   const descAnchor = useAnchorEl();
+  const creatorProfile = useCreatorProfile();
 
   // Landing url
   const landingUrlGet = useGetRequest('/creator/landing-url', { type: 'twitch' });
@@ -172,9 +169,9 @@ export default function ClickAdInfo({ profileData }: ClickAdInfoProps): JSX.Elem
 
             <Divider className={classes.divider} />
 
-            {!profileData.loading &&
-              profileData.data &&
-              (profileData.data.afreecaId || profileData.data.creatorTwitchOriginalId) && (
+            {!creatorProfile.isLoading &&
+              creatorProfile.data &&
+              (creatorProfile.data.afreecaId || creatorProfile.data.creatorTwitchOriginalId) && (
                 <>
                   <div>
                     <Typography variant="body1" className={classes.bold}>
@@ -190,7 +187,7 @@ export default function ClickAdInfo({ profileData }: ClickAdInfoProps): JSX.Elem
                   <br />
                   <div>
                     <div className={classes.imageContainer}>
-                      {profileData.data.creatorTwitchOriginalId && (
+                      {creatorProfile.data.creatorTwitchOriginalId && (
                         <>
                           <a
                             href="/pngs/landing/트위치_패널배너.png"
@@ -206,7 +203,7 @@ export default function ClickAdInfo({ profileData }: ClickAdInfoProps): JSX.Elem
                         </>
                       )}
 
-                      {profileData.data.afreecaId && (
+                      {creatorProfile.data.afreecaId && (
                         <>
                           <br />
                           <a

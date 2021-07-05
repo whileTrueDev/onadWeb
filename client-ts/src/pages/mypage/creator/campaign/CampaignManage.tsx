@@ -14,11 +14,7 @@ import AdIncomeCard from '../../../../organisms/mypage/creator/shared/AdIncomeCa
 import OverlayUrlCard from '../../../../organisms/mypage/creator/shared/OverlayUrlCard';
 import StartGuideCard from '../../../../organisms/mypage/creator/shared/StartGuideCard';
 import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
-import {
-  OverlayUrlRes,
-  useCreatorBannerOverlay,
-} from '../../../../utils/hooks/query/useCreatorBannerOverlay';
-import { ProfileDataType } from '../../../../utils/hooks/query/useCreatorProfile';
+import { useCreatorBannerOverlay } from '../../../../utils/hooks/query/useCreatorBannerOverlay';
 // hooks
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
@@ -38,8 +34,6 @@ const CampaignManage = (): JSX.Element => {
   const clicksSummaryGet = useGetRequest<null, ClicksRes>('/creator/clicks');
   // 현재 송출중 배너 정보 조회
   const currentBannerGet = useGetRequest<null, CurrentBannerRes[]>('/creator/banner/active');
-  // 계약 정보 조회
-  const profileGet = useGetRequest<null, ProfileDataType>('/creator');
   // 배너 송출 URL 정보 조회
   const overlayUrl = useCreatorBannerOverlay();
 
@@ -58,24 +52,12 @@ const CampaignManage = (): JSX.Element => {
       <GridContainer>
         {/* 광고 시작 가이드 */}
         <GridItem xs={12} lg={6}>
-          {!overlayUrl.isLoading && overlayUrl.data && !profileGet.loading && profileGet.data && (
-            <StartGuideCard />
-          )}
+          <StartGuideCard />
         </GridItem>
 
         {/* 배너 광고 오버레이 URL */}
         <GridItem xs={12} lg={6}>
-          {overlayUrl.isLoading && (
-            <OverlayUrlCard
-              overlayUrlData={{
-                advertiseUrl: '',
-                creatorContractionAgreement: 0,
-              }}
-            />
-          )}
-          {!overlayUrl.isLoading && overlayUrl.data && (
-            <OverlayUrlCard overlayUrlData={overlayUrl.data} />
-          )}
+          <OverlayUrlCard overlayUrlData={overlayUrl.data} />
         </GridItem>
 
         {/* 현재 송출 배너 광고 정보 */}
@@ -88,16 +70,12 @@ const CampaignManage = (): JSX.Element => {
 
         {/* 클릭광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ClickAdInfo profileData={profileGet} />
+          <ClickAdInfo />
         </GridItem>
 
         {/* 채팅광고 정보 */}
         <GridItem xs={12} sm={6} lg={3}>
-          <ChatAdInfo
-            contracitonAgreementData={profileGet}
-            adChatData={adchatGet}
-            doGetReqeustOnOff={adchatGet.doGetRequest}
-          />
+          <ChatAdInfo adChatData={adchatGet} doGetReqeustOnOff={adchatGet.doGetRequest} />
         </GridItem>
 
         <GridItem xs={12} lg={6}>
