@@ -52,6 +52,7 @@ export default function PublicNoticeList(): JSX.Element {
               <NoticeTable
                 data={notice.data || []}
                 loading={notice.isLoading}
+                selectedNotice={selectedNotice}
                 onNoticeClick={handleNoticeSelect}
               />
             </div>

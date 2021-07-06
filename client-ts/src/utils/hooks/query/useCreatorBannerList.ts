@@ -2,7 +2,7 @@ import { useInfiniteQuery } from 'react-query';
 import axiosInstance from '../../axios';
 
 export interface CreatorBannerListParams {
-  page: number;
+  pageParam: number;
 }
 export interface BannerData {
   campaignId: string;
@@ -31,16 +31,19 @@ export type FindBannerListRes = {
   banners: BannerData[];
 };
 
-const getCreatorBannerList = (pageParam: number) => {
-  return axiosInstance
-    .get<FindBannerListRes>(`/creator/banner/list?page=${pageParam}`)
-    .then(res => res.data);
-};
-
-export const useCreatorBannerList = (params: CreatorBannerListParams, onError?: () => void) => {
-  const { page } = params;
-  return useInfiniteQuery('creatorBannerList', () => getCreatorBannerList(page), {
-    onError,
-    getNextPageParam: lastPage => lastPage.nextPage,
-  });
+export const useCreatorBannerList = (onError?: () => void) => {
+  return useInfiniteQuery(
+    'creatorBannerList',
+    async ({ pageParam = 0 }) => {
+      return axiosInstance
+        .get<FindBannerListRes>(`/creator/banner/list?page=${pageParam}`)
+        .then(res => res.data);
+    },
+    {
+      onError,
+      getNextPageParam: lastPage => lastPage.nextPage ?? false,
+      staleTime: 1000 * 60 * 30, // 30분 후 데이터 만료로 표시
+      cacheTime: 1000 * 60 * 60, // 캐시 1시간 유지
+    },
+  );
 };

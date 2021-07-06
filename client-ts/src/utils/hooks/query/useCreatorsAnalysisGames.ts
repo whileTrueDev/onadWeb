@@ -19,5 +19,6 @@ export const useCreatorsAnalysisGames = () => {
   return useQuery('creatorsAnalysisGames', getCreatorsAnalysisGames, {
     // staleTime 1일
     staleTime: 1000 * 60 * 60 * 24,
+    cacheTime: 1000 * 60 * 60 * 24, // 캐시 1일 유지
   });
 };

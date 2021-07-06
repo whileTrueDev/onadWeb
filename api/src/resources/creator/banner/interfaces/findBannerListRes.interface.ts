@@ -32,6 +32,7 @@ export type FindBannerListResObj = FindBannerListResult & {
   CPC: number;
 };
 export type FindBannerListRes = {
-  nextPage?: number;
+  hasNextPage: boolean;
+  nextPage: number | boolean;
   banners: FindBannerListResObj[];
 };

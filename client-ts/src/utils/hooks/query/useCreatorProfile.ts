@@ -34,8 +34,5 @@ const getCreatorProfile = async () => {
 };
 
 export const useCreatorProfile = () => {
-  return useQuery('creatorProfile', getCreatorProfile, {
-    // 데이터 만료 시간 5분
-    staleTime: 1000 * 60 * 5,
-  });
+  return useQuery('creatorProfile', getCreatorProfile);
 };

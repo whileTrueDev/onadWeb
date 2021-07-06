@@ -21,5 +21,6 @@ export const useNoticeList = () => {
   return useQuery('noticeList', getNoticeList, {
     // staleTime 1시간
     staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 60, // 캐시 1시간 유지
   });
 };

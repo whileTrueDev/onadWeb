@@ -16,6 +16,7 @@ import { CreatorCampaignRepository } from '../../../repositories/CreatorCampaign
 import { CreatorInfoRepository } from '../../../repositories/CreatorInfo.repository';
 import {
   FindBannerIncomeListResult,
+  FindBannerListRes,
   FindBannerListResObj,
   FindBannerListResult,
 } from './interfaces/findBannerListRes.interface';
@@ -64,10 +65,7 @@ export class BannerService {
   }
 
   // * 크리에이터 배너 목록 정보
-  public async findBannerList(
-    creatorId: string,
-    dto: PaginationDto,
-  ): Promise<FindBannerListResObj[]> {
+  public async findBannerList(creatorId: string, dto: PaginationDto): Promise<FindBannerListRes> {
     const realOffset = Number(dto.offset);
     const startNum = Number(dto.page) * realOffset;
 
@@ -75,9 +73,20 @@ export class BannerService {
     const creatorCampaign = await this.creatorCampaignRepo.findOne({ where: { creatorId } });
     const banList = JSON.parse(creatorCampaign.banList) as { campaignList: string[] };
     // 배너 목록 조회
-    const banners = await this.__findBannerList(creatorId, startNum, realOffset);
-
-    return this.__findIncomePerCampaign(banners, banList.campaignList);
+    // realOffset + 1 만큼의 배너를 찾는 이유는 다음 페이지가 있는지 없는지 확인하기 위해. by hwasurr
+    const banners = await this.__findBannerList(creatorId, startNum, realOffset + 1);
+    let hasNextPage = false;
+    if (banners.length === realOffset + 1) {
+      hasNextPage = true;
+    }
+    return {
+      hasNextPage,
+      nextPage: hasNextPage ? Number(dto.page) + 1 : false,
+      banners: await this.__findIncomePerCampaign(
+        banners.slice(0, realOffset),
+        banList.campaignList,
+      ),
+    };
   }
 
   // * 크리에이터 배너 오버레이 주소 조회

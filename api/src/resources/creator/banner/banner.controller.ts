@@ -33,11 +33,10 @@ export class BannerController {
     @Creator() { creatorId }: CreatorSession,
     @Query() dto: PaginationDto,
   ): Promise<FindBannerListRes> {
-    const banners = await this.bannerService.findBannerList(creatorId, {
+    return this.bannerService.findBannerList(creatorId, {
       ...dto,
       offset: dto.offset || 4,
     });
-    return { banners, nextPage: Number(dto.page) + 1 };
   }
 
   @Get('overlay')

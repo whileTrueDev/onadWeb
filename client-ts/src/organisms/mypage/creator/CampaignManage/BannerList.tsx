@@ -75,7 +75,7 @@ export default function BannerList(): JSX.Element {
     return str;
   }
   // 캠페인목록 크기
-  const bannerList = useCreatorBannerList({ page: 0 });
+  const bannerList = useCreatorBannerList();
 
   return (
     <Grid container spacing={1} className={classes.container}>
@@ -181,9 +181,7 @@ export default function BannerList(): JSX.Element {
               color="primary"
               size="large"
               onClick={(): void => {
-                bannerList.fetchNextPage({
-                  pageParam: 1,
-                });
+                bannerList.fetchNextPage();
               }}
             >
               더보기

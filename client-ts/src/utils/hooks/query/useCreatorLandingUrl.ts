@@ -16,5 +16,7 @@ const getCreatorLandingUrl = async (type: CreatorLandingUrlParams) => {
 };
 
 export const useCreatorLandingUrl = (type: CreatorLandingUrlParams) => {
-  return useQuery(['creatorLandingUrl', type], () => getCreatorLandingUrl(type));
+  return useQuery(['creatorLandingUrl', type], () => getCreatorLandingUrl(type), {
+    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+  });
 };

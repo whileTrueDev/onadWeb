@@ -38,6 +38,6 @@ export const useCreatorClicksCurrent = (params: CreatorClicksCurrentParams) => {
   return useQuery(
     ['creatorClicksCurrent', offset, page],
     () => getCreatorClicksCurrent({ offset, page }),
-    { keepPreviousData: true },
+    { keepPreviousData: true, staleTime: 1000 * 60 * 5, cacheTime: 1000 * 60 * 10 },
   );
 };

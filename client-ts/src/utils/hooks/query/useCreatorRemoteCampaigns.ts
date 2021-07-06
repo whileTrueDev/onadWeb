@@ -28,9 +28,8 @@ const getCreatorRemoteCampaigns = async (params: RemoteCampaignParams) => {
 
 export const useCreatorRemoteCampaigns = (params: RemoteCampaignParams) => {
   return useQuery('creatorRemoteCampaigns', () => getCreatorRemoteCampaigns(params), {
-    // staleTime 2분
-    staleTime: 1000 * 60 * 2,
     refetchOnWindowFocus: true, // 윈도우 포커스시 재요청
     refetchOnMount: true, // 컴포넌트 마운트시 재요청
+    staleTime: 1000 * 60 * 3, // 3분지나면 만료된 데이터료 표시
   });
 };

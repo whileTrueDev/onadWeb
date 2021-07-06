@@ -8,7 +8,7 @@ const getCreatorBannerStartCheck = async () => {
 
 export const useCreatorBannerStartCheck = () => {
   return useQuery('creatorBannerStartCheck', getCreatorBannerStartCheck, {
-    // staleTime 15일
-    staleTime: 1000 * 60 * 60 * 24 * 15,
+    staleTime: 1000 * 60 * 30, // 30분 이후 만료로 표시
+    cacheTime: 1000 * 60 * 60, // 60분 동안 캐시 유지
   });
 };

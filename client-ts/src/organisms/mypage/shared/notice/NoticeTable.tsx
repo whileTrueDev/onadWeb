@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import dayjs from 'dayjs';
 import Typography from '@material-ui/core/Typography';
 import FiberNew from '@material-ui/icons/FiberNew';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { lighten, makeStyles, Paper } from '@material-ui/core';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
 import { NoticeData } from '../../../../utils/hooks/query/useNoticeList';
@@ -36,12 +37,14 @@ export interface NoticeTableProps {
   data: NoticeData[];
   loading?: boolean;
   onNoticeClick: (notice: NoticeData) => void;
+  selectedNotice?: NoticeData;
 }
 
 export default function NoticeTable({
   data,
   loading,
   onNoticeClick,
+  selectedNotice,
 }: NoticeTableProps): JSX.Element {
   const classes = useStyles();
 
@@ -64,6 +67,13 @@ export default function NoticeTable({
               field: 'code',
               renderCell: (_data): React.ReactElement => (
                 <Typography variant="body2" noWrap>
+                  {selectedNotice && _data.row.code === selectedNotice.code && (
+                    <ArrowRightIcon
+                      color="primary"
+                      fontSize="large"
+                      style={{ verticalAlign: 'middle' }}
+                    />
+                  )}
                   {_data.row.code}
                 </Typography>
               ),

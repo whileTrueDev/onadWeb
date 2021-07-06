@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NoticeCard(): JSX.Element {
-  const noticeList = useNoticeList();
   const classes = useStyles();
+  const noticeList = useNoticeList();
   const noticeReadFlagPatch = usePatchRequest('/notice/read-flag');
 
   return (
@@ -43,31 +43,29 @@ export default function NoticeCard(): JSX.Element {
 
       <div className={classes.section}>
         {noticeList.isLoading && <CenterLoading />}
-        {noticeList.data &&
-          noticeList.data
-            .sort((x, y) => new Date(y.regiDate).getTime() - new Date(x.regiDate).getTime())
-            .slice(0, 5)
-            .map(noti => (
-              <div key={noti.code} className={classes.noticeItem}>
-                <Typography
-                  onClick={(): void => {
-                    noticeReadFlagPatch.doPatchRequest();
-                    history.push('/mypage/creator/notice', { selectedNotice: noti.code });
-                  }}
-                  className={classnames(classes.link, classes.ellipsis)}
-                >
-                  {noti.title}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  align="right"
-                  className={classes.noticeDate}
-                >
-                  {dayjs(noti.regiDate).fromNow()}
-                </Typography>
-              </div>
-            ))}
+        {!noticeList.isLoading &&
+          noticeList.data &&
+          noticeList.data.slice(0, 5).map(noti => (
+            <div key={noti.code} className={classes.noticeItem}>
+              <Typography
+                onClick={(): void => {
+                  noticeReadFlagPatch.doPatchRequest();
+                  history.push('/mypage/creator/notice', { selectedNotice: noti.code });
+                }}
+                className={classnames(classes.link, classes.ellipsis)}
+              >
+                {noti.title}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                align="right"
+                className={classes.noticeDate}
+              >
+                {dayjs(noti.regiDate).fromNow()}
+              </Typography>
+            </div>
+          ))}
       </div>
 
       <div className={classes.right}>

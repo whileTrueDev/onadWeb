@@ -13,7 +13,7 @@ const getCreatorIncomeRatio = async () => {
 
 export const useCreatorIncomeRatio = () => {
   return useQuery('creatorIncomeRatio', getCreatorIncomeRatio, {
-    // staleTime 1시간
-    staleTime: 1000 * 60 * 60,
+    cacheTime: 1000 * 60 * 60, // 캐시 60분유지
+    staleTime: 1000 * 60 * 30, // 30분이후 만료된데이터로 표시
   });
 };

@@ -13,7 +13,8 @@ const getCreatorCPS = async () => {
 
 export const useCreatorCPS = () => {
   return useQuery('creatorCPS', getCreatorCPS, {
-    // staleTime 10 분
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 20, // 20 분이후 만료로 표시
+    cacheTime: 1000 * 60 * 20, // 캐시 20분간 유효
+    refetchOnWindowFocus: true,
   });
 };

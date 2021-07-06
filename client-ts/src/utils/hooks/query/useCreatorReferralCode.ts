@@ -20,5 +20,6 @@ export const useCreatorReferralCode = () => {
   return useQuery('creatorReferralCode', getCreatorReferralCode, {
     // staleTime 15일
     staleTime: 1000 * 60 * 60 * 24 * 15,
+    cacheTime: 1000 * 60 * 60 * 24, // 캐시 1일 유지
   });
 };
