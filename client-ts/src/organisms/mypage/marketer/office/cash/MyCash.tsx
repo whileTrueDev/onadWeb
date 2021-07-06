@@ -1,23 +1,22 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
+// own components
+import { Button, makeStyles, Paper } from '@material-ui/core';
 // core
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-// own components
-import { Paper, Button, CircularProgress, makeStyles } from '@material-ui/core';
-
-import CashChargeDialog from './CashChargeDialog';
-import RefundDialog from '../refund/RefundDialog';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { useEffect, useState } from 'react';
+import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
 import Table from '../../../../../atoms/Table/Table';
-
-import { CashInterface, AccountInterface } from '../interface';
-// hooks
-import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import useDialog from '../../../../../utils/hooks/useDialog';
 import HOST, { REACT_HOST } from '../../../../../config';
-import { AdInterface } from '../../dashboard/interfaces';
 import axiosInstance from '../../../../../utils/axios';
+import { useMarketerAccount } from '../../../../../utils/hooks/query/useMarketerAccount';
+import { useMarketerAd } from '../../../../../utils/hooks/query/useMarketerAd';
+import { useMarketerCash } from '../../../../../utils/hooks/query/useMarketerCash';
+import { useMarketerCashChargeHistory } from '../../../../../utils/hooks/query/useMarketerCashChargeHistory';
+import useDialog from '../../../../../utils/hooks/useDialog';
+import RefundDialog from '../refund/RefundDialog';
+import CashChargeDialog from './CashChargeDialog';
 
 dayjs.extend(relativeTime);
 
@@ -32,18 +31,17 @@ const useStyles = makeStyles(theme => ({
   button: { margin: theme.spacing(0, 1, 0, 0) },
 }));
 
-interface MyCashProps {
-  accountData: UseGetRequestObject<AccountInterface | null>;
-  cashData: UseGetRequestObject<CashInterface | null>;
-  adData: UseGetRequestObject<AdInterface | null>;
-}
-
-function MyCash(props: MyCashProps): JSX.Element {
+function MyCash(): JSX.Element {
   const classes = useStyles();
+
+  // 데이텨 요청 훅 사용
+  const account = useMarketerAccount();
+  const cash = useMarketerCash();
+  const ad = useMarketerAd();
+  const chargeHistory = useMarketerCashChargeHistory();
+
   const chargeDialog = useDialog();
   const refundDialog = useDialog();
-
-  const { accountData, cashData, adData } = props;
 
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 700;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
@@ -59,10 +57,6 @@ function MyCash(props: MyCashProps): JSX.Element {
 
   const [vbankload, setVbankload] = useState<boolean>(false);
 
-  const { data, loading } = useGetRequest<null, { data: string[][] }>(
-    '/marketer/cash/history/charge',
-  );
-
   useEffect(() => {
     axiosInstance.post<boolean[]>(`${HOST}/marketer/cash/vbank`).then(row => {
       setVbankload(row.data[0]);
@@ -71,20 +65,20 @@ function MyCash(props: MyCashProps): JSX.Element {
 
   return (
     <Paper className={classes.root}>
-      {adData.loading && <CircularProgress />}
-      {!adData.loading && !adData.error && adData.data && (
+      {ad.isLoading && <CenterLoading />}
+      {!ad.isLoading && !ad.error && ad.data && (
         <div>
           <Typography style={{ fontWeight: 'bold' }}>보유 광고 캐시</Typography>
           <Typography gutterBottom variant="h4" style={{ fontWeight: 'bold' }}>
-            {`${adData.data.cashAmount.toLocaleString()} 원`}
+            {`${ad.data.cashAmount.toLocaleString()} 원`}
             <Typography component="span" variant="body2" color="textSecondary">
               &nbsp;
-              {`현재 총 소진 캐시: ${adData.data.spendAll.toLocaleString()} 원`}
+              {`현재 총 소진 캐시: ${ad.data.spendAll.toLocaleString()} 원`}
             </Typography>
           </Typography>
-          {!cashData.loading && !cashData.error && cashData.data && (
+          {!cash.isLoading && !cash.error && cash.data && (
             <Typography variant="caption" color="textSecondary">
-              {`최근 캐시 변동: ${dayjs(cashData.data.date).fromNow()}`}
+              {`최근 캐시 변동: ${dayjs(cash.data.date).fromNow()}`}
             </Typography>
           )}
 
@@ -117,10 +111,10 @@ function MyCash(props: MyCashProps): JSX.Element {
               캐시충전(무통장)
             </Button>
 
-            {!accountData.loading &&
-              !accountData.error &&
-              accountData.data &&
-              !accountData.data.marketerAccountNumber && (
+            {!account.isLoading &&
+              !account.error &&
+              account.data &&
+              !account.data.marketerAccountNumber && (
                 <Tooltip title="환불계좌가 등록되지 않아 진행이 불가합니다.">
                   <span>
                     <Button
@@ -135,10 +129,10 @@ function MyCash(props: MyCashProps): JSX.Element {
                   </span>
                 </Tooltip>
               )}
-            {!accountData.loading &&
-              !accountData.error &&
-              accountData.data &&
-              accountData.data.marketerAccountNumber && (
+            {!account.isLoading &&
+              !account.error &&
+              account.data &&
+              account.data.marketerAccountNumber && (
                 <Button
                   size="medium"
                   variant="outlined"
@@ -158,7 +152,9 @@ function MyCash(props: MyCashProps): JSX.Element {
             <Table
               rowPerPage={3}
               tableHead={['날짜', '충전금액', '결제수단', '진행상황']}
-              tableData={loading || !data ? [] : data.data}
+              tableData={
+                chargeHistory.isLoading || !chargeHistory.data ? [] : chargeHistory.data.data
+              }
               pagination
             />
           </div>
@@ -166,27 +162,27 @@ function MyCash(props: MyCashProps): JSX.Element {
       )}
 
       {/* Dialogs */}
-      {!cashData.loading && cashData.data && !cashData.error && (
+      {!cash.isLoading && cash.data && !cash.error && (
         <CashChargeDialog
           open={chargeDialog.open}
           handleClose={chargeDialog.handleClose}
-          currentCash={cashData.data.cashAmount}
+          currentCash={cash.data.cashAmount}
         />
       )}
 
-      {!accountData.loading &&
-        !accountData.error &&
-        accountData.data &&
-        cashData.data &&
-        accountData.data.marketerAccountNumber &&
-        !cashData.loading &&
-        !accountData.error && (
+      {!account.isLoading &&
+        !account.error &&
+        account.data &&
+        cash.data &&
+        account.data.marketerAccountNumber &&
+        !cash.isLoading &&
+        !account.error && (
           <RefundDialog
             open={refundDialog.open}
             handleClose={refundDialog.handleClose}
-            accountNumber={accountData.data.marketerAccountNumber}
-            accountHolder={accountData.data.accountHolder}
-            currentCash={cashData.data.cashAmount}
+            accountNumber={account.data.marketerAccountNumber}
+            accountHolder={account.data.accountHolder}
+            currentCash={cash.data.cashAmount}
           />
         )}
     </Paper>
