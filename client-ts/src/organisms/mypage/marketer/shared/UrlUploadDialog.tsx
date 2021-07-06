@@ -35,7 +35,7 @@ const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
 interface UrlUploadDialogProps {
   open: boolean;
   handleClose: () => void;
-  recallRequest?: () => void;
+  onSuccess?: () => void;
 }
 
 function QontoStepIcon(props: any): JSX.Element {
@@ -50,7 +50,7 @@ function QontoStepIcon(props: any): JSX.Element {
 }
 
 export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
-  const { open, handleClose, recallRequest } = props;
+  const { open, handleClose, onSuccess } = props;
   const [activeStep] = useState(0);
 
   const subOpen = useToggle(); // Toggle for sub-urls
@@ -79,8 +79,8 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
     // success callback function
     () => {
       handleClose();
-      if (recallRequest) {
-        recallRequest();
+      if (onSuccess) {
+        onSuccess();
       }
     },
   );

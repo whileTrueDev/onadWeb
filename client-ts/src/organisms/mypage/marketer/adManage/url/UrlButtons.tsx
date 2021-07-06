@@ -1,16 +1,14 @@
 import { Button, makeStyles } from '@material-ui/core';
+import { useQueryClient } from 'react-query';
 import { useDialog } from '../../../../../utils/hooks';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import UrlUploadDialog from '../../shared/UrlUploadDialog';
-import { UrlDataInterface } from '../interface';
 
 const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
 }));
-export interface UrlButtonsProps {
-  urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
-}
-export default function UrlButtons({ urlData }: UrlButtonsProps): JSX.Element {
+
+export default function UrlButtons(): JSX.Element {
+  const queryClient = useQueryClient();
   const classes = useStyles();
   const urlUploadDialog = useDialog();
 
@@ -29,7 +27,7 @@ export default function UrlButtons({ urlData }: UrlButtonsProps): JSX.Element {
       <UrlUploadDialog
         open={urlUploadDialog.open}
         handleClose={urlUploadDialog.handleClose}
-        recallRequest={urlData.request}
+        onSuccess={() => queryClient.invalidateQueries('marketerLandingUrlList')}
       />
     </div>
   );

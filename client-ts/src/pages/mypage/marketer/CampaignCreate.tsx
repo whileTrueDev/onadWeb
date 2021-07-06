@@ -3,6 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { MouseEvent, useReducer } from 'react';
+import { useQueryClient } from 'react-query';
 import { Link, useLocation } from 'react-router-dom';
 // others
 import HOST from '../../../config';
@@ -40,6 +41,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
 
 const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
+  const queryClient = useQueryClient();
 
   // *****************************************************
   // url search parameter를 토대로 캠페인 생성 이후 보낼 redirect uri를 가져온다.
@@ -193,6 +195,7 @@ const CampaignCreate = (): JSX.Element => {
       .post(`${HOST}/marketer/campaign`, campaignCreateDTO)
       .then(res => {
         campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
+        queryClient.invalidateQueries('marketerCampaignList');
         if (res.data[0]) {
           alert(res.data[1]);
           if (urlParams && urlParams.to) history.push(`/mypage/marketer/${urlParams.to}`);

@@ -169,14 +169,14 @@ function CampaignFormPaper({
       <BannerUploadDialog
         open={bannerUploadDialog.open}
         onClose={bannerUploadDialog.handleClose}
-        recallRequest={bannerData.doGetRequest} // 배너 데이터 재요청
+        onSuccess={bannerData.doGetRequest} // 배너 데이터 재요청
       />
 
       {/* 랜딩페이지URL 생성 다이얼로그 */}
       <UrlUploadDialog
         open={landingUrlUploadDialog.open}
         handleClose={landingUrlUploadDialog.handleClose}
-        recallRequest={landingUrlData.doGetRequest}
+        onSuccess={landingUrlData.doGetRequest}
       />
 
       {/* 상품 생성 다이얼로그 */}

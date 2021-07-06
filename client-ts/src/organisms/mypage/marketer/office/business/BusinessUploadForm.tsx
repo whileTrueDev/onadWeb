@@ -1,17 +1,15 @@
-import { useState } from 'react';
 // core
-import { Paper, Typography, Button, makeStyles } from '@material-ui/core';
-// own components
-import BusinessViewDialog from './BusinessViewDialog';
-
-// step dialog
-import BusinessUploadStepDialog from './BusinessUploadStepDialog';
-
+import { Button, makeStyles, Paper, Typography } from '@material-ui/core';
+import { useState } from 'react';
+import Table from '../../../../../atoms/Table/Table';
+import { useMarketerBusiness } from '../../../../../utils/hooks/query/useMarketerBusiness';
+import { useMarketerTaxBills } from '../../../../../utils/hooks/query/useMarketerTaxBills';
 // hooks
 import useDialog from '../../../../../utils/hooks/useDialog';
-import useGetRequest, { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { BusinessInterface } from '../interface';
-import Table from '../../../../../atoms/Table/Table';
+// step dialog
+import BusinessUploadStepDialog from './BusinessUploadStepDialog';
+// own components
+import BusinessViewDialog from './BusinessViewDialog';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,16 +23,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(0, 1, 0, 0),
   },
 }));
-interface BusinessUploadFormProps {
-  businessRegistrationData: UseGetRequestObject<BusinessInterface | null>;
-}
-
-function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
+function BusinessUploadForm(): JSX.Element {
   const classes = useStyles();
-  const { businessRegistrationData } = props;
+  const businessRegistration = useMarketerBusiness();
+  const taxBills = useMarketerTaxBills(); // taxbill 목록 데이터
+
   const showDialog = useDialog();
-  const snack = useDialog();
   const stepDialog = useDialog();
+
   const imageRex = /data:image\/([a-zA-Z]*);base64,([^\\"]*)/;
   const pdfRex = /data:application\/pdf;base64,([^\\"]*)/;
   const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
@@ -43,19 +39,16 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
     isBusiness: false,
   });
 
-  // 목록 데이터
-  const { data, loading } = useGetRequest<null, string[][]>('/marketer/tax-bills');
-
   return (
     <Paper className={classes.root}>
       <Typography style={{ fontWeight: 'bold' }}>세금계산서/현금영수증 발행</Typography>
 
-      {!businessRegistrationData.loading &&
-      businessRegistrationData.data &&
-      businessRegistrationData.data.marketerBusinessRegSrc ? (
+      {!businessRegistration.isLoading &&
+      businessRegistration.data &&
+      businessRegistration.data.marketerBusinessRegSrc ? (
         <div>
-          {imageRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ||
-          pdfRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+          {imageRex.test(businessRegistration.data.marketerBusinessRegSrc) ||
+          pdfRex.test(businessRegistration.data.marketerBusinessRegSrc) ? (
             <>
               <Typography gutterBottom variant="body2">
                 사업자 등록증이 업로드 되어 있습니다.
@@ -91,10 +84,10 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
             </>
           ) : (
             <>
-              {phoneRex.test(businessRegistrationData.data.marketerBusinessRegSrc) ? (
+              {phoneRex.test(businessRegistration.data.marketerBusinessRegSrc) ? (
                 <span>
                   <Typography gutterBottom align="center" variant="body2">
-                    전화번호 : {businessRegistrationData.data.marketerBusinessRegSrc}
+                    전화번호 : {businessRegistration.data.marketerBusinessRegSrc}
                   </Typography>
                   <Typography gutterBottom variant="body2">
                     현금 영수증이 업로드 되어 있습니다.
@@ -147,37 +140,32 @@ function BusinessUploadForm(props: BusinessUploadFormProps): JSX.Element {
         </div>
       )}
 
-      {data && (
+      {taxBills.data && (
         <div style={{ marginTop: 16 }}>
           <Typography style={{ fontWeight: 'bold' }}>세금계산서 발행 내역</Typography>
           <Table
             rowPerPage={3}
             tableHead={['날짜', '금액', '발행상태']}
-            tableData={loading || data === null ? [] : data}
+            tableData={taxBills.isLoading || !taxBills.data ? [] : taxBills.data}
             pagination
           />
         </div>
       )}
 
-      {!businessRegistrationData.loading && businessRegistrationData.data && (
+      {!businessRegistration.isLoading && businessRegistration.data && (
         <BusinessUploadStepDialog
           open={stepDialog.open}
           handleClose={stepDialog.handleClose}
-          businessRegiImage={businessRegistrationData.data.marketerBusinessRegSrc}
-          request={businessRegistrationData.doGetRequest}
-          handleSnackOpen={snack.handleOpen}
+          onSuccess={businessRegistration.refetch}
           step={step}
         />
       )}
 
-      {!businessRegistrationData.loading && businessRegistrationData.data && (
+      {!businessRegistration.isLoading && businessRegistration.data && (
         <BusinessViewDialog
           open={showDialog.open}
           handleClose={showDialog.handleClose}
-          businessRegiImage={businessRegistrationData.data.marketerBusinessRegSrc}
-          request={businessRegistrationData.doGetRequest}
-          handleSnackOpen={snack.handleOpen}
-          step={step}
+          businessRegiImage={businessRegistration.data.marketerBusinessRegSrc}
         />
       )}
     </Paper>

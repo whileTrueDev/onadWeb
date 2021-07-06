@@ -106,7 +106,7 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
 
   const nameData = useGetRequest<string[]>('/marketer/campaign/names');
   // {'campaignId', 'data', 'type'} 의 데이터를 전달해야 가능하다.
-  const { doPatchRequest } = usePatchRequest('/marketer/campaign', doGetRequest);
+  const { doPatchRequest } = usePatchRequest('/marketer/campaign');
   // const updateBudget = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
 
   const checkCampaignName = (value: string): void => {
@@ -156,16 +156,22 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
 
   const handleNameUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'name', data: state };
-    doPatchRequest(data);
+    doPatchRequest(data)
+      .then(() => enqueueSnackbar('캠페인 변경 성공', { variant: 'success' }))
+      .then(() => doGetRequest())
+      .catch(() => enqueueSnackbar('캠페인 변경 실패', { variant: 'error' }));
     dispatch({ key: 'reset' });
-    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
+    handleClose();
   };
 
   const handleBudgetUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'budget', data: state };
-    doPatchRequest(data);
+    doPatchRequest(data)
+      .then(() => enqueueSnackbar('캠페인 변경 성공', { variant: 'success' }))
+      .then(() => doGetRequest())
+      .catch(() => enqueueSnackbar('캠페인 변경 실패', { variant: 'error' }));
     dispatch({ key: 'reset' });
-    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
+    handleClose();
   };
 
   return (

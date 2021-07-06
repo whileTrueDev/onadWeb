@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/hooks';
 import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
-import { CreateMerchandiseDto, MerchandiseImage, MerchandiseOption } from '../adManage/interface';
+import { CreateMerchandiseDto } from '../adManage/interface';
 import AddressInput, { OnadAddressData } from './sub/MerchandiseAddressInput';
 import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
@@ -33,6 +33,10 @@ import {
   getS3MerchandiseDescImagePath,
 } from '../../../../utils/aws/getS3Path';
 import getDiscountPrice from '../../../../utils/getDiscountPrice';
+import {
+  MerchandiseImage,
+  MerchandiseOption,
+} from '../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';

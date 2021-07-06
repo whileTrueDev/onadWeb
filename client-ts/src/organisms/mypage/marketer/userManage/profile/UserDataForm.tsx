@@ -6,7 +6,7 @@ import { useContext, useEffect } from 'react';
 import EditableTextField from '../../../../../atoms/EditableInput/EditableTextField';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
-import { MarketerInfo } from '../../office/interface';
+import { MarketerInfo } from '../../../../../utils/hooks/query/useMarketerProfile';
 import EditablePasswordInput from './sub/EditablePasswordInput';
 import EditablePhoneInput from './sub/EditablePhoneInput';
 import EditProfileImage from './sub/EditProfileImage';

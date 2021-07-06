@@ -47,14 +47,7 @@ interface StepperInterface {
   isBusiness: boolean;
 }
 
-interface BusinessRegiUploadDialogProps {
-  handleClose: () => void;
-  businessRegiImage: string;
-  request: () => void;
-  handleSnackOpen?: () => void;
-}
-
-function BusinessUploadStep(props: StepperInterface & BusinessRegiUploadDialogProps): JSX.Element {
+function BusinessUploadStep(props: StepperInterface): JSX.Element {
   const { handleChangeStep, isBusiness } = props;
   const classes = useStyles();
   const defaultImage = '';

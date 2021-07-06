@@ -31,9 +31,6 @@ interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
   businessRegiImage: string;
-  request: () => void;
-  handleSnackOpen: () => void;
-  step: { currStep: number; isBusiness: boolean };
 }
 
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {

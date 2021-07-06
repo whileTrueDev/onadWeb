@@ -7,7 +7,6 @@ import CircularProgress from '../../../../../../atoms/Progress/CircularProgress'
 import { useGetRequest } from '../../../../../../utils/hooks';
 import {
   CpsAnalysisReportData,
-  CPSChartInterface,
   CreatorDataCPSInterface,
   GeoInterface,
   HeatmapInterface,
@@ -18,6 +17,7 @@ import GeoReport from './report/GeoReport';
 import { OnadTheme } from '../../../../../../theme';
 import CreatorsReportDetail from './report/CreatorsReportDetail';
 import CreatorsReportCPS from './report/CreatorsReportCPS';
+import { MarketerAdAnalysisExpenditureCPS } from '../../../../../../utils/hooks/query/useMarketerAdAnalysisExpenditureCPS';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   container: {
@@ -60,7 +60,7 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
   );
 
   // eslint-disable-next-line max-len
-  const chartData = useGetRequest<{ campaignId: string }, CPSChartInterface[]>(
+  const chartData = useGetRequest<{ campaignId: string }, MarketerAdAnalysisExpenditureCPS[]>(
     '/marketer/campaign/analysis/cps/chart',
     { campaignId },
   );

@@ -13,11 +13,11 @@ import history from '../../../../history';
 import { useMypageStore } from '../../../../store/mypageStore';
 // utils
 import axios from '../../../../utils/axios';
+import { MarketerInfo } from '../../../../utils/hooks/query/useMarketerProfile';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
 import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { ContractionDataType } from '../../creator/shared/StartGuideCard';
-import { MarketerInfo } from '../../marketer/office/interface';
 // types
 import { NoticeDataParam, NoticeDataRes } from './NotificationType';
 import MarketerPopover from './sub/MarketerPopover';

@@ -2,22 +2,24 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import { useQueryClient } from 'react-query';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { usePatchRequest, usePostRequest } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { MarketerSettlement } from '../../office/interface';
+import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
 import SettlementRegForm, { SettlementRegDTO } from './SettlementRegForm';
 
 export interface SettlementRegDialogProps {
   open: boolean;
   onClose: () => void;
-  settlementData?: UseGetRequestObject<MarketerSettlement>;
 }
 export default function SettlementRegDialog({
   open,
   onClose,
-  settlementData,
 }: SettlementRegDialogProps): JSX.Element {
+  const queryClient = useQueryClient();
+  // 판매대금 출금정산을 위한 정산 등록 정보 조회
+  const settlement = useMarketerSettlement();
+
   // * 스낵바
   const { enqueueSnackbar } = useSnackbar();
   const settlementPost = usePostRequest('/marketer/settlement');
@@ -73,7 +75,7 @@ export default function SettlementRegDialog({
       handleLoadingEnd();
       if (res.data === 1) {
         enqueueSnackbar('정산 등록이 완료되었습니다.', { variant: 'success' });
-        if (settlementData) settlementData.doGetRequest();
+        if (settlement) queryClient.invalidateQueries('marketerSettlement');
         onClose();
       } else {
         enqueueSnackbar(
@@ -102,7 +104,7 @@ export default function SettlementRegDialog({
   return (
     <>
       <CustomDialog fullWidth maxWidth="sm" open={open} onClose={onClose} title="정산 등록">
-        {settlementData?.data && (
+        {settlement?.data && (
           <Alert severity="error">
             <Typography variant="body2">
               * 정산 등록을 수정하면 다시 검수과정을 거치게 됩니다.
@@ -113,12 +115,7 @@ export default function SettlementRegDialog({
             </Typography>
           </Alert>
         )}
-        <SettlementRegForm
-          onSubmit={handleSubmit}
-          onCancle={onClose}
-          loading={loading}
-          settlementData={settlementData}
-        />
+        <SettlementRegForm onSubmit={handleSubmit} onCancle={onClose} loading={loading} />
 
         {(settlementPatch.loading || settlementPost.loading) && <CircularProgress />}
       </CustomDialog>

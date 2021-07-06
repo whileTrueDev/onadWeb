@@ -25,11 +25,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface BusinessRegiUploadDialogProps {
-  open: boolean;
   handleClose: () => void;
-  businessRegiImage: string;
-  request: () => void;
-  handleSnackOpen: () => void;
+  onSuccess: () => void;
   step: { currStep: number; isBusiness: boolean };
 }
 
@@ -38,10 +35,11 @@ function getSteps(): string[] {
   return ['유형 선택', '필수 정보 업로드', '완료'];
 }
 
-export default function BuisnessUploadStepManager(
-  props: BusinessRegiUploadDialogProps,
-): JSX.Element {
-  const { handleClose, businessRegiImage, request, step } = props;
+export default function BuisnessUploadStepManager({
+  handleClose,
+  onSuccess,
+  step,
+}: BusinessRegiUploadDialogProps): JSX.Element {
   const steps = getSteps();
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(step.currStep);
@@ -73,15 +71,7 @@ export default function BuisnessUploadStepManager(
           />
         );
       case 1:
-        return (
-          <BusinessUploadStep
-            handleClose={handleClose}
-            handleChangeStep={handleChangeStep}
-            isBusiness={isBusiness}
-            businessRegiImage={businessRegiImage}
-            request={request}
-          />
-        );
+        return <BusinessUploadStep handleChangeStep={handleChangeStep} isBusiness={isBusiness} />;
       case 2:
         return <BusinessCompleteStep handleChangeStep={handleChangeStep} isBusiness={isBusiness} />;
       default:
@@ -128,7 +118,7 @@ export default function BuisnessUploadStepManager(
                   color="primary"
                   onClick={(): void => {
                     handleClose();
-                    request();
+                    onSuccess();
                   }}
                 >
                   완료

@@ -45,33 +45,6 @@ export interface CampaignInterface {
   merchandiseDenialReason?: string;
 }
 
-export interface OnOffInterface {
-  onOffState: boolean;
-}
-
-export interface AdInterface {
-  cashAmount: number;
-  spendAll: number;
-}
-
-export interface CountInterface {
-  counts: number;
-}
-
-export interface ValueChartInterface {
-  date: string;
-  value: number;
-  type: string; // 'CPM' | 'CPC';
-}
-
-export interface ActionLogInterface {
-  id: number;
-  marketerId: string;
-  type: number;
-  detail: string;
-  date: Date;
-}
-
 export interface ReportInterface {
   campaignName: string;
   totalCPM: number;
@@ -151,12 +124,6 @@ export interface CreatorDataInterface {
 export interface CreatorDataCPSInterface
   extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'> {
   total_sales_amount: number;
-}
-
-export interface CPSChartInterface {
-  date: string;
-  value: number;
-  type: string;
 }
 
 export interface HeatmapInterface {

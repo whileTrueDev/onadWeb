@@ -13,9 +13,9 @@ import { Alert } from '@material-ui/lab';
 import GreenRadio from '../../../../../atoms/Radio/GreenRadio';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { Merchandise } from '../../adManage/interface';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
+import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 const useStyles = makeStyles(theme => ({
   merchandiseList: {

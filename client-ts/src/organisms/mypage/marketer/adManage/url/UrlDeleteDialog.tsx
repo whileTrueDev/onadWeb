@@ -5,7 +5,7 @@ import StyledItemText from '../../../../../atoms/StyledItemText';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { UrlDataInterface } from '../interface';
+import { MarketerLandingUrl } from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -25,14 +25,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface UrlDeleteDialogProps {
   open: boolean;
-  selectedUrl: UrlDataInterface;
+  selectedUrl: MarketerLandingUrl;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess: () => void;
 }
 
 const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const classes = useStyles();
-  const { open, selectedUrl, handleClose, recallRequest } = props;
+  const { open, selectedUrl, handleClose, onSuccess } = props;
 
   const { loading, doDeleteRequest } =
     useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
@@ -77,8 +77,8 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                   doDeleteRequest({ linkId: selectedUrl.linkId });
                   setTimeout(() => {
                     handleClose();
-                    if (recallRequest) {
-                      recallRequest();
+                    if (onSuccess) {
+                      onSuccess();
                     }
                   }, 1000);
                 }}

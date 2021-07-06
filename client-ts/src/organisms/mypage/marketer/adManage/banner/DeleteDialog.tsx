@@ -4,9 +4,9 @@ import { Alert } from '@material-ui/lab';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { BannerDataInterface } from '../interface';
 import openKakaoChat from '../../../../../utils/openKakaoChat';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
+import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
 
 const useStyles = makeStyles(() => ({
   center: {
@@ -18,15 +18,15 @@ const useStyles = makeStyles(() => ({
 
 interface DeleteDialogProps {
   open: boolean;
-  selectedBanner: BannerDataInterface;
+  selectedBanner: MarketerBanner;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess: () => void;
 }
 
 const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
 
-  const { open, selectedBanner, handleClose, recallRequest } = props;
+  const { open, selectedBanner, handleClose, onSuccess } = props;
 
   const { doDeleteRequest } = useDeleteRequest<{ bannerId: string }, any[]>('/marketer/banner');
 
@@ -69,7 +69,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
                   doDeleteRequest({ bannerId: selectedBanner.bannerId });
                   setTimeout(() => {
                     handleClose();
-                    recallRequest();
+                    onSuccess();
                   }, 500);
                 }}
               >

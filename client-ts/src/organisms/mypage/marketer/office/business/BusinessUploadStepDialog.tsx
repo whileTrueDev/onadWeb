@@ -4,17 +4,16 @@ import BuisnessUploadStepManager from './businessuploadstep/BusinessUploadStepMa
 interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
-  businessRegiImage: string;
-  request: () => void;
-  handleSnackOpen: () => void;
+  onSuccess: () => void;
   step: { currStep: number; isBusiness: boolean };
 }
 
-export default function BusinessRegiUploadStepDialogProps(
-  props: BusinessRegiUploadDialogProps,
-): JSX.Element {
-  const { open, handleClose, businessRegiImage, request, step, handleSnackOpen } = props;
-
+export default function BusinessRegiUploadStepDialogProps({
+  open,
+  handleClose,
+  onSuccess,
+  step,
+}: BusinessRegiUploadDialogProps): JSX.Element {
   return (
     <Dialog
       open={open}
@@ -24,14 +23,7 @@ export default function BusinessRegiUploadStepDialogProps(
       scroll="body"
       fullWidth
     >
-      <BuisnessUploadStepManager
-        open={open}
-        businessRegiImage={businessRegiImage}
-        request={request}
-        handleClose={handleClose}
-        handleSnackOpen={handleSnackOpen}
-        step={step}
-      />
+      <BuisnessUploadStepManager onSuccess={onSuccess} handleClose={handleClose} step={step} />
     </Dialog>
   );
 }

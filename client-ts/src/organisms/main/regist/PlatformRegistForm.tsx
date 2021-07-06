@@ -1,27 +1,27 @@
-import { useState, useEffect } from 'react';
-import * as React from 'react';
-import NumberFormat from 'react-number-format';
 import {
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  InputAdornment,
   Button,
-  MenuItem,
-  TextField,
-  Grid,
-  Paper,
-  Typography,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Paper,
   Radio,
   Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import useStyles from './style/PlatformRegistForm.style';
-import useGetRequest from '../../../utils/hooks/useGetRequest';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import NumberFormat from 'react-number-format';
 import StaticInput from '../../../atoms/StaticInput';
-import { StepAction, StepState } from './Stepper.reducer';
+import { useMarketerProfileSocial } from '../../../utils/hooks/query/useMarketerProfileSocial';
 import areaCodes, { MenuProps } from '../../../utils/inputs/area-codes';
+import { StepAction, StepState } from './Stepper.reducer';
+import useStyles from './style/PlatformRegistForm.style';
 
 // domain select용.
 const domains = [
@@ -43,11 +43,6 @@ export interface Props {
   setLoading: (number: number) => void;
 }
 
-interface ProfileData {
-  marketerPlatformData: string;
-  marketerMail: string;
-}
-
 function PlatformRegistForm({
   handleBack,
   handleUserSubmit,
@@ -63,17 +58,17 @@ function PlatformRegistForm({
   const [marketerId, setMarketerId] = useState('');
 
   // user 데이터를 전달 받는 hook 사용하여 기본 값을 가져온다.
-  const profileData = useGetRequest<null, ProfileData>('/marketer/social');
+  const profile = useMarketerProfileSocial();
   useEffect(() => {
-    if (!profileData.loading && profileData.data) {
-      const { marketerPlatformData, marketerMail } = profileData.data;
+    if (!profile.isLoading && profile.data) {
+      const { marketerPlatformData, marketerMail } = profile.data;
 
       dispatch({ type: 'domain', value: marketerMail.split('@')[1] });
       dispatch({ type: 'email', value: marketerMail.split('@')[0] });
       setMarketerId(marketerPlatformData);
       dispatch({ type: 'checkDuplication', value: false });
     }
-  }, [dispatch, profileData.loading, profileData.data]);
+  }, [dispatch, profile.isLoading, profile.data]);
 
   function handleCustom(event: React.ChangeEvent<HTMLInputElement>): void {
     setCustomDomain(event.target.value);

@@ -1,20 +1,18 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
+import { useQueryClient } from 'react-query';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
 import BannerUploadDialog from '../../shared/BannerUploadDialog';
-import { BannerDataInterface } from '../interface';
 
 const useStyles = makeStyles(theme => ({
   container: { marginBottom: theme.spacing(1) },
   button: { margin: theme.spacing(0, 0.5) },
 }));
-export interface BannerButtonsProps {
-  bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
-}
-export default function BannerButtons({ bannerData }: BannerButtonsProps): JSX.Element {
+
+export default function BannerButtons(): JSX.Element {
+  const queryClient = useQueryClient();
   const classes = useStyles();
   const uploadDialog = useDialog();
   const InquireDialog = useDialog();
@@ -52,7 +50,7 @@ export default function BannerButtons({ bannerData }: BannerButtonsProps): JSX.E
       <BannerUploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
-        recallRequest={bannerData.request}
+        onSuccess={() => queryClient.invalidateQueries('marketerBannerList')}
       />
 
       {/* 배너 생성 가이드 다이얼로그 */}

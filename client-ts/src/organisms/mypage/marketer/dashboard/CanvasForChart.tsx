@@ -1,29 +1,27 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { Divider, makeStyles, Paper } from '@material-ui/core';
 import 'chartjs-plugin-colorschemes';
 import * as React from 'react';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
 import CircularProgress from '../../../../atoms/Progress/CircularProgress';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { useMarketerAdAnalysisExpenditure } from '../../../../utils/hooks/query/useMarketerAdAnalysisExpenditure';
+import { useMarketerAdAnalysisExpenditureCPS } from '../../../../utils/hooks/query/useMarketerAdAnalysisExpenditureCPS';
 import ChartTabs from '../campaign-chart/ChartTabs';
 import CreatorsChart from '../campaign-chart/CreatorsChart';
-import { CPSChartInterface, ValueChartInterface } from './interfaces';
 
 const useStyles = makeStyles(theme => ({
   tabs: { display: 'flex', padding: theme.spacing(2, 2, 0, 2) },
   container: { padding: theme.spacing(2) },
 }));
-interface CanvasForChartProps {
-  valueChartData: UseGetRequestObject<ValueChartInterface[]>;
-  cpsChartData: UseGetRequestObject<CPSChartInterface[]>;
-}
 
-export default function CanvasForChart(props: CanvasForChartProps): JSX.Element {
+export default function CanvasForChart(): JSX.Element {
   const classes = useStyles();
-  const { valueChartData, cpsChartData } = props;
+
+  const valueChart = useMarketerAdAnalysisExpenditure();
+  const cpsChart = useMarketerAdAnalysisExpenditureCPS();
 
   const [tabValue, setTabValue] = React.useState<number>(0);
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   function handleTabChange(event: React.ChangeEvent<{}>, newValue: number): void {
     setTabValue(newValue);
   }
@@ -40,10 +38,10 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
           {/* 광고비용 */}
           {tabValue === 0 && (
             <div>
-              {valueChartData.loading && <CircularProgress />}
-              {!valueChartData.loading && valueChartData.data && (
+              {valueChart.isLoading && <CircularProgress />}
+              {!valueChart.isLoading && valueChart.data && (
                 <ReChartBar
-                  data={valueChartData.data}
+                  data={valueChart.data || []}
                   dataKey={['cpm_amount', 'cpc_amount']}
                   labels={{
                     cpm_amount: '배너광고',
@@ -64,10 +62,10 @@ export default function CanvasForChart(props: CanvasForChartProps): JSX.Element 
           {/* 상품 판매 클릭수 / 판매수 */}
           {tabValue === 2 && (
             <div style={{ width: '100%' }}>
-              {cpsChartData.loading && <CircularProgress />}
-              {!cpsChartData.loading && cpsChartData.data && (
+              {cpsChart.isLoading && <CircularProgress />}
+              {!cpsChart.isLoading && cpsChart.data && (
                 <ReChartBar
-                  data={cpsChartData.data}
+                  data={cpsChart.data || []}
                   dataKey={['click_amount', 'sales_amount']}
                   keyMap={[
                     { typeName: '클릭', to: 'click_amount' },

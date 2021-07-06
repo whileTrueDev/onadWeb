@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createContext } from 'react';
-import { MarketerInfo } from '../organisms/mypage/marketer/office/interface';
-import { useGetRequest } from '../utils/hooks';
+import { MarketerInfo, useMarketerProfile } from '../utils/hooks/query/useMarketerProfile';
 
 export interface MarketerInfoContextValue {
   user?: MarketerInfo;
@@ -20,14 +19,14 @@ const MarketerInfoContext = createContext<MarketerInfoContextValue>(defaultValue
 
 export function MarketerInfoContextProvider(props: any): JSX.Element {
   const { children } = props;
-  const marketerInfo = useGetRequest<null, MarketerInfo>('/marketer');
+  const marketerInfo = useMarketerProfile();
 
   return (
     <MarketerInfoContext.Provider
       value={{
         user: marketerInfo.data,
-        loading: marketerInfo.loading,
-        doGetRequest: marketerInfo.doGetRequest,
+        loading: marketerInfo.isLoading,
+        doGetRequest: marketerInfo.refetch,
       }}
     >
       {children}

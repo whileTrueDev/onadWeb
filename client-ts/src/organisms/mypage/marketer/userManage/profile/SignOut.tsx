@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import axios from '../../../../../utils/axios';
 import SignOutDialog from './SignOutDialog';
 import HOST, { REACT_HOST } from '../../../../../config';
-import { MarketerInfo } from '../../office/interface';
+import { MarketerInfo } from '../../../../../utils/hooks/query/useMarketerProfile';
 
 const SignOut = (props: { userData: MarketerInfo }): JSX.Element => {
   const { userData } = props;

@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query';
 import axios from '../../axios';
 
-export interface AdInterface {
+export interface MarketerAd {
   cashAmount: number;
   spendAll: number;
 }
 
 const getMarketerAd = async () => {
-  return axios.get<AdInterface | null>('/marketer/ad').then(res => res.data);
+  return axios.get<MarketerAd | null>('/marketer/ad').then(res => res.data);
 };
 
 export const useMarketerAd = () => {

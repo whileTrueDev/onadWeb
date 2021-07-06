@@ -1,27 +1,23 @@
-import { CircularProgress, Button, Box, Typography, TextField } from '@material-ui/core';
+import { Box, CircularProgress, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import * as React from 'react';
 import SalesIncomeSettlementLogMonthlyTable from '../../../../../../atoms/Table/SalesIncomeSettlementLogMonthlyTable';
-import useGetRequest from '../../../../../../utils/hooks/useGetRequest';
-import { SalesIncomeSettlement } from '../MySalesIncome';
-import { FilterValue } from '../SalesIncomeSettlementLog';
+import { useMarketerSettlementLogs } from '../../../../../../utils/hooks/query/useMarketerSettlementLogs';
+import { useMarketerSettlementLogYears } from '../../../../../../utils/hooks/query/useMarketerSettlementLogYears';
 
 export default function MonthlySettlement(): React.ReactElement {
   // 월 데이터
   const [year, setYear] = React.useState<null | string>(null);
+  // eslint-disable-next-line @typescript-eslint/ban-types
   function handleYearChange(e: React.ChangeEvent<{}>, newValue: string | null): void {
     setYear(newValue);
   }
 
   // 판매대금 정산 내역 - Year
-  const settlementLogsYears = useGetRequest<null, string[]>('/marketer/settlement/logs/years');
-
+  const settlementLogsYears = useMarketerSettlementLogYears();
   // 판매대금 정산 진행 내역 조회
-  const settlementLogsData = useGetRequest<FilterValue, SalesIncomeSettlement[]>(
-    '/marketer/settlement/logs',
-    {},
-    { lateFetch: true },
-  );
+  const settlementLogs = useMarketerSettlementLogs(year);
+
   return (
     <Box marginTop={2}>
       <Box marginBottom={1}>
@@ -31,7 +27,7 @@ export default function MonthlySettlement(): React.ReactElement {
       <Box display="flex" alignItems="center">
         <Autocomplete
           options={settlementLogsYears.data || []}
-          loading={settlementLogsYears.loading}
+          loading={settlementLogsYears.isLoading}
           loadingText="로딩중.."
           noOptionsText="아직 정산 내역이 없습니다."
           getOptionLabel={option => option}
@@ -48,33 +44,22 @@ export default function MonthlySettlement(): React.ReactElement {
           )}
         />
       </Box>
-      {!settlementLogsYears.loading && settlementLogsYears.data?.length === 0 && (
+      {!settlementLogsYears.isLoading && settlementLogsYears.data?.length === 0 && (
         <Box>
           <Typography variant="body2">아직 정산 내역이 없습니다.</Typography>
         </Box>
       )}
-      <Box marginY={1}>
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!year}
-          onClick={() => {
-            settlementLogsData.doGetRequest({
-              month: null,
-              year,
-            });
-          }}
-        >
-          보기
-        </Button>
+
+      <Box my={2}>
+        {settlementLogs.isLoading && <CircularProgress />}
+        {!settlementLogs.isLoading && !settlementLogs.error && settlementLogs.data && (
+          <SalesIncomeSettlementLogMonthlyTable
+            exportFileName={`온애드_판매대금_정산_내역_${year}년`}
+            isLoading={settlementLogs.isLoading}
+            settlementLogsData={settlementLogs.data}
+          />
+        )}
       </Box>
-      {settlementLogsData.loading && <CircularProgress />}
-      {!settlementLogsData.loading && !settlementLogsData.error && settlementLogsData.data && (
-        <SalesIncomeSettlementLogMonthlyTable
-          exportFileName={`온애드_판매대금_정산_내역_${year}년`}
-          settlementLogsData={settlementLogsData}
-        />
-      )}
     </Box>
   );
 }

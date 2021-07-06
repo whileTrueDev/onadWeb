@@ -2,17 +2,17 @@ import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
 import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { Merchandise } from '../interface';
+import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 interface MerchandiseDeleteDialogProps {
   open: boolean;
   selectedMerchandise: Merchandise;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess: () => void;
 }
 
 const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Element => {
-  const { open, selectedMerchandise, handleClose, recallRequest } = props;
+  const { open, selectedMerchandise, handleClose, onSuccess } = props;
 
   const { loading, doDeleteRequest } =
     useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
@@ -54,8 +54,8 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
                 doDeleteRequest({ id: selectedMerchandise.id });
                 setTimeout(() => {
                   handleClose();
-                  if (recallRequest) {
-                    recallRequest();
+                  if (onSuccess) {
+                    onSuccess();
                   }
                 }, 1000);
               }}

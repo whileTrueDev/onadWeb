@@ -3,7 +3,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
 import history from '../../../../history';
-import { useGetRequest } from '../../../../utils/hooks';
+import queryClient from '../../../../queryClient';
+import { useMarketerCampaignList } from '../../../../utils/hooks/query/useMarketerCampaignList';
 import { CONFIRM_STATE_REJECTED } from '../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignMetaInfoCard from '../adManage/campaign/sub/CampaignMetaInfoCard';
 import { CampaignInterface } from './interfaces';
@@ -29,21 +30,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function CampaignList(): JSX.Element {
-  const OFFSET = 4;
   const classes = useStyles();
-
-  const campaignData = useGetRequest<{ page: number; offset: number }, CampaignInterface[]>(
-    '/marketer/campaign/list',
-    { page: 0, offset: OFFSET },
-  );
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const OFFSET = 2;
+  const campaigns = useMarketerCampaignList({ page: 0, offset: OFFSET });
 
   return (
     <Paper style={{ minHeight: 400 }}>
       <div className={classes.title}>
         <Typography variant="h6">내 캠페인</Typography>
-        {campaignData.data && campaignData.data.length > 0 && (
+        {campaigns.data && campaigns.data.length > 0 && (
           <Button
             variant="outlined"
             size="small"
@@ -59,7 +56,7 @@ export default function CampaignList(): JSX.Element {
 
       <Divider />
 
-      {campaignData.loading && (
+      {campaigns.isLoading && (
         <Grid item xs={12} className={classes.loading}>
           <div style={{ textAlign: 'center' }}>
             <CircularProgress />
@@ -67,10 +64,10 @@ export default function CampaignList(): JSX.Element {
         </Grid>
       )}
 
-      {campaignData.data && (
+      {campaigns.data && (
         <div>
           <article className={classes.article}>
-            {campaignData.data
+            {campaigns.data
               .filter(cam => cam.confirmState !== CONFIRM_STATE_REJECTED)
               .slice(0, 2)
               .map((campaign: CampaignInterface) => (
@@ -81,7 +78,7 @@ export default function CampaignList(): JSX.Element {
                     <CampaignOnOffSwitch
                       campaign={campaign}
                       onSuccess={(): void => {
-                        campaignData.doGetRequest();
+                        queryClient.invalidateQueries('marketerCampaignList');
                         enqueueSnackbar('캠페인 On/Off 상태 변경 완료', { variant: 'success' });
                       }}
                       onFail={(): void => {
@@ -111,7 +108,7 @@ export default function CampaignList(): JSX.Element {
         </div>
       )}
 
-      {!campaignData.loading && campaignData.data && campaignData.data.length === 0 && (
+      {!campaigns.isLoading && campaigns.data && campaigns.data.length === 0 && (
         <Grid
           container
           justify="center"

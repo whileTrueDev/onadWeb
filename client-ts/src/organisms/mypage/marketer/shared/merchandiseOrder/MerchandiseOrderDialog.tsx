@@ -18,6 +18,7 @@ import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
 import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
+import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 import {
   OrderStatus,
   주문상태_상품준비,
@@ -25,7 +26,7 @@ import {
   주문상태_출고완료,
   주문상태_출고준비,
 } from '../../../../../utils/render_funcs/renderOrderStatus';
-import { Merchandise, MerchandiseOrder } from '../../adManage/interface';
+import { MerchandiseOrder } from '../../adManage/interface';
 import OrderStateChangeDialog, { OrderCourierDTO } from './OrderStateChangeDialog';
 
 const useStyles = makeStyles(theme => ({

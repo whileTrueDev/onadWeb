@@ -81,12 +81,12 @@ const myReducer = (state: ImageInterface, action: ImageAction): ImageInterface =
 interface UploadDialogProps {
   open: boolean;
   onClose: () => void;
-  recallRequest?: () => void;
+  onSuccess?: () => void;
   failCallback?: (e: any) => void;
 }
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
-  const { open, onClose, recallRequest, failCallback } = props;
+  const { open, onClose, onSuccess, failCallback } = props;
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
   const handleClose = (): void => {
@@ -107,7 +107,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
         setSubmitLoading(false);
         if (res.data[0]) {
           alert(res.data[1]);
-          if (recallRequest) recallRequest();
+          if (onSuccess) onSuccess();
         } else {
           alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
