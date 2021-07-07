@@ -356,6 +356,14 @@ body {
   bottom: 0%;
   position: absolute;
 }
+/* 우측상단 온애드 로고 */
+.top-right-logo {
+  /* width: 34.4%;
+  height: 44.5%; */
+  top: 2.5%;
+  right: 2%;
+  position: fixed;
+}
 
 /* 우측 상단 응원메세지 영역 */
 .top-right {
