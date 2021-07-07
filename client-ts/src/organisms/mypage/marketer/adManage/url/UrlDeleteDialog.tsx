@@ -1,11 +1,11 @@
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import StyledItemText from '../../../../../atoms/StyledItemText';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useMarketerLandingUrlConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerLandingUrlConnectedCampaigns';
 import { MarketerLandingUrl } from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
+import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -37,12 +37,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const { loading, doDeleteRequest } =
     useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
 
-  const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>(
-    '/marketer/landing-url/campaigns',
-    {
-      linkId: selectedUrl.linkId,
-    },
-  );
+  const connectedCampaign = useMarketerLandingUrlConnectedCampaigns(selectedUrl.linkId);
 
   return (
     <Dialog
@@ -53,7 +48,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length > 0 && (
               <Tooltip
@@ -66,7 +61,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                 </div>
               </Tooltip>
             )}
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length === 0 && (
               <Button

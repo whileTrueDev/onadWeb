@@ -7,8 +7,7 @@ const getMarketerTaxBills = async () => {
 
 export const useMarketerTaxBills = () => {
   return useQuery('marketerTaxBills', getMarketerTaxBills, {
-    // staleTime 1일
     staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    cacheTime: 1000 * 60 * 60 * 24,
   });
 };

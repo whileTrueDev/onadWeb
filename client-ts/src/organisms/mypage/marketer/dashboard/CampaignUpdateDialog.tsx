@@ -10,7 +10,7 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
 import Success from '../../../../atoms/Typography/Success';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
+import { useMarketerCampaignNames } from '../../../../utils/hooks/query/useMarketerCampaignNames';
 import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { CampaignInterface } from './interfaces';
 
@@ -104,14 +104,14 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
     campaignName: '',
   });
 
-  const nameData = useGetRequest<string[]>('/marketer/campaign/names');
+  const nameData = useMarketerCampaignNames();
   // {'campaignId', 'data', 'type'} 의 데이터를 전달해야 가능하다.
   const { doPatchRequest } = usePatchRequest('/marketer/campaign');
   // const updateBudget = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
 
   const checkCampaignName = (value: string): void => {
-    if (!nameData.loading && !nameData.error) {
-      if (nameData.data.includes(value)) {
+    if (!nameData.isLoading && !nameData.error) {
+      if (nameData.data && nameData.data.includes(value)) {
         setCheckName(false);
         dispatch({ key: 'campaignName', value: '' });
         setDuplicate(true);

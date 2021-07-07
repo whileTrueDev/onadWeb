@@ -84,7 +84,7 @@ const OnadIndex = (): JSX.Element => {
               <Route path="/regist/:platform" component={RegistPage} />
               <Route exact path="/regist" component={RegistPage} />
               <Route exact path="/introduce/:userType" component={Introduction} />
-              <Suspense fallback={LoadingPage}>
+              <Suspense fallback={<LoadingPage />}>
                 <Route exact path="/policy" component={Policy} />
                 <Route exact path="/policy/:privacy" component={Policy} />
                 <Route path="/mypage/creator" component={CreatorDashboard} />

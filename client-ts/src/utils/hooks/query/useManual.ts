@@ -19,8 +19,7 @@ const getManual = async (type: CreatorOrMarketerParams) => {
 
 export const useManual = (type: CreatorOrMarketerParams) => {
   return useQuery(['manuals', type], () => getManual(type), {
-    // staleTime 1일
     staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    cacheTime: 1000 * 60 * 60 * 24,
   });
 };

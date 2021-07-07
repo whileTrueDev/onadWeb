@@ -8,8 +8,7 @@ const getCreatorRemotePageUrl = async () => {
 
 export const useCreatorRemotePageUrl = () => {
   return useQuery('creatorRemotePageUrl', getCreatorRemotePageUrl, {
-    // staleTime 15일
-    staleTime: 1000 * 60 * 60 * 24 * 15,
+    staleTime: 1000 * 60 * 60,
     cacheTime: 1000 * 60 * 60 * 24, // 캐시 1일 유지
   });
 };

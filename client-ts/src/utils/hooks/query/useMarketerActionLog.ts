@@ -15,8 +15,7 @@ const getMarketerActionLog = async () => {
 
 export const useMarketerActionLog = () => {
   return useQuery('marketerActionLog', getMarketerActionLog, {
-    // staleTime 1일
-    staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    staleTime: 1000 * 60 * 1,
+    cacheTime: 1000 * 60 * 1,
   });
 };

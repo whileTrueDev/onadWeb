@@ -1,21 +1,20 @@
-import dayjs from 'dayjs';
 import {
+  CircularProgress,
   List,
   ListItem,
-  ListItemText,
-  Typography,
   ListItemSecondaryAction,
+  ListItemText,
   makeStyles,
-  CircularProgress,
+  Typography,
 } from '@material-ui/core';
-import * as React from 'react';
 import { Alert } from '@material-ui/lab';
+import dayjs from 'dayjs';
+import * as React from 'react';
+import Button from '../../../../../atoms/CustomButtons/Button';
 import GreenRadio from '../../../../../atoms/Radio/GreenRadio';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import Button from '../../../../../atoms/CustomButtons/Button';
+import { useMarketerMerchandisesListOnlyNotConnected } from '../../../../../utils/hooks/query/useMarketerMerchandisesListOnlyNotConnected';
 import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
-import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 const useStyles = makeStyles(theme => ({
   merchandiseList: {
@@ -29,19 +28,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface SelectMerchandiseProps {
-  merchandiseData: UseGetRequestObject<Merchandise[]>;
   state: CampaignCreateInterface;
   dispatch: React.Dispatch<CampaignCreateAction>;
   handleDialogOpen: () => void;
 }
 
 export default function SelectMerchandise({
-  merchandiseData,
   state,
   dispatch,
   handleDialogOpen,
 }: SelectMerchandiseProps): JSX.Element {
   const classes = useStyles();
+  const merchandiseData = useMarketerMerchandisesListOnlyNotConnected();
 
   return (
     <div>
@@ -64,12 +62,12 @@ export default function SelectMerchandise({
       />
 
       <div>
-        {merchandiseData.loading && (
+        {merchandiseData.isLoading && (
           <div style={{ padding: 72 }}>
             <CircularProgress />
           </div>
         )}
-        {!merchandiseData.loading && merchandiseData.data && merchandiseData.data.length > 0 && (
+        {!merchandiseData.isLoading && merchandiseData.data && merchandiseData.data.length > 0 && (
           <List className={classes.merchandiseList}>
             {merchandiseData.data.map(merchandise => (
               <ListItem
@@ -99,7 +97,7 @@ export default function SelectMerchandise({
             ))}
           </List>
         )}
-        {!merchandiseData.loading && merchandiseData.data && merchandiseData.data.length === 0 && (
+        {!merchandiseData.isLoading && merchandiseData.data && merchandiseData.data.length === 0 && (
           <Alert severity="warning">
             <Typography variant="body2">선택할 수 있는 상품이 없어요..</Typography>
             <Typography variant="body2">새로운 상품을 등록하세요!</Typography>

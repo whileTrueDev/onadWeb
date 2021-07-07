@@ -4,6 +4,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Slide, Collapse, Typography } from '@material-ui/core';
 // customized component
+import { useQueryClient } from 'react-query';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import WithdrawalAgreement from './withdrawal/Agreement';
@@ -36,6 +37,7 @@ function WithdrawDialog({
   receivable,
   realName,
 }: WithdrawalDialogProps): JSX.Element {
+  const queryClient = useQueryClient();
   const classes = useWithdrawalDialogStyles();
 
   const currentCashNumber = Number(receivable);
@@ -109,6 +111,7 @@ function WithdrawDialog({
     withdrawalPost.doPostRequest({ withdrawalAmount: selectValue }).then(() => {
       // 요청 성공시 Success callback 함수
       setActiveStep(preIndex => preIndex + 1);
+      queryClient.invalidateQueries('creatorIncomeWithdrawal');
     });
   }
 

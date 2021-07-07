@@ -4,7 +4,7 @@ import { Avatar, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import * as React from 'react';
 import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
-import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
+import { useMarketerCampaignAnalysisCPSCreators } from '../../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCPSCreators';
 import { CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
 
 const useStyles = makeStyles(theme => ({
@@ -15,22 +15,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface CreatorsReportCPSProps {
-  creatorsData: UseGetRequestObject<CreatorDataCPSInterface[]>;
+  campaignId: string;
   onRowClick?: (row: CreatorDataCPSInterface) => void;
 }
 export default function CreatorsReportCPS(props: CreatorsReportCPSProps): JSX.Element {
-  const { creatorsData, onRowClick } = props;
+  const { campaignId, onRowClick } = props;
+  const creatorsData = useMarketerCampaignAnalysisCPSCreators(campaignId);
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      {!creatorsData.loading && creatorsData.data && (
+      {!creatorsData.isLoading && creatorsData.data && (
         <CustomDataGrid
           disableSelectionOnClick
           onRowClick={param => {
             if (onRowClick) onRowClick(param.row as CreatorDataCPSInterface);
           }}
-          loading={creatorsData.loading}
+          loading={creatorsData.isLoading}
           rows={creatorsData.data}
           density="compact"
           columns={[

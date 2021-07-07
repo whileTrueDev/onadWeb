@@ -27,7 +27,11 @@ export default function UrlButtons(): JSX.Element {
       <UrlUploadDialog
         open={urlUploadDialog.open}
         handleClose={urlUploadDialog.handleClose}
-        onSuccess={() => queryClient.invalidateQueries('marketerLandingUrlList')}
+        onSuccess={() => {
+          queryClient.invalidateQueries('marketerLandingUrlList');
+          queryClient.invalidateQueries('marketerLandingUrlListWithoutPagination');
+          queryClient.invalidateQueries('marketerLandingUrlConnectedCampaigns');
+        }}
       />
     </div>
   );

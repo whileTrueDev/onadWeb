@@ -2,6 +2,7 @@
 import { IconButton, Tooltip, Typography } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
@@ -21,7 +22,7 @@ import DeleteDialog from './DeleteDialog';
 
 export default function BannerInventory(): JSX.Element {
   const queryClient = useQueryClient();
-  const safelyRefetchBanners = () => queryClient.invalidateQueries('marketerBannerList');
+  const { enqueueSnackbar } = useSnackbar();
   // 배너 데이터 조회
   const bannerPageLength = useMarketerBannerLength();
   const FETCH_PAGE_OFFSET = 5;
@@ -123,7 +124,7 @@ export default function BannerInventory(): JSX.Element {
               disableColumnMenu: true,
               renderCell: (data): React.ReactElement => (
                 <IconButton
-                  onClick={(e): void => {
+                  onClick={(): void => {
                     handleBannerSelect(data.row as MarketerBanner);
                     deleteDialog.handleOpen();
                   }}
@@ -142,7 +143,12 @@ export default function BannerInventory(): JSX.Element {
           open={deleteDialog.open}
           selectedBanner={selectedBanner}
           handleClose={deleteDialog.handleClose}
-          onSuccess={safelyRefetchBanners}
+          onSuccess={() => {
+            queryClient.invalidateQueries('useMarketerBannerLength');
+            queryClient.invalidateQueries('marketerBannerList');
+            queryClient.invalidateQueries('marketerBannerActive');
+            enqueueSnackbar('배너 삭제 완료.', { variant: 'success' });
+          }}
         />
       )}
 

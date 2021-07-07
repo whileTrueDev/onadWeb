@@ -1,17 +1,18 @@
 /* eslint-disable react/display-name */
 /* eslint-disable max-len */
-import { useRef, useState } from 'react';
-
-import * as React from 'react';
+import { Avatar, Button, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-import { Typography, Avatar, Grid, makeStyles, TextField, Button } from '@material-ui/core';
 import Poll from '@material-ui/icons/Poll';
-import MaterialTable from '../../../../../atoms/Table/MaterialTable';
+import * as React from 'react';
+import { useRef, useState } from 'react';
 import StyledSelectText from '../../../../../atoms/StyledItemText';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import MaterialTable from '../../../../../atoms/Table/MaterialTable';
+import {
+  CreatorDetailDataInterface,
+  useCreatorsAnalysisDetail,
+} from '../../../../../utils/hooks/query/useCreatorsAnalysisDetail';
 import ContentsPie from '../../shared/ContentsPie';
 import TimeChart from '../../shared/TimeChart';
-import { CreatorDetailDataInterface } from '../interfaces';
 
 const SearchTextField = ({ searchText, setSearchText }: any) => {
   const searchTextRef = useRef<HTMLInputElement>(null);
@@ -93,7 +94,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
 
   // **********************************************************
   // 데이터 요청
-  const fetchData = useGetRequest<null, CreatorDetailDataInterface[]>('/creators/analysis/detail');
+  const creatorDetials = useCreatorsAnalysisDetail();
 
   // 크리에이터별 상세 그래프
   const renderDetailGraph = (rowData: CreatorDetailDataInterface): JSX.Element => (
@@ -137,9 +138,9 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
     <div id="creator-select-table">
       {/* 검색 컴포넌트 */}
       <SearchTextField searchText={searchText} setSearchText={setSearchText} />
-      {fetchData.loading && <MaterialTable columns={[]} data={[]} isLoading title="" />}
-      {!fetchData.loading && fetchData.error && <span>Error</span>}
-      {!fetchData.loading && fetchData.data && (
+      {creatorDetials.isLoading && <MaterialTable columns={[]} data={[]} isLoading title="" />}
+      {!creatorDetials.isLoading && creatorDetials.error && <span>Error</span>}
+      {!creatorDetials.isLoading && creatorDetials.data && (
         <MaterialTable
           columns={[
             {
@@ -330,7 +331,7 @@ export default function CreatorTable(props: CreatorTableProps): JSX.Element {
           }}
           title=""
           cellWidth={90}
-          data={fetchData.data.filter(d => {
+          data={creatorDetials.data.filter(d => {
             if (d.creatorName && d.creatorName.indexOf(searchText) > -1) {
               return true;
             }

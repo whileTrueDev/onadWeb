@@ -1,3 +1,5 @@
+import { MarketerCampaignAnalysisCreatorData } from '../../../../utils/hooks/query/useMarketerCampaignAnalysisCreatorData';
+
 export interface CampaignTargetCreator {
   creatorId: string;
   creatorTwitchId?: string;
@@ -56,22 +58,6 @@ export interface ReportInterface {
   totalLandingView: number;
 }
 
-export interface ReportInterfaceV2 {
-  campaignName: string;
-  totalCPM: number;
-  totalViewCount: number;
-  totalCPC: number;
-  adchatClick: number;
-  adpanelClick: number;
-}
-
-export interface CpsAnalysisReportData {
-  totalSalesIncome: number;
-  adchatClick: number;
-  adpanelClick: number;
-  totalSalesAmount: number;
-}
-
 export interface CreatorDataPerMarketerInterface {
   id: string;
   creatorId: string;
@@ -87,59 +73,11 @@ export interface CreatorDataPerMarketerInterface {
   total_ad_exposure_amount: number;
   recentDate: string;
 }
-export interface CreatorDataInterface {
-  id: string;
-  creatorId: string;
-  // twitch information
-  creatorTwitchName?: string;
-  creatorTwitchId?: string;
-  creatorLogo?: string;
-  // afreeca information
-  afreecaId?: string;
-  afreecaName?: string;
-  afreecaLogo?: string;
-
-  total_ad_exposure_amount: number;
-  recentDate: string;
-  viewer?: number;
-  followers?: number;
-  airtime?: number;
-  impression?: number;
-  openHour?: number;
-  content?: number;
-  ctr?: number;
-  contentsGraphData?: string;
-  contentsGraphDataAfreeca?: string;
-  timeGraphData?: string;
-  timeGraphDataAfreeca?: string;
-  viewerAfreeca?: number;
-  ctrAfreeca?: number;
-  followersAfreeca?: number;
-  airtimeAfreeca?: number;
-  impressionAfreeca?: number;
-  openHourAfreeca?: number;
-  contentAfreeca?: number;
-}
 
 export interface CreatorDataCPSInterface
-  extends Omit<CreatorDataInterface, 'total_ad_exposure_amount'> {
+  extends Omit<MarketerCampaignAnalysisCreatorData, 'total_ad_exposure_amount'> {
   total_sales_amount: number;
 }
-
-export interface HeatmapInterface {
-  date: string;
-  count: number;
-}
-
-export type GeoInterface = {
-  latitude: number;
-  longitude: number;
-  range: number[];
-  country: string;
-  region: string;
-  city: string;
-  ll: number[];
-};
 
 export interface CreatorDetailInterface {
   creatorId: string;

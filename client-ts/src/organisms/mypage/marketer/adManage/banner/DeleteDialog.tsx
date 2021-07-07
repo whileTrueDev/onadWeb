@@ -1,12 +1,12 @@
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Tooltip, Grid, Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import { useMarketerBannerConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerBannerConnectedCampaigns';
+import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
 import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 import openKakaoChat from '../../../../../utils/openKakaoChat';
-import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
-import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
 
 const useStyles = makeStyles(() => ({
   center: {
@@ -30,12 +30,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
 
   const { doDeleteRequest } = useDeleteRequest<{ bannerId: string }, any[]>('/marketer/banner');
 
-  const connectedCampaign = useGetRequest<{ bannerId: string }, { campaignId: string }[]>(
-    '/marketer/banner/campaigns',
-    {
-      bannerId: selectedBanner.bannerId,
-    },
-  );
+  const connectedCampaign = useMarketerBannerConnectedCampaigns(selectedBanner.bannerId);
 
   return (
     <Dialog
@@ -46,7 +41,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length > 0 && (
               <Tooltip
@@ -59,7 +54,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
                 </div>
               </Tooltip>
             )}
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length === 0 && (
               <Button

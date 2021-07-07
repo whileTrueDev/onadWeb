@@ -15,6 +15,7 @@ const getCreatorLinkAfreecaCert = async () => {
 
 export const useCreatorLinkAfreecaCert = () => {
   return useQuery('creatorLinkAfreecaCert', getCreatorLinkAfreecaCert, {
+    refetchOnWindowFocus: true,
     cacheTime: 1000 * 60 * 3, // 캐시 3분유지
   });
 };

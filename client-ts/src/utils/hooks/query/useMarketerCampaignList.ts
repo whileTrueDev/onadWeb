@@ -62,7 +62,6 @@ export const useMarketerCampaignList = (params: MarketerCampaignListParams) => {
   const { offset, page } = params;
   return useQuery(['marketerCampaignList', offset, page], () => getMarketerCampaignList(params), {
     keepPreviousData: true,
-    // staleTime 1일
-    cacheTime: 1000 * 60 * 60, // 캐시 1시간 유지
+    cacheTime: 1000 * 60 * 10,
   });
 };

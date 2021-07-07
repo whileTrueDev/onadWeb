@@ -17,8 +17,7 @@ const getMarketerSalesIncome = async () => {
 
 export const useMarketerSalesIncome = () => {
   return useQuery('marketerSalesIncome', getMarketerSalesIncome, {
-    // staleTime 1일
-    staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    refetchOnWindowFocus: true,
+    cacheTime: 1000 * 60 * 10,
   });
 };

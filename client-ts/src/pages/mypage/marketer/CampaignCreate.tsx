@@ -196,6 +196,9 @@ const CampaignCreate = (): JSX.Element => {
       .then(res => {
         campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         queryClient.invalidateQueries('marketerCampaignList');
+        queryClient.invalidateQueries('marketerCampaign');
+        queryClient.invalidateQueries('marketerCampaignActive');
+        queryClient.invalidateQueries('marketerCampaignNames');
         if (res.data[0]) {
           alert(res.data[1]);
           if (urlParams && urlParams.to) history.push(`/mypage/marketer/${urlParams.to}`);

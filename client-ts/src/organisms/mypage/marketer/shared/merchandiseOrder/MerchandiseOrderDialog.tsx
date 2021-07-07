@@ -17,8 +17,9 @@ import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
-import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
-import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
+import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
+import { useMarketerMerchandisesDetail } from '../../../../../utils/hooks/query/useMarketerMerchandisesDetail';
+import { MerchandiseOrder } from '../../../../../utils/hooks/query/useMarketerMerchandisesOrders';
 import {
   OrderStatus,
   주문상태_상품준비,
@@ -26,7 +27,6 @@ import {
   주문상태_출고완료,
   주문상태_출고준비,
 } from '../../../../../utils/render_funcs/renderOrderStatus';
-import { MerchandiseOrder } from '../../adManage/interface';
 import OrderStateChangeDialog, { OrderCourierDTO } from './OrderStateChangeDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -67,9 +67,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const marketerInfo = useContext(MarketerInfoContext);
-  const merchandiseDetailGet = useGetRequest<null, Merchandise>(
-    `/marketer/merchandises/${merchandiseOrder.merchandiseId}`,
-  );
+  const merchandiseDetailGet = useMarketerMerchandisesDetail(merchandiseOrder.merchandiseId);
 
   // S3 상품 이미지 URL을 구하는 함수.
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
@@ -130,12 +128,12 @@ MerchandiseDetailDialogProps): React.ReactElement {
   return (
     <>
       <CustomDialog open={open} onClose={onClose} maxWidth="xs" fullWidth title="주문 정보">
-        {merchandiseDetailGet.loading && (
+        {merchandiseDetailGet.isLoading && (
           <div style={{ textAlign: 'center', width: '100%' }}>
             <CircularProgress />
           </div>
         )}
-        {!merchandiseDetailGet.loading && (
+        {!merchandiseDetailGet.isLoading && (
           <>
             {merchandiseDetailGet.data && merchandiseDetailGet.data.imagesRes && (
               <SwipeableTextMobileStepper

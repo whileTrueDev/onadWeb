@@ -11,9 +11,9 @@ import TestChargeAgreement from './ChargeAgreement';
 import TestChargeAmount from './ChargeAmount';
 import TestChargeComplete from './ChargeComplete';
 import TestChargeSolution from './ChargeSolution';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import { chargeReducer, VbankInterface } from '../interface';
 import sources from '../sources';
+import { useMarketerProfile } from '../../../../../utils/hooks/query/useMarketerProfile';
 
 declare global {
   interface Window {
@@ -71,19 +71,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface MarketerInfoInterface {
-  marketerId: string;
-  marketerName: string;
-  marketerMail: string;
-  marketerPhoneNum: string;
-  marketerBusinessRegNum: string;
-  marketerContraction: number;
-  platformType: number;
-}
-
 function TestChargeDialog(): JSX.Element {
-  const marketerProfileData = useGetRequest<null, MarketerInfoInterface>('/marketer');
-  // const cashData = useGetRequest<null, string | null>('/marketer/cash');
+  const marketerProfileData = useMarketerProfile();
 
   const classes = useStyles();
   const [completeLoading, setCompleteLoading] = useState(false);

@@ -1,8 +1,8 @@
-import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
+import { useMarketerMerchandisesConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerMerchandisesConnectedCampaigns';
 import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
+import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 
 interface MerchandiseDeleteDialogProps {
   open: boolean;
@@ -17,12 +17,7 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
   const { loading, doDeleteRequest } =
     useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
 
-  const connectedCampaign = useGetRequest<{ id?: number }, number>(
-    '/marketer/merchandises/campaigns',
-    {
-      id: selectedMerchandise.id,
-    },
-  );
+  const connectedCampaign = useMarketerMerchandisesConnectedCampaigns(selectedMerchandise.id);
 
   return (
     <Dialog
@@ -33,7 +28,7 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data > 0 ? (
+          {!connectedCampaign.isLoading && connectedCampaign.data && connectedCampaign.data > 0 ? (
             <Tooltip
               title={<Typography>상품이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}
             >
@@ -44,7 +39,7 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
               </div>
             </Tooltip>
           ) : null}
-          {!connectedCampaign.loading && connectedCampaign.data === 0 ? (
+          {!connectedCampaign.isLoading && connectedCampaign.data === 0 ? (
             <Button
               style={{ marginRight: 4 }}
               variant="outlined"

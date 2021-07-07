@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import axios from '../../axios';
 
-export interface ProfileDataType {
+export interface CreatorProfile {
   loginId: string;
   creatorId: string;
   creatorName: string;
@@ -28,11 +28,14 @@ export interface ProfileDataType {
   BussinessRegiImg: string;
 }
 
-const getCreatorProfile = async () => {
-  const res = await axios.get<ProfileDataType>('/creator');
+export const getCreatorProfile = async () => {
+  const res = await axios.get<CreatorProfile>('/creator');
   return res.data;
 };
 
 export const useCreatorProfile = () => {
-  return useQuery('creatorProfile', getCreatorProfile);
+  return useQuery('creatorProfile', getCreatorProfile, {
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
+  });
 };

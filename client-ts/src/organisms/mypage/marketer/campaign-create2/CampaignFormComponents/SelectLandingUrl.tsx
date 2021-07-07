@@ -1,31 +1,28 @@
-import { useState } from 'react';
-import * as React from 'react';
-import dayjs from 'dayjs';
 import {
   Grid,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
   ListItemSecondaryAction,
-  Typography,
+  ListItemText,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
-
 import { Check, HourglassEmpty, OpenInNew } from '@material-ui/icons';
+import dayjs from 'dayjs';
+import * as React from 'react';
+import { useState } from 'react';
+import Button from '../../../../../atoms/CustomButtons/Button';
 import GreenRadio from '../../../../../atoms/Radio/GreenRadio';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import Button from '../../../../../atoms/CustomButtons/Button';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
-import { LandingUrlData } from '../interfaces';
+import { useMarketerLandingUrlListWithoutPagination } from '../../../../../utils/hooks/query/useMarketerLandingUrlListWithoutPagination';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 import useStyles from './SelectLandingUrl.style';
 
 interface SelectLandingUrlProps {
   handleDialogOpen: () => void;
   state: CampaignCreateInterface;
   dispatch: React.Dispatch<CampaignCreateAction>;
-  landingUrlData: UseGetRequestObject<LandingUrlData[]>;
 }
 /**
  * @description
@@ -39,8 +36,10 @@ interface SelectLandingUrlProps {
  * @author 박찬우
  */
 function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
-  const { handleDialogOpen, dispatch, state, landingUrlData } = props;
+  const { handleDialogOpen, dispatch, state } = props;
   const classes = useStyles();
+
+  const landingUrlData = useMarketerLandingUrlListWithoutPagination();
 
   const [selectedLandingUrlLinkTo, setSelectedLandingUrlLinkTo] = useState<string>();
 
@@ -79,7 +78,7 @@ function SelectLandingUrl(props: SelectLandingUrlProps): JSX.Element {
       )}
 
       <Grid item>
-        {!landingUrlData.loading && landingUrlData.data && (
+        {!landingUrlData.isLoading && landingUrlData.data && (
           <List className={classes.landinglist}>
             {landingUrlData.data
               .filter(l => l.confirmState !== 2) // 2는 거절된 url을 나타낸다.

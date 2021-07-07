@@ -13,8 +13,7 @@ const getMarketerSettlementLogs = async (year: string | null) => {
 export const useMarketerSettlementLogs = (year: string | null) => {
   return useQuery(['marketerSettlementLogs', year], () => getMarketerSettlementLogs(year), {
     enabled: false,
-    // staleTime 1일
     staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    cacheTime: 1000 * 60 * 60 * 24,
   });
 };

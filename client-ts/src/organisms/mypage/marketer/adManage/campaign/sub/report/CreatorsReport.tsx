@@ -4,8 +4,10 @@ import { Avatar, makeStyles, Typography } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
 import * as React from 'react';
 import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
-import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
-import { CreatorDataInterface } from '../../../../dashboard/interfaces';
+import {
+  MarketerCampaignAnalysisCreatorData,
+  useMarketerCampaignAnalysisCreatorData,
+} from '../../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCreatorData';
 
 const useStyles = makeStyles(theme => ({
   container: { maxWidth: 600, height: 300 },
@@ -15,22 +17,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface CreatorsReportProps {
-  creatorsData: UseGetRequestObject<CreatorDataInterface[]>;
-  onRowClick?: (row: CreatorDataInterface) => void;
+  campaignId: string;
+  onRowClick?: (row: MarketerCampaignAnalysisCreatorData) => void;
 }
 export default function CreatorsReport(props: CreatorsReportProps): JSX.Element {
-  const { creatorsData, onRowClick } = props;
+  const { campaignId, onRowClick } = props;
   const classes = useStyles();
+
+  const creatorsData = useMarketerCampaignAnalysisCreatorData(campaignId);
 
   return (
     <div className={classes.container}>
-      {!creatorsData.loading && creatorsData.data && (
+      {!creatorsData.isLoading && creatorsData.data && (
         <CustomDataGrid
           disableSelectionOnClick
           onRowClick={param => {
-            if (onRowClick) onRowClick(param.row as CreatorDataInterface);
+            if (onRowClick) onRowClick(param.row as MarketerCampaignAnalysisCreatorData);
           }}
-          loading={creatorsData.loading}
+          loading={creatorsData.isLoading}
           rows={creatorsData.data}
           density="compact"
           columns={[

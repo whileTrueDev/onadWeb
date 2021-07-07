@@ -1,22 +1,24 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import { Typography, Button, makeStyles } from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { compose, withProps, withHandlers } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer';
 import dotenv from 'dotenv';
-import { GeoInterface } from '../../../../dashboard/interfaces';
-import { UseGetRequestObject } from '../../../../../../../utils/hooks/useGetRequest';
+import { nanoid } from 'nanoid';
+import { useState } from 'react';
+import { GoogleMap, Marker, withGoogleMap, withScriptjs } from 'react-google-maps';
+import MarkerClusterer from 'react-google-maps/lib/components/addons/MarkerClusterer';
+import { compose, withHandlers, withProps } from 'recompose';
 import CustomDataGrid from '../../../../../../../atoms/Table/CustomDataGrid';
+import {
+  CampaignGeoData,
+  useMarketerCampaignGeoData,
+} from '../../../../../../../utils/hooks/query/useMarketerCampaignGeoData';
 
 dotenv.config();
 interface MapWithMarkerClustererProps {
   onMarkerClustererClick: () => (markerClusterer: any) => void;
-  markers: GeoInterface[];
+  markers: CampaignGeoData[];
 }
 interface MapWithMarkerClustererOutProps {
-  markers: GeoInterface[];
+  markers: CampaignGeoData[];
 }
 // Ip To Geo Map settings
 const MapWithAMarkerClusterer = compose<
@@ -50,28 +52,28 @@ const MapWithAMarkerClusterer = compose<
       enableRetinaIcons
       gridSize={60}
     >
-      {props.markers.map((marker: GeoInterface) => (
+      {props.markers.map((marker: CampaignGeoData) => (
         <Marker key={nanoid()} position={{ lat: marker.latitude, lng: marker.longitude }} />
       ))}
     </MarkerClusterer>
   </GoogleMap>
 ));
 
-type IpToGeoData = UseGetRequestObject<GeoInterface[]>;
 interface IpToGeoProps {
-  ipToGeoData: IpToGeoData;
+  campaignId: string;
   [key: string]: any;
 }
 
 // Ip To Geo Map component
 function IpToGeo(props: IpToGeoProps): JSX.Element {
-  const { ipToGeoData } = props;
+  const { campaignId } = props;
+  const ipToGeoData = useMarketerCampaignGeoData(campaignId);
   const [mapOpen, setMapOpen] = useState<boolean>(false);
 
   return (
     <div>
-      {ipToGeoData.loading && <Skeleton height={400} />}
-      {!ipToGeoData.loading && ipToGeoData.data && (
+      {ipToGeoData.isLoading && <Skeleton height={400} />}
+      {!ipToGeoData.isLoading && ipToGeoData.data && (
         <div>
           {mapOpen ? null : (
             <div
@@ -107,7 +109,7 @@ interface GeoTableData {
   city: string;
 }
 // Ip To Get Table settgins
-function groupByCity(payload: GeoInterface[] | null): Array<GeoTableData> {
+function groupByCity(payload: CampaignGeoData[] | null): Array<GeoTableData> {
   const newData: Array<GeoTableData> = [];
   const cities: Array<string> = [];
   if (payload !== null) {
@@ -142,15 +144,17 @@ const useStyles = makeStyles(() => ({
 }));
 // Ip To Geo Table
 interface IpToGeoTableProps {
-  ipToGeoData: IpToGeoData;
+  campaignId: string;
 }
 function IpToGeoTable(props: IpToGeoTableProps): JSX.Element {
-  const { ipToGeoData } = props;
+  const { campaignId } = props;
+  const ipToGeoData = useMarketerCampaignGeoData(campaignId);
+
   const classes = useStyles();
 
   return (
     <div style={{ height: '250px' }}>
-      {!ipToGeoData.loading && ipToGeoData.data && (
+      {!ipToGeoData.isLoading && ipToGeoData.data && (
         <CustomDataGrid
           disableSelectionOnClick
           className={classes.datagrid}
@@ -179,16 +183,19 @@ function IpToGeoTable(props: IpToGeoTableProps): JSX.Element {
 }
 
 export default function GeoReport(props: IpToGeoProps): JSX.Element {
-  const { ipToGeoData, ...rest } = props;
+  const { campaignId, ...rest } = props;
+  const ipToGeoData = useMarketerCampaignGeoData(campaignId);
   return (
     <div {...rest}>
-      <IpToGeo ipToGeoData={ipToGeoData} />
-      <IpToGeoTable ipToGeoData={ipToGeoData} />
-      <div style={{ padding: 8 }}>
-        <Typography variant="caption">
-          * 정확한 위치가 확인되는 경우만 목록에 표시됩니다.
-        </Typography>
-      </div>
+      <IpToGeo campaignId={campaignId} />
+      <IpToGeoTable campaignId={campaignId} />
+      {!ipToGeoData.isLoading && (
+        <div style={{ padding: 8 }}>
+          <Typography variant="caption">
+            * 정확한 위치가 확인되는 경우만 목록에 표시됩니다.
+          </Typography>
+        </div>
+      )}
     </div>
   );
 }

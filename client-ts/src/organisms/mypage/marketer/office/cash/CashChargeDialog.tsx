@@ -9,6 +9,7 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
 import DialogContent from '@material-ui/core/DialogContent';
+import { useQueryClient } from 'react-query';
 import axios from '../../../../../utils/axios';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
@@ -79,6 +80,7 @@ interface CashDialogProps {
 
 function CashDialog(props: CashDialogProps): JSX.Element {
   const classes = useStyles();
+  const queryClient = useQueryClient();
   const { open, handleClose, currentCash } = props;
   // select value
   const { selectValue, handleChange } = useValue('10000');
@@ -105,6 +107,8 @@ function CashDialog(props: CashDialogProps): JSX.Element {
       .then(res => {
         if (res.data[0]) {
           handleConfirmDialogClose();
+          queryClient.invalidateQueries('marketerCash');
+          queryClient.invalidateQueries('marketerCashChargeHistory');
           history.push('/mypage/marketer/myoffice/cash');
         } else {
           console.log('cash - charge - error!');

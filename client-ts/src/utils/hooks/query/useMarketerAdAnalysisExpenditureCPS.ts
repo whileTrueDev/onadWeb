@@ -15,8 +15,8 @@ const getMarketerAdAnalysisExpenditureCPS = async () => {
 
 export const useMarketerAdAnalysisExpenditureCPS = () => {
   return useQuery('marketerAdAnalysisExpenditureCPS', getMarketerAdAnalysisExpenditureCPS, {
-    // staleTime 1일
-    staleTime: 1000 * 60 * 60 * 24,
-    cacheTime: 1000 * 60 * 60 * 24, // 캐시 24시간 유지
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 60 * 10,
+    cacheTime: 1000 * 60 * 10,
   });
 };

@@ -50,7 +50,11 @@ export default function BannerButtons(): JSX.Element {
       <BannerUploadDialog
         open={uploadDialog.open}
         onClose={uploadDialog.handleClose}
-        onSuccess={() => queryClient.invalidateQueries('marketerBannerList')}
+        onSuccess={() => {
+          queryClient.invalidateQueries('marketerBannerList');
+          queryClient.invalidateQueries('marketerBannerListActive');
+          queryClient.invalidateQueries('marketerBannerLength');
+        }}
       />
 
       {/* 배너 생성 가이드 다이얼로그 */}

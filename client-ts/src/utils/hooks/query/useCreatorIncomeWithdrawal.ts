@@ -14,5 +14,6 @@ const getCreatorIncomeWithdrawal = async () => {
 export const useCreatorIncomeWithdrawal = () => {
   return useQuery('creatorIncomeWithdrawal', getCreatorIncomeWithdrawal, {
     staleTime: 1000 * 60 * 5, // 5분이후 만료로 표시
+    cacheTime: 1000 * 60 * 10,
   });
 };

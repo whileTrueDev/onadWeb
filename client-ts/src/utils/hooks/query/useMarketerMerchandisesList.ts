@@ -67,9 +67,8 @@ export const useMarketerMerchandisesList = (params: MarketerMerchandisesListPara
     () => getMarketerMerchandisesList({ page, offset }),
     {
       keepPreviousData: true,
-      // staleTime 10분
       staleTime: 1000 * 60 * 10,
-      cacheTime: 1000 * 60 * 10, // 캐시 10 분 유지
+      cacheTime: 1000 * 60 * 10,
     },
   );
 };
