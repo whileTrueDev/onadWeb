@@ -16,6 +16,7 @@ import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import banks, { Bank } from '../../../../../constants/banks';
 import { useDialog } from '../../../../../utils/hooks';
+import { SettlementRegDTO } from '../../../../../utils/hooks/mutation/useMarketerCreateSettlementMutation';
 import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
 import { OnadUploadedImageData } from '../../../../../utils/hooks/useImageListUpload';
 import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
@@ -37,17 +38,6 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(0, 0, 2),
   },
 }));
-
-export interface SettlementRegDTO {
-  name: string;
-  identificationNumber: string;
-  bankName: string;
-  bankAccountOwner: string;
-  bankAccountNumber: string;
-  businessmanFlag: string;
-  identificationImgSrc: string;
-  bankAccountImgSrc: string;
-}
 
 export interface SettlementRegFormProps {
   onSubmit: (dto: Partial<SettlementRegDTO>, reqType?: 'post' | 'patch') => void;

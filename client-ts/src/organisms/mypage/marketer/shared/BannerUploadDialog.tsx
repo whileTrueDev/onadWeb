@@ -4,8 +4,7 @@ import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
 import { useReducer, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../config';
-import axios from '../../../../utils/axios';
+import { useMarketerCreateBannerMutation } from '../../../../utils/hooks/mutation/useMarketerCreateBannerMutation';
 import BannerUpload from './sub/BannerUpload';
 // import BannerDescForm from './BannerDescForm';
 import './upload.css';
@@ -95,16 +94,12 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
     onClose();
   };
 
-  // 등록 버튼 로딩을 위한 상태값
-  const [submitLoading, setSubmitLoading] = useState(false);
-
   // 배너를 등록 함수
+  const createBanner = useMarketerCreateBannerMutation();
   const handleSubmit = (): void => {
-    setSubmitLoading(true);
-    axios
-      .post(`${HOST}/marketer/banner`, { bannerSrc: state.imageUrl })
+    createBanner
+      .mutateAsync({ bannerSrc: state.imageUrl })
       .then(res => {
-        setSubmitLoading(false);
         if (res.data[0]) {
           alert(res.data[1]);
           if (onSuccess) onSuccess();
@@ -134,7 +129,7 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
             <Button
               color="primary"
               variant="contained"
-              disabled={submitLoading}
+              disabled={createBanner.isLoading}
               onClick={handleSubmit}
             >
               등록

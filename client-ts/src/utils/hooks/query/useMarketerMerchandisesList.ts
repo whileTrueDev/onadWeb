@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import axios from '../../axios';
 
 export interface Merchandise {
+  marketerId: string;
   id: number;
   name: string;
   regularPrice: number;

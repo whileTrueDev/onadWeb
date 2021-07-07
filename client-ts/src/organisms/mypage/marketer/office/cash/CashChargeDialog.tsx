@@ -1,21 +1,19 @@
-import * as React from 'react';
+import DialogContent from '@material-ui/core/DialogContent';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 // material ui core
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import Divider from '@material-ui/core/Divider';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import DialogContent from '@material-ui/core/DialogContent';
-import { useQueryClient } from 'react-query';
-import axios from '../../../../../utils/axios';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../../config';
 import history from '../../../../../history';
+import { useMarketerCreateCashChargeMutation } from '../../../../../utils/hooks/mutation/useMarketerCreateCashChargeMutation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: { fontWeight: 'bold' },
@@ -80,7 +78,6 @@ interface CashDialogProps {
 
 function CashDialog(props: CashDialogProps): JSX.Element {
   const classes = useStyles();
-  const queryClient = useQueryClient();
   const { open, handleClose, currentCash } = props;
   // select value
   const { selectValue, handleChange } = useValue('10000');
@@ -96,19 +93,18 @@ function CashDialog(props: CashDialogProps): JSX.Element {
     handleConfirmDialogOpen,
   } = useConfirmDialog(handleClose);
 
+  const chargeMutation = useMarketerCreateCashChargeMutation();
   function handleSubmitClick(): void {
     if (selectValue > 1000001) return;
     // 해당 금액 만큼 광고 캐시에 추가하는 요청
-    axios
-      .post<boolean[]>(`${HOST}/marketer/cash/charge`, {
+    chargeMutation
+      .mutateAsync({
         chargeCash: selectValue,
         chargeType: chargeType.selectValue,
       })
       .then(res => {
         if (res.data[0]) {
           handleConfirmDialogClose();
-          queryClient.invalidateQueries('marketerCash');
-          queryClient.invalidateQueries('marketerCashChargeHistory');
           history.push('/mypage/marketer/myoffice/cash');
         } else {
           console.log('cash - charge - error!');

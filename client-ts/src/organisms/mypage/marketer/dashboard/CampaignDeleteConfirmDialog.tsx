@@ -1,21 +1,22 @@
 import Typography from '@material-ui/core/Typography';
-import Dialog from '../../../../atoms/Dialog/Dialog';
+import { useSnackbar } from 'notistack';
 import Button from '../../../../atoms/CustomButtons/Button';
-import useDeleteRequest from '../../../../utils/hooks/useDeleteRequest';
+import Dialog from '../../../../atoms/Dialog/Dialog';
+import { useMarketerDeleteCampaignMutation } from '../../../../utils/hooks/mutation/useMarketerDeleteCampaignMutation';
 import { CampaignInterface } from './interfaces';
 
 interface CampaignDeleteConfirmDialogProps {
   open: boolean;
   selectedCampaign: CampaignInterface;
   handleClose: () => void;
-  doGetRequest: () => void;
 }
 
 export default function CampaignDeleteConfirmDialog(
   props: CampaignDeleteConfirmDialogProps,
 ): JSX.Element {
-  const { open, handleClose, doGetRequest, selectedCampaign } = props;
-  const { doDeleteRequest } = useDeleteRequest('/marketer/campaign', doGetRequest);
+  const { open, handleClose, selectedCampaign } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const deleteCampaignMutation = useMarketerDeleteCampaignMutation();
 
   return (
     <Dialog
@@ -28,8 +29,18 @@ export default function CampaignDeleteConfirmDialog(
           <Button
             color="primary"
             onClick={(): void => {
-              doDeleteRequest({ campaignId: selectedCampaign.campaignId });
-              handleClose();
+              deleteCampaignMutation
+                .mutateAsync({ campaignId: selectedCampaign.campaignId })
+                .then(() => {
+                  enqueueSnackbar('캠페인 삭제 성공', { variant: 'success' });
+                  handleClose();
+                })
+                .catch(() => {
+                  enqueueSnackbar(
+                    '캠페인 삭제에 실패했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+                    { variant: 'error' },
+                  );
+                });
             }}
           >
             삭제

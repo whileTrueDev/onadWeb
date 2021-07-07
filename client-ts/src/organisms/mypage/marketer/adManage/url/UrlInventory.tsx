@@ -167,12 +167,6 @@ export default function UrlTable(): JSX.Element {
           open={urlDeleteDialog.open}
           selectedUrl={selectedUrl}
           handleClose={urlDeleteDialog.handleClose}
-          onSuccess={(): void => {
-            queryClient.invalidateQueries('marketerLandingUrlList');
-            queryClient.invalidateQueries('marketerLandingUrlListWithoutPagination');
-            queryClient.invalidateQueries('marketerLandingUrlConnectedCampaigns');
-            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
-          }}
         />
       )}
     </div>

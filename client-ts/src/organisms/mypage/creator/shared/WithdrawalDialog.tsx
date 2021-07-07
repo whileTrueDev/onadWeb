@@ -1,22 +1,20 @@
-import { useReducer, useState } from 'react';
-import * as React from 'react';
+import { Collapse, Grid, Slide, Typography } from '@material-ui/core';
 // material ui core
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Slide, Collapse, Typography } from '@material-ui/core';
-// customized component
-import { useQueryClient } from 'react-query';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useReducer, useState } from 'react';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
+import history from '../../../../history';
+import { useCreatorCreateWithdrawalMutation } from '../../../../utils/hooks/mutation/useCreatorCreateWithdrawalMutation';
 import WithdrawalAgreement from './withdrawal/Agreement';
 import WithdrawalAmount from './withdrawal/Amount';
-import WithdrawalConfirm from './withdrawal/Confirm';
 import WithdrawalComplete from './withdrawal/Complete';
+import WithdrawalConfirm from './withdrawal/Confirm';
+import withdrawalSources from './withdrawal/withdrawalSources';
 // reducer
 import withdrawalDialogReducer, { WithdrawalDialogState } from './WithdrawalDialog.reducer';
-// utils
-import usePostRequest from '../../../../utils/hooks/usePostRequest';
-import history from '../../../../history';
-import withdrawalSources from './withdrawal/withdrawalSources';
 
 const useWithdrawalDialogStyles = makeStyles(theme => ({
   title: { marginTop: theme.spacing(1) },
@@ -37,8 +35,8 @@ function WithdrawDialog({
   receivable,
   realName,
 }: WithdrawalDialogProps): JSX.Element {
-  const queryClient = useQueryClient();
   const classes = useWithdrawalDialogStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const currentCashNumber = Number(receivable);
 
@@ -93,7 +91,7 @@ function WithdrawDialog({
     };
 
   // 출금 POST 요청객체 생성
-  const withdrawalPost = usePostRequest('/creator/income/withdrawal');
+  const withdrawalPost = useCreatorCreateWithdrawalMutation();
 
   // 출금 신청 버튼 1번만 클릭될 수 있도록 disabled 하기 위한 상태
   const [clicked, setClicked] = useState(false);
@@ -108,11 +106,17 @@ function WithdrawDialog({
     event.preventDefault();
     handleClicked();
     // 해당 금액 만큼 출금 내역에 추가하는 요청 실시
-    withdrawalPost.doPostRequest({ withdrawalAmount: selectValue }).then(() => {
-      // 요청 성공시 Success callback 함수
-      setActiveStep(preIndex => preIndex + 1);
-      queryClient.invalidateQueries('creatorIncomeWithdrawal');
-    });
+    withdrawalPost
+      .mutateAsync({ withdrawalAmount: selectValue })
+      .then(() => {
+        // 요청 성공시 Success callback 함수
+        setActiveStep(preIndex => preIndex + 1);
+      })
+      .catch(() =>
+        enqueueSnackbar('출금 신청 요청에 실패했습니다. support@onad.io로 문의바랍니다.', {
+          variant: 'error',
+        }),
+      );
   }
 
   const handleBack = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -166,10 +170,10 @@ function WithdrawDialog({
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={clicked || withdrawalPost.loading}
+                    disabled={clicked || withdrawalPost.isLoading}
                     onClick={handleSubmitClick}
                   >
-                    {withdrawalPost.loading ? '신청 진행중...' : '신청'}
+                    {withdrawalPost.isLoading ? '신청 진행중...' : '신청'}
                   </Button>
                 </Collapse>
               </Grid>

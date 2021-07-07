@@ -4,11 +4,9 @@ import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../../config';
-import axiosInstance from '../../../../../utils/axios';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
+import { useCreatorCreateLinkAfreecaCertMutation } from '../../../../../utils/hooks/mutation/useCreatorCreateLinkAfreecaCertMutation';
 import { useCreatorLinkAfreecaCert } from '../../../../../utils/hooks/query/useCreatorLinkAfreecaCert';
 
 export interface AfreecaLinkDialogProps {
@@ -26,7 +24,6 @@ export default function AfreecaLinkDialog({
 }: AfreecaLinkDialogProps): JSX.Element {
   const AFREECA_ONAD_ID_LINK_NOTE = '온애드 (kmotiv)';
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
   const afreecaLink = useCreatorLinkAfreecaCert();
 
   // 아프리카 연동 인증번호
@@ -42,15 +39,13 @@ export default function AfreecaLinkDialog({
   }, [afreecaLink.data]);
 
   // 아프리카 연동 요청
+  const createLinkCertMutation = useCreatorCreateLinkAfreecaCertMutation();
   function handleAfreecaClick(): void {
-    axiosInstance
-      .post(`${HOST}/link/afreeca/cert`, {
+    createLinkCertMutation
+      .mutateAsync({
         afreecaId: afreecaId.value,
       })
       .then(res => {
-        // 아프리카 연동 요청 목록 재요청 (parent 컴포넌트를 위해)
-        queryClient.invalidateQueries('creatorLinkAfreecaCert');
-
         // *************************************************
         const { status } = res.data;
         if (status === 'already-linked') {
@@ -60,10 +55,10 @@ export default function AfreecaLinkDialog({
           });
         } else if (status === 'duplicate-request') {
           // 이미 아프리카 연동 진행을 했다 + 아직 쪽지를 보내지 않은 경우
-          handleCertCode(res.data.cert.tempCode);
+          handleCertCode(res.data.cert?.tempCode || '');
         } else if (status === 'created') {
           // 이외의 경우 => 연동 인증번호가 생성
-          handleCertCode(res.data.cert.tempCode);
+          handleCertCode(res.data.cert?.tempCode || '');
         }
       })
       .catch(() => {

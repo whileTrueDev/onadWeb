@@ -1,7 +1,4 @@
 import useGetRequest from './useGetRequest';
-import useDeleteRequest from './useDeleteRequest';
-import usePostRequest from './usePostRequest';
-import usePutRequest from './usePutRequest';
 import usePatchRequest from './usePatchRequest';
 import useAnchorEl from './useAnchorEl';
 import useDialog from './useDialog';
@@ -15,9 +12,6 @@ import useScript from './useScript';
 
 export {
   useGetRequest,
-  useDeleteRequest,
-  usePostRequest,
-  usePutRequest,
   usePatchRequest,
   useAnchorEl,
   useDialog,

@@ -8,12 +8,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Notifications from '@material-ui/icons/Notifications';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
-import HOST from '../../../../config';
 import MarketerInfoContext from '../../../../context/MarketerInfo.context';
 import history from '../../../../history';
 import { useMypageStore } from '../../../../store/mypageStore';
-// utils
-import axios from '../../../../utils/axios';
+import { useLogoutMutation } from '../../../../utils/hooks/mutation/useLogoutMutation';
 import { CreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import { useNoticeReadFlag } from '../../../../utils/hooks/query/useNoticeReadFlag';
 import { useNotifications } from '../../../../utils/hooks/query/useNotifications';
@@ -62,10 +60,10 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
   });
 
   // 로그아웃
+  const logoutMutation = useLogoutMutation();
   function handleLogoutClick(): void {
-    axios.get(`${HOST}/logout`).then(() => {
-      history.push('/');
-    });
+    logoutMutation.mutate();
+    history.push('/');
   }
 
   // 유저 로고 클릭시의 설정 리스트

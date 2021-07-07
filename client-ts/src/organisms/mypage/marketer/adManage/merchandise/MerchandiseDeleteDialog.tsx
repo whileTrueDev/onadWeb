@@ -1,23 +1,23 @@
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import { useMarketerDeleteMerchandiseMutation } from '../../../../../utils/hooks/mutation/useMarketerDeleteMerchandiseMutation';
 import { useMarketerMerchandisesConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerMerchandisesConnectedCampaigns';
 import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 
 interface MerchandiseDeleteDialogProps {
   open: boolean;
   selectedMerchandise: Merchandise;
   handleClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Element => {
   const { open, selectedMerchandise, handleClose, onSuccess } = props;
-
-  const { loading, doDeleteRequest } =
-    useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
+  const { enqueueSnackbar } = useSnackbar();
 
   const connectedCampaign = useMarketerMerchandisesConnectedCampaigns(selectedMerchandise.id);
+  const deleteMerchandiseMutation = useMarketerDeleteMerchandiseMutation();
 
   return (
     <Dialog
@@ -44,15 +44,21 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
               style={{ marginRight: 4 }}
               variant="outlined"
               color="primary"
-              disabled={loading}
+              disabled={deleteMerchandiseMutation.isLoading}
               onClick={(): void => {
-                doDeleteRequest({ id: selectedMerchandise.id });
-                setTimeout(() => {
-                  handleClose();
-                  if (onSuccess) {
-                    onSuccess();
-                  }
-                }, 1000);
+                deleteMerchandiseMutation
+                  .mutateAsync({ id: selectedMerchandise.id })
+                  .then(() => {
+                    enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
+                    handleClose();
+                    if (onSuccess) onSuccess();
+                  })
+                  .catch(() => {
+                    enqueueSnackbar(
+                      '상품 삭제에 실패했습니다. 문제가 반복되는 경우 support@onad.io로 문의바랍니다.',
+                      { variant: 'error' },
+                    );
+                  });
               }}
             >
               확인

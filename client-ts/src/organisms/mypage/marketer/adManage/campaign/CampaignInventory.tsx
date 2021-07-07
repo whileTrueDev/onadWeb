@@ -369,10 +369,6 @@ export default function CampaignInventory({
         <CampaignDeleteConfirmDialog
           open={campaignDeleteDialog.open}
           selectedCampaign={selected}
-          doGetRequest={() => {
-            campaignRefetchSafely();
-            queryClient.invalidateQueries('marketerBannerConnectedCampaigns');
-          }}
           handleClose={(): void => {
             setSelected(undefined);
             campaignDeleteDialog.handleClose();

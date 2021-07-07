@@ -1,11 +1,11 @@
+import { makeStyles, Paper, Typography } from '@material-ui/core';
+import classnames from 'classnames';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import classnames from 'classnames';
-import { makeStyles, Paper, Typography } from '@material-ui/core';
-import history from '../../../../history';
-import { usePatchRequest } from '../../../../utils/hooks';
-import { useNoticeList } from '../../../../utils/hooks/query/useNoticeList';
 import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+import history from '../../../../history';
+import { useUpdateNoticeReadFlagMutation } from '../../../../utils/hooks/mutation/useUpdateNoticeReadFlagMutation';
+import { useNoticeList } from '../../../../utils/hooks/query/useNoticeList';
 
 dayjs.extend(relativeTime);
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 export default function NoticeCard(): JSX.Element {
   const classes = useStyles();
   const noticeList = useNoticeList();
-  const noticeReadFlagPatch = usePatchRequest('/notice/read-flag');
+  const noticeReadFlagMutation = useUpdateNoticeReadFlagMutation();
 
   return (
     <Paper className={classes.container}>
@@ -48,8 +48,8 @@ export default function NoticeCard(): JSX.Element {
           noticeList.data.slice(0, 5).map(noti => (
             <div key={noti.code} className={classes.noticeItem}>
               <Typography
-                onClick={(): void => {
-                  noticeReadFlagPatch.doPatchRequest();
+                onClick={async () => {
+                  await noticeReadFlagMutation.mutateAsync();
                   history.push('/mypage/creator/notice', { selectedNotice: noti.code });
                 }}
                 className={classnames(classes.link, classes.ellipsis)}

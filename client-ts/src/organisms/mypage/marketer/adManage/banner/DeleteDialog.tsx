@@ -1,11 +1,12 @@
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import { useMarketerDeleteBannerMutation } from '../../../../../utils/hooks/mutation/useMarketerDeleteBannerMutation';
 import { useMarketerBannerConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerBannerConnectedCampaigns';
 import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 import openKakaoChat from '../../../../../utils/openKakaoChat';
 
 const useStyles = makeStyles(() => ({
@@ -20,15 +21,16 @@ interface DeleteDialogProps {
   open: boolean;
   selectedBanner: MarketerBanner;
   handleClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { open, selectedBanner, handleClose, onSuccess } = props;
 
-  const { doDeleteRequest } = useDeleteRequest<{ bannerId: string }, any[]>('/marketer/banner');
+  const deleteBannerMutation = useMarketerDeleteBannerMutation();
 
   const connectedCampaign = useMarketerBannerConnectedCampaigns(selectedBanner.bannerId);
 
@@ -60,12 +62,21 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
               <Button
                 variant="contained"
                 color="primary"
+                disabled={deleteBannerMutation.isLoading}
                 onClick={(): void => {
-                  doDeleteRequest({ bannerId: selectedBanner.bannerId });
-                  setTimeout(() => {
-                    handleClose();
-                    onSuccess();
-                  }, 500);
+                  deleteBannerMutation
+                    .mutateAsync({ bannerId: selectedBanner.bannerId })
+                    .then(() => {
+                      if (onSuccess) onSuccess();
+                      enqueueSnackbar('배너 삭제 완료.', { variant: 'success' });
+                      handleClose();
+                    })
+                    .catch(() => {
+                      enqueueSnackbar(
+                        '배너 삭제에 실패했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+                        { variant: 'error' },
+                      );
+                    });
                 }}
               >
                 확인

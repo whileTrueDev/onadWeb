@@ -157,39 +157,18 @@ function CampaignFormPaper({
       <ButtonSet type="submit" handleBack={handleBack} nextButtonOpen disabled={state.loading} />
 
       {/* 배너 생성 다이얼로그 */}
-      <BannerUploadDialog
-        open={bannerUploadDialog.open}
-        onClose={bannerUploadDialog.handleClose}
-        onSuccess={() => {
-          queryClient.invalidateQueries('marketerBannerListActive');
-          queryClient.invalidateQueries('marketerBannerList');
-          queryClient.invalidateQueries('marketerBannerLength');
-          queryClient.invalidateQueries('marketerBannerConnectedCampaigns');
-        }} // 배너 데이터 재요청
-      />
+      <BannerUploadDialog open={bannerUploadDialog.open} onClose={bannerUploadDialog.handleClose} />
 
       {/* 랜딩페이지URL 생성 다이얼로그 */}
       <UrlUploadDialog
         open={landingUrlUploadDialog.open}
         handleClose={landingUrlUploadDialog.handleClose}
-        onSuccess={() => {
-          queryClient.invalidateQueries('marketerLandingUrlListWithoutPagination');
-          queryClient.invalidateQueries('marketerLandingUrlList');
-          queryClient.invalidateQueries('marketerLandingUrlListWithoutPagination');
-          queryClient.invalidateQueries('marketerLandingUrlConnectedCampaigns');
-        }}
       />
 
       {/* 상품 생성 다이얼로그 */}
       <MerchandiseUploadDialog
         open={merchandiseUploadDialog.open}
         onClose={merchandiseUploadDialog.handleClose}
-        onSuccess={() => {
-          queryClient.invalidateQueries('marketerMerchandisesList');
-          queryClient.invalidateQueries('marketerMerchandisesLength');
-          queryClient.invalidateQueries('marketerMerchandisesListOnlyNotConnected');
-          queryClient.invalidateQueries('marketerMerchandisesAddresses');
-        }}
       />
     </CampaignCreateStepLayout>
   );

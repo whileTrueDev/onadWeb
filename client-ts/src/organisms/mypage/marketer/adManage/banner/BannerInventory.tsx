@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
@@ -21,7 +20,6 @@ import BannerInfoPopover from '../campaign/BannerInfoPopover';
 import DeleteDialog from './DeleteDialog';
 
 export default function BannerInventory(): JSX.Element {
-  const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   // 배너 데이터 조회
   const bannerPageLength = useMarketerBannerLength();
@@ -143,12 +141,6 @@ export default function BannerInventory(): JSX.Element {
           open={deleteDialog.open}
           selectedBanner={selectedBanner}
           handleClose={deleteDialog.handleClose}
-          onSuccess={() => {
-            queryClient.invalidateQueries('useMarketerBannerLength');
-            queryClient.invalidateQueries('marketerBannerList');
-            queryClient.invalidateQueries('marketerBannerActive');
-            enqueueSnackbar('배너 삭제 완료.', { variant: 'success' });
-          }}
         />
       )}
 

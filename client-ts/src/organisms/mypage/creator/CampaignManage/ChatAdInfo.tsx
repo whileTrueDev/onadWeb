@@ -1,5 +1,3 @@
-import { useSnackbar } from 'notistack';
-import classnames from 'classnames';
 import {
   FormControlLabel,
   Hidden,
@@ -10,10 +8,12 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import { useQueryClient } from 'react-query';
-import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
-import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorUpdateAdchatAgreementMutation } from '../../../../utils/hooks/mutation/useCreatorUpdateAdchatAgreementMutation';
 import { useCreatorAdchatAgreement } from '../../../../utils/hooks/query/useCreatorAdChatAgreement';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ChatAdInfo(): JSX.Element {
-  const queryClient = useQueryClient();
   const creatorProfile = useCreatorProfile();
   const adchatAgreement = useCreatorAdchatAgreement();
   const { enqueueSnackbar } = useSnackbar();
@@ -40,14 +39,17 @@ export default function ChatAdInfo(): JSX.Element {
   const descAnchor = useAnchorEl();
 
   // OnOff toggle
-  const onOffUpdate = usePatchRequest('/creator/adchat/agreement', () => {
-    queryClient.invalidateQueries('creatorAdchatAgreement');
-  });
+  const onOffUpdate = useCreatorUpdateAdchatAgreementMutation();
   const handleSwitch = (): void => {
     onOffUpdate
-      .doPatchRequest({ targetOnOffState: !adchatAgreement.data?.adChatAgreement })
+      .mutateAsync({ targetOnOffState: !adchatAgreement.data?.adChatAgreement })
       .then(() => enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' }))
-      .catch(() => enqueueSnackbar('변경중 오류가 발생했습니다.', { variant: 'error' }));
+      .catch(() =>
+        enqueueSnackbar(
+          '변경중 오류가 발생했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+          { variant: 'error' },
+        ),
+      );
   };
 
   return (

@@ -2,11 +2,14 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { usePatchRequest, usePostRequest } from '../../../../../utils/hooks';
+import { usePatchRequest } from '../../../../../utils/hooks';
+import {
+  SettlementRegDTO,
+  useMarketerCreateSettlementMutation,
+} from '../../../../../utils/hooks/mutation/useMarketerCreateSettlementMutation';
 import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
-import SettlementRegForm, { SettlementRegDTO } from './SettlementRegForm';
+import SettlementRegForm from './SettlementRegForm';
 
 export interface SettlementRegDialogProps {
   open: boolean;
@@ -16,13 +19,12 @@ export default function SettlementRegDialog({
   open,
   onClose,
 }: SettlementRegDialogProps): JSX.Element {
-  const queryClient = useQueryClient();
   // 판매대금 출금정산을 위한 정산 등록 정보 조회
   const settlement = useMarketerSettlement();
 
   // * 스낵바
   const { enqueueSnackbar } = useSnackbar();
-  const settlementPost = usePostRequest('/marketer/settlement');
+  const settlementPost = useMarketerCreateSettlementMutation();
   const settlementPatch = usePatchRequest('/marketer/settlement');
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,7 +77,6 @@ export default function SettlementRegDialog({
       handleLoadingEnd();
       if (res.data === 1) {
         enqueueSnackbar('정산 등록이 완료되었습니다.', { variant: 'success' });
-        if (settlement) queryClient.invalidateQueries('marketerSettlement');
         onClose();
       } else {
         enqueueSnackbar(
@@ -98,7 +99,7 @@ export default function SettlementRegDialog({
     if (reqType && reqType === 'patch') {
       return settlementPatch.doPatchRequest(data).then(onSuccess).catch(onFail);
     }
-    return settlementPost.doPostRequest(data).then(onSuccess).catch(onFail);
+    return settlementPost.mutateAsync(data).then(onSuccess).catch(onFail);
   }
 
   return (
@@ -117,7 +118,7 @@ export default function SettlementRegDialog({
         )}
         <SettlementRegForm onSubmit={handleSubmit} onCancle={onClose} loading={loading} />
 
-        {(settlementPatch.loading || settlementPost.loading) && <CircularProgress />}
+        {(settlementPatch.loading || settlementPost.isLoading) && <CircularProgress />}
       </CustomDialog>
     </>
   );

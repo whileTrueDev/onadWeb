@@ -230,7 +230,7 @@ const UserInfoCard = ({ handleWithdrawalDialogOpen }: UserInfoCardProps): JSX.El
       <div className={classes.withdrawalSection}>
         {withdrawal.isLoading && <CenterLoading height={25} />}
 
-        {(!withdrawal.data || withdrawal.data.length === 0) && (
+        {!withdrawal.isLoading && (!withdrawal.data || withdrawal.data.length === 0) && (
           <div className={classes.flex} style={{ marginTop: 32 }}>
             <Typography variant="body2" className={classes.ellipsis}>
               아직 출금 신청 내역이 없어요..

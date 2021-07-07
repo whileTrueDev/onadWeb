@@ -1,6 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
-import { useQueryClient } from 'react-query';
 import { useDialog } from '../../../../../utils/hooks';
 import MerchandiseUploadDialog from '../../shared/MerchandiseUploadDialog';
 
@@ -9,7 +8,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function MerchandiseButtons(): JSX.Element {
-  const queryClient = useQueryClient();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -28,7 +26,6 @@ export default function MerchandiseButtons(): JSX.Element {
         onSuccess={() => {
           enqueueSnackbar('상품 등록을 완료하였습니다.', { variant: 'success' });
           merchandiseUploadDialog.handleClose();
-          queryClient.invalidateQueries('marketerMerchandisesList');
         }}
         onFail={() => {
           enqueueSnackbar('상품 등록 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {

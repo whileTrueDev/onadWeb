@@ -2,10 +2,8 @@
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import dayjs from 'dayjs';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import getDiscountPrice from '../../../../../utils/getDiscountPrice';
 import { useDialog } from '../../../../../utils/hooks';
@@ -23,7 +21,6 @@ const useStyles = makeStyles(() => ({
 
 const FETCH_PAGE_OFFSET = 5;
 export default function MerchandiseInventory(): JSX.Element {
-  const queryClient = useQueryClient();
   const classes = useStyles();
 
   const [page, setPage] = useState(0);
@@ -38,7 +35,6 @@ export default function MerchandiseInventory(): JSX.Element {
   }
 
   const merchandiseDeleteDialog = useDialog();
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div className={classes.datagrid}>
@@ -148,10 +144,6 @@ export default function MerchandiseInventory(): JSX.Element {
           open={merchandiseDeleteDialog.open}
           selectedMerchandise={selectedMerchandise}
           handleClose={merchandiseDeleteDialog.handleClose}
-          onSuccess={(): void => {
-            queryClient.invalidateQueries('marketerMerchandisesList');
-            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
-          }}
         />
       )}
     </div>

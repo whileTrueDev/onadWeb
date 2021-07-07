@@ -1,10 +1,11 @@
-import classnames from 'classnames';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Button, Typography, Grid, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useMarketerUpdateBusinessMutation } from '../../../../../../utils/hooks/mutation/useMarketerUpdateBusinessMutation';
 import useBannerUpload from '../../../../../../utils/hooks/useBannerUpload';
 import useEventTargetValue from '../../../../../../utils/hooks/useEventTargetValue';
-import usePutRequest from '../../../../../../utils/hooks/usePutRequest';
 
 const useStyles = makeStyles(theme => ({
   helperAlert: {
@@ -49,17 +50,13 @@ interface StepperInterface {
 
 function BusinessUploadStep(props: StepperInterface): JSX.Element {
   const { handleChangeStep, isBusiness } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const defaultImage = '';
   const defaultNumber = '';
   const { imageUrl, imageName, handleReset, readImage } = useBannerUpload(defaultImage);
   const eventValue = useEventTargetValue(defaultNumber);
-  const imageUpload = usePutRequest('/marketer/business', () => {
-    handleChangeStep(2);
-  });
-  const numberUpload = usePutRequest('/marketer/business', () => {
-    handleChangeStep(2);
-  });
+  const businessUpdateMutation = useMarketerUpdateBusinessMutation();
   const phoneRex = /^\d{3}-\d{3,4}-\d{4}$/;
 
   return (
@@ -144,7 +141,15 @@ function BusinessUploadStep(props: StepperInterface): JSX.Element {
               color="primary"
               className={classes.button}
               onClick={async (): Promise<void> => {
-                await imageUpload.doPutRequest({ value: imageUrl });
+                await businessUpdateMutation
+                  .mutateAsync({ value: imageUrl })
+                  .then(() => handleChangeStep(2))
+                  .catch(() =>
+                    enqueueSnackbar(
+                      '등록에 실패했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.',
+                      { variant: 'error' },
+                    ),
+                  );
               }}
               disabled={!imageName}
             >
@@ -185,7 +190,15 @@ function BusinessUploadStep(props: StepperInterface): JSX.Element {
               className={classes.button}
               color="primary"
               onClick={async (): Promise<void> => {
-                await numberUpload.doPutRequest({ value: eventValue.value });
+                await businessUpdateMutation
+                  .mutateAsync({ value: eventValue.value })
+                  .then(() => handleChangeStep(2))
+                  .catch(() =>
+                    enqueueSnackbar(
+                      '등록에 실패했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.',
+                      { variant: 'error' },
+                    ),
+                  );
               }}
               disabled={!eventValue.value || !phoneRex.test(eventValue.value)}
             >

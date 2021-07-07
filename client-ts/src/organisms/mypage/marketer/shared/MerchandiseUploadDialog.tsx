@@ -20,7 +20,8 @@ import {
   getS3MerchandiseImagePath,
 } from '../../../../utils/aws/getS3Path';
 import getDiscountPrice from '../../../../utils/getDiscountPrice';
-import { useDialog, useEventTargetValue, usePostRequest } from '../../../../utils/hooks';
+import { useDialog, useEventTargetValue } from '../../../../utils/hooks';
+import { useMarketerCreateMerchandiseMutation } from '../../../../utils/hooks/mutation/useMarketerCreateMerchandiseMutation';
 import {
   OnadAddressData,
   useMarketerMerchandisesAddresses,
@@ -31,7 +32,6 @@ import {
 } from '../../../../utils/hooks/query/useMarketerMerchandisesList';
 import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
-import { CreateMerchandiseDto } from '../adManage/interface';
 import AddressInput from './sub/MerchandiseAddressInput';
 import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
@@ -168,7 +168,7 @@ export default function MerchandiseUploadDialog({
 
   // *************************************************************
   // 상품 등록 백엔드 요청
-  const merchandisePost = usePostRequest<CreateMerchandiseDto>('/marketer/merchandises');
+  const merchandisePost = useMarketerCreateMerchandiseMutation();
 
   // form error 표시를 위한 변수
   const [formError, setFormError] = useState('');
@@ -231,7 +231,7 @@ export default function MerchandiseUploadDialog({
     handleLoadingStatus('상품 등록 중...');
     // 상품 등록 POST 요청
     merchandisePost
-      .doPostRequest({
+      .mutateAsync({
         ...merchandiseInfo,
         optionFlag: optionFlag.value === FLAG_ON,
         pickupFlag: pickupFlag.value === FLAG_ON,

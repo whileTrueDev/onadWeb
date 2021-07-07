@@ -58,10 +58,6 @@ export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProp
       });
   };
 
-  // const { doPostRequest } = usePostRequest(
-  //   '/marketer/ad/on-off', onOffData.doGetRequest
-  // );
-
   return (
     <Paper className={classes.paper}>
       <div className={classes.div}>
