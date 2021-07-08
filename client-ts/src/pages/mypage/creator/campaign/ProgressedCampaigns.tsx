@@ -24,7 +24,9 @@ export default function ProgressedCampaigns(): React.ReactElement {
             creatorProfile.data.creatorContractionAgreement !== 1 && (
               <div style={{ textAlign: 'center' }}>
                 <Typography>아직 진행한 광고가 없어요!</Typography>
-                <Typography>방송 채널 연동을 진행하고, 광고를 진행해보세요!</Typography>
+                <Typography>
+                  방송 채널 연동 및 이용 동의를 진행하고, 광고를 진행해보세요!
+                </Typography>
                 <Button
                   disableElevation
                   variant="contained"

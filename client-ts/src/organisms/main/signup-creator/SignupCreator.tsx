@@ -515,7 +515,12 @@ export default function SignupCreator(): JSX.Element {
           size="large"
           variant="contained"
           style={{ width: '100%' }}
-          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
+          disabled={
+            !signupInfo.userid ||
+            !signupInfo.passwd ||
+            !signupInfo.repasswd ||
+            duplicateCheckLoading
+          }
         >
           가입하기
         </Button>
@@ -528,22 +533,12 @@ export default function SignupCreator(): JSX.Element {
       <Button
         component={Link}
         className={classes.socialLoginButton}
-        to="/mypage/creator/main"
+        to="/creator"
         color="primary"
         variant="contained"
         fullWidth
       >
-        마이페이지로 이동
-      </Button>
-      <Button
-        component={Link}
-        className={classes.socialLoginButton}
-        to="/creator"
-        color="default"
-        variant="contained"
-        fullWidth
-      >
-        메인화면으로
+        메인화면으로 이동
       </Button>
     </div>
   );

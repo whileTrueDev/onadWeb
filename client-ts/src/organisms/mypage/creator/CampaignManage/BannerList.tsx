@@ -76,15 +76,17 @@ export default function BannerList(): JSX.Element {
   }
   // 캠페인목록 크기
   const bannerList = useCreatorBannerList();
-
   return (
     <Grid container spacing={1} className={classes.container}>
       {/* 아직 없는 경우 처리 */}
-      {!bannerList.isLoading && (!bannerList.data || bannerList.data.pages.length < 1) && (
-        <Grid item xs={12} style={{ marginTop: 8 }}>
-          <Typography>아직 진행한 광고가 없습니다.</Typography>
-        </Grid>
-      )}
+      {!bannerList.isLoading &&
+        (!bannerList.data ||
+          (bannerList.data.pages.length === 1 &&
+            bannerList.data.pages[0].banners.length === 0)) && (
+          <Grid item xs={12} style={{ marginTop: 8 }}>
+            <Typography>아직 진행한 광고가 없습니다.</Typography>
+          </Grid>
+        )}
       {/* 목록 */}
       <Grid item xs={12} container>
         {bannerList.data &&

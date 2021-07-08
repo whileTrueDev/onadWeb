@@ -57,7 +57,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
       <div className={classes.container}>
         {/* 유저 정보 */}
         <List>
-          {user.isLoading && <CenterLoading />}
+          {user.isLoading && <CenterLoading height={50} />}
           {!user.isLoading && user.data && (
             <ListItem style={{ display: 'flex', alignItems: 'center' }}>
               <Avatar
@@ -101,7 +101,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
             to="/mypage/creator/notice"
             component={Link}
             onClick={(): void => {
-              if (!noticeReadFlag.isLoading && noticeReadFlag.data) {
+              if (!noticeReadFlag.isLoading && !noticeReadFlag.data?.noticeReadState) {
                 noticeReadFlagPatch.mutate();
               }
             }}

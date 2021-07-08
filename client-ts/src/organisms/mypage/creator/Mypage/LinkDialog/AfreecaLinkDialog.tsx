@@ -42,9 +42,7 @@ export default function AfreecaLinkDialog({
   const createLinkCertMutation = useCreatorCreateLinkAfreecaCertMutation();
   function handleAfreecaClick(): void {
     createLinkCertMutation
-      .mutateAsync({
-        afreecaId: afreecaId.value,
-      })
+      .mutateAsync({ afreecaId: afreecaId.value })
       .then(res => {
         // *************************************************
         const { status } = res.data;
@@ -109,7 +107,7 @@ export default function AfreecaLinkDialog({
               onClick={handleAfreecaClick}
               color="primary"
               variant="contained"
-              disabled={!afreecaId.value}
+              disabled={!afreecaId.value || createLinkCertMutation.isLoading}
             >
               인증번호 발급 요청
             </Button>

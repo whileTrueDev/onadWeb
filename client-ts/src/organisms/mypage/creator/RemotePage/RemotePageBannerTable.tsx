@@ -172,7 +172,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
                         onChange={(): void => {
                           handleSwitch(value.campaignId, value.state, pageUrl);
                         }}
-                        disabled={Boolean(remoteCampaigns.isLoading)}
+                        disabled={remoteCampaigns.isLoading}
                       />
                     }
                   />

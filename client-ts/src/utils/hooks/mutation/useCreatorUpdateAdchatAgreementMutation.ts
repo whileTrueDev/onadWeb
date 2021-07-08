@@ -8,7 +8,7 @@ export const useCreatorUpdateAdchatAgreementMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (dto: CreatorUpdateAdchatAgreementMutationDto) =>
-      axios.patch<boolean>('/creator/adchat/agreement', { data: dto }),
+      axios.patch<boolean>('/creator/adchat/agreement', dto),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('creatorAdchatAgreement');

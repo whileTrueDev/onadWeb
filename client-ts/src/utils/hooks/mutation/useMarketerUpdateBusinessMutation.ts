@@ -8,8 +8,7 @@ export interface MarketerUpdateBusinessMutationDto {
 export const useMarketerUpdateBusinessMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (dto: MarketerUpdateBusinessMutationDto) =>
-      axios.put<boolean>('/marketer/business', { data: dto }),
+    (dto: MarketerUpdateBusinessMutationDto) => axios.put<boolean>('/marketer/business', dto),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('marketerBusiness');

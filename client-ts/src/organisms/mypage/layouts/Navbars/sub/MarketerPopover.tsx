@@ -65,7 +65,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
       <div className={classes.container}>
         {/* 유저 정보 */}
         <List>
-          {marketerInfo.isLoading && <CenterLoading />}
+          {marketerInfo.isLoading && <CenterLoading height={50} />}
           {!marketerInfo.isLoading && marketerInfo.data && (
             <ListItem style={{ display: 'flex', alignItems: 'center' }}>
               <Tooltip title="변경하러가기" arrow>
@@ -105,7 +105,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
             to="/mypage/marketer/notice"
             component={Link}
             onClick={(): void => {
-              if (!noticeReadFlag.isLoading && noticeReadFlag.data) {
+              if (!noticeReadFlag.isLoading && !noticeReadFlag.data?.noticeReadState) {
                 noticeReadFlagPatch.mutate();
               }
               handleUserMenuClose();
