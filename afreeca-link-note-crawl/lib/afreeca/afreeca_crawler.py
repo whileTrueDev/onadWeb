@@ -107,7 +107,10 @@ class AfreecaNoteCrawler:
             # 유저 이름. 형식 => 닉네임 (ID)
             username = note.find_element(By.ID, 'ict').text
             nickname = username.split(' (')[0]
-            afreecaId = username.split(' (')[1].replace(")", "")
+            if (username == 'afnotice'):
+                pass
+            else:
+                afreecaId = username.split(' (')[1].replace(")", "")
 
             # 쪽지 내용
             note_contents = note.find_element(By.CLASS_NAME, 'memo_cnt').text
