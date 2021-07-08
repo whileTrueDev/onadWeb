@@ -11,19 +11,40 @@ let messageHtml: string;
 const messageArray: string[] = [];
 let idx = 0;
 let bannerId = 0;
+let bottomTextIndex = 0;
 // 하단 marquee 영역 이벤트
-setInterval(() => {
-  if($('.bottom-area').css({ display: 'none' })) {
-    $('.bottom-area').css({ display: 'flex' })
+// setInterval(() => {
+//   if($('.bottom-area').css({ display: 'none' })) {
+//     $('.bottom-area').css({ display: 'flex' })
+//   }
+//   if (idx >= idArray.length) {
+//       idx = 0;
+//     }
+//   if (idArray.length){
+//   $('.bottom-area-text').text(`${idArray[idx]}`)
+//   $('.bottom-area-text').css({ display: 'flex' });
+//   idx += 1;}
+// }, 10000);
+
+async function switchBottomText(){
+  if (bottomTextIndex > idArray.length) {
+    bottomTextIndex = 0
   }
-  if (idx >= idArray.length) {
-      idx = 0;
-    }
-  if (idArray.length){
-  $('.bottom-area-text').text(`${idArray[idx]}`)
-  $('.bottom-area-text').css({ display: 'flex' });
-  idx += 1;}
-}, 10000);
+  if (idArray.length !== 0){
+    await setTimeout(() => {
+      $('.bottom-area-text').text(`${idArray[idx]}`).fadeIn(500)
+    }, 1000)
+    bottomTextIndex += 1
+    await setTimeout(() => {
+      $('.bottom-area-text').fadeOut(500)
+      switchBottomText()
+    }, 10000)
+  } else {
+    await setTimeout(() => {
+      switchBottomText()
+    }, 10000)
+  }
+}
 
 // 우측상단 응원문구 이벤트
 setInterval(async () => {
@@ -40,19 +61,29 @@ setInterval(async () => {
 }, 2000);
 
 async function switchImage(){
-  bannerId += 1
-  if (bannerId === 7) {
-    bannerId = 1
+  if (!$('.vertical-banner').attr('src')?.includes('gif')){
+    bannerId += 1
+
+    if (bannerId === 7) {
+      bannerId = 1
+    }
+    console.log($('.vertical-banner').attr('src'))
+    await setTimeout(() => {
+      $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeIn(1000)
+    }, 1000)
+    
+    await setTimeout(() => {
+      $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeOut(1000)
+      switchImage()
+    }, 10000)
+  } else {
+    await setTimeout(() => {
+      switchImage()
+    }, 10000)
   }
-  await setTimeout(() => {
-    $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeIn(1000)
-  }, 1000)
-  
-  await setTimeout(() => {
-    $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeOut(1000)
-    switchImage()
-  }, 10000)
 }
+
+switchBottomText()
 switchImage()
 
 function getOS(): string|null {
@@ -172,7 +203,7 @@ socket.on('get live commerce image', (data: ImageData) => {
   switch (data.which) {
     case 'left':
       $('.left-banner-area').empty().append(`
-      <img src=${data.imgUrl} class="left-live-commerce" width="100%" height="100%">
+      <img src=${data.imgUrl} class="vertical-banner" alt="세로배너영역">
     `);
       break;
     case 'bottom':
