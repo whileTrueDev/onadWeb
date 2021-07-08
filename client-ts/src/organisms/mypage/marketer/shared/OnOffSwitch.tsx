@@ -2,7 +2,6 @@ import { FormControlLabel, Paper, Switch, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
-// import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import { useQueryClient } from 'react-query';
 import { useMarketerAdOnOffMutation } from '../../../../utils/hooks/mutation/useMarketerAdOnOffMutation';
 import { useMarketerAdOnOff } from '../../../../utils/hooks/query/useMarketerAdOnOff';

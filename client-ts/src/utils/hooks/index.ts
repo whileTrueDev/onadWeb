@@ -1,4 +1,3 @@
-import useGetRequest from './useGetRequest';
 import usePatchRequest from './usePatchRequest';
 import useAnchorEl from './useAnchorEl';
 import useDialog from './useDialog';
@@ -11,7 +10,6 @@ import useTooltip from './useTooltip';
 import useScript from './useScript';
 
 export {
-  useGetRequest,
   usePatchRequest,
   useAnchorEl,
   useDialog,
