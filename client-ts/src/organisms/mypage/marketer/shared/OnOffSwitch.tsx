@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { FormControlLabel, Paper, Switch, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Paper, Typography, FormControlLabel, Switch } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 // import usePostRequest from '../../../../utils/hooks/usePostRequest';
 import { useQueryClient } from 'react-query';
-import { useSnackbar } from 'notistack';
-import HOST from '../../../../config';
-import axios from '../../../../utils/axios';
+import { useMarketerAdOnOffMutation } from '../../../../utils/hooks/mutation/useMarketerAdOnOffMutation';
 import { useMarketerAdOnOff } from '../../../../utils/hooks/query/useMarketerAdOnOff';
 
 const useStyles = makeStyles(() => ({
@@ -33,15 +32,13 @@ export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProp
     }
   }, [onOffData]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const onOffMutation = useMarketerAdOnOffMutation();
   const handleSwitch = () => {
-    setLoading(true);
-    axios
-      .post(`${HOST}/marketer/ad/on-off`, {
+    onOffMutation
+      .mutateAsync({
         onOffState: onOffData.data ? !onOffData.data.onOffState : false,
       })
       .then(res => {
-        setLoading(false);
         if (!res.data[0]) {
           alert(res.data[1]);
         } else {
@@ -49,7 +46,6 @@ export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProp
         }
       })
       .catch(err => {
-        setLoading(false);
         enqueueSnackbar(
           '광고 On/Off 도중에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견되면 support@onad.io로 문의 바랍니다.',
           { variant: 'error' },
@@ -66,7 +62,7 @@ export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProp
           label=""
           control={
             <Switch
-              disabled={loading}
+              disabled={onOffMutation.isLoading}
               color="secondary"
               checked={viewState}
               onChange={(): void => {

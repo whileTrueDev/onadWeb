@@ -1,13 +1,12 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { usePatchRequest } from '../../../../../utils/hooks';
 import {
   SettlementRegDTO,
   useMarketerCreateSettlementMutation,
 } from '../../../../../utils/hooks/mutation/useMarketerCreateSettlementMutation';
+import { useMarketerUpdateSettlementMutation } from '../../../../../utils/hooks/mutation/useMarketerUpdateSettlementMutation';
 import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
 import SettlementRegForm from './SettlementRegForm';
 
@@ -25,15 +24,7 @@ export default function SettlementRegDialog({
   // * 스낵바
   const { enqueueSnackbar } = useSnackbar();
   const settlementPost = useMarketerCreateSettlementMutation();
-  const settlementPatch = usePatchRequest('/marketer/settlement');
-
-  const [loading, setLoading] = useState<boolean>(false);
-  function handleLoadingStart(): void {
-    setLoading(true);
-  }
-  function handleLoadingEnd(): void {
-    setLoading(false);
-  }
+  const settlementPatch = useMarketerUpdateSettlementMutation();
 
   // eslint-disable-next-line consistent-return
   function handleSubmit(
@@ -74,8 +65,7 @@ export default function SettlementRegDialog({
       return enqueueSnackbar('통장 사본을 업로드해주세요.', { variant: 'error' });
 
     const onSuccess = (res: any): void => {
-      handleLoadingEnd();
-      if (res.data === 1) {
+      if (res.data) {
         enqueueSnackbar('정산 등록이 완료되었습니다.', { variant: 'success' });
         onClose();
       } else {
@@ -87,7 +77,6 @@ export default function SettlementRegDialog({
     };
 
     const onFail = (err: any): void => {
-      handleLoadingEnd();
       enqueueSnackbar(
         '정산 등록중 오류가 발생했습니다. 문제가 지속되는 경우 support@onad.io로 문의 바랍니다.',
         { variant: 'error' },
@@ -95,9 +84,8 @@ export default function SettlementRegDialog({
       console.error(err);
     };
 
-    handleLoadingStart();
     if (reqType && reqType === 'patch') {
-      return settlementPatch.doPatchRequest(data).then(onSuccess).catch(onFail);
+      return settlementPatch.mutateAsync(data).then(onSuccess).catch(onFail);
     }
     return settlementPost.mutateAsync(data).then(onSuccess).catch(onFail);
   }
@@ -116,9 +104,13 @@ export default function SettlementRegDialog({
             </Typography>
           </Alert>
         )}
-        <SettlementRegForm onSubmit={handleSubmit} onCancle={onClose} loading={loading} />
+        <SettlementRegForm
+          onSubmit={handleSubmit}
+          onCancle={onClose}
+          loading={settlementPatch.isLoading || settlementPost.isLoading}
+        />
 
-        {(settlementPatch.loading || settlementPost.isLoading) && <CircularProgress />}
+        {(settlementPatch.isLoading || settlementPost.isLoading) && <CircularProgress />}
       </CustomDialog>
     </>
   );

@@ -12,8 +12,10 @@ import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import { OnadTheme } from '../../../../theme';
-import axiosInstance from '../../../../utils/axios';
 import { useDialog, useEventTargetValue } from '../../../../utils/hooks';
+import { useCreatorDeleteLinkAfreecaCertMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkAfreecaCertMutation';
+import { useCreatorDeleteLinkAfreecaMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkAfreecaMutation';
+import { useCreatorDeleteLinkTwitchMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkTwitchMutation';
 import { useCreatorLinkAfreecaCert } from '../../../../utils/hooks/query/useCreatorLinkAfreecaCert';
 import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import openKakaoChat from '../../../../utils/openKakaoChat';
@@ -69,30 +71,26 @@ export default function PlatformLinkCard(): JSX.Element {
 
   // 아프리카 연동 취소 확인 다이얼로그
   const afreecaCancelConfirmDialog = useDialog();
+  const deleteCert = useCreatorDeleteLinkAfreecaCertMutation();
   // 아프리카 연동 요청 취소 핸들러
   function handleCancel(): void {
-    axiosInstance
-      .delete(`${HOST}/link/afreeca/cert`, {
-        data: { afreecaId: afreecaId.value },
-      })
-      .then(res => {
-        if (res.data) {
-          afreecaCancelConfirmDialog.handleClose();
-          queryClient.invalidateQueries('creatorProfile');
-        }
-      });
+    deleteCert.mutateAsync({ afreecaId: afreecaId.value }).then(res => {
+      if (res.data) {
+        afreecaCancelConfirmDialog.handleClose();
+      }
+    });
   }
 
   // 아프리카 연동 상태 다이얼로그
   const afreecaLinkDeleteDialog = useDialog();
+  const deleteLinkAfreeca = useCreatorDeleteLinkAfreecaMutation();
   // 아프리카 연동 해제
   function handleDeleteLinkAfreeca(): void {
-    axiosInstance
-      .delete(`${HOST}/link/afreeca`)
+    deleteLinkAfreeca
+      .mutateAsync()
       .then(res => {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
-          queryClient.invalidateQueries('creatorProfile');
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
@@ -107,13 +105,13 @@ export default function PlatformLinkCard(): JSX.Element {
   // ************************************************
   // 트위치 연동 해제
   const twitchLinkDeleteDialog = useDialog();
+  const deleteLinkTwitch = useCreatorDeleteLinkTwitchMutation();
   function handleDeleteLinkTwitch(): void {
-    axiosInstance
-      .delete(`${HOST}/link/twitch`)
+    deleteLinkTwitch
+      .mutateAsync()
       .then(res => {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
-          queryClient.invalidateQueries('creatorProfile');
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })

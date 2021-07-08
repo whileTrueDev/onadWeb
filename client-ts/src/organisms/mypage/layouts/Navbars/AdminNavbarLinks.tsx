@@ -17,7 +17,6 @@ import { useNoticeReadFlag } from '../../../../utils/hooks/query/useNoticeReadFl
 import { useNotifications } from '../../../../utils/hooks/query/useNotifications';
 import { useProfileByUserType } from '../../../../utils/hooks/query/useProfileByUserType';
 import useAnchorEl from '../../../../utils/hooks/useAnchorEl';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 // types
 import MarketerPopover from './sub/MarketerPopover';
 import NotificationPopper from './sub/NotificationPopper';
@@ -54,10 +53,7 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
   }
 
   // 공지사항
-  const noticeReadFlag = useNoticeReadFlag(type);
-  const noticeReadFlagPatch = usePatchRequest('/notice/read-flag', () => {
-    queryClient.invalidateQueries(['noticeReadFlag', type]);
-  });
+  const noticeReadFlag = useNoticeReadFlag();
 
   // 로그아웃
   const logoutMutation = useLogoutMutation();
@@ -166,24 +162,10 @@ export default function AdminNavbarLinks({ type }: AdminNavbarLinksProps): JSX.E
       )}
 
       {/* 유저 설정 리스트 */}
-      {type === 'creator' && (
-        <UserPopover
-          handleLogoutClick={handleLogoutClick}
-          doNoticePatchRequest={(): void => {
-            noticeReadFlagPatch.doPatchRequest({ type });
-          }}
-        />
-      )}
+      {type === 'creator' && <UserPopover handleLogoutClick={handleLogoutClick} />}
 
       {/* 유저 설정 리스트 */}
-      {type === 'marketer' && (
-        <MarketerPopover
-          handleLogoutClick={handleLogoutClick}
-          doNoticePatchRequest={(): void => {
-            noticeReadFlagPatch.doPatchRequest({ type });
-          }}
-        />
-      )}
+      {type === 'marketer' && <MarketerPopover handleLogoutClick={handleLogoutClick} />}
     </div>
   );
 }

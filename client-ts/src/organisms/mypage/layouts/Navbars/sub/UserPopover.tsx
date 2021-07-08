@@ -16,6 +16,7 @@ import { useMypageStore } from '../../../../../store/mypageStore';
 import { useNoticeReadFlag } from '../../../../../utils/hooks/query/useNoticeReadFlag';
 import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
 import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
+import { useUpdateNoticeReadFlagMutation } from '../../../../../utils/hooks/mutation/useUpdateNoticeReadFlagMutation';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },
@@ -24,13 +25,13 @@ const useStyles = makeStyles(theme => ({
 
 export interface UserPopoverProps {
   handleLogoutClick: () => void;
-  doNoticePatchRequest: () => void;
 }
 export default function UserPopover(props: UserPopoverProps): JSX.Element {
-  const { handleLogoutClick, doNoticePatchRequest } = props;
+  const { handleLogoutClick } = props;
 
-  const noticeReadFlag = useNoticeReadFlag('creator');
+  const noticeReadFlag = useNoticeReadFlag();
   const user = useCreatorProfile();
+  const noticeReadFlagPatch = useUpdateNoticeReadFlagMutation();
 
   const userMenuAnchor = useMypageStore(x => x.userMenuAnchor);
   const handleUserMenuClose = useMypageStore(x => x.handleUserMenuClose);
@@ -101,7 +102,7 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
             component={Link}
             onClick={(): void => {
               if (!noticeReadFlag.isLoading && noticeReadFlag.data) {
-                doNoticePatchRequest();
+                noticeReadFlagPatch.mutate();
               }
             }}
           >

@@ -3,10 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { MouseEvent, useReducer } from 'react';
-import { useQueryClient } from 'react-query';
 import { Link, useLocation } from 'react-router-dom';
-// others
-import HOST from '../../../config';
 import history from '../../../history';
 import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 // organisms
@@ -16,7 +13,10 @@ import {
   CampaignCreateReducer,
   defaultState as step3DefaultState,
 } from '../../../organisms/mypage/marketer/campaign-create2/reducers/campaignCreate.reducer';
-import axios from '../../../utils/axios';
+import {
+  MarketerCreateCampaignMutationDto,
+  useMarketerCreateCampaignMutation,
+} from '../../../utils/hooks/mutation/useMarketerCreateCampaignMutation';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import parseParams from '../../../utils/parseParams';
 
@@ -41,7 +41,6 @@ const useStyles = makeStyles((_theme: Theme) => ({
 
 const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
-  const queryClient = useQueryClient();
 
   // *****************************************************
   // url search parameter를 토대로 캠페인 생성 이후 보낼 redirect uri를 가져온다.
@@ -91,6 +90,7 @@ const CampaignCreate = (): JSX.Element => {
   const budgetInputRef = React.useRef<HTMLInputElement>();
 
   // *****************************************************
+  const createCampaignMutation = useMarketerCreateCampaignMutation();
   // 캠페인 생성 요청 핸들러
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -125,7 +125,7 @@ const CampaignCreate = (): JSX.Element => {
       const NUM = type.replace(/[^0-9]/g, '');
       return NUM;
     }
-    const campaignCreateDTO: any = {
+    const campaignCreateDTO: Partial<MarketerCreateCampaignMutationDto> = {
       optionType: typeToNum(campaignCreateState.selectedOption),
       // 아프리카 카테고리 선택형의 경우 type1-1이므로 11이 됨.
       // 하지만 "카테고리 선택형" 이라는 동일한 유형이므로 동일하게 처리되어야 함. => 1로 수정함.
@@ -190,15 +190,9 @@ const CampaignCreate = (): JSX.Element => {
     }
     campaignCreateDTO.keyword = ['', '', '']; // keyword추가후 수정
 
-    campaignCreateDispatch({ type: 'LOADING_START', value: '' });
-    axios
-      .post(`${HOST}/marketer/campaign`, campaignCreateDTO)
+    createCampaignMutation
+      .mutateAsync(campaignCreateDTO as MarketerCreateCampaignMutationDto)
       .then(res => {
-        campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
-        queryClient.invalidateQueries('marketerCampaignList');
-        queryClient.invalidateQueries('marketerCampaign');
-        queryClient.invalidateQueries('marketerCampaignActive');
-        queryClient.invalidateQueries('marketerCampaignNames');
         if (res.data[0]) {
           alert(res.data[1]);
           if (urlParams && urlParams.to) history.push(`/mypage/marketer/${urlParams.to}`);

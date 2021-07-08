@@ -7,14 +7,10 @@ export interface NoticeReadFlag {
   noticeReadState: number;
 }
 
-const getNoticeReadFlag = async (userType: CreatorOrMarketerParams) => {
-  return axios
-    .get<NoticeReadFlag>(`/notice/read-flag`, { params: { userType } })
-    .then(res => res.data);
+const getNoticeReadFlag = async () => {
+  return axios.get<NoticeReadFlag>(`/notice/read-flag`).then(res => res.data);
 };
 
-export const useNoticeReadFlag = (userType: CreatorOrMarketerParams) => {
-  return useQuery(['noticeReadFlag', userType], () => getNoticeReadFlag(userType), {
-    enabled: !!userType,
-  });
+export const useNoticeReadFlag = () => {
+  return useQuery('noticeReadFlag', getNoticeReadFlag);
 };

@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
@@ -53,7 +52,6 @@ export default function CampaignInventory({
   pageOffset,
   handlePage,
 }: CampaignInventoryProps): JSX.Element {
-  const queryClient = useQueryClient();
   const classes = useStyles();
 
   // **************************************************************************************
@@ -61,10 +59,6 @@ export default function CampaignInventory({
   const campaigns = useMarketerCampaignList({ offset: pageOffset, page: currentPage });
 
   const campaignPageLength = useMarketerCampaignLength();
-
-  const campaignRefetchSafely = () => {
-    queryClient.invalidateQueries('marketerCampaignList');
-  };
 
   const { enqueueSnackbar } = useSnackbar();
   // ******************************************
@@ -78,7 +72,6 @@ export default function CampaignInventory({
       );
     } else {
       handleCampaignSelect(undefined);
-      campaignRefetchSafely();
     }
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
@@ -356,7 +349,6 @@ export default function CampaignInventory({
         <CampaignUpdateDialog
           open={campaignUpdateDialog.open}
           selectedCampaign={selected}
-          doGetRequest={campaignRefetchSafely}
           handleClose={(): void => {
             setSelected(undefined);
             campaignUpdateDialog.handleClose();

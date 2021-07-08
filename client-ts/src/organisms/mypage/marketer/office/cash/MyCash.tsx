@@ -5,11 +5,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
 import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
 import Table from '../../../../../atoms/Table/Table';
-import HOST, { REACT_HOST } from '../../../../../config';
-import axiosInstance from '../../../../../utils/axios';
+import { REACT_HOST } from '../../../../../config';
 import { useMarketerAccount } from '../../../../../utils/hooks/query/useMarketerAccount';
 import { useMarketerAd } from '../../../../../utils/hooks/query/useMarketerAd';
 import { useMarketerCash } from '../../../../../utils/hooks/query/useMarketerCash';
@@ -53,15 +51,6 @@ function MyCash(): JSX.Element {
     process.env.NODE_ENV === 'production'
       ? window.screen.height / 2 - 400
       : window.screen.height / 2 - 350;
-  // front HOST
-
-  const [vbankload, setVbankload] = useState<boolean>(false);
-
-  useEffect(() => {
-    axiosInstance.post<boolean[]>(`${HOST}/marketer/cash/vbank`).then(row => {
-      setVbankload(row.data[0]);
-    });
-  }, [setVbankload, vbankload]);
 
   return (
     <Paper className={classes.root}>

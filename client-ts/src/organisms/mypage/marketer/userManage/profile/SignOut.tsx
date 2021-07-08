@@ -1,29 +1,33 @@
-import { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
-
-import axios from '../../../../../utils/axios';
-import SignOutDialog from './SignOutDialog';
-import HOST, { REACT_HOST } from '../../../../../config';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useLogoutMutation } from '../../../../../utils/hooks/mutation/useLogoutMutation';
+import { useMarketerSignoutMutation } from '../../../../../utils/hooks/mutation/useMarketerSignoutMutation';
 import { MarketerInfo } from '../../../../../utils/hooks/query/useMarketerProfile';
+import SignOutDialog from './SignOutDialog';
 
 const SignOut = (props: { userData: MarketerInfo }): JSX.Element => {
   const { userData } = props;
-  const [open, openState] = useState(false);
+  const history = useHistory();
   const [marketerId, setMarketerId] = useState<string>('');
 
+  const [open, openState] = useState(false);
   function handleOpen(): void {
     openState(!open);
   }
 
+  const logoutMutation = useLogoutMutation();
+  const signoutMutation = useMarketerSignoutMutation();
   function doSignOut(): void {
-    axios
-      .delete<null, boolean[]>(`${HOST}/marketer`)
+    signoutMutation
+      .mutateAsync()
       .then(() => {
         alert('탈퇴가 완료되었습니다.');
-        window.location.href = REACT_HOST!;
+        logoutMutation.mutate();
+        history.push('/');
       })
       .catch(() => {
-        alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        alert('회원 탈퇴 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       });
   }
 

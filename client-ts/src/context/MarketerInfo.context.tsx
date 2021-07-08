@@ -5,12 +5,12 @@ import { MarketerInfo, useMarketerProfile } from '../utils/hooks/query/useMarket
 export interface MarketerInfoContextValue {
   user?: MarketerInfo;
   loading: boolean;
-  doGetRequest: () => void;
+  refetchUnSafely: () => void;
 }
 export const defaultValue: MarketerInfoContextValue = {
   user: undefined,
   loading: false,
-  doGetRequest: () => {},
+  refetchUnSafely: () => {},
 };
 
 // *******************************************************
@@ -26,7 +26,7 @@ export function MarketerInfoContextProvider(props: any): JSX.Element {
       value={{
         user: marketerInfo.data,
         loading: marketerInfo.isLoading,
-        doGetRequest: marketerInfo.refetch,
+        refetchUnSafely: marketerInfo.refetch,
       }}
     >
       {children}

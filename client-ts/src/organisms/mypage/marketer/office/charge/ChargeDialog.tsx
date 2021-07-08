@@ -1,19 +1,19 @@
-import { useReducer, useEffect, useState } from 'react';
-
-import * as React from 'react';
+import { Collapse, Grid, Slide } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Slide, Collapse } from '@material-ui/core';
-import axios from '../../../../../utils/axios';
+import * as React from 'react';
+import { useEffect, useReducer, useState } from 'react';
 // customized component
 import Button from '../../../../../atoms/CustomButtons/Button';
 import HOST from '../../../../../config';
+import axios from '../../../../../utils/axios';
+import { useMarketerCreateCashChargeCardMutation } from '../../../../../utils/hooks/mutation/useMarketerCreateCashChargeCardMutation';
+import { useMarketerProfile } from '../../../../../utils/hooks/query/useMarketerProfile';
+import { chargeReducer, VbankInterface } from '../interface';
+import sources from '../sources';
 import TestChargeAgreement from './ChargeAgreement';
 import TestChargeAmount from './ChargeAmount';
 import TestChargeComplete from './ChargeComplete';
 import TestChargeSolution from './ChargeSolution';
-import { chargeReducer, VbankInterface } from '../interface';
-import sources from '../sources';
-import { useMarketerProfile } from '../../../../../utils/hooks/query/useMarketerProfile';
 
 declare global {
   interface Window {
@@ -119,6 +119,7 @@ function TestChargeDialog(): JSX.Element {
 
   const { selectValue, chargeType } = stepState;
 
+  const chargeMutation = useMarketerCreateCashChargeCardMutation();
   // 전자 결제시스템
   function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
@@ -180,16 +181,16 @@ function TestChargeDialog(): JSX.Element {
     const payCallback = (rsp: any) => {
       if (rsp.success) {
         // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-        axios
-          .post(`${HOST}/marketer/cash/charge/card`, {
+        chargeMutation
+          .mutateAsync({
             chargeCash: selectValue,
             chargeType,
             imp_uid: rsp.imp_uid,
             merchant_uid: rsp.merchant_uid,
           })
-          .then((data: any) => {
+          .then((res: any) => {
             // 결제 완료에 대한 응답처리
-            switch (data.data.status) {
+            switch (res.data.status) {
               // 가상계좌 발급 완료시 로직
               case 'vbankIssued':
                 // 가상계좌 안내에 대한 데이터를 마케터에게 표시하기 위해 state에 담는다.
@@ -206,7 +207,7 @@ function TestChargeDialog(): JSX.Element {
 
               // 계좌이체 및 신용카드 결제 완료시 로직
               case 'success':
-                if (!data.data[0]) {
+                if (!res.data[0]) {
                   setCompleteLoading(false);
                   setIndex(index + 1);
                 } else {

@@ -24,6 +24,7 @@ import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
 import history from '../../../../../history';
 import { useMypageStore } from '../../../../../store/mypageStore';
 import { OnadTheme } from '../../../../../theme';
+import { useUpdateNoticeReadFlagMutation } from '../../../../../utils/hooks/mutation/useUpdateNoticeReadFlagMutation';
 import { useMarketerProfile } from '../../../../../utils/hooks/query/useMarketerProfile';
 import { useNoticeReadFlag } from '../../../../../utils/hooks/query/useNoticeReadFlag';
 
@@ -33,13 +34,13 @@ const useStyles = makeStyles(theme => ({
 }));
 export interface MarketerPopoverProps {
   handleLogoutClick: () => void;
-  doNoticePatchRequest: () => void;
 }
 export default function MarketerPopover(props: MarketerPopoverProps): JSX.Element {
-  const { handleLogoutClick, doNoticePatchRequest } = props;
+  const { handleLogoutClick } = props;
 
   const marketerInfo = useMarketerProfile();
-  const noticeReadFlag = useNoticeReadFlag('marketer');
+  const noticeReadFlag = useNoticeReadFlag();
+  const noticeReadFlagPatch = useUpdateNoticeReadFlagMutation();
   const userMenuAnchor = useMypageStore(x => x.userMenuAnchor);
   const handleUserMenuClose = useMypageStore(x => x.handleUserMenuClose);
 
@@ -105,7 +106,7 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
             component={Link}
             onClick={(): void => {
               if (!noticeReadFlag.isLoading && noticeReadFlag.data) {
-                doNoticePatchRequest();
+                noticeReadFlagPatch.mutate();
               }
               handleUserMenuClose();
             }}

@@ -17,7 +17,8 @@ import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
-import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
+import { useDialog } from '../../../../../utils/hooks';
+import { useMarketerUpdateOrderMutation } from '../../../../../utils/hooks/mutation/useMarketerUpdateOrderMutation';
 import { useMarketerMerchandisesDetail } from '../../../../../utils/hooks/query/useMarketerMerchandisesDetail';
 import { MerchandiseOrder } from '../../../../../utils/hooks/query/useMarketerMerchandisesOrders';
 import {
@@ -88,7 +89,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
   );
 
   // 상태 변경 요청 핸들링
-  const orderStatusPatch = usePatchRequest('/marketer/orders');
+  const orderStatusPatch = useMarketerUpdateOrderMutation();
 
   const confirmDialog = useDialog();
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>();
@@ -104,7 +105,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
   type StatusChangeParams = { status: OrderStatus; dto?: OrderCourierDTO; denialReason?: string };
   function handleStatusChange({ status, dto, denialReason }: StatusChangeParams): void {
     orderStatusPatch
-      .doPatchRequest({
+      .mutateAsync({
         orderId: merchandiseOrder.id,
         status,
         denialReason,
@@ -116,7 +117,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
         confirmDialog.handleClose();
         if (onStatusChange) onStatusChange();
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error(err);
         enqueueSnackbar(
           '주문 상태를 변경하는 도중 오류가 발생했습니다. 문제가 지속적으로 발견될 시 support@onad.io로 문의바랍니다.',

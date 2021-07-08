@@ -15,10 +15,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { OpenInNew } from '@material-ui/icons';
 import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
-import { useQueryClient } from 'react-query';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
+import { useCreatorUpdateRemoteOnOffMutation } from '../../../../utils/hooks/mutation/useCreatorUpdateRemoteOnOffMutation';
 import { useCreatorRemoteCampaigns } from '../../../../utils/hooks/query/useCreatorRemoteCampaigns';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
 import { CPS_OPTION_TYPE } from '../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../utils/render_funcs/renderPriorityType';
 
@@ -64,16 +63,12 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
   const { pageUrl } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const queryClient = useQueryClient();
   const remoteCampaigns = useCreatorRemoteCampaigns({ remoteControllerUrl: pageUrl });
 
-  const onOffUpdate = usePatchRequest('/creator/remote/onoff', () => {
-    queryClient.invalidateQueries('creatorRemoteCampaigns');
-  });
-
+  const onOffUpdate = useCreatorUpdateRemoteOnOffMutation();
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
     onOffUpdate
-      .doPatchRequest({ campaignId, state, url })
+      .mutateAsync({ campaignId, state, url })
       .then(() => enqueueSnackbar('정상적으로 변경 되었습니다.', { variant: 'success' }))
       .catch(() => enqueueSnackbar('변경 중 오류가 발생 했습니다.', { variant: 'error' }));
   };

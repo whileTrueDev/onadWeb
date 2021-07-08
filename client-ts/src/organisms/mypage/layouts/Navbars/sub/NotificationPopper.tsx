@@ -2,11 +2,11 @@ import { Badge, Divider, List, ListItem, Popover, Typography } from '@material-u
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
+import { useUpdateNotificationReadFlagMutation } from '../../../../../utils/hooks/mutation/useUpdateNotificationReadFlagMutation';
 import {
   CreatorOrMarketerParams,
   useNotifications,
 } from '../../../../../utils/hooks/query/useNotifications';
-import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 // types
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,10 +44,11 @@ export default function NotificationPopover({
   handleAnchorClose: () => void;
 }): JSX.Element {
   const classes = useStyles();
-  const userType = window.location.pathname.split('/')[2];
+  const userType = window.location.pathname.split('/')[2] as CreatorOrMarketerParams;
 
-  const notifications = useNotifications(userType as CreatorOrMarketerParams);
-  const notiReadPatch = usePatchRequest(`/${userType}/notification`);
+  const notifications = useNotifications(userType);
+  const notiReadPatch = useUpdateNotificationReadFlagMutation(userType);
+
   return (
     <Popover
       open={Boolean(anchorEl)}
@@ -86,7 +87,7 @@ export default function NotificationPopover({
                     if (noti.readState === UNREAD_STATE) {
                       // 알림 읽음 처리
                       notiReadPatch
-                        .doPatchRequest({ index: noti.index })
+                        .mutateAsync({ index: noti.index })
                         // 개인 알림 데이터 리로드
                         .then(() => successCallback(noti.index));
                     }
