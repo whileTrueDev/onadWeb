@@ -4,13 +4,13 @@ const socket: any = io({ transports: ['websocket'] });
 let idArray: Array<null|string> = [];
 const rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
-// const ICON_ARRAY = ['crown', 'second', 'third'];
-let setDate = new Date("2021-07-03T14:00:00+0900");
+// const verticalImageArray = ['crown', 'second', 'third'];
+let setDate = new Date("2021-07-11T14:30:00+0900");
 
 let messageHtml: string;
 const messageArray: string[] = [];
 let idx = 0;
-
+let bannerId = 0;
 // 하단 marquee 영역 이벤트
 setInterval(() => {
   if($('.bottom-area').css({ display: 'none' })) {
@@ -38,6 +38,22 @@ setInterval(async () => {
     
   }
 }, 2000);
+
+async function switchImage(){
+  bannerId += 1
+  if (bannerId === 7) {
+    bannerId = 1
+  }
+  await setTimeout(() => {
+    $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeIn(1000)
+  }, 1000)
+  
+  await setTimeout(() => {
+    $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeOut(1000)
+    switchImage()
+  }, 10000)
+}
+switchImage()
 
 function getOS(): string|null {
   const { userAgent } = window.navigator;
@@ -351,6 +367,9 @@ socket.on('show virtual ad to client', () => {
 
 socket.on('quantity object from server', (quantityObject:string) => {
   $('#quantity-object').text(quantityObject)
+  $('.bottom-object').css({
+    'opacity':1
+  })
 });
 
 socket.on('get current quantity', (currentQuantity:number) => {

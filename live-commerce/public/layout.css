@@ -31,7 +31,7 @@ body {
 .live-commerce {
   width: 96.9%;
   height: 94.5%;
-  margin-top:0.7%;
+  margin-top: 0.7%;
   position: relative;
 }
 
@@ -59,14 +59,13 @@ body {
 
 .bottom-left-icon {
   width: 18%;
-  margin-left:10%;
+  margin-left: 10%;
 }
 
 .bottom-left-icon#clock {
   width: 17%;
-  margin-right:8%;
+  margin-right: 8%;
 }
-
 
 .bottom-left-icon.urgent#clock {
   /* Start the shake animation and make the animation last for 0.5 seconds */
@@ -118,6 +117,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  opacity: 0;
 }
 
 .bottom-object span {
@@ -156,7 +156,7 @@ body {
 }
 
 .bottom-timer.urgent {
-  color: #ffd200;;
+  color: #ffd200;
 }
 
 .bottom-timer span {
@@ -189,7 +189,7 @@ body {
 }
 
 .bottom-admin {
-  z-index:3;
+  z-index: 3;
   color: yellow;
   font-size: 23px;
 }
@@ -277,6 +277,11 @@ body {
   position: relative;
 }
 
+.vertical-banner {
+  width: 100%;
+  height: 100%;
+}
+
 /* 좌측 상단 랭킹 */
 .ranking-area {
   display: flex;
@@ -355,6 +360,14 @@ body {
   left: 0%;
   bottom: 0%;
   position: absolute;
+}
+/* 우측상단 온애드 로고 */
+.top-right-logo {
+  /* width: 34.4%;
+  height: 44.5%; */
+  top: 2.5%;
+  right: 2%;
+  position: fixed;
 }
 
 /* 우측 상단 응원메세지 영역 */
