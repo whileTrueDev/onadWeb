@@ -10,6 +10,7 @@ export interface MarketerInfo {
   marketerContraction: number;
   platformType: number;
   profileImage?: string;
+  temporaryLogin?: boolean;
 }
 export const getMarketerProfile = async () => {
   return axios.get<MarketerInfo>('/marketer').then(res => res.data);

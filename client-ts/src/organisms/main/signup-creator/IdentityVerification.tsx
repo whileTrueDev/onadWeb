@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { useCallback, useEffect, useState } from 'react';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import axios from '../../../utils/axios';
 import HOST from '../../../config';
+import { useCertificationMutation } from '../../../utils/hooks/mutation/useCertificationMutation';
 
 const useStyles = makeStyles(theme => ({
   contents: { marginTop: theme.spacing(2), marginBottom: theme.spacing(2) },
@@ -23,13 +23,14 @@ export default function IndentityVerification({
   const [success, setSuccess] = useState(false);
   const [helperText, setHelperText] = useState('');
 
+  const certificationMutation = useCertificationMutation();
   const submitImpUid = useCallback(
     ({ impUid }) => {
-      axios
-        .post(`${HOST}/certification`, { imp_uid: impUid })
+      certificationMutation
+        .mutateAsync({ imp_uid: impUid })
         .then(res => {
           const { error, data } = res.data;
-          if (error) setHelperText(data.msg);
+          if (error) setHelperText(data.msg || '');
           else {
             setSuccess(true);
             onSuccess();
@@ -39,7 +40,7 @@ export default function IndentityVerification({
           setHelperText('본인인증과정에서 오류가 발생헀습니다. support@onad.io로 문의바랍니다.');
         });
     },
-    [onSuccess],
+    [certificationMutation, onSuccess],
   );
 
   useEffect(() => {
