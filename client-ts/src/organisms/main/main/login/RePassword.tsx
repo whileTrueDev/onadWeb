@@ -14,6 +14,7 @@ import axios from '../../../../utils/axios';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import passwordRegex from '../../../../utils/inputs/regex/password.regex';
+import { useMarketerUpdateMarketerInfoMutation } from '../../../../utils/hooks/mutation/useMarketerUpdateMarketerInfoMutation';
 
 const initialValue = {
   value: '',
@@ -73,19 +74,19 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
     dispatch({ type: 'repasswd', value: event.target.value });
   };
 
+  const updateMarketerMutation = useMarketerUpdateMarketerInfoMutation();
   const handleSubmit = (event: FormType) => {
     event.preventDefault();
     if (state.password || state.repasswd) {
       alert('입력이 올바르지 않습니다.');
       return;
     }
-    const user = {
-      type: 'password',
-      value: state.value,
-    };
 
-    axios
-      .patch(`${HOST}/marketer`, user)
+    updateMarketerMutation
+      .mutateAsync({
+        type: 'password',
+        value: state.value,
+      })
       .then(() => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);

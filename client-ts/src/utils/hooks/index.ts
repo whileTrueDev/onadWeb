@@ -1,4 +1,3 @@
-import usePatchRequest from './usePatchRequest';
 import useAnchorEl from './useAnchorEl';
 import useDialog from './useDialog';
 import useEventTargetValue from './useEventTargetValue';
@@ -10,7 +9,6 @@ import useTooltip from './useTooltip';
 import useScript from './useScript';
 
 export {
-  usePatchRequest,
   useAnchorEl,
   useDialog,
   useEventTargetValue,
