@@ -2,10 +2,8 @@
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
 import dayjs from 'dayjs';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
-import { useQueryClient } from 'react-query';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog } from '../../../../../utils/hooks';
 import { useMarketerLandingUrlLength } from '../../../../../utils/hooks/query/useMarketerLandingUrlLength';
@@ -29,7 +27,6 @@ const useStyles = makeStyles(() => ({
 
 const FETCH_PAGE_OFFSET = 5;
 export default function UrlTable(): JSX.Element {
-  const queryClient = useQueryClient();
   const classes = useStyles();
 
   // URL 데이터
@@ -43,9 +40,6 @@ export default function UrlTable(): JSX.Element {
   function handleUrlSelect(url: MarketerLandingUrl): void {
     setUrl(url);
   }
-
-  // 삭제 성공 알림
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div>
@@ -147,6 +141,9 @@ export default function UrlTable(): JSX.Element {
               field: '',
               width: 80,
               headerName: '삭제',
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
               renderCell: (data): React.ReactElement => (
                 <IconButton
                   onClick={(): void => {

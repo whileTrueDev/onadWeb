@@ -14,8 +14,12 @@ const getMarketerCashUsageHistoryMonth = async (month: string) => {
 };
 
 export const useMarketerCashUsageHistoryMonth = (month: string) => {
-  return useQuery('marketerCashUsageHistoryMonth', () => getMarketerCashUsageHistoryMonth(month), {
-    staleTime: 1000 * 60 * 10,
-    cacheTime: 1000 * 60 * 10,
-  });
+  return useQuery(
+    ['marketerCashUsageHistoryMonth', month],
+    () => getMarketerCashUsageHistoryMonth(month),
+    {
+      staleTime: 1000 * 60 * 10,
+      cacheTime: 1000 * 60 * 10,
+    },
+  );
 };

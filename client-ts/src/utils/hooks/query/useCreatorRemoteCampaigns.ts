@@ -23,7 +23,7 @@ export interface RemoteCampaign {
 }
 
 const getCreatorRemoteCampaigns = async (params: RemoteCampaignParams) => {
-  return axios.get<RemoteCampaign[]>('/creator/referral-code/my', { params }).then(res => res.data);
+  return axios.get<RemoteCampaign[]>('/creator/remote/campaigns', { params }).then(res => res.data);
 };
 
 export const useCreatorRemoteCampaigns = (params: RemoteCampaignParams) => {

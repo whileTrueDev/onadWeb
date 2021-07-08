@@ -125,6 +125,8 @@ export default function MerchandiseInventory(): JSX.Element {
             width: 80,
             headerName: '삭제',
             disableColumnMenu: true,
+            sortable: false,
+            filterable: false,
             renderCell: (data): React.ReactElement => (
               <IconButton
                 onClick={(): void => {

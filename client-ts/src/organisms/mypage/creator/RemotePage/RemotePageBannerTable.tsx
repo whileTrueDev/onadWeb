@@ -146,7 +146,13 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
           </TableRow>
         </TableHead>
         <TableBody>
-          {remoteCampaigns.data &&
+          {remoteCampaigns.isLoading && (
+            <TableCell align="center" colSpan={4}>
+              <CircularProgress />
+            </TableCell>
+          )}
+          {!remoteCampaigns.isLoading &&
+            remoteCampaigns.data &&
             remoteCampaigns.data.map(value => (
               <TableRow key={value.index}>
                 <TableCell
@@ -236,11 +242,6 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
             </TableRow>
           )}
         </TableBody>
-        {remoteCampaigns.isLoading && (
-          <TableCell align="center" colSpan={4}>
-            <CircularProgress />
-          </TableCell>
-        )}
       </Table>
     </div>
   );

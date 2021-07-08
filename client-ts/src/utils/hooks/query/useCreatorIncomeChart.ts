@@ -17,6 +17,6 @@ const getCreatorIncomeChart = async () => {
 export const useCreatorIncomeChart = () => {
   return useQuery('creatorIncomeChart', getCreatorIncomeChart, {
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 60 * 2, // 2분이후 만료로 표시
+    staleTime: 1000 * 60 * 3, // 2분이후 만료로 표시
   });
 };

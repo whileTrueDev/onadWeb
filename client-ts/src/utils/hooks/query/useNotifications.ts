@@ -23,7 +23,7 @@ const getNotifications = async (type: CreatorOrMarketerParams) => {
 export const useNotifications = (type: CreatorOrMarketerParams) => {
   return useQuery(['notifications', type], () => getNotifications(type), {
     enabled: !!type,
-    staleTime: 1000 * 60 * 1,
+    staleTime: 1000 * 60 * 5,
     cacheTime: 1000 * 60 * 10,
     refetchOnWindowFocus: true,
   });
