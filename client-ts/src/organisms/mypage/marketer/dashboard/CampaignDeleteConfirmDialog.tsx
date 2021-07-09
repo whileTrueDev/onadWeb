@@ -32,7 +32,10 @@ export default function CampaignDeleteConfirmDialog(
               deleteCampaignMutation
                 .mutateAsync({ campaignId: selectedCampaign.campaignId })
                 .then(() => {
-                  enqueueSnackbar('캠페인 삭제 성공', { variant: 'success' });
+                  enqueueSnackbar('캠페인 삭제 완료되었습니다.', {
+                    variant: 'success',
+                    preventDuplicate: false,
+                  });
                   handleClose();
                 })
                 .catch(() => {

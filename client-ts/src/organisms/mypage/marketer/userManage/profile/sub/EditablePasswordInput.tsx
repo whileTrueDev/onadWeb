@@ -50,6 +50,7 @@ export default function EditablePasswordInput({
     if (!(value === rePassword.value))
       return alert('비밀번호와 비밀번호 확인이 동일하지 않습니다.');
     if (!passwordRegex.test(value)) return alert('비밀번호 형식이 올바르지 않습니다.');
+    editMode.handleToggle();
     return onSubmit(value);
   }
 

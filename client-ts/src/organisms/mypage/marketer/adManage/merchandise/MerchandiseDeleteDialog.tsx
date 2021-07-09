@@ -49,7 +49,10 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
                 deleteMerchandiseMutation
                   .mutateAsync({ id: selectedMerchandise.id })
                   .then(() => {
-                    enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
+                    enqueueSnackbar('상품 삭제 완료되었습니다.', {
+                      variant: 'success',
+                      preventDuplicate: false,
+                    });
                     handleClose();
                     if (onSuccess) onSuccess();
                   })

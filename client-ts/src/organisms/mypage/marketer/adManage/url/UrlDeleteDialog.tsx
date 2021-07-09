@@ -74,7 +74,10 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                     .then(() => {
                       handleClose();
                       if (onSuccess) onSuccess();
-                      enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
+                      enqueueSnackbar('랜딩페이지URL 삭제 완료되었습니다.', {
+                        variant: 'success',
+                        preventDuplicate: false,
+                      });
                     })
                     .catch(() => {
                       enqueueSnackbar(

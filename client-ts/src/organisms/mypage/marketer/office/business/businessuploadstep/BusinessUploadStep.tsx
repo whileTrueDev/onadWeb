@@ -143,7 +143,10 @@ function BusinessUploadStep(props: StepperInterface): JSX.Element {
               onClick={async (): Promise<void> => {
                 await businessUpdateMutation
                   .mutateAsync({ value: imageUrl })
-                  .then(() => handleChangeStep(2))
+                  .then(() => {
+                    enqueueSnackbar('파일 등록 성공', { variant: 'success' });
+                    handleChangeStep(2);
+                  })
                   .catch(() =>
                     enqueueSnackbar(
                       '등록에 실패했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.',

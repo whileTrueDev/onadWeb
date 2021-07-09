@@ -156,7 +156,6 @@ function BusinessUploadForm(): JSX.Element {
         <BusinessUploadStepDialog
           open={stepDialog.open}
           handleClose={stepDialog.handleClose}
-          onSuccess={businessRegistration.refetch}
           step={step}
         />
       )}

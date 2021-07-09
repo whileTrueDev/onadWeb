@@ -11,6 +11,7 @@ import dotenv from 'dotenv';
 import { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { Route, Router, Switch } from 'react-router-dom';
 import history from './history';
 import ChargeDialog from './organisms/mypage/marketer/office/charge/ChargeDialog';
@@ -91,6 +92,10 @@ const OnadIndex = (): JSX.Element => {
                 <Route path="/mypage/marketer" component={MarketerDashboard} />
               </Suspense>
               <Route exact path="/marketer/charge" component={ChargeDialog} />
+
+              {/* ---- 배포시 제거필요 ----  */}
+              <ReactQueryDevtools />
+              {/* ---- 배포시 제거필요 ----  */}
             </SnackbarProvider>
           </ThemeProvider>
         </QueryClientProvider>

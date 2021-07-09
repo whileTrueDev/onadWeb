@@ -2,6 +2,7 @@ import { Button, Collapse, Step, StepContent, StepLabel, Stepper } from '@materi
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import { useReducer, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
 import { useMarketerCreateBannerMutation } from '../../../../utils/hooks/mutation/useMarketerCreateBannerMutation';
@@ -86,6 +87,7 @@ interface UploadDialogProps {
 
 const UploadDialog = (props: UploadDialogProps): JSX.Element => {
   const { open, onClose, onSuccess, failCallback } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const [state, dispatch] = useReducer(myReducer, { imageName: '', imageUrl: DEFAULT_IMAGE_PATH });
   const [activeStep, setStep] = useState(0);
   const handleClose = (): void => {
@@ -101,17 +103,21 @@ const UploadDialog = (props: UploadDialogProps): JSX.Element => {
       .mutateAsync({ bannerSrc: state.imageUrl })
       .then(res => {
         if (res.data[0]) {
-          alert(res.data[1]);
+          enqueueSnackbar(res.data[1], { variant: 'success' });
           if (onSuccess) onSuccess();
         } else {
-          alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          enqueueSnackbar('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+            variant: 'error',
+          });
         }
         handleClose();
       })
       .catch(e => {
         if (failCallback) failCallback(e);
         else {
-          alert('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+          enqueueSnackbar('배너 등록 도중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+            variant: 'error',
+          });
         }
       });
   };

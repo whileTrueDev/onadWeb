@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 interface BusinessRegiUploadDialogProps {
   handleClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
   step: { currStep: number; isBusiness: boolean };
 }
 
@@ -118,7 +118,7 @@ export default function BuisnessUploadStepManager({
                   color="primary"
                   onClick={(): void => {
                     handleClose();
-                    onSuccess();
+                    if (onSuccess) onSuccess();
                   }}
                 >
                   완료

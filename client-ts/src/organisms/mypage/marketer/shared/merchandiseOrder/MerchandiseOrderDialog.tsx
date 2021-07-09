@@ -113,7 +113,10 @@ MerchandiseDetailDialogProps): React.ReactElement {
         trackingNumber: dto ? dto.trackingNumber : null,
       })
       .then(() => {
-        enqueueSnackbar('주문 상태를 변경이 완료되었습니다.', { variant: 'success' });
+        enqueueSnackbar('주문 상태 변경 완료되었습니다.', {
+          variant: 'success',
+          preventDuplicate: false,
+        });
         confirmDialog.handleClose();
         if (onStatusChange) onStatusChange();
       })

@@ -4,7 +4,7 @@ import BuisnessUploadStepManager from './businessuploadstep/BusinessUploadStepMa
 interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
   step: { currStep: number; isBusiness: boolean };
 }
 

@@ -7,7 +7,7 @@ const getMarketerCampaignLength = async () => {
 
 export const useMarketerCampaignLength = () => {
   return useQuery('marketerCampaignLength', getMarketerCampaignLength, {
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 3,
     cacheTime: 1000 * 60 * 10,
   });
 };

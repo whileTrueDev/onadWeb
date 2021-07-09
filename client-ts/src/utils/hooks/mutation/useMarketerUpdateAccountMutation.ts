@@ -14,7 +14,7 @@ export const useMarketerUpdateAccountMutation = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (dto: MarketerUpdateAccountMutationDto) =>
-      axios.post<MarketerUpdateAccountMutationRes>('/marketer/account', dto),
+      axios.put<MarketerUpdateAccountMutationRes>('/marketer/account', dto),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('marketerProfile');

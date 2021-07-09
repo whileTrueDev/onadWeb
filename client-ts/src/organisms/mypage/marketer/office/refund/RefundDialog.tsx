@@ -84,6 +84,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
       .mutateAsync({ withdrawCash: selectValue })
       .then(() => {
         setIndex(preIndex => preIndex + 1);
+        enqueueSnackbar('환불 신청 완료되었습니다.', { variant: 'success' });
       })
       .catch(err => {
         console.log(err);
@@ -91,7 +92,6 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
           '환불 신청 중 오류가 발생했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.',
           { variant: 'error' },
         );
-        history.push('/mypage/marketer/myoffice/cash');
       });
   }
 

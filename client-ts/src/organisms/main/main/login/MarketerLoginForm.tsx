@@ -72,10 +72,13 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           }
         }
       })
-      .catch(reason => {
-        console.log(reason);
+      .catch(err => {
+        console.log(err);
         setPasswd(''); // 비밀번호 초기화
-        alert('회원이 아닙니다.');
+        const message = err.response?.data
+          ? err.response?.data.message
+          : '아이디 또는 비밀번호가 올바르지 못합니다.';
+        alert(message);
       });
   };
 

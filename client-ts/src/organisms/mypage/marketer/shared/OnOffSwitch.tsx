@@ -41,6 +41,7 @@ export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProp
         if (!res.data[0]) {
           alert(res.data[1]);
         } else {
+          enqueueSnackbar(`광고상태가 성공적으로 변경되었습니다`, { variant: 'success' });
           queryClient.invalidateQueries('marketerAdOnOff');
         }
       })

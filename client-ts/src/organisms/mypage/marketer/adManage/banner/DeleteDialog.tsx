@@ -68,7 +68,10 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
                     .mutateAsync({ bannerId: selectedBanner.bannerId })
                     .then(() => {
                       if (onSuccess) onSuccess();
-                      enqueueSnackbar('배너 삭제 완료.', { variant: 'success' });
+                      enqueueSnackbar('배너 삭제 완료되었습니다.', {
+                        variant: 'success',
+                        preventDuplicate: false,
+                      });
                       handleClose();
                     })
                     .catch(() => {

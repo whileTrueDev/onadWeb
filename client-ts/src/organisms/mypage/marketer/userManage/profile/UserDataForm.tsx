@@ -63,7 +63,10 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
     updateMarketermutation
       .mutateAsync({ type, value })
       .then(() => {
-        enqueueSnackbar('성공적으로 수정하였습니다.', { variant: 'success' });
+        enqueueSnackbar('성공적으로 수정하였습니다.', {
+          variant: 'success',
+          preventDuplicate: false,
+        });
       })
       .catch(() => {
         enqueueSnackbar('수정중 오류가 발생했습니다. 문의바랍니다.', { variant: 'error' });

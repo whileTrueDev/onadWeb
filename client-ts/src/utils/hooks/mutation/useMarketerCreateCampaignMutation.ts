@@ -25,9 +25,9 @@ export const useMarketerCreateCampaignMutation = () => {
     (dto: MarketerCreateCampaignMutationDto) =>
       axios.post<MarketerCreateCampaignMutationRes>('/marketer/campaign', dto),
     {
-      onSuccess: () => {
+      onSuccess() {
+        queryClient.invalidateQueries('marketerCampaignLength');
         queryClient.invalidateQueries('marketerCampaignList');
-        queryClient.invalidateQueries('marketerCampaign');
         queryClient.invalidateQueries('marketerCampaignActive');
         queryClient.invalidateQueries('marketerCampaignNames');
       },
