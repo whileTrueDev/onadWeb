@@ -2,7 +2,6 @@
 import { Button, Hidden } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // 내부 소스
-
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
 import * as React from 'react';
@@ -17,18 +16,17 @@ import HowToUse from '../components/main/howToUse/howToUse';
 import Advantage from '../components/main/advantage/advantage';
 import Reference from '../components/main/reference/reference';
 // util 계열
-
+// 컴포넌트
+import ParallaxScroll from '../components/main/parallaxScroll';
+import ReferralCodeEventDialog from '../components/shared/referralCodeEventDialog';
 // 스타일
-
-// utill 계열 컴포넌트
+// utill 계열
 import useLoginValue from '../utils/hooks/useLoginValue';
 import history from '../utils/history';
-import ParallaxScroll from '../components/main/parallaxScroll';
 import axios from '../utils/axios';
 import HOST from '../config';
 import { useDialog } from '../utils/hooks';
 import openKakaoChat from '../utils/openKakaoChat';
-import ReferralCodeEventDialog from '../components/shared/popup/ReferralCodeEventDialog';
 
 const useStyles = makeStyles(theme => ({
   parallax: {

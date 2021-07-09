@@ -5,7 +5,7 @@ import { Palette } from '@material-ui/core/styles/createPalette';
 
 export interface OnadPalette extends Palette {
   platform: {
-    afreeca: string;the
+    afreeca: string;
     twitch: string;
     youtube: string;
     naver: string;
