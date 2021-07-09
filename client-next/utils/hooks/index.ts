@@ -4,7 +4,7 @@
 // import usePutRequest from './usePutRequest';
 // import usePatchRequest from './usePatchRequest';
 // import useAnchorEl from './useAnchorEl';
-// import useDialog from './useDialog';
+import useDialog from './useDialog';
 import useEventTargetValue from './useEventTargetValue';
 // import useBannerUpload from './useBannerUpload';
 // import useLoginValue from './useLoginValue';
@@ -20,7 +20,7 @@ export {
   // usePutRequest,
   // usePatchRequest,
   // useAnchorEl,
-  // useDialog,
+  useDialog,
   useEventTargetValue,
   // useBannerUpload,
   // useLoginValue,

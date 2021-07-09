@@ -1,5 +1,4 @@
-import { useState, useRef } from 'react';
-import * as React from 'react';
+// material-UI
 import {
   Checkbox,
   FormControlLabel,
@@ -10,11 +9,18 @@ import {
   Grid,
   CircularProgress,
 } from '@material-ui/core';
-import useStyles from '../../../styles/main/inquiry/inquiry.style';
+// 내부 소스
+// 프로젝트 내부 모듈
+import { useState, useRef } from 'react';
+import * as React from 'react';
+// 컴포넌트
+import Dialog from '../../../atoms/dialog/dialog';
+// util 계열
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import useDialog from '../../../utils/hooks/useDialog';
-import Dialog from '../../../atoms/Dialog/Dialog';
+// 스타일
+import useStyles from '../../../styles/main/inquiry/inquiry.style';
 
 interface Props {
   confirmClose?: () => void;

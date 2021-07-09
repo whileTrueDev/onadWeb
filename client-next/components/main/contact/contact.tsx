@@ -6,11 +6,11 @@ import { Button, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import * as React from 'react';
 // 컴포넌트
-import Inquiry from '../Inquiry/Inquiry';
-import InquiryCreator from '../Inquiry/InquiryCreator';
+import Inquiry from '../inquiry/inquiry';
+import InquiryCreator from '../inquiry/inquiryCreator';
 import Dialog from '../../../atoms/dialog/dialog';
-import CreatorLoginForm from '../login/creatorLoginForm';
-import MarketerLoginForm from '../login/marketerLoginForm';
+import CreatorLoginForm from '../../login/creatorLoginForm';
+import MarketerLoginForm from '../../login/marketerLoginForm';
 // util 계열
 
 // 스타일
