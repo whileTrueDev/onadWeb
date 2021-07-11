@@ -1,4 +1,4 @@
-// import useGetRequest from './useGetRequest';
+import useGetRequest from './useGetRequest';
 // import useDeleteRequest from './useDeleteRequest';
 // import usePostRequest from './usePostRequest';
 // import usePutRequest from './usePutRequest';
@@ -14,7 +14,7 @@ import useEventTargetValue from './useEventTargetValue';
 // import useScript from './useScript';
 
 export {
-  // useGetRequest,
+  useGetRequest,
   // useDeleteRequest,
   // usePostRequest,
   // usePutRequest,
