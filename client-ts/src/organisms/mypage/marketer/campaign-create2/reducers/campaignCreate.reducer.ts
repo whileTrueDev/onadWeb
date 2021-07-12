@@ -22,9 +22,7 @@ export type CampaignCreateAction = {
     | 'SET_SELECTED_GAMES_MANY'
     | 'DELETE_SELECTED_GAMES'
     | 'DELETE_SELECTED_GAMES_MANY'
-    | 'RESET_SELECTED_GAMES'
-    | 'LOADING_START'
-    | 'LOADING_DONE';
+    | 'RESET_SELECTED_GAMES';
   value: any;
 };
 
@@ -130,12 +128,6 @@ export const CampaignCreateReducer = (
     }
     case 'RESET_SELECTED_GAMES':
       return { ...state, selectedGames: [] };
-    // 캠페인 생성 요청 로딩
-    case 'LOADING_START':
-      return { ...state, loading: true };
-    // 캠페인 생성 요청 로딩 완료
-    case 'LOADING_DONE':
-      return { ...state, loading: false };
     // 모두 초기화
     case 'ALL_RESET':
       return { ...defaultState, selectedOption: state.selectedOption };

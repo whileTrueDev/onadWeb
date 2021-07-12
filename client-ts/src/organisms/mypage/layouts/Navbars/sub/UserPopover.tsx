@@ -11,9 +11,12 @@ import NightsStayIcon from '@material-ui/icons/NightsStay';
 import { Divider, List, ListItem, Popover, Avatar, ListItemText } from '@material-ui/core';
 import useTheme from '@material-ui/core/styles/useTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import { OnadTheme } from '../../../../../theme';
-import { ContractionDataType } from '../../../creator/shared/StartGuideCard';
+import { useMypageStore } from '../../../../../store/mypageStore';
+import { useNoticeReadFlag } from '../../../../../utils/hooks/query/useNoticeReadFlag';
+import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
+import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
+import { useUpdateNoticeReadFlagMutation } from '../../../../../utils/hooks/mutation/useUpdateNoticeReadFlagMutation';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },
@@ -21,33 +24,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export interface UserPopoverProps {
-  open: boolean;
-  userData: ContractionDataType;
-  anchorEl?: HTMLElement | null;
-  handleAnchorClose: () => void;
   handleLogoutClick: () => void;
-  noticeReadFlagGet: UseGetRequestObject<{ noticeReadState: number }>;
-  doNoticePatchRequest: () => void;
 }
 export default function UserPopover(props: UserPopoverProps): JSX.Element {
-  const {
-    open,
-    userData,
-    anchorEl,
-    handleAnchorClose,
-    handleLogoutClick,
-    noticeReadFlagGet,
-    doNoticePatchRequest,
-  } = props;
+  const { handleLogoutClick } = props;
+
+  const noticeReadFlag = useNoticeReadFlag();
+  const user = useCreatorProfile();
+  const noticeReadFlagPatch = useUpdateNoticeReadFlagMutation();
+
+  const userMenuAnchor = useMypageStore(x => x.userMenuAnchor);
+  const handleUserMenuClose = useMypageStore(x => x.handleUserMenuClose);
 
   const theme = useTheme<OnadTheme>();
   const classes = useStyles();
 
   return (
     <Popover
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleAnchorClose}
+      open={!!userMenuAnchor}
+      anchorEl={userMenuAnchor}
+      onClose={handleUserMenuClose}
       anchorOrigin={{
         vertical: 'bottom',
         horizontal: 'right',
@@ -61,32 +57,35 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
       <div className={classes.container}>
         {/* 유저 정보 */}
         <List>
-          <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar
-              className={classes.icon}
-              src={userData.creatorLogo || userData.afreecaLogo || ''}
-            />
-            {/* 트위치만 연동된 경우 */}
-            {userData.creatorName && (
-              <ListItemText
-                primary={`${userData.creatorName} (${userData.loginId})`}
-                secondary={userData.creatorMail || ''}
+          {user.isLoading && <CenterLoading height={50} />}
+          {!user.isLoading && user.data && (
+            <ListItem style={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar
+                className={classes.icon}
+                src={user.data.creatorLogo || user.data.afreecaLogo || ''}
               />
-            )}
+              {/* 트위치만 연동된 경우 */}
+              {user.data.creatorName && (
+                <ListItemText
+                  primary={`${user.data.creatorName} (${user.data.loginId})`}
+                  secondary={user.data.creatorMail || ''}
+                />
+              )}
 
-            {/* 아프리카만 연동된 경우 */}
-            {!userData.creatorName && userData.afreecaName && (
-              <ListItemText
-                primary={`${userData.afreecaName} (${userData.loginId})`}
-                secondary={userData.creatorMail || ''}
-              />
-            )}
+              {/* 아프리카만 연동된 경우 */}
+              {!user.data.creatorName && user.data.afreecaName && (
+                <ListItemText
+                  primary={`${user.data.afreecaName} (${user.data.loginId})`}
+                  secondary={user.data.creatorMail || ''}
+                />
+              )}
 
-            {/* 트위치, 아프리카 모두 연동 안된 경우 */}
-            {!userData.creatorName && !userData.afreecaName && (
-              <ListItemText primary={userData.loginId} secondary={userData.creatorMail || ''} />
-            )}
-          </ListItem>
+              {/* 트위치, 아프리카 모두 연동 안된 경우 */}
+              {!user.data.creatorName && !user.data.afreecaName && (
+                <ListItemText primary={user.data.loginId} secondary={user.data.creatorMail || ''} />
+              )}
+            </ListItem>
+          )}
         </List>
         <Divider />
 
@@ -102,14 +101,14 @@ export default function UserPopover(props: UserPopoverProps): JSX.Element {
             to="/mypage/creator/notice"
             component={Link}
             onClick={(): void => {
-              if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {
-                doNoticePatchRequest();
+              if (!noticeReadFlag.isLoading && !noticeReadFlag.data?.noticeReadState) {
+                noticeReadFlagPatch.mutate();
               }
             }}
           >
-            {!noticeReadFlagGet.loading &&
-            noticeReadFlagGet.data &&
-            noticeReadFlagGet.data.noticeReadState === 0 ? (
+            {!noticeReadFlag.isLoading &&
+            noticeReadFlag.data &&
+            noticeReadFlag.data.noticeReadState === 0 ? (
               <Badge variant="dot" color="primary" className={classes.icon}>
                 <SpeakerNotes color="action" />
               </Badge>

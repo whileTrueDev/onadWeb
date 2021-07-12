@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import {
   Button,
   Chip,
@@ -12,27 +11,31 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useState, useRef, useMemo } from 'react';
+import classnames from 'classnames';
 import * as React from 'react';
+import { useMemo, useRef, useState } from 'react';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
 import {
-  useDialog,
-  useEventTargetValue,
-  useGetRequest,
-  usePostRequest,
-} from '../../../../utils/hooks';
+  getS3MerchandiseDescImagePath,
+  getS3MerchandiseImagePath,
+} from '../../../../utils/aws/getS3Path';
+import getDiscountPrice from '../../../../utils/getDiscountPrice';
+import { useDialog, useEventTargetValue } from '../../../../utils/hooks';
+import { useMarketerCreateMerchandiseMutation } from '../../../../utils/hooks/mutation/useMarketerCreateMerchandiseMutation';
+import {
+  OnadAddressData,
+  useMarketerMerchandisesAddresses,
+} from '../../../../utils/hooks/query/useMarketerMerchandisesAddresses';
+import {
+  MerchandiseImage,
+  MerchandiseOption,
+} from '../../../../utils/hooks/query/useMarketerMerchandisesList';
 import useImageListUpload from '../../../../utils/hooks/useImageListUpload';
 import useSwapableListItem from '../../../../utils/hooks/useSwappableListItem';
-import { CreateMerchandiseDto, MerchandiseImage, MerchandiseOption } from '../adManage/interface';
-import AddressInput, { OnadAddressData } from './sub/MerchandiseAddressInput';
+import AddressInput from './sub/MerchandiseAddressInput';
 import MerchandiseImageUpload from './sub/MerchandiseImageUpload';
 import MerchandiseOptionInput from './sub/MerchandiseOptionInput';
 import MerchandiseUploadDialogLoading from './sub/MerchandiseUploadDialogLoading';
-import {
-  getS3MerchandiseImagePath,
-  getS3MerchandiseDescImagePath,
-} from '../../../../utils/aws/getS3Path';
-import getDiscountPrice from '../../../../utils/getDiscountPrice';
 
 const FLAG_ON = 'Yes';
 const FLAG_OFF = 'No';
@@ -165,7 +168,7 @@ export default function MerchandiseUploadDialog({
 
   // *************************************************************
   // 상품 등록 백엔드 요청
-  const merchandisePost = usePostRequest<CreateMerchandiseDto>('/marketer/merchandises');
+  const merchandisePost = useMarketerCreateMerchandiseMutation();
 
   // form error 표시를 위한 변수
   const [formError, setFormError] = useState('');
@@ -228,7 +231,7 @@ export default function MerchandiseUploadDialog({
     handleLoadingStatus('상품 등록 중...');
     // 상품 등록 POST 요청
     merchandisePost
-      .doPostRequest({
+      .mutateAsync({
         ...merchandiseInfo,
         optionFlag: optionFlag.value === FLAG_ON,
         pickupFlag: pickupFlag.value === FLAG_ON,
@@ -281,9 +284,7 @@ export default function MerchandiseUploadDialog({
   }
 
   // 주소 내역 불러오기.
-  const addressHistoryGet = useGetRequest<null, OnadAddressData[]>(
-    '/marketer/merchandises/addresses',
-  );
+  const addressHistoryGet = useMarketerMerchandisesAddresses();
 
   // 할인율 계산 변수
   const discountRate = useMemo(
@@ -409,7 +410,7 @@ export default function MerchandiseUploadDialog({
         <Collapse in={pickupFlag.value === FLAG_ON}>
           <Typography>반송지주소</Typography>
           <div className={classes.bottomSpace}>
-            {!addressHistoryGet.loading && addressHistoryGet.data && (
+            {!addressHistoryGet.isLoading && addressHistoryGet.data && (
               <div style={{ margin: '8px 0px' }}>
                 <Typography variant="body2" color="textSecondary">
                   기록 (클릭시 주소 설정)

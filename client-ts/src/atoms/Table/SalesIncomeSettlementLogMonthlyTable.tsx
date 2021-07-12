@@ -3,17 +3,18 @@ import { Box, Link } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
 import * as React from 'react';
 import { Link as ReactRouterLink, useHistory } from 'react-router-dom';
-import { SalesIncomeSettlement } from '../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
-import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
+import { SalesIncomeSettlement } from '../../utils/hooks/query/useMarketerSettlement';
 import CustomDataGridExportable from './CustomDataGridExportable';
 
 interface SalesIncomeSettlementLogMonthlyTableProps {
   exportFileName: string;
-  settlementLogsData: UseGetRequestObject<SalesIncomeSettlement[]>;
+  isLoading: boolean;
+  settlementLogsData: SalesIncomeSettlement[];
 }
 
 export default function SalesIncomeSettlementLogMonthlyTable({
   exportFileName,
+  isLoading,
   settlementLogsData,
 }: SalesIncomeSettlementLogMonthlyTableProps): React.ReactElement {
   const history = useHistory();
@@ -57,14 +58,14 @@ export default function SalesIncomeSettlementLogMonthlyTable({
       <Box height={400}>
         <CustomDataGridExportable
           exportFileName={exportFileName}
-          loading={settlementLogsData.loading}
+          loading={isLoading}
           disableSelectionOnClick
           disableColumnMenu
           disableColumnFilter
           disableColumnSelector
           disableMultipleColumnsSorting
           columns={column}
-          rows={settlementLogsData.data || []}
+          rows={settlementLogsData || []}
         />
       </Box>
     </>

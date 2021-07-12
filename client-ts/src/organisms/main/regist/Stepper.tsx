@@ -1,14 +1,14 @@
-import { useState, useEffect, useReducer } from 'react';
-import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
-import useStyles from './style/Stepper.style';
-import axios from '../../../utils/axios';
+import { Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { useEffect, useReducer, useState } from 'react';
+import history from '../../../history';
+import { useMarketerSignupMutation } from '../../../utils/hooks/mutation/useMarketerSignupMutation';
+import { useMarketerSignupWithPlatformMutation } from '../../../utils/hooks/mutation/useMarketerSignupWithPlatformMutation';
+import IdentityVerification from './IdentityVerification';
+import PaperSheet from './Paper';
 import PlatformRegistForm from './PlatformRegistForm';
 import RegistForm from './RegistForm';
-import PaperSheet from './Paper';
-import HOST from '../../../config';
-import history from '../../../history';
-import IdentityVerification from './IdentityVerification';
-import { myReducer, initialState } from './Stepper.reducer';
+import { initialState, myReducer } from './Stepper.reducer';
+import useStyles from './style/Stepper.style';
 
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();
@@ -38,6 +38,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     setStep(0);
   }
 
+  const signupMutation = useMarketerSignupMutation();
+  const signupPlatformMutation = useMarketerSignupWithPlatformMutation();
   function handleUserSubmit(user: any): void {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
@@ -45,8 +47,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
       platformType,
     };
     if (platform === undefined) {
-      axios
-        .post(`${HOST}/marketer`, user)
+      signupMutation
+        .mutateAsync(user)
         .then(res => {
           const { error } = res.data;
           if (!error) {
@@ -65,8 +67,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           history.push('/');
         });
     } else {
-      axios
-        .post(`${HOST}/marketer/platform`, returnUser)
+      signupPlatformMutation
+        .mutateAsync(returnUser)
         .then(res => {
           const { error } = res.data;
           if (!error) {

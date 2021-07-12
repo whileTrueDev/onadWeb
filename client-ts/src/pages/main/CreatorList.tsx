@@ -1,14 +1,15 @@
 /* eslint-disable react/display-name */
-import { useState, useEffect } from 'react';
-import { Typography, TablePagination, useMediaQuery } from '@material-ui/core';
+import { TablePagination, Typography, useMediaQuery } from '@material-ui/core';
 import { nanoid } from 'nanoid';
-import useStyles from './style/CreatorList.style';
-import NavTop from '../../organisms/main/layouts/NavTop';
-import AppFooter from '../../organisms/main/layouts/AppFooter';
-import RePasswordDialog from '../../organisms/main/main/login/RePassword';
-import useLoginValue from '../../utils/hooks/useLoginValue';
-import useGetRequest from '../../utils/hooks/useGetRequest';
+import { useEffect, useState } from 'react';
 import Table from '../../atoms/Table/MaterialTable';
+import AppFooter from '../../organisms/main/layouts/AppFooter';
+import NavTop from '../../organisms/main/layouts/NavTop';
+import RePasswordDialog from '../../organisms/main/main/login/RePassword';
+import { useCreators } from '../../utils/hooks/query/useCreators';
+import { useCreatorsLive } from '../../utils/hooks/query/useCreatorsLive';
+import useLoginValue from '../../utils/hooks/useLoginValue';
+import useStyles from './style/CreatorList.style';
 
 export interface ContractedCreatorListData<T> {
   creatorId: T;
@@ -31,9 +32,8 @@ export default function CreatorList(): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
   const [LiveCreator, setLiveCreator] = useState<null | ContractedCreatorListData<string>[]>();
-  const ContractedCreatorList =
-    useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
-  const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');
+  const ContractedCreatorList = useCreators();
+  const LiveCreatorList = useCreatorsLive();
   const isSmWidth = useMediaQuery('(max-width:960px)');
   const isXsWidth = useMediaQuery('(max-width:600px)');
 
@@ -44,9 +44,9 @@ export default function CreatorList(): JSX.Element {
 
   useEffect(() => {
     if (
-      !ContractedCreatorList.loading &&
+      !ContractedCreatorList.isLoading &&
       ContractedCreatorList.data &&
-      !LiveCreatorList.loading &&
+      !LiveCreatorList.isLoading &&
       LiveCreatorList.data
     ) {
       setLiveCreator(
@@ -55,9 +55,9 @@ export default function CreatorList(): JSX.Element {
     }
   }, [
     ContractedCreatorList.data,
-    ContractedCreatorList.loading,
+    ContractedCreatorList.isLoading,
     LiveCreatorList.data,
-    LiveCreatorList.loading,
+    LiveCreatorList.isLoading,
   ]);
 
   const Columns = [
@@ -128,9 +128,9 @@ export default function CreatorList(): JSX.Element {
           </Typography>
           {/* 라이브 스트리밍 리스트 */}
           <div className={classes.liveContainer}>
-            {!ContractedCreatorList.loading &&
+            {!ContractedCreatorList.isLoading &&
               ContractedCreatorList.data &&
-              !LiveCreatorList.loading &&
+              !LiveCreatorList.isLoading &&
               LiveCreatorList.data &&
               LiveCreator?.map(row => (
                 <div
@@ -164,7 +164,7 @@ export default function CreatorList(): JSX.Element {
                 !isSmWidth ? Columns : !isXsWidth ? Columns.slice(0, 3) : Columns.slice(0, 1)
               }
               data={ContractedCreatorList.data || []}
-              isLoading={ContractedCreatorList.loading || false}
+              isLoading={ContractedCreatorList.isLoading || false}
               components={{
                 Pagination: props => <TablePagination {...props} />,
               }}

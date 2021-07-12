@@ -1,20 +1,20 @@
-import { useReducer } from 'react';
-import * as React from 'react';
+import { Collapse, Grid, Slide } from '@material-ui/core';
 // material ui core
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Slide, Collapse } from '@material-ui/core';
-import axios from '../../../../../utils/axios';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useReducer } from 'react';
+import Button from '../../../../../atoms/CustomButtons/Button';
 // customized component
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import Button from '../../../../../atoms/CustomButtons/Button';
-import HOST from '../../../../../config';
 import history from '../../../../../history';
+import { useMarketerCreateCashRefundMutation } from '../../../../../utils/hooks/mutation/useMarketerCreateCashRefundMutation';
+import { stepReducer } from '../interface';
+import sources from '../sources';
 import RefundAgreement from './RefundAgreement';
-import RefundConfirm from './RefundConfirm';
 import RefundAmount from './RefundAmount';
 import RefundComplete from './RefundComplete';
-import sources from '../sources';
-import { stepReducer } from '../interface';
+import RefundConfirm from './RefundConfirm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contentTitle: {
@@ -56,6 +56,7 @@ interface RefundDialogProps {
 
 function RefundDialog(props: RefundDialogProps): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [stepComplete, setStepComplete] = React.useState(false); // 현재 step에서 다음 step으로 넘어가기위한 state
   const [paperSwitch, setPaperSwitch] = React.useState(true); // animation을 위한 state
   const [index, setIndex] = React.useState(0); // 각 step을 정의하는  state
@@ -74,20 +75,23 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
 
   const { selectValue, checked } = stepState;
 
+  const refundMutation = useMarketerCreateCashRefundMutation();
   function handleSubmitClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
     event.preventDefault();
 
     // 해당 금액 만큼 환불 내역에 추가하는 요청
-    axios
-      .post(`${HOST}/marketer/cash/refund`, {
-        withdrawCash: selectValue,
-      })
+    refundMutation
+      .mutateAsync({ withdrawCash: selectValue })
       .then(() => {
         setIndex(preIndex => preIndex + 1);
+        enqueueSnackbar('환불 신청 완료되었습니다.', { variant: 'success' });
       })
       .catch(err => {
         console.log(err);
-        history.push('/mypage/marketer/myoffice/cash');
+        enqueueSnackbar(
+          '환불 신청 중 오류가 발생했습니다. 문제가 지속될 경우 support@onad.io로 문의바랍니다.',
+          { variant: 'error' },
+        );
       });
   }
 

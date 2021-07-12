@@ -1,20 +1,19 @@
-import { useState, useRef } from 'react';
-import * as React from 'react';
 import {
-  Checkbox,
-  FormControlLabel,
   Button,
-  Typography,
-  Input,
-  Container,
-  Grid,
+  Checkbox,
   CircularProgress,
+  Container,
+  FormControlLabel,
+  Grid,
+  Input,
+  Typography,
 } from '@material-ui/core';
-import useStyles from '../style/Inqurie.style';
-import HOST from '../../../../config';
-import axios from '../../../../utils/axios';
-import useDialog from '../../../../utils/hooks/useDialog';
+import * as React from 'react';
+import { useRef, useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
+import { useCreateCreatorInquiryMutation } from '../../../../utils/hooks/mutation/useCreateCreatorInquiryMutation';
+import useDialog from '../../../../utils/hooks/useDialog';
+import useStyles from '../style/Inqurie.style';
 
 interface Props {
   confirmClose?: () => void;
@@ -58,6 +57,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   // 문의 요청 중 로딩에 대한 상태
   const [loading, setLoading] = React.useState(false);
 
+  const createInquiry = useCreateCreatorInquiryMutation();
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const AnonymousUser = inquiryContent;
@@ -68,8 +68,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
       alert('개인정보수집 및 이용안내에 동의해주세요');
     } else {
       AnonymousUser.privacyAgreement = true;
-      axios
-        .post(`${HOST}/inquiry/creator`, AnonymousUser)
+      createInquiry
+        .mutateAsync(AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);

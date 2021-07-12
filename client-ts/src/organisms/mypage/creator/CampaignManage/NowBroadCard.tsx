@@ -1,18 +1,10 @@
+import { Avatar, Button, Grid, Hidden, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Refresh } from '@material-ui/icons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {
-  Avatar,
-  Button,
-  CircularProgress,
-  Grid,
-  Hidden,
-  makeStyles,
-  Paper,
-  Typography,
-} from '@material-ui/core';
-import { Refresh } from '@material-ui/icons';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+import { useCreatorBannerActive } from '../../../../utils/hooks/query/useCreatorBannerActive';
 import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 import { Link } from './BannerList';
 
@@ -62,27 +54,9 @@ const useStyles = makeStyles(theme => ({
   marketerLogo: { marginRight: theme.spacing(1) },
 }));
 
-export interface CurrentBannerRes {
-  marketerName: string;
-  bannerSrc: string;
-  campaignName: string;
-  campaignDescription: string;
-  links: string;
-  regiDate: string;
-  profileImage?: string;
-  date: string;
-  merchandiseName?: string;
-  itemSiteUrl?: string;
-}
-export interface NowBroadCardProps {
-  currentBannerGet: UseGetRequestObject<CurrentBannerRes[]>;
-  remoteControllerUrlGet: UseGetRequestObject<string>;
-}
-export default function NowBroadCard({
-  currentBannerGet,
-  remoteControllerUrlGet,
-}: NowBroadCardProps): JSX.Element {
+export default function NowBroadCard(): JSX.Element {
   const classes = useStyles();
+  const currentBanner = useCreatorBannerActive();
 
   return (
     <Paper className={classes.container}>
@@ -99,25 +73,21 @@ export default function NowBroadCard({
               variant="outlined"
               color="primary"
               onClick={(): void => {
-                currentBannerGet.doGetRequest();
+                currentBanner.refetch();
               }}
             >
               <Refresh />
               새로고침
             </Button>
           </Hidden>
-          <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlGet} />
+          <RemotePageOpenButton />
         </div>
       </div>
 
       <div className={classes.section}>
-        {currentBannerGet.loading && (
-          <div className={classes.loading}>
-            <CircularProgress />
-          </div>
-        )}
+        {currentBanner.isLoading && <CenterLoading />}
 
-        {currentBannerGet.data && currentBannerGet.data.length <= 0 && (
+        {currentBanner.data && currentBanner.data.length <= 0 && (
           <div className={classes.area}>
             <div style={{ textAlign: 'center' }}>
               <Typography variant="body1" className={classes.head}>
@@ -129,9 +99,9 @@ export default function NowBroadCard({
             </div>
           </div>
         )}
-        {!currentBannerGet.loading &&
-          currentBannerGet.data &&
-          currentBannerGet.data.slice(0, 1).map(bannerData => (
+        {!currentBanner.isLoading &&
+          currentBanner.data &&
+          currentBanner.data.slice(0, 1).map(bannerData => (
             <Grid
               container
               spacing={2}

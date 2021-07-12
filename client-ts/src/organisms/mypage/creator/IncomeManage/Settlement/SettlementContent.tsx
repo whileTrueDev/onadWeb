@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { nanoid } from 'nanoid';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
-import { ProfileDataType } from '../../Mypage/ProfileData.type';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import SettlementForm from './SettlementForm';
 import AgreementSource from '../source/source';
@@ -57,22 +56,29 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface SettlementContentProps {
-  profileData: ProfileDataType;
+  name: string;
+  phoneNumber: string;
+  identificationNumber: string;
+  creatorType: number;
+  identificationImg: string;
+  AccountImg: string;
+  BussinessRegiImg: string;
+  realName: string;
+  creatorAccountNumber: string;
 }
 
-function SettlementContent({ profileData }: SettlementContentProps): JSX.Element {
+function SettlementContent({
+  name,
+  phoneNumber,
+  identificationNumber,
+  creatorType,
+  identificationImg,
+  AccountImg,
+  BussinessRegiImg,
+  realName,
+  creatorAccountNumber,
+}: SettlementContentProps): JSX.Element {
   const classes = useStyles();
-  const {
-    name,
-    phoneNumber,
-    identificationNumber,
-    creatorType,
-    identificationImg,
-    AccountImg,
-    BussinessRegiImg,
-    realName,
-    creatorAccountNumber,
-  } = profileData;
   const ImageUploadID = useDialog();
   const ImageUploadAC = useDialog();
   const BussinessUpload = useDialog();

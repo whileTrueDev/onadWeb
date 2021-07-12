@@ -1,7 +1,7 @@
 import { CircularProgress, makeStyles, Paper, Typography, useTheme } from '@material-ui/core';
 import classnames from 'classnames';
-import { useMemo } from 'react';
 import * as React from 'react';
+import { useMemo } from 'react';
 import {
   CartesianGrid,
   Legend,
@@ -13,7 +13,7 @@ import {
   YAxis,
 } from 'recharts';
 import makeBarChartData2 from '../../../../../utils/chart/makeBarChartData';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { useCreatorCPSChart } from '../../../../../utils/hooks/query/useCreatorCpsChart';
 
 const CPS_CHART_CONTAINER_HEIGHT = 400;
 const useStyles = makeStyles(theme => ({
@@ -26,20 +26,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface CpsChartData {
-  date: string;
-  value: number;
-  type: 'CPS';
-}
-
-export interface CPSChartProps {
-  cpsChartData: UseGetRequestObject<CpsChartData[]>;
-}
-
-export default function CPSChart({ cpsChartData }: CPSChartProps): React.ReactElement {
+export default function CPSChart(): React.ReactElement {
   const classes = useStyles();
   const theme = useTheme();
 
+  const cpsChartData = useCreatorCPSChart();
   const preprocessed = useMemo(() => {
     if (cpsChartData.data) {
       return makeBarChartData2(cpsChartData.data, [{ typeName: 'CPS', to: 'cps_value' }]);
@@ -63,13 +54,13 @@ export default function CPSChart({ cpsChartData }: CPSChartProps): React.ReactEl
     >
       <Typography className={classes.title}>최근 판매 수익 그래프</Typography>
 
-      {preprocessed.length === 0 && cpsChartData.loading && (
+      {preprocessed.length === 0 && cpsChartData.isLoading && (
         <div className={classnames(classes.center, classes.container)}>
           <CircularProgress />
         </div>
       )}
 
-      {!cpsChartData.loading && (
+      {!cpsChartData.isLoading && (
         <ResponsiveContainer width="100%" height={CPS_CHART_CONTAINER_HEIGHT}>
           <LineChart
             data={preprocessed}

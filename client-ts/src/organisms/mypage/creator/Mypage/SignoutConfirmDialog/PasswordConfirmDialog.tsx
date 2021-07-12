@@ -1,8 +1,8 @@
-import { Box, TextField, Typography, Button } from '@material-ui/core';
+import { Box, Button, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { usePostRequest } from '../../../../../utils/hooks';
+import { useCreatorCheckPasswordMutation } from '../../../../../utils/hooks/mutation/useCreatorCheckPasswordMutation';
 
 interface PasswordConfirmDialogProps {
   open: boolean;
@@ -19,7 +19,7 @@ export default function PasswordConfirmDialog({
   onClose,
   onSubmit,
 }: PasswordConfirmDialogProps): React.ReactElement {
-  const checkPw = usePostRequest('/creator/password');
+  const checkPw = useCreatorCheckPasswordMutation();
 
   const {
     control,
@@ -29,7 +29,7 @@ export default function PasswordConfirmDialog({
     reset,
   } = useForm<PasswordForm>();
   const checkPasswordSubmit: SubmitHandler<PasswordForm> = async data => {
-    const res = await checkPw.doPostRequest({ password: data.password });
+    const res = await checkPw.mutateAsync({ password: data.password });
     if (res.data) {
       onClose();
       reset();
@@ -66,7 +66,7 @@ export default function PasswordConfirmDialog({
 
         <Box display="flex" alignItems="center" justifyContent="flex-end" my={1}>
           <Box mr={1}>
-            <Button variant="contained" color="primary" type="submit" disabled={checkPw.loading}>
+            <Button variant="contained" color="primary" type="submit" disabled={checkPw.isLoading}>
               확인
             </Button>
           </Box>

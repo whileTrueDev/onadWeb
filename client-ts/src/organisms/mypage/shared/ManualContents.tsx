@@ -2,7 +2,7 @@ import { Chip, CircularProgress, makeStyles, Paper, Typography } from '@material
 import classnames from 'classnames';
 import { useState, useEffect, useMemo } from 'react';
 import Markdown from 'react-markdown/with-html';
-import { UseGetRequestObject } from '../../../utils/hooks/useGetRequest';
+import { useManual } from '../../../utils/hooks/query/useManual';
 
 const useStyles = makeStyles(theme => ({
   tabs: { padding: theme.spacing(1, 0), borderBottom: `2px solid ${theme.palette.divider}` },
@@ -14,21 +14,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface Manual {
-  title: string;
-  subTitle: string;
-  contents: string;
-  priority: string;
-  createdAt: string;
-  updatedAt: string;
+interface ManualContentsProps {
+  type: 'creator' | 'marketer';
 }
-export type ManualRes = Array<Manual>;
-export interface ManualProps {
-  manualGet: UseGetRequestObject<ManualRes>;
-}
-
-export default function ManualContents({ manualGet }: ManualProps): JSX.Element {
+export default function ManualContents({ type }: ManualContentsProps): JSX.Element {
   const classes = useStyles();
+  const manuals = useManual(type);
 
   const [tabValue, setTabValue] = useState<string>();
   function handleTabChange(newValue: string): void {
@@ -37,30 +28,30 @@ export default function ManualContents({ manualGet }: ManualProps): JSX.Element 
 
   // 현재 선택된 매뉴얼
   const currentManual = useMemo(() => {
-    if (manualGet.data) {
-      return manualGet.data.find((d: any) => d.title === tabValue);
+    if (manuals.data) {
+      return manuals.data.find((d: any) => d.title === tabValue);
     }
     return undefined;
-  }, [manualGet.data, tabValue]);
+  }, [manuals.data, tabValue]);
 
   useEffect(() => {
-    if (manualGet.data && manualGet.data.length > 0) {
-      setTabValue(manualGet.data[0].title);
+    if (manuals.data && manuals.data.length > 0) {
+      setTabValue(manuals.data[0].title);
     }
-  }, [manualGet.data]);
+  }, [manuals.data]);
 
   return (
     <Paper>
-      {manualGet.loading && (
+      {manuals.isLoading && (
         <div style={{ textAlign: 'center' }}>
           <CircularProgress />
         </div>
       )}
 
       <div className={classes.tabs}>
-        {!manualGet.loading &&
-          manualGet.data &&
-          manualGet.data.map((eachManual: any) => (
+        {!manuals.isLoading &&
+          manuals.data &&
+          manuals.data.map((eachManual: any) => (
             <Chip
               onClick={() => {
                 handleTabChange(eachManual.title);
@@ -75,7 +66,7 @@ export default function ManualContents({ manualGet }: ManualProps): JSX.Element 
           ))}
       </div>
 
-      {!manualGet.loading && manualGet.data && (
+      {!manuals.isLoading && manuals.data && (
         <div>
           {currentManual && (
             <div className={classes.container}>

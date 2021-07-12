@@ -1,23 +1,22 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import * as React from 'react';
 // components
 import { Paper } from '@material-ui/core';
 import ReChartBar from '../../../../atoms/Chart/ReChartBar';
-import { ChartDataBase } from '../../../../utils/chart/makeBarChartData';
+import { useCreatorIncomeChart } from '../../../../utils/hooks/query/useCreatorIncomeChart';
 
 export interface IncomeChartParams {
   dateRange: string;
 }
 export interface IncomeChartProps {
-  incomeChartData: ChartDataBase[];
   title?: React.ReactNode;
 }
-function IncomeChart({ incomeChartData, title }: IncomeChartProps): JSX.Element {
+function IncomeChart({ title }: IncomeChartProps): JSX.Element {
+  const incomeChart = useCreatorIncomeChart();
   return (
     <Paper style={{ padding: 32, height: 400, marginTop: 8 }}>
       {!title ? null : title}
       <ReChartBar
-        data={incomeChartData}
+        data={incomeChart.data ? incomeChart.data : []}
         dataKey={['cpm_amount', 'cpc_amount', 'cps_amount']}
         keyMap={[
           { typeName: 'CPC', to: 'cpc_amount' },

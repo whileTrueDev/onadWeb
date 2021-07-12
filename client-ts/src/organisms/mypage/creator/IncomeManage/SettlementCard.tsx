@@ -6,7 +6,8 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import SettlementForm from './Settlement/SettlementForm';
 import SettlementContent from './Settlement/SettlementContent';
 import StyledItemText from '../../../../atoms/StyledItemText';
-import { ProfileDataType } from '../Mypage/ProfileData.type';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -41,13 +42,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface SettlementCardProps {
-  profileData: ProfileDataType;
-}
-const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
+const SettlementCard = (): JSX.Element => {
   const classes = useStyles();
+  const profile = useCreatorProfile();
   let settlementState;
-  switch (profileData.settlementState) {
+  switch (profile.data?.settlementState) {
     case 0:
       settlementState = '미등록';
       break;
@@ -72,6 +71,9 @@ const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
     }
   }
 
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
+
   return (
     <Paper style={{ padding: 32, marginTop: 8 }}>
       <Typography style={{ fontWeight: 'bold' }} component="div">
@@ -79,10 +81,10 @@ const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
         <Chip
           style={{ marginLeft: 8 }}
           label={settlementState}
-          color={profileData.settlementState === 2 ? 'primary' : 'default'}
+          color={profile.data.settlementState === 2 ? 'primary' : 'default'}
         />
       </Typography>
-      {(profileData.settlementState === 0 || profileData.settlementState === 3) && (
+      {(profile.data.settlementState === 0 || profile.data.settlementState === 3) && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
             <Grid item sm={12}>
@@ -128,7 +130,7 @@ const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
           </Grid>
         </>
       )}
-      {profileData.settlementState === 1 && (
+      {profile.data.settlementState === 1 && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
             <Grid item sm={12}>
@@ -143,11 +145,21 @@ const SettlementCard = ({ profileData }: SettlementCardProps): JSX.Element => {
           </Grid>
         </>
       )}
-      {profileData.settlementState === 2 && (
+      {profile.data.settlementState === 2 && (
         <>
           <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
             <Grid item sm={12}>
-              <SettlementContent profileData={profileData} />
+              <SettlementContent
+                name={profile.data.name}
+                phoneNumber={profile.data.phoneNumber}
+                identificationNumber={profile.data.identificationNumber}
+                creatorType={profile.data.creatorType}
+                identificationImg={profile.data.identificationImg}
+                AccountImg={profile.data.AccountImg}
+                BussinessRegiImg={profile.data.BussinessRegiImg}
+                realName={profile.data.realName}
+                creatorAccountNumber={profile.data.creatorAccountNumber}
+              />
             </Grid>
           </Grid>
         </>

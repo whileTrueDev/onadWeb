@@ -1,8 +1,8 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 import Table from '../../../../../atoms/Table/CashUsageTable';
+import { useMarketerCashUsageHistoryMonth } from '../../../../../utils/hooks/query/useMarketerCashUsageHistoryMonth';
 
 const initialData = {
   data: [['-', '-', '-']],
@@ -18,21 +18,11 @@ interface CashUsageDialogProps {
   data: string[];
 }
 
-interface UsageInterface {
-  data: string[][];
-  metaData: { type: string; cash: string }[];
-}
-
 export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Element {
   const classes = useStyles();
   const { open, handleClose, data } = props;
 
-  const usagePerMonthData = useGetRequest<{ month: string }, UsageInterface>(
-    '/marketer/cash/history/usage/month',
-    {
-      month: data[0], // data[0] = "00년 00월"
-    },
-  );
+  const usagePerMonthData = useMarketerCashUsageHistoryMonth(data[0]); // data[0] = "00년 00월"
 
   return (
     <Dialog
@@ -51,12 +41,12 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
           <Typography variant="h6" gutterBottom>{`${data[1]} 원`}</Typography>
         </div>
 
-        {usagePerMonthData.loading && (
+        {usagePerMonthData.isLoading && (
           <div style={{ textAlign: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!usagePerMonthData.loading && usagePerMonthData.data && (
+        {!usagePerMonthData.isLoading && usagePerMonthData.data && (
           <div className={classes.flex}>
             {usagePerMonthData.data.metaData.map(meta => (
               <div key={`month_data_${meta.type}${meta.cash}`} className={classes.flex}>
@@ -69,11 +59,11 @@ export default function CashUsageDialog(props: CashUsageDialogProps): JSX.Elemen
             ))}
           </div>
         )}
-        {!usagePerMonthData.loading && usagePerMonthData.data && (
+        {!usagePerMonthData.isLoading && usagePerMonthData.data && (
           <Table
             // tableHeaderColor="info"
             tableHead={['집행 날짜', '집행 금액', '광고 타입']}
-            tableData={usagePerMonthData.loading ? initialData.data : usagePerMonthData.data.data}
+            tableData={usagePerMonthData.isLoading ? initialData.data : usagePerMonthData.data.data}
             perMonth
           />
         )}

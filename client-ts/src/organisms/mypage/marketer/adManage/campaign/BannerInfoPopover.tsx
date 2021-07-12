@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
 import { makeStyles, Paper, Popover, Typography } from '@material-ui/core';
 import { CampaignInterface } from '../../dashboard/interfaces';
-import { BannerDataInterface } from '../interface';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import renderBannerConfirmState, {
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderBannerConfirmState';
+import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
 
 const useStyles = makeStyles(theme => ({
   container: { padding: theme.spacing(2), minWidth: 350, minHeight: 200 },
@@ -15,7 +15,7 @@ export interface BannerInfoPopoverProps {
   anchorEl: HTMLElement;
   onClose: () => void;
   selectedCampaign?: CampaignInterface;
-  selectedBanner?: BannerDataInterface;
+  selectedBanner?: MarketerBanner;
 }
 export default function BannerInfoPopover({
   open,

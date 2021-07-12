@@ -9,7 +9,9 @@ import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
 import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
+import { useMarketerCampaignLength } from '../../../../../utils/hooks/query/useMarketerCampaignLength';
+import { useMarketerCampaignList } from '../../../../../utils/hooks/query/useMarketerCampaignList';
+import { LandingUrlLink } from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
 import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
 import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
 import {
@@ -19,7 +21,6 @@ import {
 import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
 import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
 import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
-import { UrlLink } from '../interface';
 import BannerInfoPopover from './BannerInfoPopover';
 import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
 
@@ -40,18 +41,25 @@ const useStyles = makeStyles(() => ({
   zoomin: { cursor: 'zoom-in' },
 }));
 export interface CampaignInventoryProps {
-  pageOffset: number;
-  campaignData: UsePaginatedGetRequestObject<CampaignInterface>;
-  pageLength: number;
   handleCampaignSelect: (campaignId: string | undefined) => void;
+  currentPage: number;
+  pageOffset: number;
+  handlePage: (v: number) => void;
 }
 export default function CampaignInventory({
-  pageOffset,
-  campaignData,
-  pageLength,
   handleCampaignSelect,
+  currentPage,
+  pageOffset,
+  handlePage,
 }: CampaignInventoryProps): JSX.Element {
   const classes = useStyles();
+
+  // **************************************************************************************
+  // 캠페인 데이터
+  const campaigns = useMarketerCampaignList({ offset: pageOffset, page: currentPage });
+
+  const campaignPageLength = useMarketerCampaignLength();
+
   const { enqueueSnackbar } = useSnackbar();
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
@@ -64,7 +72,6 @@ export default function CampaignInventory({
       );
     } else {
       handleCampaignSelect(undefined);
-      campaignData.requestWithoutConcat();
     }
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
@@ -116,16 +123,16 @@ export default function CampaignInventory({
         pagination
         paginationMode="server"
         pageSize={pageOffset}
-        rowCount={pageLength || undefined}
+        rowCount={campaignPageLength.data}
         rowsPerPageOptions={[5]}
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          campaignData.handlePage(param.page);
+          handlePage(param.page);
         }}
         disableSelectionOnClick
-        rows={campaignData.data || []}
-        loading={campaignData.loading}
+        rows={campaigns.data || []}
+        loading={campaigns.isLoading}
         columns={[
           {
             field: 'onOff',
@@ -135,7 +142,7 @@ export default function CampaignInventory({
                 campaign={data.row as CampaignInterface}
                 onSuccess={onOnOffSuccess}
                 onFail={onOnOffFail}
-                inventoryLoading={campaignData.loading}
+                inventoryLoading={campaigns.isLoading}
               />
             ),
           },
@@ -208,7 +215,7 @@ export default function CampaignInventory({
                   <Typography
                     onClick={(): void => {
                       const targetUrl = data.row.linkData.links.find(
-                        (link: UrlLink) => !!link.primary,
+                        (link: LandingUrlLink) => !!link.primary,
                       );
                       window.open(targetUrl.linkTo, '_blank');
                     }}
@@ -342,7 +349,6 @@ export default function CampaignInventory({
         <CampaignUpdateDialog
           open={campaignUpdateDialog.open}
           selectedCampaign={selected}
-          doGetRequest={campaignData.requestWithoutConcat}
           handleClose={(): void => {
             setSelected(undefined);
             campaignUpdateDialog.handleClose();
@@ -355,7 +361,6 @@ export default function CampaignInventory({
         <CampaignDeleteConfirmDialog
           open={campaignDeleteDialog.open}
           selectedCampaign={selected}
-          doGetRequest={campaignData.requestWithoutConcat}
           handleClose={(): void => {
             setSelected(undefined);
             campaignDeleteDialog.handleClose();

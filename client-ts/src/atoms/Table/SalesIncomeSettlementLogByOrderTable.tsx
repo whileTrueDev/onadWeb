@@ -1,51 +1,25 @@
 /* eslint-disable react/display-name */
 import { Box, Typography } from '@material-ui/core';
 import { GridColumns } from '@material-ui/data-grid';
-import { useMemo } from 'react';
 import * as React from 'react';
-import { UseGetRequestObject } from '../../utils/hooks/useGetRequest';
+import { useMemo } from 'react';
+import { useMarketerPaymentMethods } from '../../utils/hooks/query/useMarketerPaymentMethods';
+import { SettlementByOrderData } from '../../utils/hooks/query/useMarketerSettlementLogsByOrder';
 import CustomDataGridExportable from './CustomDataGridExportable';
 
-export interface SettlementByOrderData {
-  VAT: number;
-  actualSendedAmount: number;
-  bigo: string;
-  campaignId: string;
-  campaignName: string;
-  commissionAmount: number;
-  deliveryFee: number;
-  id: number;
-  orderId: number;
-  orderPrice: number;
-  paymentCommissionAmount: number;
-  paymentMethod: string;
-  purchaseChannel: string;
-  settlementLogId: number;
-  createDate: Date;
-  orderDate: Date;
-  cancelDate: Date | null;
-  purchaseConfirmDate: Date;
-  updateDate: Date;
-  isLiveCommerce: number;
-}
-
-export interface PaymentMethods {
-  id: number;
-  method: string;
-  paymentFee: number;
-  paymentFeeFixed: number;
-}
 interface SalesIncomeSettlementLogByOrderTableProps {
   exportFileName: string;
-  settlementLogsData: UseGetRequestObject<SettlementByOrderData[]>;
-  paymentMethodData: UseGetRequestObject<PaymentMethods[]>;
+  isLoading: boolean;
+  settlementLogsData: SettlementByOrderData[];
 }
 
 export default function SalesIncomeSettlementLogByOrderTable({
   exportFileName,
+  isLoading,
   settlementLogsData,
-  paymentMethodData,
 }: SalesIncomeSettlementLogByOrderTableProps): React.ReactElement {
+  const paymentMethods = useMarketerPaymentMethods();
+
   const column: GridColumns = [
     { field: 'orderId', headerName: '주문번호', width: 100 },
     { field: 'isLiveCommerce', headerName: '캠페인유형' },
@@ -71,12 +45,12 @@ export default function SalesIncomeSettlementLogByOrderTable({
   }));
 
   const preprocessedData = useMemo(() => {
-    if (!settlementLogsData.data) return [];
-    return settlementLogsData.data.map(d => ({
+    if (!settlementLogsData) return [];
+    return settlementLogsData.map(d => ({
       ...d,
       isLiveCommerce: d.isLiveCommerce ? '라이브커머스' : '판매형광고',
     }));
-  }, [settlementLogsData.data]);
+  }, [settlementLogsData]);
   return (
     <Box>
       <Box height={400}>
@@ -88,15 +62,15 @@ export default function SalesIncomeSettlementLogByOrderTable({
           disableColumnSelector
           disableMultipleColumnsSorting
           columns={column}
-          loading={settlementLogsData.loading}
+          loading={isLoading}
           rows={preprocessedData}
         />
       </Box>
 
-      {!paymentMethodData.loading && paymentMethodData.data && (
+      {!paymentMethods.isLoading && paymentMethods.data && (
         <Box>
           <Typography variant="body2">결제수단별 수수료</Typography>
-          {paymentMethodData.data.map(paymentMethod => (
+          {paymentMethods.data.map(paymentMethod => (
             <Typography key={paymentMethod.id} variant="caption">
               {`${paymentMethod.method}: `}
               {paymentMethod.paymentFee

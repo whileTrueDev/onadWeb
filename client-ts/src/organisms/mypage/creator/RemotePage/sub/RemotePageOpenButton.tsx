@@ -1,13 +1,12 @@
 import { Button, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import { REACT_HOST } from '../../../../../config';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
 import StyledTooltip from '../../../../../atoms/Tooltip/StyledTooltip';
+import { REACT_HOST } from '../../../../../config';
+import { useCreatorRemotePageUrl } from '../../../../../utils/hooks/query/useCreatorRemotePageUrl';
 
-export interface RemotePageOpenButtonProps {
-  remoteControllerUrl: UseGetRequestObject<string>;
-}
-const RemotePageOpenButton = ({ remoteControllerUrl }: RemotePageOpenButtonProps): JSX.Element => {
+const RemotePageOpenButton = (): JSX.Element => {
+  const remotePageUrl = useCreatorRemotePageUrl();
+
   const POPUP_WIDTH = process.env.NODE_ENV === 'production' ? 900 : 900;
   const POPUP_HEIGHT = process.env.NODE_ENV === 'production' ? 800 : 700;
 
@@ -19,18 +18,18 @@ const RemotePageOpenButton = ({ remoteControllerUrl }: RemotePageOpenButtonProps
     <Button
       variant="contained"
       color="primary"
-      disabled={!remoteControllerUrl.data}
+      disabled={!remotePageUrl.data}
       onClick={(): void => {
-        if (remoteControllerUrl.data) {
+        if (remotePageUrl.data) {
           window.open(
-            `${REACT_HOST}/creator/remote/${getCorrectUrl(remoteControllerUrl.data)}`,
+            `${REACT_HOST}/creator/remote/${getCorrectUrl(remotePageUrl.data)}`,
             '_blank',
             `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${0}, top=${0}, title="온애드 리모컨"`,
           );
         }
       }}
     >
-      {!remoteControllerUrl.data ? (
+      {!remotePageUrl.data ? (
         <StyledTooltip title={<Typography variant="body2">이용 동의 필요</Typography>}>
           <Typography variant="body2" style={{ display: 'flex', alignItems: 'center' }}>
             실시간 광고 제어

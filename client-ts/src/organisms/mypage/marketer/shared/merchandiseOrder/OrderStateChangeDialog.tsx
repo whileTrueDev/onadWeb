@@ -9,7 +9,7 @@ import renderOrderStatus, {
   주문상태_출고완료,
   주문상태_주문취소,
 } from '../../../../../utils/render_funcs/renderOrderStatus';
-import { MerchandiseOrder } from '../../adManage/interface';
+import { MerchandiseOrder } from '../../../../../utils/hooks/query/useMarketerMerchandisesOrders';
 
 const useStyles = makeStyles(theme => ({
   divider: {

@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { Button, Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Stepper, Step, StepLabel, StepContent, Button } from '@material-ui/core';
 import Check from '@material-ui/icons/Check';
 import classnames from 'classnames';
-
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import useToggle from '../../../../utils/hooks/useToggle';
+import { useMarketerCreateLandingUrlMutation } from '../../../../utils/hooks/mutation/useMarketerCreateLandingUrlMutation';
 import useEventTargetValue from '../../../../utils/hooks/useEventTargetValue';
-import usePostRequest from '../../../../utils/hooks/usePostRequest';
-import UrlUploadStep from './UrlUploadStep';
+import useToggle from '../../../../utils/hooks/useToggle';
 import landingUrlRegex from '../../../../utils/inputs/regex/landing-url.regex';
+import UrlUploadStep from './UrlUploadStep';
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex' },
@@ -35,7 +35,7 @@ const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
 interface UrlUploadDialogProps {
   open: boolean;
   handleClose: () => void;
-  recallRequest?: () => void;
+  onSuccess?: () => void;
 }
 
 function QontoStepIcon(props: any): JSX.Element {
@@ -50,7 +50,8 @@ function QontoStepIcon(props: any): JSX.Element {
 }
 
 export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Element {
-  const { open, handleClose, recallRequest } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const { open, handleClose, onSuccess } = props;
   const [activeStep] = useState(0);
 
   const subOpen = useToggle(); // Toggle for sub-urls
@@ -65,25 +66,7 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
   const sub2UrlName = useEventTargetValue(); // Sub url2 name
   const sub2UrlCheck = useToggle(true); // Sub url2 설정/미설정
 
-  const { doPostRequest } = usePostRequest<
-    {
-      links: {
-        primary: boolean;
-        linkName: string;
-        linkTo: string;
-      }[];
-    },
-    any[]
-  >(
-    '/marketer/landing-url',
-    // success callback function
-    () => {
-      handleClose();
-      if (recallRequest) {
-        recallRequest();
-      }
-    },
-  );
+  const createLandingUrl = useMarketerCreateLandingUrlMutation();
 
   function handleSubmit(): void {
     const linkResult = [];
@@ -99,7 +82,11 @@ export default function UrlUploadDialog(props: UrlUploadDialogProps): JSX.Elemen
       linkResult.push({ primary: false, linkName: sub2UrlName.value, linkTo: sub2Url.value });
     }
 
-    doPostRequest({ links: linkResult });
+    createLandingUrl.mutateAsync({ links: linkResult }).then(() => {
+      handleClose();
+      enqueueSnackbar('랜딩페이지URL 등록 완료', { variant: 'success' });
+      if (onSuccess) onSuccess();
+    });
   }
   const handleDialogClose = (): void => {
     // Reset values
