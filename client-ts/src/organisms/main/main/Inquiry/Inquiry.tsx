@@ -11,10 +11,9 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import useStyles from '../style/Inqurie.style';
-import HOST from '../../../../config';
-import axios from '../../../../utils/axios';
 import useDialog from '../../../../utils/hooks/useDialog';
 import Dialog from '../../../../atoms/Dialog/Dialog';
+import { useCreateInquiryMutation } from '../../../../utils/hooks/mutation/useCreateInquiryMutation';
 
 interface Props {
   confirmClose?: () => void;
@@ -58,6 +57,7 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   // 문의 요청 중 로딩에 대한 상태
   const [loading, setLoading] = React.useState(false);
 
+  const createInquiry = useCreateInquiryMutation();
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const AnonymousUser = inquiryContent;
@@ -68,8 +68,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
       alert('개인정보수집 및 이용안내에 동의해주세요');
     } else {
       AnonymousUser.privacyAgreement = true;
-      axios
-        .post(`${HOST}/inquiry`, AnonymousUser)
+      createInquiry
+        .mutateAsync(AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);

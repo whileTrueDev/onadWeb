@@ -1,4 +1,3 @@
-import classnames from 'classnames';
 import {
   FormControlLabel,
   Hidden,
@@ -9,9 +8,12 @@ import {
   Typography,
 } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import { useAnchorEl, usePatchRequest } from '../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { ContractionDataType } from '../shared/StartGuideCard';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorUpdateAdchatAgreementMutation } from '../../../../utils/hooks/mutation/useCreatorUpdateAdchatAgreementMutation';
+import { useCreatorAdchatAgreement } from '../../../../utils/hooks/query/useCreatorAdChatAgreement';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -28,35 +30,26 @@ const useStyles = makeStyles(theme => ({
   alignCenter: { textAlign: 'center' },
 }));
 
-export interface AdChatRes {
-  adChatAgreement: 1 | 0;
-}
-export interface ChatAdInfoProps {
-  contracitonAgreementData: UseGetRequestObject<ContractionDataType>;
-  adChatData: UseGetRequestObject<AdChatRes>;
-  doGetReqeustOnOff: () => void;
-  successSnackOpen: () => void;
-  failSnackOpen: () => void;
-}
-export default function ChatAdInfo({
-  contracitonAgreementData,
-  adChatData,
-  doGetReqeustOnOff,
-  successSnackOpen,
-  failSnackOpen,
-}: ChatAdInfoProps): JSX.Element {
+export default function ChatAdInfo(): JSX.Element {
+  const creatorProfile = useCreatorProfile();
+  const adchatAgreement = useCreatorAdchatAgreement();
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
   const descAnchor = useAnchorEl();
 
   // OnOff toggle
-  const onOffUpdate = usePatchRequest('/creator/adchat/agreement', () => {
-    doGetReqeustOnOff();
-  });
+  const onOffUpdate = useCreatorUpdateAdchatAgreementMutation();
   const handleSwitch = (): void => {
     onOffUpdate
-      .doPatchRequest({ targetOnOffState: !adChatData.data?.adChatAgreement })
-      .then(() => successSnackOpen())
-      .catch(() => failSnackOpen());
+      .mutateAsync({ targetOnOffState: !adchatAgreement.data?.adChatAgreement })
+      .then(() => enqueueSnackbar('정상적으로 변경되었습니다.', { variant: 'success' }))
+      .catch(() =>
+        enqueueSnackbar(
+          '변경중 오류가 발생했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+          { variant: 'error' },
+        ),
+      );
   };
 
   return (
@@ -81,26 +74,26 @@ export default function ChatAdInfo({
           현재 트위치만 가능합니다.
         </Typography>
 
-        {!contracitonAgreementData.loading && contracitonAgreementData.data && (
+        {!creatorProfile.isLoading && creatorProfile.data && (
           <div className={classes.onoffButton}>
             <FormControlLabel
               label="끄기/켜기"
               // 온애드 이용 동의를 안했거나, 트위치 연동을 안한 경우
               disabled={
-                !contracitonAgreementData.data.creatorContractionAgreement ||
-                !contracitonAgreementData.data.creatorTwitchOriginalId
+                !creatorProfile.data.creatorContractionAgreement ||
+                !creatorProfile.data.creatorTwitchOriginalId
               }
               control={
                 <Switch
                   color="primary"
-                  checked={Boolean(adChatData.data?.adChatAgreement)}
+                  checked={Boolean(adchatAgreement.data?.adChatAgreement)}
                   onChange={(): void => {
                     handleSwitch();
                   }}
                 />
               }
             />
-            {Boolean(adChatData.data?.adChatAgreement) && (
+            {Boolean(adchatAgreement.data?.adChatAgreement) && (
               <Typography variant="body2" color="textSecondary">
                 채팅창에서
                 <Typography variant="body2" color="primary" component="span">
@@ -111,13 +104,13 @@ export default function ChatAdInfo({
                 </Typography>
               </Typography>
             )}
-            {!contracitonAgreementData.data.creatorContractionAgreement && (
+            {!creatorProfile.data.creatorContractionAgreement && (
               <Typography variant="body2" color="textSecondary">
                 이용동의가 필요합니다.
               </Typography>
             )}
-            {contracitonAgreementData.data.creatorContractionAgreement &&
-              !contracitonAgreementData.data.creatorTwitchOriginalId && (
+            {creatorProfile.data.creatorContractionAgreement &&
+              !creatorProfile.data.creatorTwitchOriginalId && (
                 <Typography variant="body2" color="textSecondary">
                   트위치TV 연동이 필요합니다.
                 </Typography>

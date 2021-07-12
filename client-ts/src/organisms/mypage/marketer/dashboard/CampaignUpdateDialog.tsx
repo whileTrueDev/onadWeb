@@ -10,8 +10,8 @@ import Dialog from '../../../../atoms/Dialog/Dialog';
 import StyledInput from '../../../../atoms/StyledInput';
 import DangerTypography from '../../../../atoms/Typography/Danger';
 import Success from '../../../../atoms/Typography/Success';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import usePatchRequest from '../../../../utils/hooks/usePatchRequest';
+import { useMarketerUpdateCampaignMutation } from '../../../../utils/hooks/mutation/useMarketerUpdateCampaignMutation';
+import { useMarketerCampaignNames } from '../../../../utils/hooks/query/useMarketerCampaignNames';
 import { CampaignInterface } from './interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -86,13 +86,12 @@ interface CampaignUpdateDialogProps {
   open: boolean;
   selectedCampaign: CampaignInterface;
   handleClose: () => void;
-  doGetRequest: () => void;
 }
 const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { open, selectedCampaign, handleClose, doGetRequest } = props;
+  const { open, selectedCampaign, handleClose } = props;
 
   const [error, setError] = React.useState<string | false>(false); // budget 작성시 한도 체크용 State
   const [checkName, setCheckName] = React.useState<boolean>(false);
@@ -104,14 +103,13 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
     campaignName: '',
   });
 
-  const nameData = useGetRequest<string[]>('/marketer/campaign/names');
+  const nameData = useMarketerCampaignNames();
   // {'campaignId', 'data', 'type'} 의 데이터를 전달해야 가능하다.
-  const { doPatchRequest } = usePatchRequest('/marketer/campaign', doGetRequest);
-  // const updateBudget = usePatchRequest('/api/dashboard/marketer/campaign', doGetRequest);
+  const updateCampaignMutation = useMarketerUpdateCampaignMutation();
 
   const checkCampaignName = (value: string): void => {
-    if (!nameData.loading && !nameData.error) {
-      if (nameData.data.includes(value)) {
+    if (!nameData.isLoading && !nameData.error) {
+      if (nameData.data && nameData.data.includes(value)) {
         setCheckName(false);
         dispatch({ key: 'campaignName', value: '' });
         setDuplicate(true);
@@ -156,16 +154,22 @@ const CampaignUpdateDialog = (props: CampaignUpdateDialogProps): JSX.Element => 
 
   const handleNameUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'name', data: state };
-    doPatchRequest(data);
+    updateCampaignMutation
+      .mutateAsync(data)
+      .then(() => enqueueSnackbar('캠페인 변경 성공', { variant: 'success' }))
+      .catch(() => enqueueSnackbar('캠페인 변경 실패', { variant: 'error' }));
     dispatch({ key: 'reset' });
-    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
+    handleClose();
   };
 
   const handleBudgetUpdate = (): void => {
     const data = { campaignId: selectedCampaign.campaignId, type: 'budget', data: state };
-    doPatchRequest(data);
+    updateCampaignMutation
+      .mutateAsync(data)
+      .then(() => enqueueSnackbar('캠페인 변경 성공', { variant: 'success' }))
+      .catch(() => enqueueSnackbar('캠페인 변경 실패', { variant: 'error' }));
     dispatch({ key: 'reset' });
-    enqueueSnackbar('캠페인 변경 성공', { variant: 'success' });
+    handleClose();
   };
 
   return (

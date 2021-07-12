@@ -4,17 +4,22 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Check, Refresh } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
+import { useQueryClient } from 'react-query';
 import { useLocation } from 'react-router-dom';
 import Button from '../../../../atoms/CustomButtons/Button';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import HOST from '../../../../config';
 import history from '../../../../history';
 import { OnadTheme } from '../../../../theme';
-import axiosInstance from '../../../../utils/axios';
-import { useDialog, useEventTargetValue, useGetRequest } from '../../../../utils/hooks';
+import { useDialog, useEventTargetValue } from '../../../../utils/hooks';
+import { useCreatorDeleteLinkAfreecaCertMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkAfreecaCertMutation';
+import { useCreatorDeleteLinkAfreecaMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkAfreecaMutation';
+import { useCreatorDeleteLinkTwitchMutation } from '../../../../utils/hooks/mutation/useCreatorDeleteLinkTwitchMutation';
+import { useCreatorLinkAfreecaCert } from '../../../../utils/hooks/query/useCreatorLinkAfreecaCert';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
 import openKakaoChat from '../../../../utils/openKakaoChat';
 import AfreecaLinkDialog from './LinkDialog/AfreecaLinkDialog';
-import { ProfileDataType } from './ProfileData.type';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   success: { color: theme.palette.success.main },
@@ -30,16 +35,13 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
   },
 }));
 
-interface PlatformLinkCardProps {
-  profileData: ProfileDataType;
-  profileRefetch: () => void;
-}
-export default function PlatformLinkCard({
-  profileData,
-  profileRefetch,
-}: PlatformLinkCardProps): JSX.Element {
+export default function PlatformLinkCard(): JSX.Element {
   const classes = useStyles();
+  const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
+
+  // 프로필 유저 데이터
+  const profile = useCreatorProfile();
 
   // **************************************************
   // 연동 에러 처리
@@ -62,37 +64,33 @@ export default function PlatformLinkCard({
   // 연동하고자 하는 아프리카 ID (사용자입력)
   const afreecaId = useEventTargetValue();
 
-  const afreecaLinkData = useGetRequest('/link/afreeca/cert');
+  const afreecaLink = useCreatorLinkAfreecaCert();
 
   // 아프리카 연동 다이얼로그
   const afreecaLinkDialog = useDialog();
 
   // 아프리카 연동 취소 확인 다이얼로그
   const afreecaCancelConfirmDialog = useDialog();
+  const deleteCert = useCreatorDeleteLinkAfreecaCertMutation();
   // 아프리카 연동 요청 취소 핸들러
   function handleCancel(): void {
-    axiosInstance
-      .delete(`${HOST}/link/afreeca/cert`, {
-        data: { afreecaId: afreecaId.value },
-      })
-      .then(res => {
-        if (res.data) {
-          afreecaCancelConfirmDialog.handleClose();
-          profileRefetch();
-        }
-      });
+    deleteCert.mutateAsync({ afreecaId: afreecaId.value }).then(res => {
+      if (res.data) {
+        afreecaCancelConfirmDialog.handleClose();
+      }
+    });
   }
 
   // 아프리카 연동 상태 다이얼로그
   const afreecaLinkDeleteDialog = useDialog();
+  const deleteLinkAfreeca = useCreatorDeleteLinkAfreecaMutation();
   // 아프리카 연동 해제
   function handleDeleteLinkAfreeca(): void {
-    axiosInstance
-      .delete(`${HOST}/link/afreeca`)
+    deleteLinkAfreeca
+      .mutateAsync()
       .then(res => {
         if (res.data) {
           afreecaLinkDeleteDialog.handleClose();
-          profileRefetch();
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
@@ -107,13 +105,13 @@ export default function PlatformLinkCard({
   // ************************************************
   // 트위치 연동 해제
   const twitchLinkDeleteDialog = useDialog();
+  const deleteLinkTwitch = useCreatorDeleteLinkTwitchMutation();
   function handleDeleteLinkTwitch(): void {
-    axiosInstance
-      .delete(`${HOST}/link/twitch`)
+    deleteLinkTwitch
+      .mutateAsync()
       .then(res => {
         if (res.data) {
           twitchLinkDeleteDialog.handleClose();
-          profileRefetch();
           enqueueSnackbar('성공적으로 연동이 해제 되었습니다.', { variant: 'success' });
         }
       })
@@ -125,6 +123,9 @@ export default function PlatformLinkCard({
         console.error(err);
       });
   }
+
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
 
   return (
     <Paper style={{ padding: 32 }}>
@@ -188,7 +189,7 @@ export default function PlatformLinkCard({
             src="/pngs/logo/twitch/TwitchGlitchPurple.png"
             style={{ marginRight: 16 }}
           />
-          {!profileData.creatorTwitchOriginalId ? (
+          {!profile.data?.creatorTwitchOriginalId ? (
             <Button
               variant="contained"
               size="small"
@@ -208,9 +209,11 @@ export default function PlatformLinkCard({
                 트위치 연동완료
                 <Check className={classes.success} />
               </Button>
-              <Typography style={{ marginLeft: 8 }}>
-                {`${profileData.creatorName}, ${profileData.creatorTwitchId}`}
-              </Typography>
+              {profile.data && (
+                <Typography style={{ marginLeft: 8 }}>
+                  {`${profile.data.creatorName}, ${profile.data.creatorTwitchId}`}
+                </Typography>
+              )}
               <Button
                 size="small"
                 variant="text"
@@ -230,7 +233,7 @@ export default function PlatformLinkCard({
             src="/pngs/logo/afreeca/onlyFace.png"
             style={{ marginRight: 16 }}
           />
-          {!profileData.afreecaId ? (
+          {!profile.data?.afreecaId ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button
                 variant="contained"
@@ -240,17 +243,17 @@ export default function PlatformLinkCard({
               >
                 아프리카TV 연동하기
               </Button>
-              {!afreecaLinkData.loading && afreecaLinkData.data && (
+              {!afreecaLink.isLoading && afreecaLink.data && (
                 <>
                   <Typography style={{ marginLeft: 8 }}>
-                    {`${afreecaLinkData.data.afreecaId} 연동 진행중`}
+                    {`${afreecaLink.data.afreecaId} 연동 진행중`}
                   </Typography>
                   <MuiButton
                     color="primary"
                     size="small"
                     onClick={(): void => {
-                      profileRefetch();
-                      afreecaLinkData.doGetRequest();
+                      queryClient.invalidateQueries('creatorProfile');
+                      queryClient.invalidateQueries('creatorLinkAfreecaCert');
                     }}
                   >
                     새로고침
@@ -277,9 +280,11 @@ export default function PlatformLinkCard({
                 아프리카TV 연동완료
                 <Check className={classes.success} />
               </Button>
-              <Typography style={{ marginLeft: 8 }}>
-                {`${profileData.afreecaName}, ${profileData.afreecaId}`}
-              </Typography>
+              {profile.data && (
+                <Typography style={{ marginLeft: 8 }}>
+                  {`${profile.data.afreecaName}, ${profile.data.afreecaId}`}
+                </Typography>
+              )}
               <Button
                 size="small"
                 variant="text"
@@ -296,8 +301,6 @@ export default function PlatformLinkCard({
       {/* 아프리카 연동진행 다이얼로그 */}
       <AfreecaLinkDialog
         afreecaId={afreecaId}
-        afreecaLinkData={afreecaLinkData.data}
-        afreecaLinkDataRefetch={afreecaLinkData.doGetRequest}
         open={afreecaLinkDialog.open}
         onClose={afreecaLinkDialog.handleClose}
       />
@@ -324,7 +327,7 @@ export default function PlatformLinkCard({
       </CustomDialog>
 
       {/* 아프리카 연동 해제 확인 다이얼로그 */}
-      {profileData && profileData.afreecaId && (
+      {profile.data && profile.data.afreecaId && (
         <CustomDialog
           open={afreecaLinkDeleteDialog.open}
           onClose={afreecaLinkDeleteDialog.handleClose}
@@ -352,7 +355,7 @@ export default function PlatformLinkCard({
       )}
 
       {/* 트위치 연동 해제 확인 다이얼로그 */}
-      {profileData && profileData.creatorTwitchOriginalId && (
+      {profile.data && profile.data.creatorTwitchOriginalId && (
         <CustomDialog
           open={twitchLinkDeleteDialog.open}
           onClose={twitchLinkDeleteDialog.handleClose}

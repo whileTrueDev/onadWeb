@@ -2,7 +2,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import { useDialog } from '../../../../../utils/hooks';
-import { MarketerSettlement } from '../../office/interface';
+import { MarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
 
 const useStyles = makeStyles(theme => ({
   button: {

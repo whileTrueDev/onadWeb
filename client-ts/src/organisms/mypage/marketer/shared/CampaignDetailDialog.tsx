@@ -3,9 +3,8 @@ import { Alert } from '@material-ui/lab';
 import * as React from 'react';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
 import CustomDialog from '../../../../atoms/Dialog/Dialog';
-import { useGetRequest } from '../../../../utils/hooks';
+import { useMarketerCampaign } from '../../../../utils/hooks/query/useMarketerCampaign';
 import CampaignDetail from '../adManage/campaign/sub/CampaignDetail';
-import { CampaignInterface } from '../dashboard/interfaces';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -34,30 +33,27 @@ export default function CampaignDetailDialog({
   campaignId,
 }: CampaignDetailDialogProps): React.ReactElement {
   const classes = useStyles();
-  const campaignData = useGetRequest<{ campaignId: string }, CampaignInterface>(
-    '/marketer/campaign',
-    { campaignId },
-  );
+  const campaign = useMarketerCampaign(campaignId);
 
   return (
     <CustomDialog open={open} onClose={onClose} maxWidth="xs" fullWidth title="캠페인 정보">
       <div>
-        {campaignData.loading && (
+        {campaign.isLoading && (
           <div className={classes.center}>
             <CircularProgress />
           </div>
         )}
-        {!campaignData.loading && campaignData.data && (
+        {!campaign.isLoading && campaign.data && (
           <>
-            <CampaignDetail campaign={campaignData.data} />
+            <CampaignDetail campaign={campaign.data} />
 
             <article className={classes.article}>
               <Typography className={classes.bold}>배너이미지</Typography>
-              <OnadBanner src={campaignData.data.bannerSrc} />
+              <OnadBanner src={campaign.data.bannerSrc} />
             </article>
           </>
         )}
-        {!campaignData.loading && !campaignData.data && (
+        {!campaign.isLoading && !campaign.data && (
           <Alert severity="error">
             <Typography>{`${campaignId} 캠페인은 삭제 처리되어 정보를 불러올 수 없습니다.`}</Typography>
           </Alert>

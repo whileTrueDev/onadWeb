@@ -23,6 +23,8 @@ import HOST from '../../../config';
 import history from '../../../history';
 import { OnadTheme } from '../../../theme';
 import axiosInstance from '../../../utils/axios';
+import { useCreatorSignUpMutation } from '../../../utils/hooks/mutation/useCreatorSignUpMutation';
+import { useCreatorSignupPreCreatorMutation } from '../../../utils/hooks/mutation/useCreatorSignupPreCreatorMutation';
 import passwordRegex from '../../../utils/inputs/regex/password.regex';
 import userIdRegex from '../../../utils/inputs/regex/userId.regex';
 import IndentityVerificationDialog from './IdentityVerification';
@@ -134,9 +136,10 @@ export default function SignupCreator(): JSX.Element {
   }
 
   // 본인인증 완료 이후 -> 회원가입 요청
+  const signUpMutation = useCreatorSignUpMutation();
   function handleSignup(): void {
-    axiosInstance
-      .post(`${HOST}/creator`, {
+    signUpMutation
+      .mutateAsync({
         userid: signupInfo.userid,
         passwd: signupInfo.passwd,
         referralCode: signupInfo.referralCode,
@@ -154,9 +157,10 @@ export default function SignupCreator(): JSX.Element {
   /**
    * 기존 유저 새로운 로그인 방식으로 회원가입 및 기존 onad 계정과 연동 핸들러
    * */
+  const preUserSignUpMutation = useCreatorSignupPreCreatorMutation();
   function handleSignupPreCreator(): void {
-    axiosInstance
-      .post(`${HOST}/creator/pre-user`, {
+    preUserSignUpMutation
+      .mutateAsync({
         userid: signupInfo.userid,
         passwd: signupInfo.passwd,
         creatorId: parseParams(location.search).creatorId,
@@ -511,7 +515,12 @@ export default function SignupCreator(): JSX.Element {
           size="large"
           variant="contained"
           style={{ width: '100%' }}
-          disabled={!signupInfo.userid || !signupInfo.passwd || !signupInfo.repasswd}
+          disabled={
+            !signupInfo.userid ||
+            !signupInfo.passwd ||
+            !signupInfo.repasswd ||
+            duplicateCheckLoading
+          }
         >
           가입하기
         </Button>
@@ -524,22 +533,12 @@ export default function SignupCreator(): JSX.Element {
       <Button
         component={Link}
         className={classes.socialLoginButton}
-        to="/mypage/creator/main"
+        to="/creator"
         color="primary"
         variant="contained"
         fullWidth
       >
-        마이페이지로 이동
-      </Button>
-      <Button
-        component={Link}
-        className={classes.socialLoginButton}
-        to="/creator"
-        color="default"
-        variant="contained"
-        fullWidth
-      >
-        메인화면으로
+        메인화면으로 이동
       </Button>
     </div>
   );

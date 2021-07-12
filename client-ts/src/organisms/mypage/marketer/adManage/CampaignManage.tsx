@@ -1,14 +1,12 @@
-import { useState } from 'react';
-import * as React from 'react';
 import { makeStyles, Paper, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
-import usePaginatedGetRequest from '../../../../utils/hooks/usePaginatedGetRequest';
-import { CampaignInterface, OnOffInterface } from '../dashboard/interfaces';
-import { useGetRequest } from '../../../../utils/hooks';
-import CampaignInventory from './campaign/CampaignInventory';
+import * as React from 'react';
+import { useState } from 'react';
+import { useMarketerCampaignList } from '../../../../utils/hooks/query/useMarketerCampaignList';
+import OnOffSwitch from '../shared/OnOffSwitch';
 import CampaignButtons from './campaign/CampaignButtons';
 import CampaignDetail from './campaign/CampaignDetail';
-import OnOffSwitch from '../shared/OnOffSwitch';
+import CampaignInventory from './campaign/CampaignInventory';
 
 const useStyles = makeStyles(theme => ({
   tabs: {
@@ -24,6 +22,7 @@ export default function InventoryManage(): JSX.Element {
   const classes = useStyles();
 
   const [selectedTabIndex, setSelectedTabIndex] = React.useState<string>('0');
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
     setSelectedTabIndex(newValue);
   };
@@ -31,11 +30,9 @@ export default function InventoryManage(): JSX.Element {
   // **************************************************************************************
   // 캠페인 데이터
   const CAMPAIGN_LOAD_PAGE_OFFSET = 5;
-  const campaignPageLength = useGetRequest('/marketer/campaign/length');
-  const campaignData = usePaginatedGetRequest<CampaignInterface>('/marketer/campaign/list', {
-    offset: CAMPAIGN_LOAD_PAGE_OFFSET,
-    disableConcat: true,
-  });
+  const [page, setPage] = useState(0);
+  const handlePage = (targetPage: number) => setPage(targetPage);
+  const campaigns = useMarketerCampaignList({ offset: CAMPAIGN_LOAD_PAGE_OFFSET, page });
 
   // ****************************************
   // 선택된 캠페인
@@ -45,16 +42,12 @@ export default function InventoryManage(): JSX.Element {
   }
 
   const selectedCampaign =
-    campaignData.data && campaignData.data.find(cam => cam.campaignId === selectedCampaignId);
-
-  // ********************************************
-  // 광고주 캠페인 On/Off
-  const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
+    campaigns.data && campaigns.data.find(cam => cam.campaignId === selectedCampaignId);
 
   return (
     <div>
       <div style={{ marginTop: 8, maxWidth: 320 }}>
-        <OnOffSwitch onOffData={onOffData} />
+        <OnOffSwitch />
       </div>
 
       <Paper style={{ marginTop: 8 }}>
@@ -73,9 +66,9 @@ export default function InventoryManage(): JSX.Element {
             <TabPanel value="0">
               <CampaignButtons />
               <CampaignInventory
+                currentPage={page}
                 pageOffset={CAMPAIGN_LOAD_PAGE_OFFSET}
-                campaignData={campaignData}
-                pageLength={campaignPageLength.data || undefined}
+                handlePage={handlePage}
                 handleCampaignSelect={handleCampaignSelect}
               />
             </TabPanel>
@@ -84,7 +77,7 @@ export default function InventoryManage(): JSX.Element {
       </Paper>
 
       {/* 캠페인 개별 보기 컨텐츠 */}
-      {campaignData.data && selectedCampaign && (
+      {campaigns.data && selectedCampaign && (
         <div className={classes.detail}>
           <CampaignDetail selectedCampaign={selectedCampaign} />
         </div>

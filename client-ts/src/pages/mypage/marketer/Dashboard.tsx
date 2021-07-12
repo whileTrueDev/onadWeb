@@ -1,34 +1,24 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CampaignList from '../../../organisms/mypage/marketer/dashboard/CampaignList';
 import CanvasForChart from '../../../organisms/mypage/marketer/dashboard/CanvasForChart';
-import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
-import OnOffSwitch from '../../../organisms/mypage/marketer/shared/OnOffSwitch';
-import DashboardLoading from '../../../organisms/mypage/marketer/dashboard/DashboardLoading';
-import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 import CashPopper from '../../../organisms/mypage/marketer/dashboard/CashPopper';
-
-// hooks
-import useGetRequest from '../../../utils/hooks/useGetRequest';
-import useAnchorEl from '../../../utils/hooks/useAnchorEl';
-import useDialog from '../../../utils/hooks/useDialog';
-
-import CashChargeDialog from '../../../organisms/mypage/marketer/office/cash/CashChargeDialog';
-
-import {
-  OnOffInterface,
-  AdInterface,
-  CountInterface,
-  ValueChartInterface,
-  ActionLogInterface,
-  CPSChartInterface,
-} from '../../../organisms/mypage/marketer/dashboard/interfaces';
-import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import DashboardLoading from '../../../organisms/mypage/marketer/dashboard/DashboardLoading';
+import DescCard from '../../../organisms/mypage/marketer/dashboard/DescCard';
+import LogTable from '../../../organisms/mypage/marketer/dashboard/LogTable';
 import MarketerCustomerServiceCard from '../../../organisms/mypage/marketer/dashboard/MarketerCustomerServiceCard';
 import OrderList from '../../../organisms/mypage/marketer/dashboard/OrderList';
+import CashChargeDialog from '../../../organisms/mypage/marketer/office/cash/CashChargeDialog';
+import OnOffSwitch from '../../../organisms/mypage/marketer/shared/OnOffSwitch';
+import { useMarketerAd } from '../../../utils/hooks/query/useMarketerAd';
+import { useMarketerAdAnalysisCreatorCount } from '../../../utils/hooks/query/useMarketerAdAnalysisCreatorCount';
+import { useMarketerCampaignActive } from '../../../utils/hooks/query/useMarketerCampaignActive';
+import useAnchorEl from '../../../utils/hooks/useAnchorEl';
+import useDialog from '../../../utils/hooks/useDialog';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,36 +40,24 @@ export default function Dashboard(): JSX.Element {
   const chargeDialog = useDialog();
 
   const { anchorEl, handleAnchorOpen, handleAnchorClose } = useAnchorEl();
-  const campaignData = useGetRequest<null, { activeCampaignCount: number } | null>(
-    '/marketer/campaign/active',
-  );
-  const onOffData = useGetRequest<null, OnOffInterface | null>('/marketer/ad/on-off');
-  const adData = useGetRequest<null, AdInterface | null>('/marketer/ad');
-  const countsData = useGetRequest<null, CountInterface | null>(
-    '/marketer/ad/analysis/creator-count',
-  );
-  const actionLogData = useGetRequest<null, ActionLogInterface[] | null>('/marketer/history');
-  const valueChartData = useGetRequest<null, ValueChartInterface[]>(
-    '/marketer/ad/analysis/expenditure',
-  );
-  const cpsChartData = useGetRequest<null, CPSChartInterface[]>(
-    '/marketer/ad/analysis/expenditure/cps',
-  );
+  const campaignActive = useMarketerCampaignActive();
+  const adData = useMarketerAd();
+  const counts = useMarketerAdAnalysisCreatorCount();
 
   useMypageScrollToTop();
 
   return (
     <div className={classes.root}>
-      {adData.loading || countsData.loading || valueChartData.loading || countsData.loading ? (
+      {adData.isLoading || counts.isLoading ? (
         <DashboardLoading />
       ) : (
         <div>
-          {adData.data && valueChartData.data && countsData.data && (
+          {adData.data && counts.data && (
             <Grid container spacing={2}>
               <Grid item xs={12} md={12} lg={6}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
-                    <OnOffSwitch onOffData={onOffData} />
+                    <OnOffSwitch />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <MarketerCustomerServiceCard />
@@ -129,8 +107,8 @@ export default function Dashboard(): JSX.Element {
                         data={{
                           title: '운용중 캠페인',
                           value:
-                            !campaignData.loading && campaignData.data
-                              ? campaignData.data.activeCampaignCount
+                            !campaignActive.isLoading && campaignActive.data
+                              ? campaignActive.data.activeCampaignCount
                               : 0,
                           unit: '캠페인',
                         }}
@@ -142,7 +120,7 @@ export default function Dashboard(): JSX.Element {
                       <DescCard
                         data={{
                           title: '송출방송인수',
-                          value: countsData.data.counts,
+                          value: counts.data.counts,
                           unit: '명',
                         }}
                       />
@@ -154,10 +132,10 @@ export default function Dashboard(): JSX.Element {
                 <Grid container spacing={2}>
                   <Hidden mdDown>
                     <Grid item xs={9} md={3} lg={9}>
-                      <CanvasForChart valueChartData={valueChartData} cpsChartData={cpsChartData} />
+                      <CanvasForChart />
                     </Grid>
                     <Grid item xs={3} md={3} lg={3}>
-                      <LogTable actionLogData={actionLogData} />
+                      <LogTable />
                     </Grid>
                   </Hidden>
                   <Grid item xs={12} lg={6}>

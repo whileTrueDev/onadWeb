@@ -234,20 +234,43 @@ export class CreatorService {
    */
   public async findOne({ creatorId, loginId }: FindCreatorDto): Promise<CreatorInfo> {
     if (loginId) {
-      return this.creatorInfoRepo.findOne({
-        where: { loginId },
-      });
+      return this.creatorInfoRepo
+        .createQueryBuilder()
+        .select(
+          'creatorId, loginId, creatorIp, creatorTwitchOriginalId, afreecaId, creatorTwitchRefreshToken, password, passwordSalt',
+        )
+        .where({ loginId })
+        .getRawOne();
     }
-    return this.creatorInfoRepo.findOne({
-      where: [{ creatorId }],
-    });
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select(
+        'creatorId, loginId, creatorIp, creatorTwitchOriginalId, afreecaId, creatorTwitchRefreshToken, password, passwordSalt',
+      )
+      .where({ creatorId })
+      .getRawOne();
   }
 
   /**
    * * twitchOriginalId를 기준으로 creatorInfo 정보를 찾습니다.
    */
   public async findOneByTwitchOriginalId(twitchOriginalId: string): Promise<CreatorInfo> {
-    return this.creatorInfoRepo.findOne({ where: { creatorTwitchOriginalId: twitchOriginalId } });
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select('creatorTwitchOriginalId, loginId')
+      .where({ creatorTwitchOriginalId: twitchOriginalId })
+      .getRawOne();
+  }
+
+  /**
+   * * loginId를 기준으로 creatorInfo 정보를 찾습니다.
+   */
+  public async findOneByLoginId(loginId: string): Promise<CreatorInfo> {
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select('creatorTwitchOriginalId, loginId')
+      .where({ loginId })
+      .getRawOne();
   }
 
   /**

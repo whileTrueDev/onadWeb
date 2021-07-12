@@ -1,8 +1,9 @@
-import classnames from 'classnames';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import OverlayUrlCard, { OverlayUrlRes } from '../OverlayUrlCard';
+import classnames from 'classnames';
 import history from '../../../../../history';
+import { useCreatorBannerOverlay } from '../../../../../utils/hooks/query/useCreatorBannerOverlay';
+import OverlayUrlCard from '../OverlayUrlCard';
 
 const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
@@ -16,15 +17,13 @@ const useStyles = makeStyles(theme => ({
   },
   link: { textDecoration: 'underline', cursor: 'pointer' },
 }));
-export interface SetOverlaySectionProps {
-  overlayUrlData: OverlayUrlRes;
-  handleSnackOpen: () => void;
-}
-export default function SetOverlaySection({
-  overlayUrlData,
-  handleSnackOpen,
-}: SetOverlaySectionProps): JSX.Element {
+
+export default function SetOverlaySection(): JSX.Element {
   const classes = useStyles();
+
+  // 배너 송출 URL 정보 조회
+  const overlayUrl = useCreatorBannerOverlay();
+
   return (
     <div>
       <div className={classes.container}>
@@ -39,8 +38,7 @@ export default function SetOverlaySection({
 
         <div className={classes.section}>
           <OverlayUrlCard
-            overlayUrlData={overlayUrlData}
-            handleSnackOpen={handleSnackOpen}
+            overlayUrlData={overlayUrl.data}
             helperText="[온애드 이용 동의] 가 필요합니다."
           />
         </div>

@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import classnames from 'classnames';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
-import { Done, Clear, CheckCircleOutline } from '@material-ui/icons';
+import { CheckCircleOutline, Clear, Done } from '@material-ui/icons';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import terms from '../../Dashboard/source/contractTerms';
-import SuccessTypo from '../../../../../atoms/Typography/Success';
 import DangerTypo from '../../../../../atoms/Typography/Danger';
-import { useDialog, usePatchRequest } from '../../../../../utils/hooks';
+import SuccessTypo from '../../../../../atoms/Typography/Success';
+import { useDialog } from '../../../../../utils/hooks';
+import { useCreatorUpdateContractionMutation } from '../../../../../utils/hooks/mutation/useCreatorUpdateContractionMutation';
+import { useCreatorProfile } from '../../../../../utils/hooks/query/useCreatorProfile';
+import terms from '../../Dashboard/source/contractTerms';
 import ContractionTextDialog from './sub/ContractionTextDialog';
-import { ContractionDataType } from '../StartGuideCard';
 
 const useStyles = makeStyles(theme => ({
   container: { textAlign: 'center' },
@@ -25,27 +27,15 @@ const useStyles = makeStyles(theme => ({
   textRightSpace: { marginRight: theme.spacing(1) },
   section: { margin: `${theme.spacing(2)}px 0px` },
 }));
-export interface ContractionSectionProps {
-  doReRequest: () => void;
-  contractionData: ContractionDataType;
-  handleSuccess: () => void;
-}
-export default function ContractionSection({
-  doReRequest,
-  contractionData,
-  handleSuccess,
-}: ContractionSectionProps): JSX.Element {
+
+export default function ContractionSection(): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar(); // 계약완료 스낵바를 위해
+  const profile = useCreatorProfile();
+
   // ****************************************
   // 계약 정보 업데이트 요청
-  const contractionPatch = usePatchRequest(
-    '/creator', // 계약정보 업데이트
-    () => {
-      doReRequest();
-      // 성공 스낵 오픈
-      handleSuccess();
-    },
-  );
+  const contractionPatch = useCreatorUpdateContractionMutation();
 
   // ****************************************
   // 계약 정보 창
@@ -83,7 +73,7 @@ export default function ContractionSection({
         </Typography>
       </div>
 
-      {contractionData.creatorContractionAgreement === 1 ? (
+      {profile.data?.creatorContractionAgreement === 1 ? (
         <div className={classnames(classes.container, classes.section)}>
           <CheckCircleOutline style={{ fontSize: 48 * 2 }} color="primary" />
           <Typography className={classes.bold}>이용 동의가 완료된 상태입니다!</Typography>
@@ -122,23 +112,35 @@ export default function ContractionSection({
               onClick={(): void => {
                 if (contractionList.every(row => row === true)) {
                   // 크리에이터 계약정보 patch 요청
-                  contractionPatch.doPatchRequest({ type: 'contraction' });
+                  contractionPatch
+                    .mutateAsync({ type: 'contraction' })
+                    // 성공 스낵 오픈
+                    .then(() =>
+                      enqueueSnackbar('성공적으로 이용동의가 완료되었습니다.', {
+                        variant: 'success',
+                      }),
+                    )
+                    .catch(() =>
+                      enqueueSnackbar(
+                        '이용동의 도중 오류가 발생했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+                        { variant: 'error' },
+                      ),
+                    );
                 }
               }}
               disabled={
-                !contractionList.every(row => row === true) || Boolean(contractionPatch.loading)
+                !contractionList.every(row => row === true) || Boolean(contractionPatch.isLoading)
               }
             >
               이용동의완료
             </Button>
-
             <Typography>완료하셨다면 [다음] 버튼을 눌러, 배너 오버레이를 설정해보세요!</Typography>
           </div>
         </>
       )}
 
       {/* 계약 내용 보기 다이얼로그 */}
-      {!contractionData.creatorContractionAgreement && (
+      {!profile.data?.creatorContractionAgreement && (
         <ContractionTextDialog
           open={contractionTextDialog.open}
           onClose={contractionTextDialog.handleClose}

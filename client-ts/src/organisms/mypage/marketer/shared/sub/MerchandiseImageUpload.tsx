@@ -3,7 +3,7 @@ import { Button, Chip, Dialog, makeStyles, Typography } from '@material-ui/core'
 import { useRef, useState } from 'react';
 import * as React from 'react';
 import { useDialog } from '../../../../../utils/hooks';
-import { MerchandiseImage } from '../../adManage/interface';
+import { MerchandiseImage } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 const useStyles = makeStyles(theme => ({
   uploadImageList: {

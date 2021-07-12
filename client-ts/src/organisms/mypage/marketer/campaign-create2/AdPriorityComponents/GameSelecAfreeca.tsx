@@ -1,22 +1,21 @@
-import { useEffect, useState } from 'react';
-import * as React from 'react';
-import classnames from 'classnames';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  Grid,
-  CircularProgress,
-  Typography,
-  Divider,
+  Button,
   Chip,
+  CircularProgress,
+  Collapse,
+  Divider,
+  Grid,
   List,
   ListItem,
-  Collapse,
-  Button,
+  Typography,
 } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { CheckCircle, ExpandMore } from '@material-ui/icons';
-import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
-
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
+import classnames from 'classnames';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { AfreecaCategory, useGames } from '../../../../../utils/hooks/query/useGames';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,12 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   selected: { color: theme.palette.primary.main },
 }));
 
-interface AfreecaCategory {
-  categoryId: string;
-  categoryNameKr: string;
-  isSub: boolean;
-  parentCategoryId: string;
-}
 interface GameSelectProps {
   state: CampaignCreateInterface;
   dispatch: React.Dispatch<CampaignCreateAction>;
@@ -61,7 +54,7 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
 
   // **********************************************************
   // 게임데이터 로딩 및 클릭 핸들러
-  const gamesData = useGetRequest<null, AfreecaCategory[]>('/games');
+  const gamesData = useGames();
 
   function handleGameClick(game: string): void {
     if (state.selectedGames.includes(game)) {
@@ -132,12 +125,12 @@ const GameSelectAfreeca = (props: GameSelectProps): JSX.Element => {
       </Grid>
 
       <Grid item xs={12}>
-        {gamesData.loading && (
+        {gamesData.isLoading && (
           <div style={{ padding: 72, textAlign: 'center' }}>
             <CircularProgress size={100} disableShrink />
           </div>
         )}
-        {!gamesData.loading && gamesData.data && (
+        {!gamesData.isLoading && gamesData.data && (
           <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
             <List
               style={{

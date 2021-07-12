@@ -1,44 +1,46 @@
-import { Link } from 'react-router-dom';
-// @material-ui/core components
-import Badge from '@material-ui/core/Badge';
-// @material-ui/icons
-import Person from '@material-ui/icons/Person';
-import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
-import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
-import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
-import NightsStayIcon from '@material-ui/icons/NightsStay';
 // core components
 import {
+  Avatar,
   Divider,
+  IconButton,
   List,
   ListItem,
-  Popover,
-  Avatar,
   ListItemText,
-  IconButton,
+  Popover,
   Tooltip,
 } from '@material-ui/core';
-import useTheme from '@material-ui/core/styles/useTheme';
+// @material-ui/core components
+import Badge from '@material-ui/core/Badge';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { OnadTheme } from '../../../../../theme';
-import { MarketerInfo } from '../../../marketer/office/interface';
+import useTheme from '@material-ui/core/styles/useTheme';
+import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import NightsStayIcon from '@material-ui/icons/NightsStay';
+// @material-ui/icons
+import Person from '@material-ui/icons/Person';
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
+import { Link } from 'react-router-dom';
+import CenterLoading from '../../../../../atoms/Loading/CenterLoading';
 import history from '../../../../../history';
 import { useMypageStore } from '../../../../../store/mypageStore';
+import { OnadTheme } from '../../../../../theme';
+import { useUpdateNoticeReadFlagMutation } from '../../../../../utils/hooks/mutation/useUpdateNoticeReadFlagMutation';
+import { useMarketerProfile } from '../../../../../utils/hooks/query/useMarketerProfile';
+import { useNoticeReadFlag } from '../../../../../utils/hooks/query/useNoticeReadFlag';
 
 const useStyles = makeStyles(theme => ({
   container: { width: 280 },
   icon: { marginRight: theme.spacing(2) },
 }));
 export interface MarketerPopoverProps {
-  userData: MarketerInfo;
   handleLogoutClick: () => void;
-  noticeReadFlagGet: UseGetRequestObject<{ noticeReadState: number }>;
-  doNoticePatchRequest: () => void;
 }
 export default function MarketerPopover(props: MarketerPopoverProps): JSX.Element {
-  const { userData, handleLogoutClick, noticeReadFlagGet, doNoticePatchRequest } = props;
+  const { handleLogoutClick } = props;
 
+  const marketerInfo = useMarketerProfile();
+  const noticeReadFlag = useNoticeReadFlag();
+  const noticeReadFlagPatch = useUpdateNoticeReadFlagMutation();
   const userMenuAnchor = useMypageStore(x => x.userMenuAnchor);
   const handleUserMenuClose = useMypageStore(x => x.handleUserMenuClose);
 
@@ -63,20 +65,37 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
       <div className={classes.container}>
         {/* 유저 정보 */}
         <List>
-          <ListItem style={{ display: 'flex', alignItems: 'center' }}>
-            <Tooltip title="변경하러가기" arrow>
-              <IconButton onClick={(): void => history.push('/mypage/marketer/user')}>
-                <Avatar src={userData.profileImage} />
-              </IconButton>
-            </Tooltip>
-            <ListItemText primary={userData.marketerName} secondary={userData.marketerMail} />
-          </ListItem>
+          {marketerInfo.isLoading && <CenterLoading height={50} />}
+          {!marketerInfo.isLoading && marketerInfo.data && (
+            <ListItem style={{ display: 'flex', alignItems: 'center' }}>
+              <Tooltip title="변경하러가기" arrow>
+                <IconButton
+                  onClick={(): void => {
+                    history.push('/mypage/marketer/user');
+                    handleUserMenuClose();
+                  }}
+                >
+                  <Avatar src={marketerInfo.data.profileImage} />
+                </IconButton>
+              </Tooltip>
+              <ListItemText
+                primary={marketerInfo.data.marketerName}
+                secondary={marketerInfo.data.marketerMail}
+              />
+            </ListItem>
+          )}
         </List>
         <Divider />
 
         {/* 설정 */}
         <List>
-          <ListItem button aria-label="User" to="/mypage/marketer/user" component={Link}>
+          <ListItem
+            button
+            aria-label="User"
+            to="/mypage/marketer/user"
+            component={Link}
+            onClick={() => handleUserMenuClose()}
+          >
             <Person color="action" className={classes.icon} />
             <ListItemText primary="내 정보" />
           </ListItem>
@@ -86,14 +105,15 @@ export default function MarketerPopover(props: MarketerPopoverProps): JSX.Elemen
             to="/mypage/marketer/notice"
             component={Link}
             onClick={(): void => {
-              if (!noticeReadFlagGet.loading && noticeReadFlagGet.data) {
-                doNoticePatchRequest();
+              if (!noticeReadFlag.isLoading && !noticeReadFlag.data?.noticeReadState) {
+                noticeReadFlagPatch.mutate();
               }
+              handleUserMenuClose();
             }}
           >
-            {!noticeReadFlagGet.loading &&
-            noticeReadFlagGet.data &&
-            noticeReadFlagGet.data.noticeReadState === 0 ? (
+            {!noticeReadFlag.isLoading &&
+            noticeReadFlag.data &&
+            noticeReadFlag.data.noticeReadState === 0 ? (
               <Badge variant="dot" color="primary" className={classes.icon}>
                 <SpeakerNotes color="action" />
               </Badge>

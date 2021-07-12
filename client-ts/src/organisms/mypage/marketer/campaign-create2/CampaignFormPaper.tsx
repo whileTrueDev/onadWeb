@@ -1,33 +1,30 @@
-import * as React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-
 import {
-  Typography,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  Paper,
+  Typography,
 } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import { useQueryClient } from 'react-query';
+import useDialog from '../../../../utils/hooks/useDialog';
+import BannerUploadDialog from '../shared/BannerUploadDialog';
+import MerchandiseUploadDialog from '../shared/MerchandiseUploadDialog';
+import UrlUploadDialog from '../shared/UrlUploadDialog';
+import InputDescription from './CampaignFormComponents/InputDescription';
 import InputName from './CampaignFormComponents/InputName';
 import SelectBanner from './CampaignFormComponents/SelectBanner';
-import SelectLandingUrl from './CampaignFormComponents/SelectLandingUrl';
-import InputDescription from './CampaignFormComponents/InputDescription';
 import SelectBudget from './CampaignFormComponents/SelectBudget';
 import SelectDateTerm from './CampaignFormComponents/SelectDateTerm';
-import SelectTime from './CampaignFormComponents/SelectTime';
-
-import BannerUploadDialog from '../shared/BannerUploadDialog';
-import UrlUploadDialog from '../shared/UrlUploadDialog';
-import CampaignCreateStepLayout from './shared/StepLayout';
-import ButtonSet from './shared/ButtonSet';
-
-import useDialog from '../../../../utils/hooks/useDialog';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { CampaignCreateAction, CampaignCreateInterface } from './reducers/campaignCreate.reducer';
+import SelectLandingUrl from './CampaignFormComponents/SelectLandingUrl';
 import SelectMerchandise from './CampaignFormComponents/SelectMerchandise';
-import MerchandiseUploadDialog from '../shared/MerchandiseUploadDialog';
+import SelectTime from './CampaignFormComponents/SelectTime';
+import { CampaignCreateAction, CampaignCreateInterface } from './reducers/campaignCreate.reducer';
+import ButtonSet from './shared/ButtonSet';
+import CampaignCreateStepLayout from './shared/StepLayout';
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -71,11 +68,8 @@ function CampaignFormPaper({
   step,
   handleBack,
 }: CampaignFormPaperProps): JSX.Element {
+  const queryClient = useQueryClient();
   const classes = useStyles();
-
-  const landingUrlData = useGetRequest('/marketer/landing-url/list');
-  const bannerData = useGetRequest('/marketer/banner/list/active');
-  const merchandiseData = useGetRequest('/marketer/merchandises', { onlyNotConnected: true });
 
   const bannerUploadDialog = useDialog();
   const landingUrlUploadDialog = useDialog();
@@ -90,7 +84,6 @@ function CampaignFormPaper({
       title: '송출 배너 선택',
       component: (
         <SelectBanner
-          bannerData={bannerData}
           dispatch={dispatch}
           handleDialogOpen={bannerUploadDialog.handleOpen}
           step={step}
@@ -104,7 +97,6 @@ function CampaignFormPaper({
           state={state}
           dispatch={dispatch}
           handleDialogOpen={landingUrlUploadDialog.handleOpen}
-          landingUrlData={landingUrlData}
         />
       ),
     },
@@ -115,7 +107,6 @@ function CampaignFormPaper({
           state={state}
           dispatch={dispatch}
           handleDialogOpen={merchandiseUploadDialog.handleOpen}
-          merchandiseData={merchandiseData}
         />
       ),
     },
@@ -166,24 +157,18 @@ function CampaignFormPaper({
       <ButtonSet type="submit" handleBack={handleBack} nextButtonOpen disabled={state.loading} />
 
       {/* 배너 생성 다이얼로그 */}
-      <BannerUploadDialog
-        open={bannerUploadDialog.open}
-        onClose={bannerUploadDialog.handleClose}
-        recallRequest={bannerData.doGetRequest} // 배너 데이터 재요청
-      />
+      <BannerUploadDialog open={bannerUploadDialog.open} onClose={bannerUploadDialog.handleClose} />
 
       {/* 랜딩페이지URL 생성 다이얼로그 */}
       <UrlUploadDialog
         open={landingUrlUploadDialog.open}
         handleClose={landingUrlUploadDialog.handleClose}
-        recallRequest={landingUrlData.doGetRequest}
       />
 
       {/* 상품 생성 다이얼로그 */}
       <MerchandiseUploadDialog
         open={merchandiseUploadDialog.open}
         onClose={merchandiseUploadDialog.handleClose}
-        onSuccess={merchandiseData.doGetRequest}
       />
     </CampaignCreateStepLayout>
   );

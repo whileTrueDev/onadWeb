@@ -3,11 +3,11 @@ import dayjs from 'dayjs';
 import { Paper, TablePagination, Typography } from '@material-ui/core';
 import MaterialTable from '../../../../atoms/Table/MaterialTable';
 import { WithdrawalDataType } from './WithdrawalData.type';
+import { useCreatorIncomeWithdrawal } from '../../../../utils/hooks/query/useCreatorIncomeWithdrawal';
 
-interface WithdrawalCardProps {
-  withdrawalData: WithdrawalDataType[];
-}
-function Mypage({ withdrawalData }: WithdrawalCardProps): JSX.Element {
+function Mypage(): JSX.Element {
+  // 출금 내역 데이터
+  const withdrawal = useCreatorIncomeWithdrawal();
   const [page, setPage] = useState(0);
   return (
     <Paper style={{ padding: 32, minHeight: 400, marginTop: 8 }}>
@@ -26,7 +26,8 @@ function Mypage({ withdrawalData }: WithdrawalCardProps): JSX.Element {
             lookup: { 1: '완료됨👌', 0: '정산대기⏰' },
           },
         ]}
-        data={withdrawalData}
+        isLoading={withdrawal.isLoading}
+        data={withdrawal.data ? withdrawal.data : []}
         style={{ boxShadow: 'none' }}
         components={{
           // eslint-disable-next-line react/display-name

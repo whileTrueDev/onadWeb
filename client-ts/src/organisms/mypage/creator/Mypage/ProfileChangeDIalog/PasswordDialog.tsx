@@ -3,9 +3,9 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../../config';
-import axiosInstance from '../../../../../utils/axios';
-import { useEventTargetValue, usePatchRequest, useToggle } from '../../../../../utils/hooks';
+import { useEventTargetValue, useToggle } from '../../../../../utils/hooks';
+import { useCreatorCheckPasswordMutation } from '../../../../../utils/hooks/mutation/useCreatorCheckPasswordMutation';
+import { useCreatorUpdatePasswordMutation } from '../../../../../utils/hooks/mutation/useCreatorUpdatePasswordMutation';
 import passwordRegex from '../../../../../utils/inputs/regex/password.regex';
 
 export interface PasswordDialogProps {
@@ -36,9 +36,10 @@ export default function PasswordDialog({
   // ***************************************************
   // 비밀번호 현재 체크
   const [passwordCheckFail, setPasswordCheckFail] = useState<string>('');
+  const _passwordCheck = useCreatorCheckPasswordMutation();
   function passwordCheck(cb: any): void {
-    axiosInstance
-      .post(`${HOST}/creator/password`, { password: password.value })
+    _passwordCheck
+      .mutateAsync({ password: password.value })
       .then(res => {
         if (res.data) cb();
         else setPasswordCheckFail('비밀번호가 올바르지 않습니다.');
@@ -76,9 +77,10 @@ export default function PasswordDialog({
   // ***************************************************
   // 비밀번호 변경 요청
   const [changeFailError, setChangeFailError] = useState<string>('');
-  const { doPatchRequest } = usePatchRequest('/creator/password');
+  const updatePasswordMutation = useCreatorUpdatePasswordMutation();
   function handleSubmit(): void {
-    doPatchRequest({ password: newPw.value })
+    updatePasswordMutation
+      .mutateAsync({ password: newPw.value })
       .then(res => {
         if (res.data > 0) {
           // 수정된 행 숫자 (affected Rows)

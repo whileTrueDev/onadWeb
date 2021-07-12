@@ -39,7 +39,21 @@ export class LandingUrlService {
     return false;
   }
 
-  // * landingUrl 조회
+  // * landing Url 조회
+  async findLandingUrls(marketerId: string): Promise<Array<{ id: string } & LinkRegistered>> {
+    const urls = await this.landingUrlRepo.find({
+      where: { marketerId },
+      order: { regiDate: 'DESC' },
+    });
+
+    return urls.map(url => ({
+      ...url,
+      id: url.linkId,
+      links: JSON.parse(url.links),
+    }));
+  }
+
+  // * landingUrl 조회 - 페이지네이션
   async findLandingUrlsPaginated(
     marketerId: string,
     dto: Partial<PaginationDto>,

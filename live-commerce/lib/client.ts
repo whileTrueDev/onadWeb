@@ -5,7 +5,7 @@ let idArray: Array<null|string> = [];
 const rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 // const ICON_ARRAY = ['crown', 'second', 'third'];
-let setDate = new Date("2021-06-29T11:46:00+0900");
+let setDate = new Date("2021-07-03T14:00:00+0900");
 
 let messageHtml: string;
 const messageArray: string[] = [];
@@ -13,14 +13,16 @@ let idx = 0;
 
 // 하단 marquee 영역 이벤트
 setInterval(() => {
-  if (idx >= idArray.length) {
-    idx = 0;
+  if($('.bottom-area').css({ display: 'none' })) {
+    $('.bottom-area').css({ display: 'flex' })
   }
-  if ($('.bottom-area-text').css({ display: 'none' }) && idArray.length && idArray[idx]) {
-    $('.bottom-area-text').text(`${idArray[idx]}`)
-    $('.bottom-area-text').css({ display: 'flex' });
-    idx += 1;
-  } else { $('.purchase-customer-id').html('<p></p>'); }
+  if (idx >= idArray.length) {
+      idx = 0;
+    }
+  if (idArray.length){
+  $('.bottom-area-text').text(`${idArray[idx]}`)
+  $('.bottom-area-text').css({ display: 'flex' });
+  idx += 1;}
 }, 10000);
 
 // 우측상단 응원문구 이벤트
@@ -59,42 +61,6 @@ function getOS(): string|null {
 
   return os;
 }
-
-// function dailyMissionTimer(duration:number) {
-    
-//   let timer = duration * 60;
-//   let hours, minutes, seconds;
-  
-//   const interval = setInterval(function(){
-//       hours	= parseInt(String(timer / 3600), 10);
-//       minutes = parseInt(String(timer / 60 % 60), 10);
-//       seconds = parseInt(String(timer % 60), 10);
-  
-//       hours 	= hours < 10 ? "0" + hours : hours;
-//       minutes = minutes < 10 ? "0" + minutes : minutes;
-//       seconds = seconds < 10 ? "0" + seconds : seconds;
-  
-//       $('#time-hour').text(hours);
-//       $('#time-min').text(minutes);
-//       $('#time-sec').text(seconds);
-//       if (hours === '00' 
-//           && Number(minutes) < 5
-//           && !$('.bottom-timer').attr('class')?.includes('urgent')
-//       ) {
-//         $('.bottom-timer').addClass('urgent')
-//         $('.bottom-left-icon#clock').addClass('urgent')
-//       } else if (hours === '00' 
-//           && Number(minutes) < 10
-//           && !$('.bottom-timer').attr('class')?.includes('warning')
-//       ) {
-//         $('.bottom-timer').addClass('warning')
-//       } 
-//       if (--timer < 0) {
-//           timer = 0;
-//           clearInterval(interval);
-//       }
-//   }, 1000);
-// }
 
 function dailyMissionTimer (){ 
   setInterval(function(){
@@ -207,14 +173,6 @@ socket.on('get live commerce image', (data: ImageData) => {
   }
 });
 
-function compare(a: SinglePurchase, b: SinglePurchase): number {
-  if (a.purchaseNumber > b.purchaseNumber) {
-    return -1;
-  }
-
-  return 1;
-}
-
 socket.on('get top-left ranking', (data: RankingData[]) => {
   const rankingArray = data;
   rankingArray.map((value, index) => {
@@ -269,7 +227,7 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
 //     $('.top-right').css({display:'flex'})
 //     $('.top-right').html(messageArray[0]);
 
-//     messageArray.splice(0, 1)
+//     messageArray.splice(0, 1) 
 //     await setTimeout(() => {
 //         $('.top-right').fadeOut(1000)
 //       }, 10000)
@@ -280,13 +238,16 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
 
 // 하단 메세지 (단순 답변)
 socket.on('get bottom area message', (data: string) => {
-  $('.bottom-area-wrapper').html(`
-  <p class="bottom-area-text" id="bottom-admin">
-    ${data}
-  </p>`).fadeIn(1000);
+  $('.bottom-area').prepend(`
+    <p class="bottom-admin">
+      ${data}
+    </p>
+  `).fadeIn(1000)
+  $('.bottom-area-text').fadeOut(1000)
   setTimeout(() => {
-    $('.bottom-area-text').fadeOut(1000);
-  }, 5000);
+    $('.bottom-admin').remove()
+    $('.bottom-area-text').fadeIn(5000)
+  }, 10000);
 });
 
 // 응원메세지 marquee
@@ -307,17 +268,33 @@ socket.on('clear ranking area', () => {
   $('.ranking-area-inner').html(
     `
     <p class="ranking-text-area" id="rank-0">
-      <span class="ranking-text-area-id">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/crown.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-0">
       </span>
-    </p>
-    <p class="ranking-text-area" id="rank-1">
-      <span class="ranking-text-area-id">
+    </span>
+    <span class="quantity" id="rank-0">
+    </span>
+  </p>
+
+  <p class="ranking-text-area" id="rank-1">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/second.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-1">
       </span>
-    </p>
-    <p class="ranking-text-area" id="rank-2">
-      <span class="ranking-text-area-id">
+    </span>
+    <span class="quantity" id="rank-1">
+    </span>
+  </p>
+  <p class="ranking-text-area" id="rank-2">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/third.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-2">
       </span>
-    </p>
+    </span>
+    <span class="quantity" id="rank-2">
+    </span>
+  </p>
   `
   );
   rankingArray.length = 0;
@@ -365,9 +342,9 @@ socket.on('clear screen', () => {
   $(document.body).fadeOut(1000);
 });
 
-socket.on('show virtual ad to client', async () => {
+socket.on('show virtual ad to client', () => {
   $('#virtual-ad-img').attr('src', "/public/images/yori-virtual-ad.gif")
-  await setTimeout(() => {
+  setTimeout(() => {
     $('#virtual-ad-img').attr('src', "/public/images/invisible.png")
   }, 8980);
 });
@@ -382,6 +359,10 @@ socket.on('get current quantity', (currentQuantity:number) => {
 
 socket.on('d-day from server', (date:string) => {
   setDate = new Date(date);
+})
+
+socket.on('refresh signal', () => {
+  location.reload();
 })
 
 export { };

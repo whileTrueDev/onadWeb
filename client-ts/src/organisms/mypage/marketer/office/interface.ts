@@ -1,29 +1,3 @@
-export interface BusinessInterface {
-  marketerBusinessRegNum: string;
-  marketerBusinessRegSrc: string;
-}
-
-export interface MarketerInfo {
-  marketerId: string;
-  marketerName: string;
-  marketerMail: string;
-  marketerPhoneNum: string;
-  marketerBusinessRegNum: string;
-  marketerContraction: number;
-  platformType: number;
-  profileImage?: string;
-}
-
-export interface AccountInterface {
-  marketerAccountNumber: string;
-  accountHolder: string;
-}
-
-export interface CashInterface {
-  cashAmount: string;
-  date: string;
-}
-
 export interface StateInterface {
   currentCash: number;
   selectValue: string;
@@ -132,29 +106,4 @@ export interface VbankInterface {
   vbankName: string;
   vbanDate: string;
   vbankAmount: string;
-}
-
-export interface MarketerSalesIncome {
-  id: number;
-  marketerId: string;
-  totalIncome: number;
-  receivable: number;
-  totalDeliveryFee: number;
-  receivableDeliveryFee: number;
-  createDate: string;
-}
-export interface MarketerSettlement {
-  id: number;
-  marketerId: string;
-  name: string;
-  identificationNumber: string;
-  bankName: string;
-  bankAccountOwner: string;
-  bankAccountNumber: string;
-  state: number;
-  businessmanFlag: boolean;
-  identificationImgSrc: string;
-  bankAccountImgSrc: string;
-  createDate: string;
-  updateDate: string;
 }

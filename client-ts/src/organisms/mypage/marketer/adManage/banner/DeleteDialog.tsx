@@ -1,12 +1,13 @@
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Tooltip, Grid, Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { BannerDataInterface } from '../interface';
-import openKakaoChat from '../../../../../utils/openKakaoChat';
+import { useSnackbar } from 'notistack';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import { useMarketerDeleteBannerMutation } from '../../../../../utils/hooks/mutation/useMarketerDeleteBannerMutation';
+import { useMarketerBannerConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerBannerConnectedCampaigns';
+import { MarketerBanner } from '../../../../../utils/hooks/query/useMarketerBannerList';
+import openKakaoChat from '../../../../../utils/openKakaoChat';
 
 const useStyles = makeStyles(() => ({
   center: {
@@ -18,24 +19,20 @@ const useStyles = makeStyles(() => ({
 
 interface DeleteDialogProps {
   open: boolean;
-  selectedBanner: BannerDataInterface;
+  selectedBanner: MarketerBanner;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess?: () => void;
 }
 
 const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { open, selectedBanner, handleClose, recallRequest } = props;
+  const { open, selectedBanner, handleClose, onSuccess } = props;
 
-  const { doDeleteRequest } = useDeleteRequest<{ bannerId: string }, any[]>('/marketer/banner');
+  const deleteBannerMutation = useMarketerDeleteBannerMutation();
 
-  const connectedCampaign = useGetRequest<{ bannerId: string }, { campaignId: string }[]>(
-    '/marketer/banner/campaigns',
-    {
-      bannerId: selectedBanner.bannerId,
-    },
-  );
+  const connectedCampaign = useMarketerBannerConnectedCampaigns(selectedBanner.bannerId);
 
   return (
     <Dialog
@@ -46,7 +43,7 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length > 0 && (
               <Tooltip
@@ -59,18 +56,30 @@ const DeleteDialog = (props: DeleteDialogProps): JSX.Element => {
                 </div>
               </Tooltip>
             )}
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length === 0 && (
               <Button
                 variant="contained"
                 color="primary"
+                disabled={deleteBannerMutation.isLoading}
                 onClick={(): void => {
-                  doDeleteRequest({ bannerId: selectedBanner.bannerId });
-                  setTimeout(() => {
-                    handleClose();
-                    recallRequest();
-                  }, 500);
+                  deleteBannerMutation
+                    .mutateAsync({ bannerId: selectedBanner.bannerId })
+                    .then(() => {
+                      if (onSuccess) onSuccess();
+                      enqueueSnackbar('배너 삭제 완료되었습니다.', {
+                        variant: 'success',
+                        preventDuplicate: false,
+                      });
+                      handleClose();
+                    })
+                    .catch(() => {
+                      enqueueSnackbar(
+                        '배너 삭제에 실패했습니다. 문제가 지속되는 경우 support@onad.io로 문의바랍니다.',
+                        { variant: 'error' },
+                      );
+                    });
                 }}
               >
                 확인
