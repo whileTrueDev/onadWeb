@@ -92,6 +92,9 @@ const OnadIndex = (): JSX.Element => {
                 <Route path="/mypage/marketer" component={MarketerDashboard} />
               </Suspense>
               <Route exact path="/marketer/charge" component={ChargeDialog} />
+
+              {/* 빌드시 자동으로 제거됨 */}
+              <ReactQueryDevtools />
             </SnackbarProvider>
           </ThemeProvider>
         </QueryClientProvider>
