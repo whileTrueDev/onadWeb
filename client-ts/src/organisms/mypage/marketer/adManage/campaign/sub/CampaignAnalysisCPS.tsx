@@ -1,23 +1,18 @@
+import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { CloseOutlined } from '@material-ui/icons';
 import classnames from 'classnames';
 import { useState } from 'react';
-import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
 import { Doughnut } from 'react-chartjs-2';
-import { CloseOutlined } from '@material-ui/icons';
-import CircularProgress from '../../../../../../atoms/Progress/CircularProgress';
-import { useGetRequest } from '../../../../../../utils/hooks';
-import {
-  CpsAnalysisReportData,
-  CPSChartInterface,
-  CreatorDataCPSInterface,
-  GeoInterface,
-  HeatmapInterface,
-} from '../../../dashboard/interfaces';
-import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
 import ClickHeatmap from '../../../../../../atoms/Chart/heatmap/ClickHeatmap';
-import GeoReport from './report/GeoReport';
+import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
+import CircularProgress from '../../../../../../atoms/Progress/CircularProgress';
 import { OnadTheme } from '../../../../../../theme';
-import CreatorsReportDetail from './report/CreatorsReportDetail';
+import { useMarketerCampaignAnalysisCPS } from '../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCPS';
+import { useMarketerCampaignAnalysisCPSChart } from '../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCPSChart';
+import { CreatorDataCPSInterface } from '../../../dashboard/interfaces';
 import CreatorsReportCPS from './report/CreatorsReportCPS';
+import CreatorsReportDetail from './report/CreatorsReportDetail';
+import GeoReport from './report/GeoReport';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   container: {
@@ -49,31 +44,8 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
   const classes = useStyles();
   const theme = useTheme();
 
-  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[]>(
-    '/marketer/geo/campaign',
-    { campaignId },
-  );
-
-  const reportData = useGetRequest<{ campaignId: string }, CpsAnalysisReportData>(
-    '/marketer/campaign/analysis/cps',
-    { campaignId },
-  );
-
-  // eslint-disable-next-line max-len
-  const chartData = useGetRequest<{ campaignId: string }, CPSChartInterface[]>(
-    '/marketer/campaign/analysis/cps/chart',
-    { campaignId },
-  );
-
-  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataCPSInterface[]>(
-    '/marketer/campaign/analysis/cps/creators',
-    { campaignId },
-  );
-
-  const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[]>(
-    '/marketer/campaign/analysis/heatmap',
-    { campaignId },
-  );
+  const reportData = useMarketerCampaignAnalysisCPS(campaignId);
+  const chartData = useMarketerCampaignAnalysisCPSChart(campaignId);
 
   function transformToNumber(s: any): number {
     const num = Number(s);
@@ -98,11 +70,7 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
       </Typography>
 
       {/* 로딩중 화면 */}
-      {reportData.loading ||
-      chartData.loading ||
-      ipToGeoData.loading ||
-      creatorsData.loading ||
-      clickData.loading ? (
+      {reportData.isLoading || chartData.isLoading ? (
         <CircularProgress />
       ) : (
         <div>
@@ -197,38 +165,29 @@ export default function CampaignAnalysisCPS({ campaignId }: CampaignAnalysisCPSP
               </article>
 
               {/* 일별 클릭 수 */}
-              {clickData.data && (
-                <article className={classes.article}>
-                  <Typography className={classes.bold}>일별 클릭 수</Typography>
-                  <ClickHeatmap data={clickData.data} />
-                </article>
-              )}
+              <article className={classes.article}>
+                <Typography className={classes.bold}>일별 클릭 수</Typography>
+                <ClickHeatmap campaignId={campaignId} />
+              </article>
 
               {/* 지역별 클릭 수 */}
-              {ipToGeoData.data && (
-                <article>
-                  <Typography className={classes.bold}>지역별 클릭 수</Typography>
-                  <article className={classes.chartContainer}>
-                    <GeoReport ipToGeoData={ipToGeoData} style={{ width: '100%' }} />
-                  </article>
+              <article>
+                <Typography className={classes.bold}>지역별 클릭 수</Typography>
+                <article className={classes.chartContainer}>
+                  <GeoReport campaignId={campaignId} style={{ width: '100%' }} />
                 </article>
-              )}
+              </article>
 
               {/* 광고 송출 방송인 목록 */}
-              {creatorsData.data && (
-                <article className={classes.article}>
-                  <Typography className={classes.bold}>상품을 판매한 방송인</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    방송인 클릭시 방송정보를 볼 수 있습니다.
-                  </Typography>
-                  <div className={classes.chartContainerNoFlex}>
-                    <CreatorsReportCPS
-                      creatorsData={creatorsData}
-                      onRowClick={handleSelectCreator}
-                    />
-                  </div>
-                </article>
-              )}
+              <article className={classes.article}>
+                <Typography className={classes.bold}>상품을 판매한 방송인</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  방송인 클릭시 방송정보를 볼 수 있습니다.
+                </Typography>
+                <div className={classes.chartContainerNoFlex}>
+                  <CreatorsReportCPS campaignId={campaignId} onRowClick={handleSelectCreator} />
+                </div>
+              </article>
 
               {/* 광고 송출 방송인 목록 중 특정 방송인 정보  */}
               {selectedCreator && (

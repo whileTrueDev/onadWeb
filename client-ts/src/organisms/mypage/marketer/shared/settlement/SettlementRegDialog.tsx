@@ -1,35 +1,30 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { usePatchRequest, usePostRequest } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
-import { MarketerSettlement } from '../../office/interface';
-import SettlementRegForm, { SettlementRegDTO } from './SettlementRegForm';
+import {
+  SettlementRegDTO,
+  useMarketerCreateSettlementMutation,
+} from '../../../../../utils/hooks/mutation/useMarketerCreateSettlementMutation';
+import { useMarketerUpdateSettlementMutation } from '../../../../../utils/hooks/mutation/useMarketerUpdateSettlementMutation';
+import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
+import SettlementRegForm from './SettlementRegForm';
 
 export interface SettlementRegDialogProps {
   open: boolean;
   onClose: () => void;
-  settlementData?: UseGetRequestObject<MarketerSettlement>;
 }
 export default function SettlementRegDialog({
   open,
   onClose,
-  settlementData,
 }: SettlementRegDialogProps): JSX.Element {
+  // 판매대금 출금정산을 위한 정산 등록 정보 조회
+  const settlement = useMarketerSettlement();
+
   // * 스낵바
   const { enqueueSnackbar } = useSnackbar();
-  const settlementPost = usePostRequest('/marketer/settlement');
-  const settlementPatch = usePatchRequest('/marketer/settlement');
-
-  const [loading, setLoading] = useState<boolean>(false);
-  function handleLoadingStart(): void {
-    setLoading(true);
-  }
-  function handleLoadingEnd(): void {
-    setLoading(false);
-  }
+  const settlementPost = useMarketerCreateSettlementMutation();
+  const settlementPatch = useMarketerUpdateSettlementMutation();
 
   // eslint-disable-next-line consistent-return
   function handleSubmit(
@@ -70,10 +65,8 @@ export default function SettlementRegDialog({
       return enqueueSnackbar('통장 사본을 업로드해주세요.', { variant: 'error' });
 
     const onSuccess = (res: any): void => {
-      handleLoadingEnd();
-      if (res.data === 1) {
+      if (res.data) {
         enqueueSnackbar('정산 등록이 완료되었습니다.', { variant: 'success' });
-        if (settlementData) settlementData.doGetRequest();
         onClose();
       } else {
         enqueueSnackbar(
@@ -84,7 +77,6 @@ export default function SettlementRegDialog({
     };
 
     const onFail = (err: any): void => {
-      handleLoadingEnd();
       enqueueSnackbar(
         '정산 등록중 오류가 발생했습니다. 문제가 지속되는 경우 support@onad.io로 문의 바랍니다.',
         { variant: 'error' },
@@ -92,17 +84,16 @@ export default function SettlementRegDialog({
       console.error(err);
     };
 
-    handleLoadingStart();
     if (reqType && reqType === 'patch') {
-      return settlementPatch.doPatchRequest(data).then(onSuccess).catch(onFail);
+      return settlementPatch.mutateAsync(data).then(onSuccess).catch(onFail);
     }
-    return settlementPost.doPostRequest(data).then(onSuccess).catch(onFail);
+    return settlementPost.mutateAsync(data).then(onSuccess).catch(onFail);
   }
 
   return (
     <>
       <CustomDialog fullWidth maxWidth="sm" open={open} onClose={onClose} title="정산 등록">
-        {settlementData?.data && (
+        {settlement?.data && (
           <Alert severity="error">
             <Typography variant="body2">
               * 정산 등록을 수정하면 다시 검수과정을 거치게 됩니다.
@@ -116,11 +107,10 @@ export default function SettlementRegDialog({
         <SettlementRegForm
           onSubmit={handleSubmit}
           onCancle={onClose}
-          loading={loading}
-          settlementData={settlementData}
+          loading={settlementPatch.isLoading || settlementPost.isLoading}
         />
 
-        {(settlementPatch.loading || settlementPost.loading) && <CircularProgress />}
+        {(settlementPatch.isLoading || settlementPost.isLoading) && <CircularProgress />}
       </CustomDialog>
     </>
   );

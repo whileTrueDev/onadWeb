@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import * as React from 'react';
-import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 import {
+  Button,
+  CircularProgress,
   Dialog,
   DialogContent,
-  Button,
-  TextField,
   Divider,
-  Typography,
   IconButton,
-  CircularProgress,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
-import useStyles from '../style/LoginForm.style';
-import axios from '../../../../utils/axios';
-import FindDialog from './FindDialog';
+import classnames from 'classnames';
+import * as React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import OnadLogo from '../../../../atoms/Logo/OnadLogo';
 import HOST from '../../../../config';
 import history from '../../../../history';
-import OnadLogo from '../../../../atoms/Logo/OnadLogo';
+import { useLoginMutation } from '../../../../utils/hooks/mutation/useLoginMutation';
+import { MarketerInfo } from '../../../../utils/hooks/query/useMarketerProfile';
+import useStyles from '../style/LoginForm.style';
+import FindDialog from './FindDialog';
 
 interface Props {
   open: boolean;
@@ -44,17 +45,14 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
+  const loginMutation = useLoginMutation();
   const login = (event: React.SyntheticEvent) => {
     if (event) {
       event.preventDefault();
     }
-    setLoading(true);
-    axios
-      .post(`${HOST}/login`, { userid, passwd, type: 'marketer' })
+    loginMutation
+      .mutateAsync({ userid, passwd, type: 'marketer' })
       .then(res => {
-        setLoading(false);
         if (res.data[0]) {
           setPasswd('');
           console.log(res.data);
@@ -63,7 +61,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
             handleClose();
           }
         } else {
-          const userData = res.data[1];
+          const userData = res.data[1] as MarketerInfo;
           if (userData.temporaryLogin) {
             handleClose();
             history.push('/');
@@ -74,11 +72,13 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           }
         }
       })
-      .catch(reason => {
-        setLoading(false);
-        console.log(reason);
+      .catch(err => {
+        console.log(err);
         setPasswd(''); // 비밀번호 초기화
-        alert('회원이 아닙니다.');
+        const message = err.response?.data
+          ? err.response?.data.message
+          : '아이디 또는 비밀번호가 올바르지 못합니다.';
+        alert(message);
       });
   };
 
@@ -211,7 +211,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         </div>
       </DialogContent>
 
-      {loading && (
+      {loginMutation.isLoading && (
         <div className={classes.buttonLoading}>
           <CircularProgress />
         </div>

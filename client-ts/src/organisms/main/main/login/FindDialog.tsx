@@ -1,16 +1,18 @@
-import * as React from 'react';
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Button,
   TextField,
 } from '@material-ui/core';
-import style from '../style/FindDialog.style';
-import axios from '../../../../utils/axios';
+import * as React from 'react';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import HOST from '../../../../config';
+import axios from '../../../../utils/axios';
+import { useMarketerUpdateTmpPassword } from '../../../../utils/hooks/mutation/useMarketerUpdateTmpPassword';
+import style from '../style/FindDialog.style';
 
 interface Props {
   dialogType: string;
@@ -74,16 +76,15 @@ function FindDialog({
     }
   };
 
+  const tmpPwMutation = useMarketerUpdateTmpPassword();
   const CheckPasswd = (event: FormType) => {
     event.preventDefault();
     const emailReg =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
-      axios.patch(`${HOST}/marketer/tmp-password`, findContent).then(res => {
-        console.log(res.data);
-        const ans = JSON.parse(res.data);
-        if (ans.error) {
-          alert(ans.message);
+      tmpPwMutation.mutateAsync(findContent).then(res => {
+        if (res.data.error) {
+          alert(res.data.message);
           setFindContent(initialState);
         } else {
           alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');
@@ -111,12 +112,12 @@ function FindDialog({
       return (
         <DialogContent className={classes.contents}>
           <DialogContentText className={classes.contentText}>
-            ONAD에 등록시에 입력하였던 ID와 EMAIL을 입력하세요.
+            ONAD에 등록시에 입력하였던 아이디와 이메일을 입력하세요.
           </DialogContentText>
           <TextField
             required
-            label="ID"
-            helperText="ID을 입력하세요."
+            label="아이디"
+            helperText="비밀번호를 찾을 아이디를 입력하세요."
             margin="dense"
             onChange={onChange}
             name="marketerId"
@@ -125,8 +126,8 @@ function FindDialog({
           />
           <TextField
             required
-            label="EMAIL"
-            helperText="EMAIL을 입력하세요."
+            label="이메일"
+            helperText="가입시 입력한 이메일을 입력하세요."
             margin="dense"
             onChange={onChange}
             name="marketerMail"
@@ -140,12 +141,12 @@ function FindDialog({
     return (
       <DialogContent className={classes.contents}>
         <DialogContentText className={classes.contentText}>
-          ONAD에 등록시에 입력하였던 NAME와 EMAIL을 입력하세요.
+          ONAD에 등록시에 입력하였던 이름와 이메일을 입력하세요.
         </DialogContentText>
         <TextField
           required
-          label="NAME"
-          helperText="이름을 입력하세요."
+          label="이름"
+          helperText="가입시 입력한 이름을 입력하세요."
           margin="dense"
           onChange={onChange}
           name="marketerName"
@@ -154,8 +155,8 @@ function FindDialog({
         />
         <TextField
           required
-          label="EMAIL"
-          helperText="EMAIL을 입력하세요."
+          label="이메일"
+          helperText="가입시 입력한 이메일을 입력하세요."
           margin="dense"
           onChange={onChange}
           name="marketerMail"
@@ -167,12 +168,12 @@ function FindDialog({
   };
 
   return (
-    <Dialog open={findDialogOpen} maxWidth="sm">
-      <DialogTitle>Find ID/PW</DialogTitle>
+    <Dialog open={findDialogOpen} maxWidth="sm" fullWidth>
+      <DialogTitle>아이디/비밀번호 찾기</DialogTitle>
       <form onSubmit={handleSubmit()}>
-        <Content />
+        {tmpPwMutation.isLoading ? <CenterLoading /> : <Content />}
         <DialogActions>
-          <Button type="submit" value="Submit" color="primary">
+          <Button type="submit" value="Submit" color="primary" disabled={tmpPwMutation.isLoading}>
             확인
           </Button>
           <Button color="primary" onClick={handleFindDialogClose}>

@@ -80,14 +80,14 @@ export class CampaignController {
       return this.campaignService.updateCampaignName(
         marketerId,
         dto.campaignId,
-        dto.data as string,
+        dto.data.campaignName,
       );
     }
     if (dto.type === 'budget') {
       return this.campaignService.updateCampaignBudget(
         marketerId,
         dto.campaignId,
-        dto.data as number,
+        dto.data.noBudget ? -1 : Number(dto.data.budget),
       );
     }
     throw new BadRequestException();

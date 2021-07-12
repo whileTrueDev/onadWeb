@@ -1,11 +1,11 @@
 import { Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
-import history from '../../../../history';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import OnadBanner from '../../../../atoms/Banner/OnadBanner';
-import { CurrentBannerRes } from '../CampaignManage/NowBroadCard';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+import history from '../../../../history';
+import { useCreatorBannerActive } from '../../../../utils/hooks/query/useCreatorBannerActive';
 import { Link } from '../CampaignManage/BannerList';
+import RemotePageOpenButton from '../RemotePage/sub/RemotePageOpenButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -51,12 +51,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-interface BannerCardProps {
-  currentBannerData: CurrentBannerRes[];
-  remoteControllerUrlData: UseGetRequestObject<string>;
-}
-function BannerCard({ currentBannerData, remoteControllerUrlData }: BannerCardProps): JSX.Element {
+
+function BannerCard(): JSX.Element {
   const classes = useStyles();
+  const currentBanner = useCreatorBannerActive();
 
   return (
     <Paper className={classes.container}>
@@ -69,12 +67,13 @@ function BannerCard({ currentBannerData, remoteControllerUrlData }: BannerCardPr
 
         {/* 실시간 광고 제어 버튼 */}
         <div className={classes.remoteOpenButtonContainer}>
-          <RemotePageOpenButton remoteControllerUrl={remoteControllerUrlData} />
+          <RemotePageOpenButton />
         </div>
       </div>
 
       <div className={classes.section}>
-        {currentBannerData.length <= 0 && (
+        {currentBanner.isLoading && <CenterLoading />}
+        {currentBanner.data && currentBanner.data.length <= 0 && (
           <div className={classes.area}>
             <div style={{ textAlign: 'center' }}>
               <Typography variant="body1" className={classes.head}>
@@ -86,53 +85,59 @@ function BannerCard({ currentBannerData, remoteControllerUrlData }: BannerCardPr
             </div>
           </div>
         )}
-        {currentBannerData.map(bannerData => (
-          <Grid
-            container
-            spacing={2}
-            key={bannerData.campaignDescription}
-            className={classes.bannerContainer}
-          >
-            <Grid item xs={12} md={6} className={classes.bannerItem}>
-              <OnadBanner src={bannerData.bannerSrc} alt="bannerArea" width="100%" height="100%" />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <Typography variant="body1" gutterBottom>
-                {bannerData.campaignName}
-              </Typography>
-              {bannerData.merchandiseName ? (
-                <Typography
-                  className={classes.bannerLink}
-                  onClick={() => {
-                    if (bannerData.itemSiteUrl) window.open(bannerData.itemSiteUrl, '_blank');
-                  }}
-                >
-                  {bannerData.merchandiseName}
+        {currentBanner.data &&
+          currentBanner.data.map(bannerData => (
+            <Grid
+              container
+              spacing={2}
+              key={bannerData.campaignDescription}
+              className={classes.bannerContainer}
+            >
+              <Grid item xs={12} md={6} className={classes.bannerItem}>
+                <OnadBanner
+                  src={bannerData.bannerSrc}
+                  alt="bannerArea"
+                  width="100%"
+                  height="100%"
+                />
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <Typography variant="body1" gutterBottom>
+                  {bannerData.campaignName}
                 </Typography>
-              ) : (
-                <Typography
-                  variant="body1"
-                  component="a"
-                  className={classes.bannerLink}
-                  onClick={(): void => {
-                    if (JSON.parse(bannerData.links).links) {
-                      window.open(
-                        JSON.parse(bannerData.links).links.find((link: Link) => !!link.primary)
-                          .linkTo,
-                      );
-                    }
-                  }}
-                >
-                  {JSON.parse(bannerData.links).links
-                    ? JSON.parse(bannerData.links).links.find((link: Link) => !!link.primary)
-                        .linkName
-                    : bannerData.campaignName}
-                </Typography>
-              )}
-              <Typography variant="body2">{bannerData.campaignDescription}</Typography>
+                {bannerData.merchandiseName ? (
+                  <Typography
+                    className={classes.bannerLink}
+                    onClick={() => {
+                      if (bannerData.itemSiteUrl) window.open(bannerData.itemSiteUrl, '_blank');
+                    }}
+                  >
+                    {bannerData.merchandiseName}
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body1"
+                    component="a"
+                    className={classes.bannerLink}
+                    onClick={(): void => {
+                      if (JSON.parse(bannerData.links).links) {
+                        window.open(
+                          JSON.parse(bannerData.links).links.find((link: Link) => !!link.primary)
+                            .linkTo,
+                        );
+                      }
+                    }}
+                  >
+                    {JSON.parse(bannerData.links).links
+                      ? JSON.parse(bannerData.links).links.find((link: Link) => !!link.primary)
+                          .linkName
+                      : bannerData.campaignName}
+                  </Typography>
+                )}
+                <Typography variant="body2">{bannerData.campaignDescription}</Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        ))}
+          ))}
       </div>
 
       <div className={classes.right}>

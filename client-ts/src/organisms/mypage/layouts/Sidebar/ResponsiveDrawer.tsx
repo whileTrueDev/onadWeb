@@ -13,6 +13,7 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { drawerWidth } from '../../../../assets/jss/onad';
 import history from '../../../../history';
 import { MypageRoute } from '../../../../pages/mypage/routes';
+import { useMypageStore } from '../../../../store/mypageStore';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -63,12 +64,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ResponsiveDrawerProps {
   routes: MypageRoute[];
-  mobileOpen: boolean;
-  handleDrawerToggle: () => void;
 }
 
 export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Element {
-  const { routes, mobileOpen, handleDrawerToggle } = props;
+  const { routes } = props;
+  const isDrawerOpen = useMypageStore(s => s.isDrawerOpen);
+  const toggleDrawer = useMypageStore(s => s.toggleDrawer);
+
   const classes = useStyles();
 
   // verifies if routeName is the one active (in browser input)
@@ -159,7 +161,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
                 })}
                 button
                 onClick={(): void => {
-                  if (mobileOpen) handleDrawerToggle();
+                  if (isDrawerOpen) toggleDrawer();
                 }}
                 to={route.layout + route.path}
                 component={Link}
@@ -190,8 +192,8 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps): JSX.Elem
           container={container}
           variant="temporary"
           anchor="left"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
+          open={isDrawerOpen}
+          onClose={() => toggleDrawer(false)}
           classes={{
             paper: classes.drawerPaper,
           }}

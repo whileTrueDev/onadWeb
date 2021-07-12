@@ -1,7 +1,7 @@
 import { Button, makeStyles, TextField } from '@material-ui/core';
 import { Add, ArrowDownward, ArrowUpward, Close } from '@material-ui/icons';
 import * as React from 'react';
-import { MerchandiseOption } from '../../adManage/interface';
+import { MerchandiseOption } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 import { SwapableListItemResult } from '../../../../../utils/hooks/useSwappableListItem';
 
 const useStyles = makeStyles(theme => ({

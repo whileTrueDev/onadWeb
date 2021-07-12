@@ -1,33 +1,32 @@
-import { useState } from 'react';
-import * as React from 'react';
-import NumberFormat from 'react-number-format';
 import {
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  InputAdornment,
   Button,
   Divider,
-  MenuItem,
-  TextField,
-  Grid,
-  Paper,
-  Typography,
-  Radio,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
+  Grid,
+  Input,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Radio,
   Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
-import useStyles from './style/RegistForm.style';
-import axios from '../../../utils/axios';
-import SuccessTypo from '../../../atoms/Typography/Success';
-import HOST from '../../../config';
+import * as React from 'react';
+import { useState } from 'react';
+import NumberFormat from 'react-number-format';
 import StaticInput from '../../../atoms/StaticInput';
-import { Props } from './PlatformRegistForm';
-import domains from '../../../utils/inputs/email-domains';
+import SuccessTypo from '../../../atoms/Typography/Success';
+import { useCheckMarketerIdMutation } from '../../../utils/hooks/mutation/useCheckMarketerIdMutation';
 import areaCodes, { MenuProps } from '../../../utils/inputs/area-codes';
+import domains from '../../../utils/inputs/email-domains';
+import { Props } from './PlatformRegistForm';
+import useStyles from './style/RegistForm.style';
 
 function RegistForm({
   handleBack,
@@ -125,13 +124,14 @@ function RegistForm({
   //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
   // };
 
+  const checkDuplicateIDMutation = useCheckMarketerIdMutation();
   function checkDuplicateID(): void {
     // const id = document.getElementById('id')!.value;
     const { idValue } = state;
     if (state.id || idValue === '') {
       alert('ID을 올바르게 입력해주세요.');
     } else {
-      axios.post(`${HOST}/marketer/checkId`, { idValue }).then(res => {
+      checkDuplicateIDMutation.mutateAsync({ idValue }).then(res => {
         if (res.data) {
           alert('ID가 중복되었습니다. 다른 ID를 사용해주세요.');
           dispatch({ type: 'checkDuplication', value: true });

@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { NoticeData } from './NoticeTable';
+import { NoticeData } from '../../../../utils/hooks/query/useNoticeList';
 
 const useStyles = makeStyles(theme => ({
   accordion: { marginTop: theme.spacing(1) },

@@ -1,13 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 // customized component
-import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useSnackbar } from 'notistack';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useCreatorBanBannerMutation } from '../../../../../utils/hooks/mutation/useCreatorBanBannerMutation';
 // type
 import { CampaignTableData } from './CampaignTable';
-// utils
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
 
 const useStyles = makeStyles(theme => ({
   dialog: {
@@ -24,27 +24,19 @@ const useStyles = makeStyles(theme => ({
 interface BanCheckDialogProps {
   open: boolean;
   handleDialogClose: () => void;
-  handleSnackOpen: () => void;
   campaign: CampaignTableData;
-  doCampaignGetRequest: () => void;
 }
-function BanCheckDialog({
-  open,
-  handleDialogClose,
-  handleSnackOpen,
-  campaign,
-  doCampaignGetRequest,
-}: BanCheckDialogProps): JSX.Element {
+function BanCheckDialog({ open, handleDialogClose, campaign }: BanCheckDialogProps): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const campaignDelete = useDeleteRequest('/creator/banner', () => {
-    doCampaignGetRequest(); // 캠페인 데이터 재 요청
-    handleDialogClose(); // 현재 다이얼로그 닫기
-    handleSnackOpen(); // 성공함을 알리는 스낵바 오픈
-  });
+  const campaignDelete = useCreatorBanBannerMutation();
 
   const handleSubmit = (): void => {
-    campaignDelete.doDeleteRequest({ campaignId: campaign.campaignId });
+    campaignDelete.mutateAsync({ campaignId: campaign.campaignId }).then(() => {
+      handleDialogClose(); // 현재 다이얼로그 닫기
+      enqueueSnackbar('이제 이 배너는 더이상 송출되지 않습니다.', { variant: 'success' }); // 성공함을 알리는 스낵바 오픈
+    });
   };
 
   return (

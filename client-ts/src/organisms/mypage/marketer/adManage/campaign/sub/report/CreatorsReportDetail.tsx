@@ -2,9 +2,10 @@ import classnames from 'classnames';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import { OnadTheme } from '../../../../../../../theme';
-import { CreatorDataInterface, CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
+import { CreatorDataCPSInterface } from '../../../../dashboard/interfaces';
 import ContentsPie from '../../../../shared/ContentsPie';
 import TimeChart from '../../../../shared/TimeChart';
+import { MarketerCampaignAnalysisCreatorData } from '../../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCreatorData';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   flexCenter: { display: 'flex', alignItems: 'center' },
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
 }));
 
 export interface CreatorsReportDetailProps {
-  selectedCreator: CreatorDataInterface | CreatorDataCPSInterface;
+  selectedCreator: MarketerCampaignAnalysisCreatorData | CreatorDataCPSInterface;
 }
 export default function CreatorsReportDetail({
   selectedCreator,

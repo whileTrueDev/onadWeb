@@ -10,14 +10,14 @@ import {
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
-import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useState } from 'react';
 import Button from '../../../../atoms/CustomButtons/Button';
 import Dialog from '../../../../atoms/Dialog/Dialog';
-import HOST from '../../../../config';
 import banks, { Bank } from '../../../../constants/banks';
 import history from '../../../../history';
-import axios from '../../../../utils/axios';
+import { useMarketerUpdateAccountMutation } from '../../../../utils/hooks/mutation/useMarketerUpdateAccountMutation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   contents: {
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }): JSX.Element => {
   const { open, handleDialogClose } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   // ****************************************************
   const [bank, setBank] = useState<Bank | null>(null);
@@ -60,6 +61,7 @@ const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }):
     setBank(newValue);
   };
 
+  const updateAccountMutation = useMarketerUpdateAccountMutation();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
@@ -72,22 +74,23 @@ const AccountDialog = (props: { open: boolean; handleDialogClose: () => void }):
      ******************* */
     if (!bank) return alert('은행을 선택해주세요!');
 
-    return axios
-      .put(`${HOST}/marketer/account`, {
+    return updateAccountMutation
+      .mutateAsync({
         bankName: bank.bankName,
         bankRealName,
         idNumber,
         bankAccount,
       })
       .then(() => {
-        alert('환불 계좌번호 저장에 성공하였습니다.');
         handleDialogClose();
         history.push('/mypage/marketer/myoffice/cash');
+        enqueueSnackbar('환불 계좌번호 저장에 성공하였습니다.', { variant: 'success' });
       })
       .catch(err => {
         console.log(err);
-        alert(
+        enqueueSnackbar(
           '환불 계좌번호 저장에 실패하였습니다. 문제가 지속적으로 발견될 시, support@onad.io로 문의바랍니다.',
+          { variant: 'error' },
         );
       });
   };

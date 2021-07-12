@@ -1,4 +1,5 @@
 import { Button, Paper, Typography } from '@material-ui/core';
+import { useCreatorIncome } from '../../../../utils/hooks/query/useCreatorIncome';
 
 export interface WithdrawalRequestCardProps {
   handleDialogOpen: () => void;
@@ -6,6 +7,10 @@ export interface WithdrawalRequestCardProps {
 export default function WithdrawalRequestCard({
   handleDialogOpen,
 }: WithdrawalRequestCardProps): JSX.Element {
+  const income = useCreatorIncome();
+
+  if (income.isLoading) return <div />;
+  if (income.data && !(income.data.creatorReceivable > 0)) return <div />;
   return (
     <Paper style={{ marginTop: 8, padding: '16px 32px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

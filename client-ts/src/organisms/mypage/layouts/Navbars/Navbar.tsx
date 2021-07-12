@@ -10,16 +10,17 @@ import Button from '../../../../atoms/CustomButtons/Button';
 import AdminNavbarLinks from './AdminNavbarLinks';
 // type
 import { MypageRoute as MypageRouteType } from '../../../../pages/mypage/routes';
+import { useMypageStore } from '../../../../store/mypageStore';
 
 export interface NavbarProps {
   type: 'marketer' | 'creator';
   routes: MypageRouteType[];
-  handleDrawerToggle: () => void;
 }
 
 function Navbar(props: NavbarProps): JSX.Element {
   const classes = useNavbarStyles();
-  const { type, routes, handleDrawerToggle } = props;
+  const { type, routes } = props;
+  const toggleDrawer = useMypageStore(s => s.toggleDrawer);
 
   function makeBrand(): string {
     const { pathname } = window.location;
@@ -47,7 +48,7 @@ function Navbar(props: NavbarProps): JSX.Element {
             <IconButton
               aria-label="open drawer"
               edge="start"
-              onClick={handleDrawerToggle}
+              onClick={() => toggleDrawer()}
               className={classes.menuButton}
             >
               <Menu />

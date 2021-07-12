@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { FormControlLabel, Paper, Switch, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { Paper, Typography, FormControlLabel, Switch } from '@material-ui/core';
-// import usePostRequest from '../../../../utils/hooks/usePostRequest';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
-import { OnOffInterface } from '../dashboard/interfaces';
-import HOST from '../../../../config';
-import axios from '../../../../utils/axios';
+import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
+import { useMarketerAdOnOffMutation } from '../../../../utils/hooks/mutation/useMarketerAdOnOffMutation';
+import { useMarketerAdOnOff } from '../../../../utils/hooks/query/useMarketerAdOnOff';
 
 const useStyles = makeStyles(() => ({
   paper: { maxheight: 100 },
@@ -14,49 +13,46 @@ const useStyles = makeStyles(() => ({
 
 interface OnOffSwitchProps {
   title?: string;
-  onOffData: UseGetRequestObject<OnOffInterface | null>;
 }
 
-export default function OnOffSwitch({
-  title = '광고 On/Off',
-  onOffData,
-}: OnOffSwitchProps): JSX.Element {
+export default function OnOffSwitch({ title = '광고 On/Off' }: OnOffSwitchProps): JSX.Element {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  // ********************************************
+  // 광고주 캠페인 On/Off
+  const queryClient = useQueryClient();
+  const onOffData = useMarketerAdOnOff();
   const [viewState, setView] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!onOffData.loading && onOffData.data) {
+    if (!onOffData.isLoading && onOffData.data) {
       setView(onOffData.data.onOffState);
     }
   }, [onOffData]);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const onOffMutation = useMarketerAdOnOffMutation();
   const handleSwitch = () => {
-    setLoading(true);
-    axios
-      .post(`${HOST}/marketer/ad/on-off`, {
+    onOffMutation
+      .mutateAsync({
         onOffState: onOffData.data ? !onOffData.data.onOffState : false,
       })
       .then(res => {
-        setLoading(false);
         if (!res.data[0]) {
           alert(res.data[1]);
-        } else if (onOffData.doGetRequest) {
-          onOffData.doGetRequest();
+        } else {
+          enqueueSnackbar(`광고상태가 성공적으로 변경되었습니다`, { variant: 'success' });
+          queryClient.invalidateQueries('marketerAdOnOff');
         }
       })
       .catch(err => {
-        setLoading(false);
-        alert(
+        enqueueSnackbar(
           '광고 On/Off 도중에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견되면 support@onad.io로 문의 바랍니다.',
+          { variant: 'error' },
         );
         console.error(err);
       });
   };
-
-  // const { doPostRequest } = usePostRequest(
-  //   '/marketer/ad/on-off', onOffData.doGetRequest
-  // );
 
   return (
     <Paper className={classes.paper}>
@@ -66,7 +62,7 @@ export default function OnOffSwitch({
           label=""
           control={
             <Switch
-              disabled={loading}
+              disabled={onOffMutation.isLoading}
               color="secondary"
               checked={viewState}
               onChange={(): void => {
