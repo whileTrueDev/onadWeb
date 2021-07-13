@@ -5,7 +5,7 @@ import {
   UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData
 } from './@types/data';
 import doQuery from './models/doQuery';
-
+import googleTextToSpeech from './lib/googleTextToSpeech'
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -97,9 +97,7 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('right-top-purchase-message', async (data: PurchaseMessage) => {
     const { roomName } = data;
-    const { userId } = data;
-    const { text } = data;
-    // const completeText = `${text} - [${userId}]`;
+
     const bottomTextArray:string[] = []
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
@@ -121,7 +119,9 @@ io.on('connection', (socket: Socket) => {
       bottomTextArray.push(`${data.text} - [${data.nickname}]`)
     })
 
-    io.to(roomName).emit('get right-top purchase message', data);
+    const audioBuffer = await googleTextToSpeech(data)
+    
+    io.to(roomName).emit('get right-top purchase message', [data, audioBuffer]);
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
     io.to(roomName).emit('get bottom purchase message', bottomTextArray);
@@ -185,7 +185,7 @@ io.on('connection', (socket: Socket) => {
     bottomText.result.map((data:{nickname:string; text:string}) => {
       bottomTextArray.push(`${data.text} - [${data.nickname}]`)
     })
-
+    
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
     io.to(roomName).emit('get bottom purchase message', bottomTextArray);

@@ -4,14 +4,14 @@ const socket: any = io({ transports: ['websocket'] });
 let idArray: Array<null|string> = [];
 const rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
-// const verticalImageArray = ['crown', 'second', 'third'];
-let setDate = new Date("2021-07-11T14:30:00+0900");
+
+let setDate = new Date("2021-07-16T13:00:00+0900");
 
 let messageHtml: string;
-const messageArray: string[] = [];
-let idx = 0;
+const messageArray: any[] = [];
 let bannerId = 0;
 let bottomTextIndex = 0;
+
 // 하단 marquee 영역 이벤트
 // setInterval(() => {
 //   if($('.bottom-area').css({ display: 'none' })) {
@@ -27,14 +27,15 @@ let bottomTextIndex = 0;
 // }, 10000);
 
 async function switchBottomText(){
-  if (bottomTextIndex > idArray.length) {
+
+  if (bottomTextIndex >= idArray.length) {
     bottomTextIndex = 0
   }
   if (idArray.length !== 0){
     await setTimeout(() => {
-      $('.bottom-area-text').text(`${idArray[idx]}`).fadeIn(500)
+      $('.bottom-area-text').text(`${idArray[bottomTextIndex]}`).fadeIn(500)
+      bottomTextIndex += 1
     }, 1000)
-    bottomTextIndex += 1
     await setTimeout(() => {
       $('.bottom-area-text').fadeOut(500)
       switchBottomText()
@@ -50,8 +51,11 @@ async function switchBottomText(){
 setInterval(async () => {
   if (messageArray.length !== 0 && $('.top-right').css('display') === 'none') {
     $('.top-right').css({ display: 'flex' })
-    $('.top-right').html(messageArray[0])
-    messageArray.splice(0, 1);
+    $('.top-right').html(messageArray[0].messageHtml)  
+    await setTimeout(() => {
+      $('.top-right').append(messageArray[0].alarmSoundTag)
+      messageArray.splice(0, 1);
+    }, 3000)
     await setTimeout(() => {
       $('.top-right').fadeOut(800)
       $('.donation-image').attr('src','/public/images/invisible.png');
@@ -63,11 +67,9 @@ setInterval(async () => {
 async function switchImage(){
   if (!$('.vertical-banner').attr('src')?.includes('gif')){
     bannerId += 1
-
     if (bannerId === 7) {
       bannerId = 1
     }
-    console.log($('.vertical-banner').attr('src'))
     await setTimeout(() => {
       $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeIn(1000)
     }, 1000)
@@ -229,13 +231,26 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
 });
 
 // 우측 상단 응원 문구
-socket.on('get right-top purchase message', (data: PurchaseMessage) => {
-  const alarmType = data.icon;
-  const { userId } = data;
-  const { productName } = data;
-  const { text } = data;
-  const num = data.purchaseNum;
+socket.on('get right-top purchase message', async (data: any) => {
+  const alarmType = data[0].icon;
+  const { userId } = data[0];
+  const { productName } = data[0];
+  const { text } = data[0];
+  const num = data[0].purchaseNum;
+  console.log(data)
+  let url;
 
+  if (data) {
+    const blob = new Blob([data[1]], { type: "audio/mp3" });
+    url = window.URL.createObjectURL(blob);
+  }
+
+
+  const alarmSoundTag = `
+  <iframe src="${url}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+
+                        `
+  
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
@@ -259,7 +274,7 @@ socket.on('get right-top purchase message', (data: PurchaseMessage) => {
     </div>
   </div>
   `;
-  messageArray.push(messageHtml);
+  messageArray.push({alarmSoundTag, messageHtml});
 });
 
 // ---------------------------- 추후 삽입 가능 --------------------------

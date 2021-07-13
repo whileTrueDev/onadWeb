@@ -1,28 +1,28 @@
 // Imports the Google Cloud client library
 import * as textToSpeech from '@google-cloud/text-to-speech'
-import * as fs from 'fs'
-import * as util from 'util'
-
+import { PurchaseMessage } from '../@types/data'
+import {
+  AudioEncoding, Voice
+} from '../@types/data';
 // Creates a client
-const client = new textToSpeech.TextToSpeechClient();
-async function quickStart() {
+
+async function purchaseMessageTTS(purchaseData:PurchaseMessage) {
+  const client = new textToSpeech.TextToSpeechClient();
+
   // The text to synthesize
-  const text = '요로롱님 요리마법사 1개 구매 이거 넣으면 맛있어지나요?';
 
-  interface AudioEncoding {
-    audioEncoding: 'MP3' | undefined | null
-  }
+  const userId = purchaseData.userId;
+  const productName = purchaseData.productName;
+  const quantity = purchaseData.purchaseNum;
+  const text = purchaseData.text;
 
-  interface Voice {
-    languageCode:string;
-    ssmlGender : "FEMALE" | "SSML_VOICE_GENDER_UNSPECIFIED" | "MALE" | "NEUTRAL" | null | undefined
-  }
+  const message:string = `${userId}님 ${productName} ${quantity}개 구매 감사합니다    ${text}`
 
-  const audioConfig:AudioEncoding = {audioEncoding: 'MP3'}
-  const voice:Voice = {languageCode: 'ko-KR', ssmlGender: 'FEMALE'}
+  const audioConfig:AudioEncoding = {speakingRate:1.3, audioEncoding: 'MP3'}
+  const voice:Voice = {languageCode: 'ko-KR', name:'ko-KR-Standard-A', ssmlGender: 'FEMALE'}
   // Construct the request
-  const request = {
-    input: {text: text},
+  const params = {
+    input: {text: message},
     // Select the language and SSML voice gender (optional)
     voice: voice, // , ssmlGender: 'NEUTRAL'
     // select the type of audio encoding
@@ -30,12 +30,11 @@ async function quickStart() {
   };
 
   // Performs the text-to-speech request
-  const [response] = await client.synthesizeSpeech(request);
+  const [response] = await client.synthesizeSpeech(params);
   // Write the binary audio content to a local file
-  const writeFile = util.promisify(fs.writeFile);
   if (response && response.audioContent) {
-    await writeFile('output.mp3', response.audioContent, 'binary');
+    return response.audioContent
   }
-  console.log('Audio content written to file: output.mp3');
 }
-quickStart();
+
+export default purchaseMessageTTS
