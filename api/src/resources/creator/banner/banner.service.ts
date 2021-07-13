@@ -119,6 +119,7 @@ export class BannerService {
       .where('creatorId = :creatorId', { creatorId })
       .andWhere('ct.date > DATE_ADD(NOW(), INTERVAL - 10 MINUTE)')
       .orderBy('ct.date', 'DESC')
+      .limit(1)
       .getRawMany();
   }
 
