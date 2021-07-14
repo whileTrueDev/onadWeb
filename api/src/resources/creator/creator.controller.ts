@@ -97,7 +97,7 @@ export class CreatorController {
   async checkIdDuplicate(
     @Query(ValidationPipe) dto: CheckIdDuplicateDto,
   ): Promise<'duplicate' | 'allow'> {
-    const duplicateUser = await this.creatorService.findOneByTwitchOriginalId(dto.userid);
+    const duplicateUser = await this.creatorService.findOneByLoginId(dto.userid);
     if (duplicateUser) return 'duplicate';
     return 'allow';
   }

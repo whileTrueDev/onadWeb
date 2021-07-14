@@ -2,14 +2,15 @@
 import { Checkbox, Dialog, FormControlLabel, Grid, TextField } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Autocomplete } from '@material-ui/lab';
-import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useState } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import Button from '../../../../../atoms/CustomButtons/Button';
 import StyledItemText from '../../../../../atoms/StyledItemText';
 import banks, { Bank } from '../../../../../constants/banks';
+import { useCreatorUpdateSettlementMutation } from '../../../../../utils/hooks/mutation/useCreatorUpdateSettlementMutation';
 import useDialog from '../../../../../utils/hooks/useDialog';
-import usePatchRequest from '../../../../../utils/hooks/usePatchRequest';
 import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
 import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
 import BussinessImgUpload from './BussinessImgUpload';
@@ -77,6 +78,7 @@ interface ImageData {
 }
 
 function SettlementForm({ CreatorType }: SettlementFormProps): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const ImageUploadID = useDialog();
   const ImageUploadAC = useDialog();
@@ -199,9 +201,7 @@ function SettlementForm({ CreatorType }: SettlementFormProps): JSX.Element {
   };
 
   // 정산시스템 등록을 위한 요청 객체 생성 ===> 정산시스템 patch로
-  const settlementPatch = usePatchRequest('/creator/settlement', () => {
-    completeMessage.handleOpen();
-  });
+  const settlementMutation = useCreatorUpdateSettlementMutation();
 
   const handleSubmit = (event: React.MouseEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -220,8 +220,15 @@ function SettlementForm({ CreatorType }: SettlementFormProps): JSX.Element {
         CreatorBussinessImg: creatorBussinessImg,
         CreatorType,
       };
-      // usePostRequest
-      settlementPatch.doPatchRequest({ ...creatorData });
+      settlementMutation
+        .mutateAsync({ ...creatorData })
+        .then(() => completeMessage.handleOpen())
+        .catch(() =>
+          enqueueSnackbar(
+            '변경에 실패했습니다. 문제가 지속되는 경우 support@onad.io로 문의 바랍니다.',
+            { variant: 'error' },
+          ),
+        );
     }
   };
 

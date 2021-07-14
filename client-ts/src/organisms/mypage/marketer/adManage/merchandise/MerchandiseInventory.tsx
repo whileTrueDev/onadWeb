@@ -1,34 +1,33 @@
 /* eslint-disable react/display-name */
-import dayjs from 'dayjs';
-import { useSnackbar } from 'notistack';
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { useState } from 'react';
-import * as React from 'react';
 import { Delete } from '@material-ui/icons';
+import dayjs from 'dayjs';
+import * as React from 'react';
+import { useState } from 'react';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import { Merchandise } from '../interface';
-import MerchandiseDeleteDialog from './MerchandiseDeleteDialog';
-import { useDialog } from '../../../../../utils/hooks';
-import renderMerchandiseUploadState from '../../../../../utils/render_funcs/renderMerchandiseUploadState';
 import getDiscountPrice from '../../../../../utils/getDiscountPrice';
+import { useDialog } from '../../../../../utils/hooks';
+import { useMarketerMerchandisesLength } from '../../../../../utils/hooks/query/useMarketerMerchandisesLength';
+import {
+  Merchandise,
+  useMarketerMerchandisesList,
+} from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
+import renderMerchandiseUploadState from '../../../../../utils/render_funcs/renderMerchandiseUploadState';
+import MerchandiseDeleteDialog from './MerchandiseDeleteDialog';
 
 const useStyles = makeStyles(() => ({
   datagrid: { height: 400, width: '100%' },
 }));
 
-export interface MerchandiseInventoryProps {
-  merchandiseData: UsePaginatedGetRequestObject<Merchandise>;
-  pageOffset: number;
-  totalPageLength: number;
-}
-
-export default function MerchandiseInventory({
-  merchandiseData,
-  pageOffset,
-  totalPageLength,
-}: MerchandiseInventoryProps): JSX.Element {
+const FETCH_PAGE_OFFSET = 5;
+export default function MerchandiseInventory(): JSX.Element {
   const classes = useStyles();
+
+  const [page, setPage] = useState(0);
+  const handlePage = (targetPage: number) => setPage(targetPage);
+  // 상품 데이터
+  const merchandiseData = useMarketerMerchandisesList({ page, offset: FETCH_PAGE_OFFSET });
+  const merchandisesLength = useMarketerMerchandisesLength();
 
   const [selectedMerchandise, setSelectedMerchandise] = useState<Merchandise>();
   function handleSelect(m: Merchandise): void {
@@ -36,7 +35,6 @@ export default function MerchandiseInventory({
   }
 
   const merchandiseDeleteDialog = useDialog();
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div className={classes.datagrid}>
@@ -47,12 +45,12 @@ export default function MerchandiseInventory({
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          merchandiseData.handlePage(param.page);
+          handlePage(param.page);
         }}
-        pageSize={pageOffset}
-        rowCount={totalPageLength}
+        pageSize={FETCH_PAGE_OFFSET}
+        rowCount={merchandisesLength.data}
         disableSelectionOnClick
-        loading={merchandiseData.loading}
+        loading={merchandiseData.isLoading}
         rows={merchandiseData.data || []}
         columns={[
           {
@@ -127,6 +125,8 @@ export default function MerchandiseInventory({
             width: 80,
             headerName: '삭제',
             disableColumnMenu: true,
+            sortable: false,
+            filterable: false,
             renderCell: (data): React.ReactElement => (
               <IconButton
                 onClick={(): void => {
@@ -146,10 +146,6 @@ export default function MerchandiseInventory({
           open={merchandiseDeleteDialog.open}
           selectedMerchandise={selectedMerchandise}
           handleClose={merchandiseDeleteDialog.handleClose}
-          recallRequest={(): void => {
-            merchandiseData.requestWithoutConcat();
-            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
-          }}
         />
       )}
     </div>

@@ -10,7 +10,7 @@
     "build": "tsc",
     "postbuild": "browserify ./dist/public/client.js ./dist/public/hiddenEventHandler.js ./dist/public/programIdentifier.js ./dist/public/imageClicker.js -o ./dist/public/bundle.js && cp -r ./views ./dist/views && cp -r ./public/images/ ./dist/public/images",
     "start:debug": "nodemon --watch ./ --exec ts-node ./app.ts",
-    "start:production": "node ./dist/app.js"
+    "start:production": "node --expose-gc ./dist/app.js"
   },
   "dependencies": {
     "@types/http-errors": "^1.6.3",

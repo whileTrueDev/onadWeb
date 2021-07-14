@@ -4,14 +4,18 @@ import classnames from 'classnames';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import * as React from 'react';
+import { useQueryClient } from 'react-query';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 // import CustomDataGrid from '../../../../../../atoms/Table/CustomDataGrid';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { useDialog, useGetRequest } from '../../../../../utils/hooks';
+import { useDialog } from '../../../../../utils/hooks';
 import { OrderStatus } from '../../../../../utils/render_funcs/renderOrderStatus';
-import { MerchandiseOrder } from '../../adManage/interface';
 import CampaignDetailDialog from '../CampaignDetailDialog';
 import MerchandiseOrderDialog from './MerchandiseOrderDialog';
+import {
+  MerchandiseOrder,
+  useMarketerMerchandisesOrders,
+} from '../../../../../utils/hooks/query/useMarketerMerchandisesOrders';
 
 const useStyles = makeStyles(theme => ({
   bold: { fontWeight: theme.typography.fontWeightBold },
@@ -40,12 +44,10 @@ export default function OrderInventory({
   withoutTitle,
 }: OrderInventoryProps): React.ReactElement {
   const classes = useStyles();
+  const queryClient = useQueryClient();
 
   // eslint-disable-next-line max-len
-  const ordersGet = useGetRequest<
-    { campaignId?: string; merchandiseId?: number },
-    MerchandiseOrder[]
-  >('/marketer/orders', {
+  const ordersGet = useMarketerMerchandisesOrders({
     merchandiseId: by === 'merchandise' ? merchandiseId : undefined,
     campaignId: by === 'campaign' ? campaignId : undefined,
   });
@@ -75,7 +77,7 @@ export default function OrderInventory({
       )}
       <div style={{ height }}>
         <CustomDataGrid
-          loading={ordersGet.loading}
+          loading={ordersGet.isLoading}
           rows={ordersGet.data || []}
           columns={[
             { headerName: '주문번호', field: 'id', width: 120 },
@@ -189,7 +191,7 @@ export default function OrderInventory({
           }}
           merchandiseOrder={selectedMerchandise}
           onStatusChange={(): void => {
-            ordersGet.doGetRequest();
+            queryClient.invalidateQueries('marketerMerchandisesOrders');
             orderDetailDialog.handleClose();
           }}
           onStatusChangeFail={(): void => orderDetailDialog.handleClose()}

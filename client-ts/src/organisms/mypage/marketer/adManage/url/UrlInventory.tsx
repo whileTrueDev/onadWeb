@@ -2,15 +2,19 @@
 import { IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Delete, OpenInNew } from '@material-ui/icons';
 import dayjs from 'dayjs';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useState } from 'react';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog } from '../../../../../utils/hooks';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
+import { useMarketerLandingUrlLength } from '../../../../../utils/hooks/query/useMarketerLandingUrlLength';
+import {
+  LandingUrlLink,
+  MarketerLandingUrl,
+  useMarketerLandingUrlList,
+} from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
 import renderUrlConfirmState, {
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderUrlConfirmState';
-import { UrlDataInterface, UrlLink } from '../interface';
 import UrlDeleteDialog from './UrlDeleteDialog';
 
 const useStyles = makeStyles(() => ({
@@ -20,24 +24,22 @@ const useStyles = makeStyles(() => ({
   },
   datagrid: { height: 400, width: '100%' },
 }));
-export interface UrlTableProps {
-  urlData: UsePaginatedGetRequestObject<UrlDataInterface>;
-  pageOffset: number;
-  totalPageLength: number;
-}
 
-export default function UrlTable(props: UrlTableProps): JSX.Element {
+const FETCH_PAGE_OFFSET = 5;
+export default function UrlTable(): JSX.Element {
   const classes = useStyles();
-  const { urlData, pageOffset, totalPageLength } = props;
+
+  // URL 데이터
+  const [page, setPage] = useState(0);
+  const handlePage = (newV: number) => setPage(newV);
+  const landingUrl = useMarketerLandingUrlList({ offset: FETCH_PAGE_OFFSET, page });
+  const landingUrlLength = useMarketerLandingUrlLength();
 
   const urlDeleteDialog = useDialog();
-  const [selectedUrl, setUrl] = React.useState<UrlDataInterface | null>(null);
-  function handleUrlSelect(url: UrlDataInterface): void {
+  const [selectedUrl, setUrl] = React.useState<MarketerLandingUrl | null>(null);
+  function handleUrlSelect(url: MarketerLandingUrl): void {
     setUrl(url);
   }
-
-  // 삭제 성공 알림
-  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <div>
@@ -48,14 +50,13 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           rowsPerPageOptions={[5]}
           onPageChange={(param): void => {
             // 페이지 수정 => 해당 페이지 데이터 로드
-            // page 가 1부터 시작되므로 1 줄인다.
-            urlData.handlePage(param.page);
+            handlePage(param.page);
           }}
-          pageSize={pageOffset}
-          rowCount={totalPageLength}
+          pageSize={FETCH_PAGE_OFFSET}
+          rowCount={landingUrlLength.data}
           disableSelectionOnClick
-          loading={urlData.loading}
-          rows={urlData.data || []}
+          loading={landingUrl.isLoading}
+          rows={landingUrl.data || []}
           columns={[
             {
               field: 'linkId',
@@ -95,7 +96,7 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               width: 300,
               renderCell: (data): React.ReactElement => (
                 <div style={{ overflow: 'hidden' }}>
-                  {data.row.links.links.map((link: UrlLink): JSX.Element | null => (
+                  {data.row.links.links.map((link: LandingUrlLink): JSX.Element | null => (
                     <Typography
                       noWrap
                       key={link.linkTo}
@@ -140,10 +141,13 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
               field: '',
               width: 80,
               headerName: '삭제',
+              sortable: false,
+              filterable: false,
+              disableColumnMenu: true,
               renderCell: (data): React.ReactElement => (
                 <IconButton
                   onClick={(): void => {
-                    handleUrlSelect(data.row as UrlDataInterface);
+                    handleUrlSelect(data.row as MarketerLandingUrl);
                     urlDeleteDialog.handleOpen();
                   }}
                 >
@@ -160,10 +164,6 @@ export default function UrlTable(props: UrlTableProps): JSX.Element {
           open={urlDeleteDialog.open}
           selectedUrl={selectedUrl}
           handleClose={urlDeleteDialog.handleClose}
-          recallRequest={(): void => {
-            urlData.requestWithoutConcat();
-            enqueueSnackbar('올바르게 삭제되었습니다.', { variant: 'success' });
-          }}
         />
       )}
     </div>

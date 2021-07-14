@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/camelcase */
-import { useEffect, useCallback } from 'react';
+import { Button, Grid, Typography } from '@material-ui/core';
 import Fingerprint from '@material-ui/icons/Fingerprint';
-import { Grid, Button, Typography } from '@material-ui/core';
-import useStyles from './style/IdentityVerification.style';
-import axios from '../../../utils/axios';
-import HOST from '../../../config';
+import { useCallback, useEffect } from 'react';
 import CustomCard from '../../../atoms/CustomCard';
 import StyledItemText from '../../../atoms/StyledItemText';
+import { useCertificationMutation } from '../../../utils/hooks/mutation/useCertificationMutation';
+import useStyles from './style/IdentityVerification.style';
 
 interface Props {
   handleBack: () => void;
@@ -17,13 +15,15 @@ interface Props {
 
 // 마케터 유형을 선택하고 난 뒤 rendering되는 컴포넌트.
 // useEffect를 사용하여
+
 function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props): JSX.Element {
   const classes = useStyles();
 
+  const certificatinoMutation = useCertificationMutation();
   const submitImpUid = useCallback(
     ({ impUid }) => {
-      axios
-        .post(`${HOST}/certification`, { imp_uid: impUid })
+      certificatinoMutation
+        .mutateAsync({ imp_uid: impUid })
         .then(res => {
           const { error, data } = res.data;
           if (error) {
@@ -42,7 +42,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
           handleBack();
         });
     },
-    [handleBack, handleNext],
+    [certificatinoMutation, handleBack, handleNext],
   );
 
   useEffect(() => {

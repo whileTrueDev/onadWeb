@@ -3,7 +3,6 @@ import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import MySalesIncome from '../../../../organisms/mypage/marketer/office/sales-income/MySalesIncome';
 import SalesIncomeSettlementLog from '../../../../organisms/mypage/marketer/office/sales-income/SalesIncomeSettlementLog';
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
 import useMypageScrollToTop from '../../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles(theme => ({
@@ -12,11 +11,6 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function SalesIncomeManage(): JSX.Element {
   const classes = useStyles();
-
-  // CPS 판매 광고 대금
-  const salesIncomeData = useGetRequest('/marketer/sales-income');
-  // 판매대금 출금정산을 위한 정산 등록
-  const settlementData = useGetRequest('/marketer/settlement');
 
   useMypageScrollToTop();
   return (
@@ -31,7 +25,7 @@ export default function SalesIncomeManage(): JSX.Element {
           </GridItem>
           {/* 판매 대금 정보 */}
           <GridItem xs={12}>
-            <MySalesIncome salesIncomeData={salesIncomeData} settlementData={settlementData} />
+            <MySalesIncome />
           </GridItem>
 
           <GridItem xs={12}>

@@ -1,28 +1,23 @@
-import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { Merchandise } from '../interface';
+import { useMarketerDeleteMerchandiseMutation } from '../../../../../utils/hooks/mutation/useMarketerDeleteMerchandiseMutation';
+import { useMarketerMerchandisesConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerMerchandisesConnectedCampaigns';
+import { Merchandise } from '../../../../../utils/hooks/query/useMarketerMerchandisesList';
 
 interface MerchandiseDeleteDialogProps {
   open: boolean;
   selectedMerchandise: Merchandise;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess?: () => void;
 }
 
 const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Element => {
-  const { open, selectedMerchandise, handleClose, recallRequest } = props;
+  const { open, selectedMerchandise, handleClose, onSuccess } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { loading, doDeleteRequest } =
-    useDeleteRequest<{ id?: number }, any[]>('/marketer/merchandises');
-
-  const connectedCampaign = useGetRequest<{ id?: number }, number>(
-    '/marketer/merchandises/campaigns',
-    {
-      id: selectedMerchandise.id,
-    },
-  );
+  const connectedCampaign = useMarketerMerchandisesConnectedCampaigns(selectedMerchandise.id);
+  const deleteMerchandiseMutation = useMarketerDeleteMerchandiseMutation();
 
   return (
     <Dialog
@@ -33,7 +28,7 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading && connectedCampaign.data && connectedCampaign.data > 0 ? (
+          {!connectedCampaign.isLoading && connectedCampaign.data && connectedCampaign.data > 0 ? (
             <Tooltip
               title={<Typography>상품이 캠페인에 할당되어 있어 삭제가 불가능합니다.</Typography>}
             >
@@ -44,20 +39,29 @@ const MerchandiseDeleteDialog = (props: MerchandiseDeleteDialogProps): JSX.Eleme
               </div>
             </Tooltip>
           ) : null}
-          {!connectedCampaign.loading && connectedCampaign.data === 0 ? (
+          {!connectedCampaign.isLoading && connectedCampaign.data === 0 ? (
             <Button
               style={{ marginRight: 4 }}
               variant="outlined"
               color="primary"
-              disabled={loading}
+              disabled={deleteMerchandiseMutation.isLoading}
               onClick={(): void => {
-                doDeleteRequest({ id: selectedMerchandise.id });
-                setTimeout(() => {
-                  handleClose();
-                  if (recallRequest) {
-                    recallRequest();
-                  }
-                }, 1000);
+                deleteMerchandiseMutation
+                  .mutateAsync({ id: selectedMerchandise.id })
+                  .then(() => {
+                    enqueueSnackbar('상품 삭제 완료되었습니다.', {
+                      variant: 'success',
+                      preventDuplicate: false,
+                    });
+                    handleClose();
+                    if (onSuccess) onSuccess();
+                  })
+                  .catch(() => {
+                    enqueueSnackbar(
+                      '상품 삭제에 실패했습니다. 문제가 반복되는 경우 support@onad.io로 문의바랍니다.',
+                      { variant: 'error' },
+                    );
+                  });
               }}
             >
               확인

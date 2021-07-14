@@ -29,11 +29,14 @@ export class BannerController {
   }
 
   @Get('list')
-  findBannerList(
+  async findBannerList(
     @Creator() { creatorId }: CreatorSession,
-    @Query(ValidationPipe) dto: PaginationDto,
+    @Query() dto: PaginationDto,
   ): Promise<FindBannerListRes> {
-    return this.bannerService.findBannerList(creatorId, dto);
+    return this.bannerService.findBannerList(creatorId, {
+      ...dto,
+      offset: dto.offset || 4,
+    });
   }
 
   @Get('overlay')

@@ -51,6 +51,7 @@ export class LinkService {
     // 다른 유저에게 연동된 afreecaId인지 검사
     const alreadyLinked = await this.creatorInfoRepo.findOne({
       where: { afreecaId: requestedAfreecaId },
+      select: ['creatorId', 'loginId'],
     });
     if (alreadyLinked)
       return {

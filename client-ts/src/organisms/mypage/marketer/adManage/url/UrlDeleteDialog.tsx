@@ -1,11 +1,12 @@
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Button, Typography, Tooltip, Grid } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useSnackbar } from 'notistack';
 import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
-import useDeleteRequest from '../../../../../utils/hooks/useDeleteRequest';
-import { UrlDataInterface } from '../interface';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useMarketerDeleteLandingUrlMutation } from '../../../../../utils/hooks/mutation/useMarketerDeleteLandingUrlMutation';
+import { useMarketerLandingUrlConnectedCampaigns } from '../../../../../utils/hooks/query/useMarketerLandingUrlConnectedCampaigns';
+import { MarketerLandingUrl } from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
 
 const useStyles = makeStyles((theme: Theme) => ({
   img: {
@@ -25,24 +26,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface UrlDeleteDialogProps {
   open: boolean;
-  selectedUrl: UrlDataInterface;
+  selectedUrl: MarketerLandingUrl;
   handleClose: () => void;
-  recallRequest: () => void;
+  onSuccess?: () => void;
 }
 
 const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
   const classes = useStyles();
-  const { open, selectedUrl, handleClose, recallRequest } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const { open, selectedUrl, handleClose, onSuccess } = props;
 
-  const { loading, doDeleteRequest } =
-    useDeleteRequest<{ linkId: string }, any[]>('/marketer/landing-url');
-
-  const connectedCampaign = useGetRequest<{ linkId: string }, { campaignId: string }[]>(
-    '/marketer/landing-url/campaigns',
-    {
-      linkId: selectedUrl.linkId,
-    },
-  );
+  const connectedCampaign = useMarketerLandingUrlConnectedCampaigns(selectedUrl.linkId);
+  const deleteLandingUrlMutation = useMarketerDeleteLandingUrlMutation();
 
   return (
     <Dialog
@@ -53,7 +48,7 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
       maxWidth="sm"
       buttons={
         <div style={{ display: 'flex' }}>
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length > 0 && (
               <Tooltip
@@ -66,21 +61,30 @@ const UrlDeleteDialog = (props: UrlDeleteDialogProps): JSX.Element => {
                 </div>
               </Tooltip>
             )}
-          {!connectedCampaign.loading &&
+          {!connectedCampaign.isLoading &&
             connectedCampaign.data &&
             connectedCampaign.data.length === 0 && (
               <Button
                 variant="contained"
                 color="primary"
-                disabled={loading}
+                disabled={deleteLandingUrlMutation.isLoading}
                 onClick={(): void => {
-                  doDeleteRequest({ linkId: selectedUrl.linkId });
-                  setTimeout(() => {
-                    handleClose();
-                    if (recallRequest) {
-                      recallRequest();
-                    }
-                  }, 1000);
+                  deleteLandingUrlMutation
+                    .mutateAsync({ linkId: selectedUrl.linkId })
+                    .then(() => {
+                      handleClose();
+                      if (onSuccess) onSuccess();
+                      enqueueSnackbar('랜딩페이지URL 삭제 완료되었습니다.', {
+                        variant: 'success',
+                        preventDuplicate: false,
+                      });
+                    })
+                    .catch(() => {
+                      enqueueSnackbar(
+                        '삭제에 실패했습니다. 문제가 반복되는 경우 support@onad.io로 문의바랍니다.',
+                        { variant: 'error' },
+                      );
+                    });
                 }}
               >
                 확인

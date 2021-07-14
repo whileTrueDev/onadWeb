@@ -1,26 +1,26 @@
 /* eslint-disable react/display-name */
 import { makeStyles, Paper, Tooltip, Typography } from '@material-ui/core';
 import dayjs from 'dayjs';
-import { useState } from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
 import { useDialog } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { useCreatorCpsReviews } from '../../../../../utils/hooks/query/useCreatorCpsReviews';
 import CPSReviewDialog, { CPSReview } from './CPSReviewDialog';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   linkText: {
     textDecoration: 'underline',
     cursor: 'pointer',
   },
 }));
-interface CPSReviewsProps {
-  cpsReviewData: UseGetRequestObject<CPSReview[]>;
-}
 
-export default function CPSReviews({ cpsReviewData }: CPSReviewsProps): React.ReactElement {
+export default function CPSReviews(): React.ReactElement {
   const classes = useStyles();
+
+  const cpsReviewData = useCreatorCpsReviews();
+
   const detailDialog = useDialog();
   const [selectedReview, setSelectedReview] = useState<CPSReview>();
   function handleSelectedReview(review: CPSReview): void {
@@ -36,7 +36,7 @@ export default function CPSReviews({ cpsReviewData }: CPSReviewsProps): React.Re
     <Paper style={{ height: 420, marginTop: 8, padding: 32 }}>
       <Typography style={{ fontWeight: 'bold' }}>응원 메시지</Typography>
       <CustomDataGrid
-        loading={cpsReviewData.loading}
+        loading={cpsReviewData.isLoading}
         rows={cpsReviewData.data || []}
         columns={[
           {

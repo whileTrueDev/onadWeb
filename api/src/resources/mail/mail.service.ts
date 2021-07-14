@@ -6,7 +6,7 @@ import createMarketerPwMail from './templates/createMarketerPwMail';
 @Injectable()
 export class MailService {
   private transporter: Transporter;
-  constructor(private readonly configService: ConfigService) {
+  constructor(configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',

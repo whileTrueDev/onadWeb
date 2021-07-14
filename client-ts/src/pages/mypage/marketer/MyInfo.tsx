@@ -1,13 +1,11 @@
-import { useContext } from 'react';
 import { CircularProgress, makeStyles, Typography } from '@material-ui/core';
-import { AccountInterface } from '../../../organisms/mypage/marketer/office/interface';
-import { useGetRequest } from '../../../utils/hooks';
+import { useContext } from 'react';
 import GridContainer from '../../../atoms/Grid/GridContainer';
 import GridItem from '../../../atoms/Grid/GridItem';
-import UserDataForm from '../../../organisms/mypage/marketer/userManage/profile/UserDataForm';
-import SignOut from '../../../organisms/mypage/marketer/userManage/profile/SignOut';
-import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 import MarketerInfoContext from '../../../context/MarketerInfo.context';
+import SignOut from '../../../organisms/mypage/marketer/userManage/profile/SignOut';
+import UserDataForm from '../../../organisms/mypage/marketer/userManage/profile/UserDataForm';
+import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
 
 const useStyles = makeStyles(theme => ({
   // container: { margin: '0 auto', maxWidth: 1430 },
@@ -15,8 +13,6 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function MyInfo(): JSX.Element {
   const classes = useStyles();
-  const accountData = useGetRequest<null, AccountInterface | null>('/marketer/account');
-
   const marketerInfo = useContext(MarketerInfoContext);
 
   useMypageScrollToTop();
@@ -24,7 +20,7 @@ export default function MyInfo(): JSX.Element {
     <div>
       {/* 계정 관리 */}
       {marketerInfo.loading && <CircularProgress />}
-      {!marketerInfo.loading && marketerInfo.user && !accountData.loading && (
+      {!marketerInfo.loading && marketerInfo.user && (
         <div>
           <GridContainer>
             <GridItem xs={12}>
