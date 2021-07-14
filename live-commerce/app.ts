@@ -199,7 +199,6 @@ io.on('connection', (socket: Socket) => {
   socket.on('get d-day', (dateData:DateData) => {
     const { date } = dateData;
     const { roomName } = dateData;
-    console.log(roomName)
     io.to(roomName).emit('d-day from server', date)
   })
 

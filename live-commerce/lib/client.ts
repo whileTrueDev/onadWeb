@@ -237,7 +237,6 @@ socket.on('get right-top purchase message', async (data: any) => {
   const { productName } = data[0];
   const { text } = data[0];
   const num = data[0].purchaseNum;
-  console.log(data)
   let url;
 
   if (data) {
