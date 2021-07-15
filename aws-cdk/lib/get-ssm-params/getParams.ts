@@ -357,15 +357,23 @@ export default function getSSMParams(scope: cdk.Construct) {
     },
   );
 
-  const LIVE_COMMERCE_GCP_TTS_CREDENTIAL_PATH =
-    ssm.StringParameter.fromSecureStringParameterAttributes(
-      scope,
-      'LIVE_COMMERCE_GCP_TTS_CREDENTIAL_PATH',
-      {
-        parameterName: '/LIVE_COMMERCE_GCP_TTS_CREDENTIAL_PATH',
-        version: 1,
-      },
-    );
+  const LIVECOMMERCE_GCP_TTS_PRIVATE_KEY = ssm.StringParameter.fromSecureStringParameterAttributes(
+    scope,
+    'LIVECOMMERCE_GCP_TTS_PRIVATE_KEY',
+    {
+      parameterName: '/LIVECOMMERCE_GCP_TTS_PRIVATE_KEY',
+      version: 1,
+    },
+  );
+
+  const LIVECOMMERCE_GCP_TTS_EMAIL = ssm.StringParameter.fromSecureStringParameterAttributes(
+    scope,
+    '	LIVECOMMERCE_GCP_TTS_EMAIL',
+    {
+      parameterName: '/	LIVECOMMERCE_GCP_TTS_EMAIL',
+      version: 1,
+    },
+  );
 
   return {
     TEST_REACT_HOSTNAME,
@@ -414,6 +422,7 @@ export default function getSSMParams(scope: cdk.Construct) {
     ADPICK_AFF_ID,
     ADPICK_MEM_ID,
     ADPICK_MEM_PWD,
-    LIVE_COMMERCE_GCP_TTS_CREDENTIAL_PATH,
+    LIVECOMMERCE_GCP_TTS_PRIVATE_KEY,
+    LIVECOMMERCE_GCP_TTS_EMAIL,
   };
 }
