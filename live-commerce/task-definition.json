@@ -56,8 +56,12 @@
           "name": "DB_DATABASE"
         },
         {
-          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/LIVE_COMMERCE_GCP_TTS_CREDENTIAL_PATH",
-          "name": "GOOGLE_APPLICATION_CREDENTIALS"
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/LIVECOMMERCE_GCP_TTS_PRIVATE_KEY",
+          "name": "GOOGLE_CREDENTIALS_PRIVATE_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:ap-northeast-2:803609402610:parameter/LIVECOMMERCE_GCP_TTS_EMAIL",
+          "name": "GOOGLE_CREDENTIALS_EMAIL"
         }
       ],
       "dockerSecurityOptions": null,
