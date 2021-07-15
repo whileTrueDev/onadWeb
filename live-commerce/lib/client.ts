@@ -252,7 +252,7 @@ socket.on('get right-top purchase message', async (data: any) => {
   
   messageHtml = `
   <div class="donation-wrapper">
-    <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.mp3' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+    <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.wav' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
     <div class="item">
       <div class="centered">
       <img src="/public/images/${alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'}" class="donation-image"/>
