@@ -280,6 +280,7 @@ body {
 .vertical-banner {
   width: 100%;
   height: 100%;
+  opacity: 1;
 }
 
 /* 좌측 상단 랭킹 */
@@ -360,11 +361,11 @@ body {
   left: 0%;
   bottom: 0%;
   position: absolute;
+  background-color: white;
+  background: rgba(253, 253, 253, 0.8);
 }
 /* 우측상단 온애드 로고 */
 .top-right-logo {
-  /* width: 34.4%;
-  height: 44.5%; */
   top: 2.5%;
   right: 2%;
   position: fixed;

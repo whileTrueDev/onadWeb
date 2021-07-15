@@ -23,3 +23,5 @@ calculationLog/*
 /dist/*
 
 ngrok.exe
+
+rare-*.json

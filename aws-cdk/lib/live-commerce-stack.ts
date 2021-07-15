@@ -80,6 +80,10 @@ export default class LiveCommerceStack extends cdk.Stack {
         DB_PORT: Secret.fromSsmParameter(ssmParameters.DB_PORT),
         DB_USER: Secret.fromSsmParameter(ssmParameters.DB_USER),
         DB_DATABASE: Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+        GOOGLE_CREDENTIALS_PRIVATE_KEY: Secret.fromSsmParameter(
+          ssmParameters.LIVECOMMERCE_GCP_TTS_PRIVATE_KEY,
+        ),
+        GOOGLE_CREDENTIALS_EMAIL: Secret.fromSsmParameter(ssmParameters.LIVECOMMERCE_GCP_TTS_EMAIL),
       },
     });
     container.addPortMappings({ containerPort: PORT });
