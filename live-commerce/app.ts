@@ -209,5 +209,5 @@ io.on('connection', (socket: Socket) => {
   
 
 httpServer.listen(PORT, () => {
-  console.log(`--LIVE COMMERCE SERVER-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`);
+  console.log(`--LIVE COMMERCE SERVER Ver.210716-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`);
 });
