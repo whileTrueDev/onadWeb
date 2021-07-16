@@ -7,6 +7,7 @@ import { useState } from 'react';
 import ProductHeroLayout from './productHeroLayout';
 import CreatorLoginForm from '../../login/creatorLoginForm';
 import MarketerLoginForm from '../../login/marketerLoginForm';
+import Image from 'next/image';
 // util 계열
 // 스타일
 import styles from '../../../styles/main/hero/productHero.style';

@@ -2,7 +2,7 @@
 import { Button, Typography, CircularProgress } from '@material-ui/core';
 // 내부 소스
 // 프로젝트 내부 모듈
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 // 컴포넌트
 // util 계열
@@ -30,7 +30,7 @@ function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
     }, 1000);
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const iframeDocument = document.getElementById('onadYouTube') as HTMLIFrameElement;
     iframeDocument.src = 'https://www.youtube.com/embed/E3HQlhMF-eg';
 

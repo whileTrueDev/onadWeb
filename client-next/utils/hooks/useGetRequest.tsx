@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { AxiosResponse } from 'axios';
 import axios, { cancelToken, isCancel as isAxiosCancel } from '../axios';
 import host from '../../config';
-import history from '../../history';
+import { useRouter } from 'next/router'
 
 const DEFAULT_ERROR_MESSAGE = '죄송합니다.. 데이터 조회중 오류가 발생했습니다..';
 const UNAUTHORIZED = 401;
@@ -44,6 +44,7 @@ export default function useGetRequest<PARAM_TYPE = DefaultParamType, RES_DATA_TY
     lateFetch?: boolean;
   },
 ): UseGetRequestObject<RES_DATA_TYPE> {
+  const router = useRouter()
   let lateFetch = false;
   if (options) {
     lateFetch = !!options.lateFetch;
@@ -85,7 +86,7 @@ export default function useGetRequest<PARAM_TYPE = DefaultParamType, RES_DATA_TY
                 if (err.response.status === UNAUTHORIZED) {
                   // 세션없는 요청의 경우
                   setError(err.response.data.mesage);
-                  history.push('/');
+                  router.push('/');
                 } else {
                   console.error('statuscode: ', err.response.status, err.response.data);
                   setError(err.response.data.message || DEFAULT_ERROR_MESSAGE);

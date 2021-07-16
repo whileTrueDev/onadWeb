@@ -16,36 +16,36 @@ interface IndicatorProps {
   nowBroadcast: number;
 }
 
-function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
-  const classes = useStyles();
-
-  function indicatorDecorate(indicator: number): number {
-    const indicatorLength = String(indicator).length;
-    if (indicatorLength < 4) {
-      return indicator;
-    }
-    if (indicatorLength < 7) {
-      return Number(String(indicator).slice(0, -3));
-    }
-    if (indicatorLength < 10) {
-      return Number(String(indicator).slice(0, -6));
-    }
+function indicatorDecorate(indicator: number): number {
+  const indicatorLength = String(indicator).length;
+  if (indicatorLength < 4) {
     return indicator;
   }
+  if (indicatorLength < 7) {
+    return Number(String(indicator).slice(0, -3));
+  }
+  if (indicatorLength < 10) {
+    return Number(String(indicator).slice(0, -6));
+  }
+  return indicator;
+}
 
-  function indicatorUnit(indicator: number): string {
-    const indicatorLength = String(indicator).length;
-    if (indicatorLength < 4) {
-      return '';
-    }
-    if (indicatorLength < 7) {
-      return 'K';
-    }
-    if (indicatorLength < 10) {
-      return 'M';
-    }
+function indicatorUnit(indicator: number): string {
+  const indicatorLength = String(indicator).length;
+  if (indicatorLength < 4) {
     return '';
   }
+  if (indicatorLength < 7) {
+    return 'K';
+  }
+  if (indicatorLength < 10) {
+    return 'M';
+  }
+  return '';
+}
+
+function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>

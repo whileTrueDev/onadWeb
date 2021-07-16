@@ -4,6 +4,7 @@ import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 import { myReducer, initialState } from './stepper.reducer';
 // 프로젝트 내부 모듈
 import { useState, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router'
 // 컴포넌트
 import PlatformRegistForm from './platformRegistForm';
 import RegistForm from './registForm';
@@ -12,12 +13,12 @@ import IdentityVerification from './identityVerification';
 // util 계열
 import HOST from '../../config';
 import axios from '../../utils/axios';
-import history from '../../utils/history';
 // 스타일
 import useStyles from '../../styles/regist/stepper.style';
 
 function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const classes = useStyles();
+  const router = useRouter();
   const [activeStep, setStep] = useState(0);
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
@@ -34,7 +35,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
   }
 
   function handleBack(): void {
-    if (activeStep - 1 === -1) history.push('/marketer');
+    if (activeStep - 1 === -1) router.push('/marketer');
     dispatch({ type: 'reset' });
     setStep(activeStep - 1);
   }
@@ -58,17 +59,17 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           if (!error) {
             alert('회원가입이 완료되었습니다. 다시 로그인 해주세요.');
             setLoading(0);
-            history.push('/');
+            router.push('/');
           } else {
             alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
-            history.push('/');
+            router.push('/');
           }
         })
         .catch(() => {
           alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
-          history.push('/');
+          router.push('/');
         });
     } else {
       axios
@@ -78,17 +79,17 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           if (!error) {
             alert('회원가입이 완료되었습니다. 다시 로그인 하세요.');
             setLoading(0);
-            history.push('/');
+            router.push('/');
           } else {
             alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
             setLoading(0);
-            history.push('/');
+            router.push('/');
           }
         })
         .catch(() => {
           alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
-          history.push('/');
+          router.push('/');
         });
     }
   }

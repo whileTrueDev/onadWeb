@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from '../axios';
 import HOST from '../../config';
-import history from '../history';
+import { useRouter } from 'next/router'
 
 interface LoginCheckResponse {
   error: boolean;
@@ -19,6 +19,7 @@ const useLoginValue = (): {
   const [isLogin, setisLogin] = React.useState<boolean>(false);
   const [repasswordOpen, setRepassword] = React.useState<boolean>(false);
   const [userType, setUserType] = React.useState('');
+  const router = useRouter();
 
   // logout function
   const logout = (): void => {
@@ -30,14 +31,14 @@ const useLoginValue = (): {
     axios
       .get(`${HOST}/logout`)
       .then(() => {
-        history.push('/');
+        router.push('/');
       })
       .catch((error: any) => {
         console.log(error);
       });
   };
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     axios
       .get<LoginCheckResponse>(`${HOST}/login/check`)
       .then(res => {

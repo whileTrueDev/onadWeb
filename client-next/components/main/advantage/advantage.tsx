@@ -1,11 +1,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState } from 'react';
+// material-UI
 import { Divider, Typography } from '@material-ui/core';
+// 내부 소스
+
+// 프로젝트 내부 모듈
+import { useState } from 'react';
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
-import styles from '../../../styles/main/advantage/advantage.style';
+import Image from 'next/image'
+// 컴포넌트
 import Slider from './sub/index';
+// util 계열
+// 스타일
+import styles from '../../../styles/main/advantage/advantage.style';
 
 interface Props {
   MainUserType: boolean;
@@ -57,7 +65,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <img src={content.imageUrl} alt="advantage" className={classes.advImg} />
+                <Image src={content.imageUrl} alt="advantage" className={classes.advImg}/>
                 <Typography variant="h4" className={classes.title}>
                   {content.title}
                 </Typography>
@@ -89,7 +97,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <img src={content.imageUrl} alt="advantage" className={classes.advImg} />
+                <Image src={content.imageUrl} alt="advantage" className={classes.advImg}/>
                 <Typography variant="h4" className={classes.title}>
                   {content.title}
                 </Typography>

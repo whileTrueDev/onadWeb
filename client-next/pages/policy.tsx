@@ -9,8 +9,8 @@ import classNames from 'classnames';
 // 컴포넌트
 import AppFooter from '../components/layout/appFooter';
 import RePasswordDialog from '../components/login/rePassword';
-import DefaultPolicy from '../components/main/policy/policy';
-import PolicyPrivacy from '../components/main/policy/policyPrivacy';
+import DefaultPolicy from '../components/policy/policy';
+import PolicyPrivacy from '../components/policy/policyPrivacy';
 // util 계열
 import useLoginValue from '../utils/hooks/useLoginValue';
 // 스타일

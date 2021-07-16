@@ -8,7 +8,6 @@ import CreatorLoginForm from './creatorLoginForm';
 import RegistDialog from '../regist/registDialog';
 import Link from 'next/link'
 // util 계열
-import history from '../../utils/history';
 // 스타일
 import useStyles from '../../styles/login/loginPopover.style';
 

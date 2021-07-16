@@ -22,7 +22,7 @@ import OnadLogo from '../shared/onadLogo';
 // util 계열
 import axios from '../../utils/axios';
 import HOST from '../../config';
-import history from '../../utils/history';
+import { useRouter } from 'next/router'
 import useEventTargetValue from '../../utils/hooks/useEventTargetValue';
 // 스타일
 import useStyles from '../../styles/login/loginForm.style';
@@ -38,7 +38,7 @@ export default function CreatorLoginForm({
   handleClose,
 }: CreatorLoginFormProps): JSX.Element {
   const classes = useStyles();
-
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const userid = useEventTargetValue();
@@ -60,7 +60,7 @@ export default function CreatorLoginForm({
         if (res.data[0]) {
           if (res.data[1]) setError(res.data[1]);
         }
-        if (res.data === 'success') history.push('/mypage/creator/main');
+        if (res.data === 'success') router.push('/mypage/creator/main');
       })
       .catch(err => {
         setLoading(false);
@@ -147,7 +147,7 @@ export default function CreatorLoginForm({
             <Typography
               component="span"
               variant="body2"
-              onClick={(): void => history.push('/creator/signup')}
+              onClick={(): Promise<boolean> => router.push('/creator/signup')}
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
               가입하기
@@ -164,7 +164,7 @@ export default function CreatorLoginForm({
               <Typography
                 component="span"
                 variant="body2"
-                onClick={(): void => history.push('/creator/signup/pre-user')}
+                onClick={(): Promise<boolean> => router.push('/creator/signup/pre-user')}
                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
               >
                 기존계정로그인

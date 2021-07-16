@@ -18,7 +18,7 @@ const style = makeStyles(theme => ({
   },
   figure1: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure1.png') no-repeat center center",
+    background: "url('/main/background/figure1.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 150,
     height: 75,
@@ -35,7 +35,7 @@ const style = makeStyles(theme => ({
   },
   figure2: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure2.png') no-repeat center center",
+    background: "url('/main/background/figure2.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 100,
     height: 120,
@@ -52,7 +52,7 @@ const style = makeStyles(theme => ({
   },
   figure3: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure3.png') no-repeat center center",
+    background: "url('/main/background/figure3.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 410,
     height: 130,
@@ -70,7 +70,7 @@ const style = makeStyles(theme => ({
   },
   figure4: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure4.png') no-repeat center center",
+    background: "url('/main/background/figure4.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 400,
     height: 80,
@@ -88,7 +88,7 @@ const style = makeStyles(theme => ({
   },
   figure5: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure5.png') no-repeat center center",
+    background: "url('/main/background/figure5.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 140,
     height: 120,
@@ -105,7 +105,7 @@ const style = makeStyles(theme => ({
   },
   figure6: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure6.png') no-repeat center center",
+    background: "url('/main/background/figure6.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 50,
     height: 50,
@@ -122,7 +122,7 @@ const style = makeStyles(theme => ({
   },
   figure7: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure7.png') no-repeat center center",
+    background: "url('/main/background/figure7.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 120,
     height: 120,
@@ -139,7 +139,7 @@ const style = makeStyles(theme => ({
   },
   figure8: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure8.png') no-repeat center center",
+    background: "url('/main/background/figure8.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 40,
     height: 240,
@@ -156,7 +156,7 @@ const style = makeStyles(theme => ({
   },
   figure9: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure9.png') no-repeat center center",
+    background: "url('/main/background/figure9.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 100,
     height: 100,
@@ -173,7 +173,7 @@ const style = makeStyles(theme => ({
   },
   figure10: {
     position: 'absolute',
-    background: "url('/parallaxBg/figure10.png') no-repeat center center",
+    background: "url('/main/background/figure10.png') no-repeat center center",
     backgroundSize: 'cover',
     width: 40,
     height: 180,

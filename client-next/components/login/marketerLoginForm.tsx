@@ -20,13 +20,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react';
 import * as React from 'react';
+import { useRouter } from 'next/router';
 // 컴포넌트
 import FindDialog from './findDialog';
 import OnadLogo from '../shared/onadLogo'
 // util 계열
 import axios from '../../utils/axios';
 import HOST from '../../config';
-import history from '../../utils/history';
 // 스타일
 import useStyles from '../../styles/login/loginForm.style';
 
@@ -45,7 +45,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
   const [dialogType, setDialogType] = useState<string>('ID');
   const [userid, setUserid] = useState<string>('');
   const [passwd, setPasswd] = useState<string>('');
-
+  const router = useRouter();
   // 하나의 change로 값을 받을 수 있다.
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'userid') {
@@ -77,11 +77,11 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           const userData = res.data[1];
           if (userData.temporaryLogin) {
             handleClose();
-            history.push('/');
+            router.push('/');
           } else {
             // dispatch({ type: 'session', data: userData });
             handleClose();
-            history.push('/mypage/marketer/main');
+            router.push('/mypage/marketer/main');
           }
         }
       })

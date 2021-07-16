@@ -13,11 +13,11 @@ import {
 // 프로젝트 내부 모듈
 import { useReducer } from 'react';
 import * as React from 'react';
+import { useRouter } from 'next/router'
 // 컴포넌트
 // util 계열
 import HOST from '../../config';
 import axios from '../../utils/axios';
-import history from '../../utils/history';
 import passwordRegex from '../../utils/inputs/regex/password.regex';
 // 스타일
 import useStyles from '../../styles/login/rePassword.style';
@@ -69,6 +69,7 @@ interface Props {
 function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX.Element {
   const [state, dispatch] = useReducer(myReducer, initialValue);
   const classes = useStyles();
+  const router = useRouter();
 
   const checkPasswd = (event: InputType) => {
     event.preventDefault();
@@ -97,7 +98,7 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);
         logout();
-        history.replace('/');
+        router.replace('/');
       })
       .catch(err => {
         console.log(err);

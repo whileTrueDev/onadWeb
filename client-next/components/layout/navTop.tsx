@@ -17,12 +17,12 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 // 컴포넌트
 import LoginPopover from '../login/loginPopover'; // 현재 여기 작업
 // util 계열
 import HOST from '../../config';
 import axios from '../../utils/axios';
-import history from '../../utils/history';
 // 스타일
 import useStyles from '../../styles/layout/navTop.style';
 
@@ -36,7 +36,7 @@ interface NavTopProps {
 
 function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
   const classes = useStyles();
-
+  const router = useRouter();
   const trigger = useScrollTrigger({ threshold: 100, disableHysteresis: true });
 
   // 마이페이지 이동 핸들러
@@ -50,9 +50,9 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             alert('로그인 이후 이용하세요');
           }
         } else if (userType === 'marketer') {
-          history.push('/mypage/marketer/main');
+          router.push('/mypage/marketer/main');
         } else if (userType === 'creator') {
-          history.push('/mypage/creator/main');
+          router.push('/mypage/creator/main');
         }
       })
       .catch(err => {
@@ -176,18 +176,20 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
 
           <div className={classes.tabButtonWrap}>
             {/* 이용방법 버튼 */}
-            <Link
-              href={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
-            >
-              <a className={classes.tabButton}>
-                이용방법
-              </a>
-            </Link>
+            <div>
+              <Link
+                href={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
+              >
+                <a className={classes.tabButton}>
+                  이용방법
+                </a>
+              </Link>
+            </div>
 
             {/* 방송인 목록 버튼 */}
             {MainUserType ? (
               <div>
-                <Link href="/creatorlist">
+                <Link href="/creatorList">
                   <a className={classes.creatorList}>
                     방송인 목록
                   </a>

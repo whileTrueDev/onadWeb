@@ -21,6 +21,7 @@ import classnames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 // 컴포넌트
 import IndentityVerificationDialog from './identityVerification';
@@ -28,7 +29,6 @@ import Snackbar from '../../atoms/snackbar/snackbar';
 // util 계열
 import axiosInstance from '../../utils/axios';
 import HOST from '../../config';
-import history from '../../utils/history';
 import { useDialog } from '../../utils/hooks';
 import userIdRegex from '../../utils/inputs/regex/userId.regex';
 import passwordRegex from '../../utils/inputs/regex/password.regex';
@@ -82,6 +82,7 @@ export interface CreatorSignupInfo {
 export default function SignupCreator(): JSX.Element {
   const classes = useStyles();
   const location = useLocation();
+  const router = useRouter();
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '',
@@ -151,7 +152,7 @@ export default function SignupCreator(): JSX.Element {
         referralCode: signupInfo.referralCode,
       })
       .then(() => {
-        history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
+        router.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
       .catch(() => {
         setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
@@ -171,7 +172,7 @@ export default function SignupCreator(): JSX.Element {
         accessToken: parseParams(location.search).accessToken,
       })
       .then(() => {
-        history.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
+        router.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
       })
       .catch(() => {
         setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
@@ -703,7 +704,7 @@ export default function SignupCreator(): JSX.Element {
               <div style={{ margin: 16 }}>
                 <Typography
                   variant="body2"
-                  onClick={() => history.push('/creator/signup/pre-user')}
+                  onClick={() => router.push('/creator/signup/pre-user')}
                 >
                   트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
                   <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>

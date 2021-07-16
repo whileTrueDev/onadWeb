@@ -18,7 +18,6 @@ export interface OnadPalette extends Palette {
   };
 }
 export interface OnadTheme extends Theme {
-  handleThemeChange: () => void;
   palette: OnadPalette;
 }
 
