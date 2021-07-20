@@ -14,12 +14,10 @@ interface HowToUseProps {
     content: string[];
   };
   MainUserType: boolean;
-  // timer: NodeJS.Timeout | undefined;
 }
 
 function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
   const classes = styles();
-
   const [loading, setLoading] = useState(false);
   const [iframeLoading, setIframeLoading] = useState(false);
 

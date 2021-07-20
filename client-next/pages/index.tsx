@@ -1,5 +1,5 @@
 // material-UI
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 // 내부 소스
 import source from '../source/doorSource';
 import textLogo from '../public/logo/textLogo.png';
@@ -11,7 +11,7 @@ import { nanoid } from 'nanoid';
 // 컴포넌트
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
+import Router from 'next/router'
 // 스타일
 import useStyles from '../styles/main/door.style';
 
@@ -50,16 +50,15 @@ export default function Door(): JSX.Element {
 
             <div className={classNames(css.buttonWrapper, css.columnCenterAlign)}>
               {source.buttonTitle.map(title => (
-                <Link
-                  href={title === '광고주' ? '/marketer' : '/creator'}
+                <Button
+                  className={css.button}
+                  onClick={() => title === '광고주' ? Router.push('/marketer') : Router.push('/creator')}
                   key={nanoid()}
                 >
-                  <a className={css.button}>
-                    <Typography variant="h6" className={css.buttonText}>
-                      {title}
-                    </Typography>
-                  </a>
-                </Link>
+                  <Typography variant="h6" className={css.buttonText}>
+                    {title}
+                  </Typography>
+                </Button>
               ))}
             </div>
           </div>

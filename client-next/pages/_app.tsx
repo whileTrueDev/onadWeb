@@ -7,6 +7,7 @@ import {
   MuiThemeProvider as ThemeProvider,
   responsiveFontSizes,
 } from '@material-ui/core/styles';
+import HeadCompo from '../components/layout/head';
 
 function OnadNextApp({ Component, pageProps }: AppProps) {
 
@@ -37,9 +38,12 @@ function OnadNextApp({ Component, pageProps }: AppProps) {
   }, [])
 
   return (
-    <ThemeProvider<OnadTheme> theme={onadTheme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <>
+      <HeadCompo />
+      <ThemeProvider<OnadTheme> theme={onadTheme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </>
   )
 }
 export default OnadNextApp

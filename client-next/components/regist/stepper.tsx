@@ -23,9 +23,9 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
   const [state, dispatch] = useReducer(myReducer, initialState);
   const [loading, setLoading] = useState(0);
   const [open, setOpen] = useState(0);
-  const platformList = ['', 'google', 'naver', 'kakao'];
+  const platformList = ['main', 'google', 'naver', 'kakao'];
   useEffect(() => {
-    if (platform !== undefined) {
+    if (platform !== 'main') {
       alert('최초 로그인 이므로 회원가입을 시작합니다.');
     }
   }, [platform]);
@@ -51,7 +51,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
       ...user,
       platformType,
     };
-    if (platform === undefined) {
+    if (platform === 'main') {
       axios
         .post(`${HOST}/marketer`, user)
         .then(res => {
@@ -95,7 +95,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
   }
 
   function getRegistComponent(): JSX.Element {
-    if (platform === undefined) {
+    if (platform === 'main') {
       return (
         <RegistForm
           handleUserSubmit={handleUserSubmit}

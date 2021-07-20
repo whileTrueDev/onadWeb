@@ -68,6 +68,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative'
   },
   semiTitle: {
     color: '#29e3dc',

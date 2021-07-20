@@ -45,21 +45,13 @@ export type StepAction =
 // reducer를 사용하여 Error를 handling하자
 export function myReducer(state: StepState, action: StepAction): StepState {
   switch (action.type) {
-    case 'id': {
-      if (userIdRegex.test(action.value)) {
-        return {
-          ...state,
-          id: false,
-          checkDuplication: true,
-          idValue: action.value,
-        };
-      }
-      return {
-        ...state,
-        id: true,
-        checkDuplication: true,
-        idValue: action.value,
-      };
+    case 'email': {
+      // if (emailReg.test(action.value)) {
+      //   return { ...state, email: false };
+      // }
+      // return { ...state, email: true };
+      // 오류가 존재하지 않으면 email이 false가 되어야한다.
+      return { ...state, email: action.value };
     }
     // (?=.*[0-9])
     case 'password': {
@@ -74,13 +66,21 @@ export function myReducer(state: StepState, action: StepAction): StepState {
       }
       return { ...state, repasswd: true };
     }
-    case 'email': {
-      // if (emailReg.test(action.value)) {
-      //   return { ...state, email: false };
-      // }
-      // return { ...state, email: true };
-      // 오류가 존재하지 않으면 email이 false가 되어야한다.
-      return { ...state, email: action.value };
+    case 'id': {
+      if (userIdRegex.test(action.value)) {
+        return {
+          ...state,
+          checkDuplication: true,
+          idValue: action.value,
+          id: false,
+        };
+      } 
+      return {
+        ...state,
+        checkDuplication: true,
+        idValue: action.value,
+        id: true,
+      };
     }
     case 'phoneNum': {
       if (phoneNumRegex.test(action.value)) {

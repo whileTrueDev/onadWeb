@@ -5,14 +5,16 @@ import { Typography, TablePagination, useMediaQuery } from '@material-ui/core';
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import { GetServerSideProps } from 'next';
 // 컴포넌트
 import NavTop from '../components/layout/navTop';
 import AppFooter from '../components/layout/appFooter';
 import RePasswordDialog from '../components/login/rePassword';
 import Table from '../atoms/table/materialTable';
 // util 계열
+import axios from '../utils/axios'
+import HOST from '../config'
 import useLoginValue from '../utils/hooks/useLoginValue';
-import useGetRequest from '../utils/hooks/useGetRequest';
 // 스타일
 import useStyles from '../styles/main/creatorList/creatorList.style';
 
@@ -28,6 +30,7 @@ export interface ContractedCreatorListData<T> {
   creatorTwitchId: T;
 }
 
+
 const COLORS = [
   ['#00b9fd', '#4459fc', '#0f7cfc'],
   ['#00ddcc', '#00ad93', '#00d57b'],
@@ -35,38 +38,29 @@ const COLORS = [
   ['#e000fd', '#4459fc', '#8f0ffc'],
 ];
 
-export default function CreatorList(): JSX.Element {
+interface CreatorListProps {
+  contracedCreatorData: ContractedCreatorListData<string>[]
+  liveCreatorData: string[]
+}
+
+function getRandomColors(array: any): string {
+  const RandomColor = array[Math.floor(Math.random() * array.length)];
+  return `linear-gradient(to bottom, ${RandomColor[0]},${RandomColor[1]}, ${RandomColor[2]}`;
+}
+
+export default function CreatorList({
+  contracedCreatorData,
+  liveCreatorData
+}: CreatorListProps): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
   const [LiveCreator, setLiveCreator] = useState<null | ContractedCreatorListData<string>[]>();
-  const ContractedCreatorList =
-    useGetRequest<null, ContractedCreatorListData<string>[]>('/creators');
-  const LiveCreatorList = useGetRequest<null, string[]>('/creators/live');
   const isSmWidth = useMediaQuery('(max-width:960px)');
   const isXsWidth = useMediaQuery('(max-width:600px)');
 
-  function getRandomColors(array: any): string {
-    const RandomColor = array[Math.floor(Math.random() * array.length)];
-    return `linear-gradient(to bottom, ${RandomColor[0]},${RandomColor[1]}, ${RandomColor[2]}`;
-  }
-
   useEffect(() => {
-    if (
-      !ContractedCreatorList.loading &&
-      ContractedCreatorList.data &&
-      !LiveCreatorList.loading &&
-      LiveCreatorList.data
-    ) {
-      setLiveCreator(
-        ContractedCreatorList.data!.filter(row => LiveCreatorList.data!.includes(row.creatorId)),
-      );
-    }
-  }, [
-    ContractedCreatorList.data,
-    ContractedCreatorList.loading,
-    LiveCreatorList.data,
-    LiveCreatorList.loading,
-  ]);
+    setLiveCreator(contracedCreatorData.filter(row => liveCreatorData.includes(row.creatorId)))
+  }, []);
 
   const Columns = [
     {
@@ -136,11 +130,7 @@ export default function CreatorList(): JSX.Element {
           </Typography>
           {/* 라이브 스트리밍 리스트 */}
           <div className={classes.liveContainer}>
-            {!ContractedCreatorList.loading &&
-              ContractedCreatorList.data &&
-              !LiveCreatorList.loading &&
-              LiveCreatorList.data &&
-              LiveCreator?.map(row => (
+              {LiveCreator?.map(row => (
                 <div
                   className={classes.liveCreatorWrapper}
                   key={nanoid()}
@@ -160,7 +150,8 @@ export default function CreatorList(): JSX.Element {
                     />
                   </a>
                 </div>
-              ))}
+              ))
+              }
             <div />
           </div>
 
@@ -171,8 +162,7 @@ export default function CreatorList(): JSX.Element {
                 // eslint-disable-next-line no-nested-ternary
                 !isSmWidth ? Columns : !isXsWidth ? Columns.slice(0, 3) : Columns.slice(0, 1)
               }
-              data={ContractedCreatorList.data || []}
-              isLoading={ContractedCreatorList.loading || false}
+              data={contracedCreatorData|| []}
               components={{
                 Pagination: props => <TablePagination {...props} />,
               }}
@@ -204,4 +194,19 @@ export default function CreatorList(): JSX.Element {
       />
     </div>
   );
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const contracedCreator = await axios.get(`${HOST}/creators`)
+  const liveCreator = await axios.get(`${HOST}/creators/live`)
+  
+  const contracedCreatorData = await contracedCreator.data
+  const liveCreatorData = await liveCreator.data
+
+  return {
+    props: {
+      contracedCreatorData,
+      liveCreatorData
+    }
+  }
 }

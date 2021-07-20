@@ -15,8 +15,6 @@ const useStyles = makeStyles(theme => ({
     fontFamily: 'Noto Sans KR',
   },
   image: {
-    width: '50px',
-    height: '50px',
     objectFit: 'cover',
     objectPosition: 'top',
     borderRadius: '50%',

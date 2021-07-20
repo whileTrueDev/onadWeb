@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 // 컴포넌트
 import Inquire from '../main/inquiry/inquiry';
 import Dialog from '../../atoms/dialog/dialog';
-import CustomButtons from '../../atoms/CustomButtons/Button';
+import CustomButtons from '../../atoms/button/customButton';
 // util 계열
 import useDialog from '../../utils/hooks/useDialog';
 // 스타일
@@ -161,9 +161,9 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
       </Dialog>
       <Dialog open={Boolean(UseStep.open)} onClose={UseStep.handleClose} fullWidth maxWidth="md">
         <img
-          src={`/pngs/introduction/${imgStep}.png`}
-          className={classes.contentImg}
+          src={`/introduction/${imgStep}.png`}
           alt="sample"
+          className={classes.contentImg}
         />
       </Dialog>
     </div>

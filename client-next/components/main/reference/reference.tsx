@@ -4,6 +4,7 @@ import { Grid } from '@material-ui/core';
 import urlsource from '../../../source/clientMainSource';
 // 프로젝트 내부 모듈
 import { nanoid } from 'nanoid';
+import Image from 'next/image'
 // 컴포넌트
 // util 계열
 // 스타일
@@ -25,7 +26,9 @@ function Reference(): JSX.Element {
       >
         {urlsource.Reference.map(element => (
           <Grid item key={nanoid()} className={classes.ImageSelector}>
-            <img src={element.imageUrl} className={classes.image} alt="clientImage" />
+            <div className={classes.image} >
+              <Image src={element.imageUrl} alt="clientImage" layout="fill"/>
+            </div>
           </Grid>
         ))}
       </Grid>

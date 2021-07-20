@@ -2,6 +2,12 @@
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+// 내부 소스
+import blogSVG from '../../public/footer/blog.svg'
+import instagramSVG from '../../public/footer/instagram.svg'
+import youtubeSVG from '../../public//footer/youtube.svg'
+// 프로젝틑 내부 모듈
+import Image from 'next/image';
 // 스타일
 import useStyles from '../../styles/layout/appFooter.style';
 
@@ -21,7 +27,7 @@ function AppFooter(): JSX.Element {
             <li>
               <Link
                 variant="body1"
-                href="/policy"
+                href="/policy/main"
                 color="inherit"
                 underline="none"
                 className={classes.listItem}
@@ -57,13 +63,19 @@ function AppFooter(): JSX.Element {
         </Typography>
         <div className={classes.logoWrapper}>
           <a href="https://m.blog.naver.com/PostList.nhn?blogId=wt_onad">
-            <img src="/footer/blog.svg" alt="blog" className={classes.logo} />
+            <div className={classes.logo} > 
+              <Image src={blogSVG} alt="blog" />
+            </div>
           </a>
           <a href="https://www.instagram.com/official.onad/">
-            <img src="/footer/instagram.svg" alt="instagram" className={classes.logo} />
+            <div className={classes.logo}>
+              <Image src={instagramSVG} alt="instagram"/>
+            </div>
           </a>
           <a href="https://www.youtube.com/channel/UCN3w7jS8f6t2fPROcRY7e0g">
-            <img src="/footer/youtube.svg" alt="youtube" className={classes.logo} />
+            <div className={classes.logo} >
+              <Image src={youtubeSVG} alt="youtube"/>
+            </div>
           </a>
         </div>
       </Grid>

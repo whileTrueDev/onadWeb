@@ -85,13 +85,13 @@ const styles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: 270.5,
       height: 50,
-      background: "url('/contact/liveContactSpreaded.png') no-repeat center center",
+      background: "url('/main/contact/liveContactSpreaded.png') no-repeat center center",
       backgroundSize: 'cover',
       right: 10,
       bottom: 10,
     },
     [theme.breakpoints.down('xs')]: {
-      background: "url('/contact/liveContact.svg') no-repeat center center",
+      background: "url('/main/contact/liveContact.svg') no-repeat center center",
       width: 40,
       height: 40,
       right: 10,

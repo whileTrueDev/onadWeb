@@ -14,24 +14,29 @@ import useStyles from '../../../styles/main/indicator/indicator.style';
 
 interface IndicatorProps {
   nowBroadcast: number;
+  bannerView: number;
+  contractedCreator: number;
+  totalFollower: number;
 }
 
 function indicatorDecorate(indicator: number): number {
-  const indicatorLength = String(indicator).length;
+  const indicatorScore = Math.round(indicator)
+  const indicatorLength = String(indicatorScore).length;
   if (indicatorLength < 4) {
     return indicator;
   }
   if (indicatorLength < 7) {
-    return Number(String(indicator).slice(0, -3));
+    return Number(String(indicatorScore).slice(0, -3));
   }
   if (indicatorLength < 10) {
-    return Number(String(indicator).slice(0, -6));
+    return Number(String(indicatorScore).slice(0, -6));
   }
   return indicator;
 }
 
 function indicatorUnit(indicator: number): string {
-  const indicatorLength = String(indicator).length;
+  const indicatorScore = Math.round(indicator)
+  const indicatorLength = String(indicatorScore).length;
   if (indicatorLength < 4) {
     return '';
   }
@@ -44,7 +49,12 @@ function indicatorUnit(indicator: number): string {
   return '';
 }
 
-function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
+function Indicator({
+  nowBroadcast,
+  bannerView,
+  contractedCreator,
+  totalFollower,
+}: IndicatorProps): JSX.Element {
   const classes = useStyles();
 
   return (
@@ -58,8 +68,8 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
               </Typography>
               <>
                 <Typography variant="h4" align="center" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(790120)} />
-                  {indicatorUnit(790120)}
+                  <Countup duration={2} end={indicatorDecorate(totalFollower)} />
+                  {indicatorUnit(totalFollower)}
                 </Typography>
               </>
             </div>
@@ -74,8 +84,8 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
               </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(1341)} />
-                  {indicatorUnit(1341)}
+                  <Countup duration={2} end={indicatorDecorate(contractedCreator)} />
+                  {indicatorUnit(contractedCreator)}
                 </Typography>
               </>
             </div>
@@ -106,8 +116,8 @@ function Indicator({ nowBroadcast }: IndicatorProps): JSX.Element {
               </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(49334643)} />
-                  {indicatorUnit(49334643)}
+                  <Countup duration={2} end={indicatorDecorate(bannerView)} />
+                  {indicatorUnit(bannerView)}
                 </Typography>
               </>
             </div>

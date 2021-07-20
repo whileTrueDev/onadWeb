@@ -17,8 +17,6 @@ interface LoginPopoverProps {
   type?: string;
   logout: () => void;
   MainUserType?: boolean;
-  trigger?: boolean;
-  mode?: string | undefined;
 }
 
 // login
@@ -27,8 +25,6 @@ interface LoginPopoverProps {
 function LoginPopover({
   type,
   MainUserType,
-  trigger,
-  mode,
   logout,
 }: LoginPopoverProps): JSX.Element {
   const [loginValue, setLoginValue] = useState('');

@@ -16,7 +16,6 @@ import naverLogo from '../../public/logo/naver/naver_icon_green.png'
 import kakaoLogo from '../../public/logo/kakao/kakaolink_btn_small.png'
 // 프로젝트 내부 모듈
 import classnames from 'classnames';
-import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react';
 import * as React from 'react';
@@ -68,7 +67,6 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         setLoading(false);
         if (res.data[0]) {
           setPasswd('');
-          console.log(res.data);
           alert(res.data[1]);
           if (res.data[1] === '이메일 본인인증을 해야합니다.') {
             handleClose();
@@ -82,12 +80,12 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
             // dispatch({ type: 'session', data: userData });
             handleClose();
             router.push('/mypage/marketer/main');
+            // 이 부분 호스트 바꿔서 연결해야할 듯
           }
         }
       })
       .catch(reason => {
         setLoading(false);
-        console.log(reason);
         setPasswd(''); // 비밀번호 초기화
         alert('회원이 아닙니다.');
       });
@@ -102,7 +100,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         </IconButton>
 
         <div style={{ marginBottom: 8, marginTop: 8 }}>
-          <OnadLogo width={80} />
+          <OnadLogo width={80} height={30} />
         </div>
 
         <Typography variant="h6">온애드 광고주 로그인</Typography>
@@ -148,48 +146,48 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
 
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
-        <Link
-          href={`${HOST}/login/google`}
+        <Button
+          onClick={ () => router.push(`${HOST}/login/google`)}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)}
+          style={{ alignItems: 'center' }}
         >
-          <a className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)} style={{ alignItems: 'center' }}>
-            <Image src={googleLogo} alt="googleLogo" height="30" />
-            구글 아이디로 로그인
-          </a>
-        </Link>
-        <Link
-          href={`${HOST}/login/naver`}
+          <Image src={googleLogo} alt="googleLogo" width={30} height={30}/>
+          구글 아이디로 로그인
+        </Button>
+        <Button
+          onClick={ () => router.push(`${HOST}/login/naver`)}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)}
+          style={{ alignItems: 'center' }}
         >
-          <a className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)} style={{ alignItems: 'center' }}>
-            <Image src={naverLogo} alt="naverLogo" height="30" />
-            네이버 아이디로 로그인
-          </a>
-        </Link>
-        <Link
-          href={`${HOST}/login/kakao`}
+          <Image src={naverLogo} alt="naverLogo" width={30} height={30} />
+          네이버 아이디로 로그인
+        </Button>
+        <Button
+          onClick={ () => router.push(`${HOST}/login/kakao`)}
+          fullWidth
+          className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)}
+          style={{ alignItems: 'center' }}
         >
-          <a className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)} style={{ alignItems: 'center' }}>
-            <Image src={kakaoLogo} alt="kakaoLogo" height="30" />
-            카카오 아이디로 로그인
-          </a>
-        </Link>
+          <Image src={kakaoLogo} alt="kakaoLogo" width={30} height={30}/>
+          카카오 아이디로 로그인
+        </Button>
 
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
         <div style={{ marginTop: 16 }}>
           <Typography variant="body2" color="textSecondary">
             계정이 없으신가요?&nbsp;
-            <Link
-              href="/regist"
+            <Typography
+              display="inline"
+              variant="body2"
+              style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+              onClick={() => router.push('/regist')}
+
             >
-              <a>
-                <Typography
-                  variant="body2"
-                  style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
-                >
-                  회원가입하기
-                </Typography>
-              </a>
-            </Link>
+              회원가입하기
+            </Typography>
           </Typography>
 
           <Typography variant="body2" color="textSecondary">

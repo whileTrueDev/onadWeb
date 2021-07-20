@@ -65,7 +65,9 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <Image src={content.imageUrl} alt="advantage" className={classes.advImg}/>
+                <div className={classes.advImg} >
+                  <Image src={content.imageUrl} alt="advantage" layout="fill"/>
+                </div>
                 <Typography variant="h4" className={classes.title}>
                   {content.title}
                 </Typography>
@@ -97,7 +99,9 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <Image src={content.imageUrl} alt="advantage" className={classes.advImg}/>
+                <div className={classes.advImg} >
+                  <Image src={content.imageUrl} alt="advantage" layout="fill" />
+                </div>
                 <Typography variant="h4" className={classes.title}>
                   {content.title}
                 </Typography>

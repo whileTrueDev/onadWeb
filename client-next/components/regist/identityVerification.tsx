@@ -54,6 +54,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
   useEffect(() => {
     if (open) {
       const globalParams: any = window;
+      
       const { IMP } = globalParams;
       IMP.init('imp00026649');
 
@@ -62,6 +63,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
           // param
           merchant_uid: 'ORD20180131-0000011',
           min_age: '19',
+          popup: true
         },
         (rsp: any) => {
           // callback
@@ -77,7 +79,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
   }, [handleBack, open, setOpen, submitImpUid]);
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" className={classes.root}>
       <Grid item xs={6}>
         <CustomCard
           iconComponent={<Fingerprint />}

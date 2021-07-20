@@ -44,13 +44,12 @@ const styles = makeStyles(theme => ({
     height: '100%',
   },
   flipBack: {
-    hight: '100%',
     backgroundColor: '#eaeaea',
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '90%',
-    height: '90%',
+    width: '100%',
+    height: '100%',
     zIndex: 200,
     visibility: 'visible',
     padding: '5%',
@@ -79,6 +78,7 @@ const styles = makeStyles(theme => ({
     height: '100%',
   },
   advImg: {
+    position: 'relative',
     width: 380,
     height: 300,
     [theme.breakpoints.down('md')]: {

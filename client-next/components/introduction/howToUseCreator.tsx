@@ -125,9 +125,9 @@ function HowToUseCreator({ source }: Source): JSX.Element {
 
       <Dialog open={Boolean(UseStep.open)} onClose={UseStep.handleClose} fullWidth maxWidth="md">
         <img
-          src={`/pngs/introduction/${imgStep}.png`}
-          className={classes.contentImg}
+          src={`/introduction/${imgStep}.png`}
           alt="sample"
+          className={classes.contentImg}
         />
       </Dialog>
     </div>

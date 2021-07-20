@@ -48,6 +48,8 @@ function RegistForm({
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [areaCode, setAreaCode] = useState('');
   const [numberType, setNumberType] = useState(true);
+  console.log(state.id)
+  console.log(state.password)
 
   const handleTypeChange = () => {
     // numberType이 변경될 때, 데이터도 리셋.
@@ -164,7 +166,7 @@ function RegistForm({
         <form autoComplete="off" onSubmit={handleSubmit} id="form">
           <Grid container direction="column" spacing={1}>
             <Grid item xs={12}>
-              <FormControl required error={Boolean(state.id)}>
+              <FormControl required error={Boolean(state.id)} autoComplete="off">
                 <InputLabel shrink>아이디</InputLabel>
                 <Input
                   required

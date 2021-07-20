@@ -61,6 +61,7 @@ export default function CreatorLoginForm({
           if (res.data[1]) setError(res.data[1]);
         }
         if (res.data === 'success') router.push('/mypage/creator/main');
+        // 이 부분 호스트 바뀌어서 들어가야 할 듯
       })
       .catch(err => {
         setLoading(false);
@@ -89,7 +90,7 @@ export default function CreatorLoginForm({
         </IconButton>
 
         <div style={{ marginBottom: 8, marginTop: 8 }}>
-          <OnadLogo width={80} />
+          <OnadLogo width={80} height={30}/>
         </div>
         <Typography variant="h6">온애드 방송인 로그인</Typography>
 

@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
   image: {
     width: 280,
     height: 140,
+    position: 'relative'
   },
   ImageSelector: {
     display: 'flex',

@@ -112,7 +112,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
       <div>
         <MenuItem className={classes.buttonWraper}>
           <Link
-            href={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
+            href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}
           >
             <a className={classes.mobileButton}>
               이용 방법
@@ -122,7 +122,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
 
         {MainUserType ? (
           <MenuItem className={classes.buttonWraper}>
-            <Link href="/creatorlist">
+            <Link href="/creatorList">
               <a className={classes.mobileButton}>
                 방송인 목록
               </a>
@@ -141,7 +141,6 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
           ) : (
             <LoginPopover
               type="회원가입"
-              mode="mobile"
               MainUserType={MainUserType}
               logout={logout}
             />
@@ -178,7 +177,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             {/* 이용방법 버튼 */}
             <div>
               <Link
-                href={MainUserType ? '/introduce/marketer' : '/introduce/creator'}
+                href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}
               >
                 <a className={classes.tabButton}>
                   이용방법

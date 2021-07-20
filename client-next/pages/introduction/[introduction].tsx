@@ -1,44 +1,35 @@
 // material-UI
 import { Typography, Button } from '@material-ui/core';
 // 내부 소스
-import textSource from '../source/introductionSource';
+import textSource from '../../source/introductionSource';
+import marketerIntro from '../../public/introduction/marketerIntro.svg'
+import creatorIntro from '../../public/introduction/creatorIntro.svg'
 // 프로젝트 내부 모듈
-import { useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next'
+import Image from 'next/image'
 // 컴포넌트
-import NavTop from '../components/layout/navTop';
-import HowToUseCreator from '../components/introduction/howToUseCreator';
-import HowToUseMarketer from '../components/introduction/howToUseMarketer';
-import IntroduceMiddle from '../components/introduction/introduceMiddle';
-import IntroContact from '../components/main/contact/introContact';
-import Question from '../components/introduction/question';
-import AppFooter from '../components/layout/appFooter';
+import NavTop from '../../components/layout/navTop';
+import HowToUseCreator from '../../components/introduction/howToUseCreator';
+import HowToUseMarketer from '../../components/introduction/howToUseMarketer';
+import IntroduceMiddle from '../../components/introduction/introduceMiddle';
+import IntroContact from '../../components/main/contact/introContact';
+import Question from '../../components/introduction/question';
+import AppFooter from '../../components/layout/appFooter';
 // util 계열
-import useLoginValue from '../utils/hooks/useLoginValue';
-import openKakaoChat from '../utils/openKakaoChat';
+import useLoginValue from '../../utils/hooks/useLoginValue';
+import openKakaoChat from '../../utils/openKakaoChat';
 // 스타일
-import styles from '../styles/introduction/introduction.style';
+import styles from '../../styles/introduction/introduction.style';
 
 export interface Props {
-  match: {
-    params: { userType: string | boolean };
-  };
+  params: string
 }
 
-// this is layout compoent
-export default function Introduction({ match }: Props): JSX.Element {
+export default function Introduction({ params }: Props): JSX.Element {
   const { isLogin, logout } = useLoginValue();
   const classes = styles();
-  const { userType } = match.params;
-
-  useEffect(() => {
-    const glassElement = document.getElementById('glass');
-    document.addEventListener('mousemove', e => {
-      glassElement!.style.left = `${e.offsetX}px`;
-      glassElement!.style.top = `${e.offsetY}px`;
-      glassElement!.style.display = 'block';
-    });
-  }, []);
+  const userType = params
 
   return (
     <div>
@@ -58,9 +49,9 @@ export default function Introduction({ match }: Props): JSX.Element {
                   {textSource.heroSector.marketer.text.content}
                 </Typography>
                 <div className={classes.imageWrapper}>
-                  <div className={classes.glassEffect} id="glass" />
-                  <img
-                    src="/introduction/marketerIntro.svg"
+                  <div className={classes.glassEffect}/>
+                  <Image
+                    src={marketerIntro}
                     className={classes.topImage}
                     alt="Intro"
                   />
@@ -91,9 +82,9 @@ export default function Introduction({ match }: Props): JSX.Element {
                 <div className={classes.middleLine2} />
                 <Typography variant="h5">{textSource.heroSector.marketer.text.content}</Typography>
                 <div className={classes.imageWrapper}>
-                  <div className={classes.glassEffect} id="glass" />
-                  <img
-                    src="/introduction/creatorIntro.svg"
+                  <div className={classes.glassEffect}/>
+                  <Image
+                    src={creatorIntro}
                     className={classes.topImage}
                     alt="Intro"
                   />
@@ -114,4 +105,39 @@ export default function Introduction({ match }: Props): JSX.Element {
       <Button className={classes.kakaoContact} onClick={openKakaoChat} />
     </div>
   );
+}
+
+
+
+export const getStaticPaths: GetStaticPaths = async () => {
+
+  const paths = [
+    {params: {introduction: 'marketer'}},
+    {params: {introduction: 'creator'}}
+  ]
+
+  return {
+    paths,
+    fallback: true
+  }
+}
+
+
+export const getStaticProps: GetStaticProps = async (
+  ctx: GetStaticPropsContext
+) => {
+
+  if (ctx.params?.introduction === 'marketer') {
+    return {
+      props: {
+        params: 'marketer'
+      }
+    }
+  }
+
+  return {
+    props: {
+      params: 'creator'
+    }
+  }
 }
