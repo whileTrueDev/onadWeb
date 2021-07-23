@@ -5,3 +5,4 @@ export interface QueryResult {
   error?: MysqlError | null;
   result: any;
 }
+
