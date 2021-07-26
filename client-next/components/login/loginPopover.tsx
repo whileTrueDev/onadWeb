@@ -82,7 +82,7 @@ function LoginPopover({
           ) : (
             <div>
               <Link
-                href='/creator/signup'
+                href='/regist/cre-signup'
               >
                 <a className={classes.rightLink}>
                   회원가입

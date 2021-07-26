@@ -2,7 +2,6 @@
 import {
   FormControl,
   InputLabel,
-  Input,
   FormHelperText,
   InputAdornment,
   Button,
@@ -20,9 +19,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Done from '@material-ui/icons/Done';
 // 내부 소스
 // 프로젝트 내부 모듈
-import { useState } from 'react';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
+import {useState} from 'react';
 // 컴포넌트
 import SuccessTypo from '../../atoms/typography/success';
 import StaticInput from '../../atoms/input/staticInput';
@@ -35,11 +34,16 @@ import areaCodes, { MenuProps } from '../../utils/inputs/area-codes';
 // 스타일
 import useStyles from '../../styles/regist/registForm.style';
 
+export const initialIdState = {
+  idCheck: false,
+  idValue: '',
+  checkDuplication: true,
+}
 
 function RegistForm({
   handleBack,
   handleUserSubmit,
-  state,
+  formState,
   dispatch,
   loading,
   setLoading,
@@ -48,8 +52,8 @@ function RegistForm({
   const [marketerCustomDomain, setCustomDomain] = useState('');
   const [areaCode, setAreaCode] = useState('');
   const [numberType, setNumberType] = useState(true);
-  console.log(state.id)
-  console.log(state.password)
+
+  const [idState, setIdState] = useState(initialIdState)
 
   const handleTypeChange = () => {
     // numberType이 변경될 때, 데이터도 리셋.
@@ -66,7 +70,25 @@ function RegistForm({
   }
 
   const handleChange = (name: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: name, value: event.target.value });
+    if (name !== 'idCheck') {
+      dispatch({ type: name, value: event.target.value });
+    } else {
+      const userIdRegex = /^[a-z]+[a-z0-9]{5,14}$/g;
+      const regexTest = userIdRegex.test(event.target.value)
+      if (regexTest) {
+        setIdState({
+          checkDuplication: true,
+          idValue: event.target.value,
+          idCheck: false,
+        })
+      } else {
+        setIdState({
+          checkDuplication: true,
+          idValue: event.target.value,
+          idCheck: true,
+        })
+      }
+    }
   };
 
   function handleChangePhone(value: any): void {
@@ -79,43 +101,41 @@ function RegistForm({
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
+    const { password, repasswd, phoneNumValidationCheck } = formState;
+    const {idCheck, checkDuplication, idValue} = idState
 
-    if (state.checkDuplication) {
+    if (checkDuplication) {
       alert('ID 중복 조회를 해야합니다.');
       return;
     }
-    const { id, password, repasswd, checkDuplication, phoneNumValidationCheck } = state;
 
-    // const marketerMailId = document.getElementById('email').value;
-    const marketerMailId = state.email;
+    const marketerMailId = formState.email;
 
     if (marketerMailId === '') {
       alert('입력이 올바르지 않습니다.');
       return;
     }
 
-    // 모든 state가 false가 되어야한다.
-    if (!(id || password || repasswd || checkDuplication || phoneNumValidationCheck)) {
-      // const marketerId = document.getElementById('id')!.value;
-      const marketerId = state.idValue;
-      const marketerName = state.name;
-      // const marketerName = document.getElementById('name')!.value;
-      let marketerPhoneNum = state.phoneNum;
+    // 모든 formState가 false가 되어야한다.
+    if (!(idCheck || password || repasswd || checkDuplication || phoneNumValidationCheck)) {
+      const marketerId = idValue;
+      const marketerName = formState.name;
+      let marketerPhoneNum = formState.phoneNum;
       if (!numberType) {
-        if (state.phoneNum.length === 7) {
-          marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(
+        if (formState.phoneNum.length === 7) {
+          marketerPhoneNum = `( ${areaCode} ) - ${formState.phoneNum.slice(
             0,
             3,
-          )} - ${state.phoneNum.slice(3)}`;
+          )} - ${formState.phoneNum.slice(3)}`;
         } else {
-          marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(
+          marketerPhoneNum = `( ${areaCode} ) - ${formState.phoneNum.slice(
             0,
             4,
-          )} - ${state.phoneNum.slice(4)}`;
+          )} - ${formState.phoneNum.slice(4)}`;
         }
       }
-      const marketerRawPasswd = state.passwordValue;
-      const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
+      const marketerRawPasswd = formState.passwordValue;
+      const marketerDomain = formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
       const user = {
         marketerId,
         marketerRawPasswd,
@@ -136,16 +156,17 @@ function RegistForm({
 
   function checkDuplicateID(): void {
     // const id = document.getElementById('id')!.value;
-    const { idValue } = state;
-    if (state.id || idValue === '') {
+    const {idCheck, idValue } = idState;
+    if (idCheck || idValue === '') {
       alert('ID을 올바르게 입력해주세요.');
+      setIdState({...idState, checkDuplication: true})
     } else {
       axios.post(`${HOST}/marketer/checkId`, { idValue }).then(res => {
         if (res.data) {
           alert('ID가 중복되었습니다. 다른 ID를 사용해주세요.');
-          dispatch({ type: 'checkDuplication', value: true });
+          setIdState({...idState, checkDuplication: true})
         } else {
-          dispatch({ type: 'checkDuplication', value: false });
+          setIdState({...idState, checkDuplication: false})
         }
       });
     }
@@ -166,34 +187,36 @@ function RegistForm({
         <form autoComplete="off" onSubmit={handleSubmit} id="form">
           <Grid container direction="column" spacing={1}>
             <Grid item xs={12}>
-              <FormControl required error={Boolean(state.id)} autoComplete="off">
-                <InputLabel shrink>아이디</InputLabel>
-                <Input
-                  required
-                  id="id"
-                  placeholder="아이디를 입력하세요"
-                  onChange={handleChange('id')}
-                  inputProps={{
-                    maxLength: 15,
-                  }}
-                  endAdornment={
+              <TextField
+                type="text"
+                label="아이디"
+                required
+                error={idState.idCheck}
+                placeholder="아이디를 입력하세요"
+                onChange={handleChange('idCheck')}
+                inputProps={{
+                  maxLength: 15,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  endAdornment: (
                     <InputAdornment position="end">
                       <Divider className={classes.divider} />
                       <Button color="primary" onClick={() => checkDuplicateID()}>
                         중복조회
                       </Button>
-                      {!state.checkDuplication && (
+                      {!idState.checkDuplication && (
                         <SuccessTypo>
                           <Done />
                         </SuccessTypo>
                       )}
                     </InputAdornment>
-                  }
-                />
-                <FormHelperText>
-                  {state.id ? '6자 이상, 15자 이하 영문(소문자) 또는 숫자' : ' '}
-                </FormHelperText>
-              </FormControl>
+                  ),
+                }}
+                helperText={idState.idCheck ? '6자 이상, 15자 이하 영문(소문자) 또는 숫자' : ''}
+              />
             </Grid>
             <Grid container direction="row">
               <Grid item>
@@ -205,9 +228,9 @@ function RegistForm({
                   className={classes.textField}
                   onChange={handleChange('password')}
                   helperText={
-                    state.password ? '특수문자 !@#$%^*+=- 를 포함한 8-20 영문 또는 숫자' : ' '
+                    formState.password ? '특수문자 !@#$%^*+=- 를 포함한 8-20 영문 또는 숫자' : ' '
                   }
-                  error={state.password}
+                  error={formState.password}
                   margin="normal"
                   InputLabelProps={{
                     shrink: true,
@@ -221,8 +244,8 @@ function RegistForm({
                   type="password"
                   label="비밀번호확인"
                   placeholder="비밀번호 확인을 입력하세요."
-                  helperText={state.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
-                  error={state.repasswd}
+                  helperText={formState.repasswd ? '비밀번호와 동일하지 않습니다.' : ' '}
+                  error={formState.repasswd}
                   className={classes.textField}
                   onChange={handleChange('repasswd')}
                   margin="normal"
@@ -259,7 +282,7 @@ function RegistForm({
                       className={classes.phoneField}
                       required
                       margin="normal"
-                      error={Boolean(state.phoneNumValidationCheck)}
+                      error={Boolean(formState.phoneNumValidationCheck)}
                     >
                       <InputLabel shrink htmlFor="phoneNumber">
                         전화번호
@@ -268,7 +291,7 @@ function RegistForm({
                         <NumberFormat
                           pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
                           placeholder="( ___ ) - ____ - ____"
-                          value={state.phoneNum}
+                          value={formState.phoneNum}
                           onValueChange={handleChangePhone}
                           customInput={StaticInput}
                           format="( ### ) - #### - ####"
@@ -294,7 +317,7 @@ function RegistForm({
                           </Grid>
                           <Grid item xs={9}>
                             <NumberFormat
-                              value={state.phoneNum}
+                              value={formState.phoneNum}
                               onValueChange={handleChangePhone}
                               customInput={StaticInput}
                               className={classes.companyField}
@@ -304,7 +327,7 @@ function RegistForm({
                         </Grid>
                       )}
                       <FormHelperText>
-                        {state.phoneNumValidationCheck
+                        {formState.phoneNumValidationCheck
                           ? '전화번호를 올바르게 입력하세요!'
                           : '온애드와 연락할 전화번호를 입력하세요.'}
                       </FormHelperText>
@@ -381,13 +404,13 @@ function RegistForm({
                 />
               </Grid>
               <Grid item>
-                {state.domain !== '직접입력' ? (
+                {formState.domain !== '직접입력' ? (
                   <TextField
                     required
                     select
                     label="도메인"
                     className={classes.textField}
-                    value={state.domain}
+                    value={formState.domain}
                     onChange={handleChange('domain')}
                     helperText="EMAIL 도메인을 선택하세요."
                     InputLabelProps={{

@@ -94,31 +94,6 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     }
   }
 
-  function getRegistComponent(): JSX.Element {
-    if (platform === 'main') {
-      return (
-        <RegistForm
-          handleUserSubmit={handleUserSubmit}
-          handleBack={handleBack}
-          state={state}
-          dispatch={dispatch}
-          loading={loading}
-          setLoading={setLoading}
-        />
-      );
-    }
-    return (
-      <PlatformRegistForm
-        handleUserSubmit={handleUserSubmit}
-        handleBack={handleBack}
-        state={state}
-        dispatch={dispatch}
-        loading={loading}
-        setLoading={setLoading}
-      />
-    );
-  }
-
   return (
     <div className={classes.container}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -141,7 +116,28 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
         </Step>
         <Step key="2">
           <StepLabel>개인정보 입력</StepLabel>
-          <StepContent>{getRegistComponent()}</StepContent>
+          { platform === 'main' 
+            ? <StepContent>
+                <RegistForm
+                  handleUserSubmit={handleUserSubmit}
+                  handleBack={handleBack}
+                  formState={state}
+                  dispatch={dispatch}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              </StepContent>
+            : <StepContent>
+                <PlatformRegistForm
+                  handleUserSubmit={handleUserSubmit}
+                  handleBack={handleBack}
+                  formState={state}
+                  dispatch={dispatch}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              </StepContent>
+          }
         </Step>
       </Stepper>
     </div>

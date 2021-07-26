@@ -5,24 +5,18 @@ import userIdRegex from '../../utils/inputs/regex/userId.regex';
 
 export const initialState = {
   passwordValue: '',
-  id: false,
   password: false,
   repasswd: false,
-  checkDuplication: true,
   email: '',
   phoneNum: '',
   phoneNumValidationCheck: false,
   domain: '',
   name: '',
-  idValue: '',
 };
 export interface StepState {
   passwordValue: string;
-  id: string | boolean;
-  idValue: string;
   password: boolean;
   repasswd: boolean;
-  checkDuplication: boolean;
   email: string;
   phoneNum: string;
   phoneNumValidationCheck: boolean;
@@ -31,14 +25,12 @@ export interface StepState {
 }
 
 export type StepAction =
-  | { type: 'id'; value: string }
   | { type: 'password'; value: string }
   | { type: 'repasswd'; value: string }
   | { type: 'email'; value: string }
   | { type: 'phoneNum'; value: string }
   | { type: 'companyNum'; value: string }
   | { type: 'domain'; value: string }
-  | { type: 'checkDuplication'; value: boolean }
   | { type: 'name'; value: string }
   | { type: 'reset' };
 
@@ -66,22 +58,6 @@ export function myReducer(state: StepState, action: StepAction): StepState {
       }
       return { ...state, repasswd: true };
     }
-    case 'id': {
-      if (userIdRegex.test(action.value)) {
-        return {
-          ...state,
-          checkDuplication: true,
-          idValue: action.value,
-          id: false,
-        };
-      } 
-      return {
-        ...state,
-        checkDuplication: true,
-        idValue: action.value,
-        id: true,
-      };
-    }
     case 'phoneNum': {
       if (phoneNumRegex.test(action.value)) {
         return { ...state, phoneNum: action.value, phoneNumValidationCheck: false };
@@ -101,11 +77,7 @@ export function myReducer(state: StepState, action: StepAction): StepState {
     case 'name': {
       return { ...state, name: action.value };
     }
-    case 'checkDuplication': {
-      return { ...state, checkDuplication: action.value };
-    }
     case 'reset': {
-      console.log('모든 State를 reset합니다');
       return initialState;
     }
     default: {

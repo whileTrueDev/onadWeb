@@ -43,7 +43,7 @@ const domains = [
 export interface Props {
   handleBack: () => void;
   handleUserSubmit: (user: any) => void;
-  state: StepState;
+  formState: StepState;
   dispatch: (state: StepAction) => void;
   loading: number;
   setLoading: (number: number) => void;
@@ -57,7 +57,7 @@ interface ProfileData {
 function PlatformRegistForm({
   handleBack,
   handleUserSubmit,
-  state,
+  formState,
   dispatch,
   loading,
   setLoading,
@@ -77,7 +77,6 @@ function PlatformRegistForm({
       dispatch({ type: 'domain', value: marketerMail.split('@')[1] });
       dispatch({ type: 'email', value: marketerMail.split('@')[0] });
       setMarketerId(marketerPlatformData);
-      dispatch({ type: 'checkDuplication', value: false });
     }
   }, [dispatch, profileData.loading, profileData.data]);
 
@@ -109,25 +108,23 @@ function PlatformRegistForm({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    const { email } = state;
-    // 모든 state가 false가 되어야한다.
-    // const marketerName = document.getElementById('name').value;
-    const marketerName = state.name;
-    let marketerPhoneNum = state.phoneNum;
+    const { email } = formState;
+    const marketerName = formState.name;
+    let marketerPhoneNum = formState.phoneNum;
     if (!numberType) {
-      if (state.phoneNum.length === 7) {
-        marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(
+      if (formState.phoneNum.length === 7) {
+        marketerPhoneNum = `( ${areaCode} ) - ${formState.phoneNum.slice(
           0,
           3,
-        )} - ${state.phoneNum.slice(3)}`;
+        )} - ${formState.phoneNum.slice(3)}`;
       } else {
-        marketerPhoneNum = `( ${areaCode} ) - ${state.phoneNum.slice(
+        marketerPhoneNum = `( ${areaCode} ) - ${formState.phoneNum.slice(
           0,
           4,
-        )} - ${state.phoneNum.slice(4)}`;
+        )} - ${formState.phoneNum.slice(4)}`;
       }
     }
-    const marketerDomain = state.domain === '직접입력' ? marketerCustomDomain : state.domain;
+    const marketerDomain = formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
     const user = {
       marketerId,
       marketerName,
@@ -176,7 +173,7 @@ function PlatformRegistForm({
                 <FormControl
                   required
                   margin="normal"
-                  error={Boolean(state.phoneNumValidationCheck)}
+                  error={Boolean(formState.phoneNumValidationCheck)}
                 >
                   <InputLabel shrink htmlFor="phoneNumber">
                     전화번호
@@ -185,7 +182,7 @@ function PlatformRegistForm({
                     <NumberFormat
                       pattern="^\( [0-9]{3} \) [-] +[0-9]{3,4} [-] +[0-9]{4}$"
                       placeholder="( ___ ) - ____ - ____"
-                      value={state.phoneNum}
+                      value={formState.phoneNum}
                       onValueChange={handleChangePhone}
                       customInput={StaticInput}
                       format="( ### ) - #### - ####"
@@ -211,7 +208,7 @@ function PlatformRegistForm({
                       </Grid>
                       <Grid item xs={9}>
                         <NumberFormat
-                          value={state.phoneNum}
+                          value={formState.phoneNum}
                           onValueChange={handleChangePhone}
                           customInput={StaticInput}
                           className={classes.companyField}
@@ -221,7 +218,7 @@ function PlatformRegistForm({
                     </Grid>
                   )}
                   <FormHelperText>
-                    {state.phoneNumValidationCheck
+                    {formState.phoneNumValidationCheck
                       ? '전화번호를 올바르게 입력하세요!'
                       : '온애드와 연락할 전화번호를 입력하세요.'}
                   </FormHelperText>
@@ -273,7 +270,7 @@ function PlatformRegistForm({
                 <TextField
                   required
                   label="EMAIL ID"
-                  value={state.email}
+                  value={formState.email}
                   className={classes.textField}
                   onChange={handleChange('email')}
                   helperText="EMAIL ID을 입력하세요."
@@ -292,13 +289,13 @@ function PlatformRegistForm({
                 />
               </Grid>
               <Grid item>
-                {state.domain !== '직접입력' ? (
+                {formState.domain !== '직접입력' ? (
                   <TextField
                     required
                     select
                     label="Domain"
                     className={classes.textField}
-                    value={state.domain}
+                    value={formState.domain}
                     onChange={handleChange('domain')}
                     helperText="EMAIL Domain을 선택하세요."
                     InputLabelProps={{

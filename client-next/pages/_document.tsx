@@ -25,11 +25,12 @@ export default class RootDocument extends Document {
           `,
             }}
           />
+
+          {/*  이 부분 아마도 헤드로 옮겨서 script로 대체 해야할 듯....? */}
           <meta name="theme-color" />
           {/* google adsense */}
-          <script data-ad-client="ca-pub-4320356355619389" async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-            />
+          <Script data-ad-client="ca-pub-4320356355619389" async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap" />
           <link
             rel="stylesheet"

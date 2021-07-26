@@ -20,9 +20,7 @@ import { Alert } from '@material-ui/lab';
 import classnames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 // 컴포넌트
 import IndentityVerificationDialog from './identityVerification';
 import Snackbar from '../../atoms/snackbar/snackbar';
@@ -81,8 +79,8 @@ export interface CreatorSignupInfo {
 }
 export default function SignupCreator(): JSX.Element {
   const classes = useStyles();
-  const location = useLocation();
   const router = useRouter();
+
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '',
@@ -344,6 +342,7 @@ export default function SignupCreator(): JSX.Element {
           console.error(err);
         });
     }
+
   });
 
   // 회원가입 입력 폼
@@ -530,9 +529,8 @@ export default function SignupCreator(): JSX.Element {
   const completeButtonSet = (
     <div>
       <Button
-        component={Link}
         className={classes.socialLoginButton}
-        to="/mypage/creator/main"
+        onClick={() => router.push('/mypage/creator/main')}
         color="primary"
         variant="contained"
         fullWidth
@@ -540,9 +538,8 @@ export default function SignupCreator(): JSX.Element {
         마이페이지로 이동
       </Button>
       <Button
-        component={Link}
         className={classes.socialLoginButton}
-        to="/creator"
+        onClick={() => router.push('/creator')}
         color="default"
         variant="contained"
         fullWidth
@@ -609,9 +606,8 @@ export default function SignupCreator(): JSX.Element {
                         온애드 회원가입을 진행해주세요.
                       </Typography>
                       <Button
-                        component={Link}
                         className={classes.socialLoginButton}
-                        to="/creator/signup"
+                        onClick={() => router.push('/regist/cre-signup')}
                         color="primary"
                         variant="contained"
                         fullWidth
@@ -619,9 +615,8 @@ export default function SignupCreator(): JSX.Element {
                         회원가입하기
                       </Button>
                       <Button
-                        component={Link}
                         className={classes.socialLoginButton}
-                        to="/creator"
+                        onClick={() => router.push('/creator')}
                         color="default"
                         variant="contained"
                         fullWidth

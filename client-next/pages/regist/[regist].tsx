@@ -6,6 +6,7 @@ import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next'
 // 컴포넌트
 import NavTop from '../../components/layout/navTop';
 import RegistStepper from '../../components/regist/stepper';
+import SignupCreator from '../../components/signup-creator/signupCreator';
 // util 계열
 import useLoginValue from '../../utils/hooks/useLoginValue';
 // 스타일
@@ -30,7 +31,11 @@ export default function Regist({ params }: Props): JSX.Element {
   return (
     <div className={classes.root}>
       <NavTop MainUserType logout={logout} />
-      <RegistStepper platform={params} />
+      {params === ('main' || 'twitch' || 'google' || 'kakao')
+        ? <RegistStepper platform={params} />
+        : <SignupCreator />
+      }
+      
     </div>
   );
 }
@@ -41,7 +46,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
     {params: {regist: 'main'}},
     {params: {regist: 'twitch'}},
     {params: {regist: 'google'}},
-    {params: {regist: 'kakao'}}
+    {params: {regist: 'kakao'}},
+    {params: {regist: 'cre-signup'}},
+    {params: {regist: 'cre-complete'}},
+    {params: {regist: 'pre-user'}},
   ]
 
   return {
@@ -54,7 +62,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (
   ctx: GetStaticPropsContext
 ) => {
-
   switch (ctx.params?.regist) {
     case 'twitch' :
       return {
@@ -74,6 +81,27 @@ export const getStaticProps: GetStaticProps = async (
           params: 'kakao'
         }
       }
+    case 'cre-signup' : {
+      return {
+        props: {
+          params: 'cre-signup'
+        }
+      }
+    }
+    case 'cre-complete' : {
+      return {
+        props: {
+          params: 'cre-complete'
+        }
+      }
+    }
+    case 'pre-user' : {
+      return {
+        props: {
+          params: 'pre-user'
+        }
+      }
+    }
     default:
       return {
         props: {
