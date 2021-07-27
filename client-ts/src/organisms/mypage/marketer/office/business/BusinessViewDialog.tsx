@@ -31,18 +31,15 @@ interface BusinessRegiUploadDialogProps {
   open: boolean;
   handleClose: () => void;
   businessRegiImage: string;
-  request: () => void;
-  handleSnackOpen: () => void;
-  step: { currStep: number; isBusiness: boolean };
 }
 
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {
   const { open, handleClose, businessRegiImage } = props;
   const classes = useStyles();
-  let defaultImage = '/pngs/logo/renewal/1x/logo_onad_y_w.png';
+  let defaultImage = '/pngs/logo/renewal/2x/logo_onad_y_b_2.png';
   let isPdf = false;
   if (typeof businessRegiImage === 'string') {
-    if (businessRegiImage.indexOf('pdf') === -1) {
+    if (businessRegiImage.indexOf('data:application/pdf;') === -1) {
       defaultImage = businessRegiImage;
     } else {
       isPdf = true;

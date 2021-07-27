@@ -1,28 +1,28 @@
 /* eslint-disable react/display-name */
-import { useState } from 'react';
-
-import * as React from 'react';
-import dayjs from 'dayjs';
 import { Badge, IconButton, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { MoreVert, OpenInNew } from '@material-ui/icons';
-import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
-import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
-import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
-import BannerInfoPopover from './BannerInfoPopover';
-import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
-import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
-import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useState } from 'react';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
-import { UrlLink } from '../interface';
+import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
+import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
+import { useMarketerCampaignLength } from '../../../../../utils/hooks/query/useMarketerCampaignLength';
+import { useMarketerCampaignList } from '../../../../../utils/hooks/query/useMarketerCampaignList';
+import { LandingUrlLink } from '../../../../../utils/hooks/query/useMarketerLandingUrlList';
+import renderOptionType from '../../../../../utils/render_funcs/renderOptionType';
+import renderPriorityType from '../../../../../utils/render_funcs/renderPriorityType';
 import {
   CONFIRM_STATE_CONFIRMED,
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderUrlConfirmState';
-import CampaignOnOffSwitch from '../../../../../atoms/Switch/CampaignOnOffSwitch';
+import CampaignDeleteConfirmDialog from '../../dashboard/CampaignDeleteConfirmDialog';
+import CampaignUpdateDialog from '../../dashboard/CampaignUpdateDialog';
+import { CampaignInterface, CampaignTargetCreator } from '../../dashboard/interfaces';
+import BannerInfoPopover from './BannerInfoPopover';
+import CampaignInventoryMenuPopover from './CampaignInventoryMenuPopover';
 
 const useStyles = makeStyles(() => ({
   link: {
@@ -41,37 +41,44 @@ const useStyles = makeStyles(() => ({
   zoomin: { cursor: 'zoom-in' },
 }));
 export interface CampaignInventoryProps {
-  pageOffset: number;
-  campaignData: UsePaginatedGetRequestObject<CampaignInterface>;
-  pageLength: number;
   handleCampaignSelect: (campaignId: string | undefined) => void;
+  currentPage: number;
+  pageOffset: number;
+  handlePage: (v: number) => void;
 }
 export default function CampaignInventory({
-  pageOffset,
-  campaignData,
-  pageLength,
   handleCampaignSelect,
+  currentPage,
+  pageOffset,
+  handlePage,
 }: CampaignInventoryProps): JSX.Element {
   const classes = useStyles();
+
+  // **************************************************************************************
+  // 캠페인 데이터
+  const campaigns = useMarketerCampaignList({ offset: pageOffset, page: currentPage });
+
+  const campaignPageLength = useMarketerCampaignLength();
+
+  const { enqueueSnackbar } = useSnackbar();
   // ******************************************
   // 캠페인 On/Off 변경 요청 성공 핸들러
-  const [failSnackMessage, setFailSnackMessage] = useState<string>(
-    '캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.',
-  );
-  const failSnack = useDialog();
   function onOnOffSuccess(resData: any): void {
     // on/off 변경에 실패한 경우 (캠페인의 url / banner 중 하나라도 심의 통과하지 못한 경우)
     if (!resData[0]) {
-      failSnack.handleOpen();
-      setFailSnackMessage(resData[1]);
+      enqueueSnackbar(
+        resData[1] || '캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.',
+        { variant: 'error' },
+      );
     } else {
       handleCampaignSelect(undefined);
-      campaignData.requestWithoutConcat();
     }
   }
   // 캠페인 On/Off 변경 요청 실패 핸들러
   function onOnOffFail(): void {
-    failSnack.handleOpen();
+    enqueueSnackbar('캠페인 상태를 변경하는 데에 실패했습니다. 잠시 후 다시 시도해주세요.', {
+      variant: 'error',
+    });
   }
 
   // *****************************************
@@ -116,16 +123,16 @@ export default function CampaignInventory({
         pagination
         paginationMode="server"
         pageSize={pageOffset}
-        rowCount={pageLength || undefined}
+        rowCount={campaignPageLength.data}
         rowsPerPageOptions={[5]}
         onPageChange={(param): void => {
           // 페이지 수정 => 해당 페이지 데이터 로드
           // page 가 1부터 시작되므로 1 줄인다.
-          campaignData.handlePage(param.page);
+          handlePage(param.page);
         }}
         disableSelectionOnClick
-        rows={campaignData.data || []}
-        loading={campaignData.loading}
+        rows={campaigns.data || []}
+        loading={campaigns.isLoading}
         columns={[
           {
             field: 'onOff',
@@ -135,7 +142,7 @@ export default function CampaignInventory({
                 campaign={data.row as CampaignInterface}
                 onSuccess={onOnOffSuccess}
                 onFail={onOnOffFail}
-                inventoryLoading={campaignData.loading}
+                inventoryLoading={campaigns.isLoading}
               />
             ),
           },
@@ -208,7 +215,7 @@ export default function CampaignInventory({
                   <Typography
                     onClick={(): void => {
                       const targetUrl = data.row.linkData.links.find(
-                        (link: UrlLink) => !!link.primary,
+                        (link: LandingUrlLink) => !!link.primary,
                       );
                       window.open(targetUrl.linkTo, '_blank');
                     }}
@@ -342,7 +349,6 @@ export default function CampaignInventory({
         <CampaignUpdateDialog
           open={campaignUpdateDialog.open}
           selectedCampaign={selected}
-          doGetRequest={campaignData.requestWithoutConcat}
           handleClose={(): void => {
             setSelected(undefined);
             campaignUpdateDialog.handleClose();
@@ -355,7 +361,6 @@ export default function CampaignInventory({
         <CampaignDeleteConfirmDialog
           open={campaignDeleteDialog.open}
           selectedCampaign={selected}
-          doGetRequest={campaignData.requestWithoutConcat}
           handleClose={(): void => {
             setSelected(undefined);
             campaignDeleteDialog.handleClose();
@@ -370,15 +375,6 @@ export default function CampaignInventory({
           open={anchor.open}
           anchorEl={anchor.anchorEl}
           onClose={anchor.handleAnchorClose}
-        />
-      )}
-
-      {failSnack.open && (
-        <Snackbar
-          open={failSnack.open}
-          onClose={failSnack.handleClose}
-          message={failSnackMessage}
-          color="error"
         />
       )}
     </div>

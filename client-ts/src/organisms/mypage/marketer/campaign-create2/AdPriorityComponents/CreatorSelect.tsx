@@ -8,7 +8,7 @@ import {
   CampaignCreateAction,
   CampaignSelectedCreator,
 } from '../reducers/campaignCreate.reducer';
-import { CreatorDetailDataInterface } from '../interfaces';
+import { CreatorDetailDataInterface } from '../../../../../utils/hooks/query/useCreatorsAnalysisDetail';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

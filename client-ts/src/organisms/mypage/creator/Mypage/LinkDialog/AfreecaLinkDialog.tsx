@@ -1,22 +1,14 @@
 import { Button, TextField, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { useEffect, useState } from 'react';
-import * as React from 'react';
 import { OpenInNew, Refresh } from '@material-ui/icons';
-import HOST from '../../../../../config';
-import axiosInstance from '../../../../../utils/axios';
+import { Alert } from '@material-ui/lab';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import { useDialog } from '../../../../../utils/hooks';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import copyToClipboard from '../../../../../utils/copyToClipboard';
+import { useCreatorCreateLinkAfreecaCertMutation } from '../../../../../utils/hooks/mutation/useCreatorCreateLinkAfreecaCertMutation';
+import { useCreatorLinkAfreecaCert } from '../../../../../utils/hooks/query/useCreatorLinkAfreecaCert';
 
-export interface AfreecaLinkData {
-  tempCode: string;
-  creatorId: string;
-  afreecaId: string;
-  certState: number;
-  createdAt: string;
-}
 export interface AfreecaLinkDialogProps {
   afreecaId: {
     value: string;
@@ -24,17 +16,15 @@ export interface AfreecaLinkDialogProps {
   };
   open: boolean;
   onClose: () => void;
-  afreecaLinkData?: AfreecaLinkData;
-  afreecaLinkDataRefetch: () => void;
 }
 export default function AfreecaLinkDialog({
   afreecaId,
   open,
   onClose,
-  afreecaLinkData,
-  afreecaLinkDataRefetch,
 }: AfreecaLinkDialogProps): JSX.Element {
   const AFREECA_ONAD_ID_LINK_NOTE = '온애드 (kmotiv)';
+  const { enqueueSnackbar } = useSnackbar();
+  const afreecaLink = useCreatorLinkAfreecaCert();
 
   // 아프리카 연동 인증번호
   const [certCode, setCertCode] = useState('');
@@ -43,40 +33,36 @@ export default function AfreecaLinkDialog({
   }
   useEffect(() => {
     // 이미 아프리카 연동을 진행한 경우 앞전에 생성된 인증코드를 설정
-    if (afreecaLinkData) {
-      setCertCode(afreecaLinkData.tempCode);
+    if (afreecaLink.data) {
+      setCertCode(afreecaLink.data.tempCode);
     }
-  }, [afreecaLinkData]);
+  }, [afreecaLink.data]);
 
-  // 이미 연동된 경우 알림말
-  const alreadyLinkedSnack = useDialog();
-
-  const failsnack = useDialog();
   // 아프리카 연동 요청
+  const createLinkCertMutation = useCreatorCreateLinkAfreecaCertMutation();
   function handleAfreecaClick(): void {
-    axiosInstance
-      .post(`${HOST}/link/afreeca/cert`, {
-        afreecaId: afreecaId.value,
-      })
+    createLinkCertMutation
+      .mutateAsync({ afreecaId: afreecaId.value })
       .then(res => {
-        // 아프리카 연동 요청 목록 재요청 (parent 컴포넌트를 위해)
-        afreecaLinkDataRefetch();
-
         // *************************************************
         const { status } = res.data;
         if (status === 'already-linked') {
           // 이미 다른유저에게 연동 된 경우
-          alreadyLinkedSnack.handleOpen();
+          enqueueSnackbar(`${afreecaId.value}는 이미 다른 유저에게 연동되어있습니다.`, {
+            variant: 'error',
+          });
         } else if (status === 'duplicate-request') {
           // 이미 아프리카 연동 진행을 했다 + 아직 쪽지를 보내지 않은 경우
-          handleCertCode(res.data.cert.tempCode);
+          handleCertCode(res.data.cert?.tempCode || '');
         } else if (status === 'created') {
           // 이외의 경우 => 연동 인증번호가 생성
-          handleCertCode(res.data.cert.tempCode);
+          handleCertCode(res.data.cert?.tempCode || '');
         }
       })
       .catch(() => {
-        failsnack.handleOpen();
+        enqueueSnackbar('인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요', {
+          variant: 'error',
+        });
         console.error('err');
       });
   }
@@ -86,8 +72,6 @@ export default function AfreecaLinkDialog({
   function handleButtonClicked() {
     setIsClicked(!isClicked);
   }
-
-  const copySnack = useDialog();
 
   return (
     <CustomDialog
@@ -123,7 +107,7 @@ export default function AfreecaLinkDialog({
               onClick={handleAfreecaClick}
               color="primary"
               variant="contained"
-              disabled={!afreecaId.value}
+              disabled={!afreecaId.value || createLinkCertMutation.isLoading}
             >
               인증번호 발급 요청
             </Button>
@@ -131,7 +115,7 @@ export default function AfreecaLinkDialog({
         ) : (
           <div style={{ textAlign: 'center', margin: '16px 0px' }}>
             <Typography style={{ fontWeight: 'bold' }}>
-              {afreecaId.value || afreecaLinkData?.afreecaId} 연동 진행중입니다.
+              {afreecaId.value || afreecaLink.data?.afreecaId} 연동 진행중입니다.
             </Typography>
             <Typography variant="body2">아래 설명에 따라 진행해주세요.</Typography>
           </div>
@@ -160,7 +144,14 @@ export default function AfreecaLinkDialog({
                 value={certCode}
                 id="afreeca-cert-code"
                 helperText="인증번호 클릭시 복사됩니다."
-                onClick={(e): void => copyToClipboard(e, 'afreeca-cert-code', copySnack.handleOpen)}
+                onClick={(e): void =>
+                  copyToClipboard(e, 'afreeca-cert-code', () =>
+                    enqueueSnackbar(
+                      `인증번호가 복사되었습니다. ${AFREECA_ONAD_ID_LINK_NOTE} 에게 복사된 인증번호를 쪽지로 보내주세요.`,
+                      { variant: 'success' },
+                    ),
+                  )
+                }
               />
             </div>
 
@@ -204,41 +195,6 @@ export default function AfreecaLinkDialog({
           </Alert>
         )}
       </div>
-
-      {failsnack.open && (
-        <Snackbar
-          open={failsnack.open}
-          onClose={failsnack.handleClose}
-          color="error"
-          message="인증번호를 발급하는 중 오류가 발생했습니다. 잠시후 다시 시도해 주세요"
-        />
-      )}
-
-      {alreadyLinkedSnack.open && (
-        <Snackbar
-          open={alreadyLinkedSnack.open}
-          onClose={alreadyLinkedSnack.handleClose}
-          color="error"
-          message={`${afreecaId.value}는 이미 다른 유저에게 연동되어있습니다.`}
-        />
-      )}
-
-      <Snackbar
-        open={copySnack.open}
-        onClose={copySnack.handleClose}
-        color="success"
-        message={
-          <Typography variant="body2">
-            인증번호가 복사되었습니다. &nbsp;
-            <Typography variant="body2" component="span" style={{ fontWeight: 'bold' }}>
-              &quot;
-              {AFREECA_ONAD_ID_LINK_NOTE}
-              &quot;
-            </Typography>
-            &nbsp; 에게 복사된 인증번호를 쪽지로 보내주세요.
-          </Typography>
-        }
-      />
     </CustomDialog>
   );
 }

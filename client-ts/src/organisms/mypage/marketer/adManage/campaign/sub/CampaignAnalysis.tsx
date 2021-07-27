@@ -1,22 +1,18 @@
+import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { CloseOutlined } from '@material-ui/icons';
 import classnames from 'classnames';
 import { useState } from 'react';
-import { IconButton, makeStyles, Typography, useTheme } from '@material-ui/core';
 import { Doughnut } from 'react-chartjs-2';
-import { CloseOutlined } from '@material-ui/icons';
-import CircularProgress from '../../../../../../atoms/Progress/CircularProgress';
-import { useGetRequest } from '../../../../../../utils/hooks';
-import {
-  CreatorDataInterface,
-  GeoInterface,
-  HeatmapInterface,
-  ReportInterfaceV2,
-} from '../../../dashboard/interfaces';
-import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
 import ClickHeatmap from '../../../../../../atoms/Chart/heatmap/ClickHeatmap';
-import GeoReport from './report/GeoReport';
-import CreatorsReport from './report/CreatorsReport';
+import ReportStackedBar from '../../../../../../atoms/Chart/ReportStackedBar';
+import CircularProgress from '../../../../../../atoms/Progress/CircularProgress';
 import { OnadTheme } from '../../../../../../theme';
+import { useMarketerCampaignAnalysis } from '../../../../../../utils/hooks/query/useMarketerCampaignAnalysis';
+import { MarketerCampaignAnalysisCreatorData } from '../../../../../../utils/hooks/query/useMarketerCampaignAnalysisCreatorData';
+import { useMarketerCampaignAnalysisExpenditure } from '../../../../../../utils/hooks/query/useMarketerCampaignAnalysisExpenditure';
+import CreatorsReport from './report/CreatorsReport';
 import CreatorsReportDetail from './report/CreatorsReportDetail';
+import GeoReport from './report/GeoReport';
 
 const useStyles = makeStyles((theme: OnadTheme) => ({
   container: {
@@ -48,30 +44,8 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
   const classes = useStyles();
   const theme = useTheme();
 
-  const ipToGeoData = useGetRequest<{ campaignId: string }, GeoInterface[]>(
-    '/marketer/geo/campaign',
-    { campaignId },
-  );
-
-  const reportData = useGetRequest<{ campaignId: string }, ReportInterfaceV2>(
-    '/marketer/campaign/analysis',
-    { campaignId },
-  );
-
-  const chartData = useGetRequest<{ campaignId: string }, any[]>(
-    '/marketer/campaign/analysis/v1/expenditure',
-    { campaignId },
-  );
-
-  const creatorsData = useGetRequest<{ campaignId: string }, CreatorDataInterface[]>(
-    '/marketer/campaign/analysis/creator-data',
-    { campaignId },
-  );
-
-  const clickData = useGetRequest<{ campaignId: string }, HeatmapInterface[]>(
-    '/marketer/campaign/analysis/heatmap',
-    { campaignId },
-  );
+  const reportData = useMarketerCampaignAnalysis(campaignId);
+  const chartData = useMarketerCampaignAnalysisExpenditure(campaignId);
 
   /**
    * (첫번쨰 숫자 / (첫번째숫자 + 두번째숫자) * 100).toFixed(1)
@@ -90,8 +64,8 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
     return num;
   }
 
-  const [selectedCreator, setSelectedCreator] = useState<CreatorDataInterface>();
-  function handleSelectCreator(creator: CreatorDataInterface): void {
+  const [selectedCreator, setSelectedCreator] = useState<MarketerCampaignAnalysisCreatorData>();
+  function handleSelectCreator(creator: MarketerCampaignAnalysisCreatorData): void {
     setSelectedCreator(creator);
   }
   function handleResetSelectedCreator(): void {
@@ -105,11 +79,7 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
       </Typography>
 
       {/* 로딩중 화면 */}
-      {reportData.loading ||
-      chartData.loading ||
-      ipToGeoData.loading ||
-      creatorsData.loading ||
-      clickData.loading ? (
+      {reportData.isLoading || chartData.isLoading ? (
         <CircularProgress />
       ) : (
         <div>
@@ -213,35 +183,29 @@ export default function CampaignAnalysis({ campaignId }: CampaignAnalysisProps):
               </article>
 
               {/* 일별 클릭 수 */}
-              {clickData.data && (
-                <article className={classes.article}>
-                  <Typography className={classes.bold}>일별 클릭 수</Typography>
-                  <ClickHeatmap data={clickData.data} />
-                </article>
-              )}
+              <article className={classes.article}>
+                <Typography className={classes.bold}>일별 클릭 수</Typography>
+                <ClickHeatmap campaignId={campaignId} />
+              </article>
 
               {/* 지역별 클릭 수 */}
-              {ipToGeoData.data && (
-                <article>
-                  <Typography className={classes.bold}>지역별 클릭 수</Typography>
-                  <article className={classes.chartContainer}>
-                    <GeoReport ipToGeoData={ipToGeoData} style={{ width: '100%' }} />
-                  </article>
+              <article>
+                <Typography className={classes.bold}>지역별 클릭 수</Typography>
+                <article className={classes.chartContainer}>
+                  <GeoReport campaignId={campaignId} style={{ width: '100%' }} />
                 </article>
-              )}
+              </article>
 
               {/* 광고 송출 방송인 목록 */}
-              {creatorsData.data && (
-                <article className={classes.article}>
-                  <Typography className={classes.bold}>광고 송출한 방송인</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    방송인 클릭시 방송정보를 볼 수 있습니다.
-                  </Typography>
-                  <div className={classes.chartContainerNoFlex}>
-                    <CreatorsReport creatorsData={creatorsData} onRowClick={handleSelectCreator} />
-                  </div>
-                </article>
-              )}
+              <article className={classes.article}>
+                <Typography className={classes.bold}>광고 송출한 방송인</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  방송인 클릭시 방송정보를 볼 수 있습니다.
+                </Typography>
+                <div className={classes.chartContainerNoFlex}>
+                  <CreatorsReport campaignId={campaignId} onRowClick={handleSelectCreator} />
+                </div>
+              </article>
 
               {/* 광고 송출 방송인 목록 중 특정 방송인 정보  */}
               {selectedCreator && (

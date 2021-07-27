@@ -1,19 +1,12 @@
-import { CircularProgress, makeStyles } from '@material-ui/core';
+import { Box, CircularProgress } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
-  container: {
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-  },
-}));
-
-export default function CenterLoading(): JSX.Element {
-  const classes = useStyles();
+interface CenterLoadingProps {
+  height?: number;
+}
+export default function CenterLoading({ height = 200 }: CenterLoadingProps): JSX.Element {
   return (
-    <div className={classes.container}>
+    <Box justifyContent="center" display="flex" alignItems="center" minHeight={height}>
       <CircularProgress />
-    </div>
+    </Box>
   );
 }

@@ -61,6 +61,7 @@ export default function EditableTextField({
 
   function submit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
+    editMode.handleToggle();
     onSubmit(value);
   }
 

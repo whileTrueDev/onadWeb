@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { Paper, Typography, Divider, makeStyles, Chip } from '@material-ui/core';
 import Markdown from 'react-markdown/with-html';
-import { NoticeData } from './NoticeTable';
+import { NoticeData } from '../../../../utils/hooks/query/useNoticeList';
 
 const useStyles = makeStyles(theme => ({
   markdown: {

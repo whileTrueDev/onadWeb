@@ -92,6 +92,10 @@ export class CampaignService {
             campaignId,
           });
         }
+
+        if (dto.priorityType === CampaignPriorityType.무관송출) {
+          await this.insertCampaignTargetsAnything(queryRunner, campaignId);
+        }
         return campaignObj;
       },
       { errorMessage: `An error occurred during create campaign (${marketerId}) - ` },
@@ -153,7 +157,7 @@ export class CampaignService {
 
   // * 캠페인 이름 목록 반환 - 캠페인 이름 중복 확인을 위해
   async findNames(): Promise<string[]> {
-    const result = await this.campaignRepo.find({ select: ['campaignName'] });
+    const result = await this.campaignRepo.find();
     return result.map(c => c.campaignName);
   }
 
@@ -230,7 +234,10 @@ export class CampaignService {
     }
 
     // * "특정 카테고리 송출" 의 경우
-    if (priorityType === CampaignPriorityType.특정아프리카카테고리송출 || priorityType === CampaignPriorityType.특정트위치카테고리송출) {
+    if (
+      priorityType === CampaignPriorityType.특정아프리카카테고리송출 ||
+      priorityType === CampaignPriorityType.특정트위치카테고리송출
+    ) {
       const needUpdateCategories: CategoryCampaign[] = []; // 이전에 카테고리 송출로 선택된 기록이 있어 Update 필요한 카테고리
       // * "특정 카테고리 송출" - 아프리카 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
       if (priorityType === CampaignPriorityType.특정아프리카카테고리송출) {
@@ -266,7 +273,7 @@ export class CampaignService {
           queryRunner,
         );
       }
-  
+
       // * "특정 카테고리 송출" - 트위치 카테고리 송출 선택 시 + 기존 categoryCampaign 목록에 없는 경우
       if (priorityType === CampaignPriorityType.특정트위치카테고리송출) {
         const twitchCategories = await this.twitchGameRepo.find({
@@ -300,7 +307,7 @@ export class CampaignService {
           queryRunner,
         );
       }
-  
+
       // * 기존 categoryCampaign 목록에 있는 경우
       await Promise.all(
         needUpdateCategories.map(categoryCampaign => {
@@ -314,5 +321,26 @@ export class CampaignService {
         }),
       );
     }
+  }
+
+  /**
+   * 무관 송출의 경우 categoryCampaign의 "14,무관송출" 에 추가되어야 하므로, 해당 작업 실행
+   */
+  private async insertCampaignTargetsAnything(queryRunner: QueryRunner, campaignId: string) {
+    const ANYTHING_CATEGORY_NAME = '무관';
+    const ANYTHING_CATEGORY_ID = 14;
+
+    const anythingCategory = await this.categoryCampaignRepo.findOne({
+      where: { categoryId: ANYTHING_CATEGORY_ID, categoryName: ANYTHING_CATEGORY_NAME },
+    });
+
+    const campaignListJson = JSON.parse(anythingCategory.campaignList);
+    campaignListJson.campaignList = campaignListJson.campaignList.concat(campaignId);
+
+    return this.categoryCampaignRepo.updateCategoryCampaign(
+      JSON.stringify(campaignListJson),
+      ANYTHING_CATEGORY_NAME,
+      queryRunner,
+    );
   }
 }

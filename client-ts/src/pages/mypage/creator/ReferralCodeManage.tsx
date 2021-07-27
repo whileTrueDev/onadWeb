@@ -1,21 +1,22 @@
-import classnames from 'classnames';
-import { useEffect } from 'react';
-import dayjs from 'dayjs';
 import {
   Button,
+  CircularProgress,
+  Hidden,
+  makeStyles,
   Paper,
   TextField,
   Typography,
-  CircularProgress,
-  makeStyles,
-  Hidden,
 } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import { useDialog, useGetRequest } from '../../../utils/hooks';
-import copyToClipboard from '../../../utils/copyToClipboard';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
+import classnames from 'classnames';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
+import { useEffect } from 'react';
 import ReferralCodeEventDialog from '../../../organisms/shared/popup/ReferralCodeEventDialog';
+import copyToClipboard from '../../../utils/copyToClipboard';
+import { useDialog } from '../../../utils/hooks';
+import { useCreatorReferralCode } from '../../../utils/hooks/query/useCreatorReferralCode';
 
 const useStyles = makeStyles(theme => ({
   container: { margin: '0 auto', maxWidth: 1024 },
@@ -40,11 +41,10 @@ export interface ReferralCodeRes {
 
 const CALCULATE_DONE_STATE = 2;
 export default function ReferralCodeManage(): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
-  const referralCodeReq = useGetRequest<null, ReferralCodeRes>('/creator/referral-code/my');
-
-  const copySnack = useDialog();
+  const referralCode = useCreatorReferralCode();
 
   // **************************************************
   // 리뉴얼 추가 작업 - 리뉴얼 알림창 및 크리에이터 로그인 다이얼로그 오픈 토글
@@ -81,10 +81,10 @@ export default function ReferralCodeManage(): JSX.Element {
         </Typography>
 
         <div className={classnames(classes.contentsSpace, classes.contents)}>
-          {referralCodeReq.loading && <CircularProgress />}
-          {!referralCodeReq.loading && referralCodeReq.data && (
+          {referralCode.isLoading && <CircularProgress />}
+          {!referralCode.isLoading && referralCode.data && (
             <>
-              {referralCodeReq.data.creatorContractionAgreement === 0 ? (
+              {referralCode.data.creatorContractionAgreement === 0 ? (
                 <Alert severity="error">
                   <Typography variant="body2">
                     아직 온애드 이용동의를 마치지 않아 사용할 수 없습니다.
@@ -96,7 +96,7 @@ export default function ReferralCodeManage(): JSX.Element {
               ) : (
                 <>
                   <TextField
-                    value={referralCodeReq.data.referralCode}
+                    value={referralCode.data.referralCode}
                     className={classes.textfield}
                     fullWidth
                     variant="outlined"
@@ -104,15 +104,17 @@ export default function ReferralCodeManage(): JSX.Element {
                     InputProps={{
                       readOnly: true,
                     }}
-                    disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
+                    disabled={referralCode.data.calculateState === CALCULATE_DONE_STATE}
                   />
                   <Button
                     color="primary"
                     variant="contained"
                     onClick={e =>
-                      copyToClipboard(e, 'referral-code-textfield', copySnack.handleOpen)
+                      copyToClipboard(e, 'referral-code-textfield', () => {
+                        enqueueSnackbar('추천인 코드가 복사되었습니다.', { variant: 'success' });
+                      })
                     }
-                    disabled={referralCodeReq.data.calculateState === CALCULATE_DONE_STATE}
+                    disabled={referralCode.data.calculateState === CALCULATE_DONE_STATE}
                   >
                     복사
                   </Button>
@@ -122,23 +124,23 @@ export default function ReferralCodeManage(): JSX.Element {
           )}
         </div>
 
-        {referralCodeReq.data && Boolean(referralCodeReq.data.calculateState) && (
+        {referralCode.data && Boolean(referralCode.data.calculateState) && (
           <div className={classes.contentsSpace}>
-            {referralCodeReq.data.calculateState === CALCULATE_DONE_STATE && (
+            {referralCode.data.calculateState === CALCULATE_DONE_STATE && (
               <div>
                 <Typography>
                   <CheckCircle fontSize="small" className={classes.successIcon} />
                   {`사용 완료(수익금 지급 완료) - ${
-                    referralCodeReq.data.creatorName && referralCodeReq.data.afreecaName
-                      ? `${referralCodeReq.data.creatorName}(${referralCodeReq.data.afreecaName})`
-                      : referralCodeReq.data.creatorName ||
-                        referralCodeReq.data.afreecaName ||
-                        referralCodeReq.data.loginId
+                    referralCode.data.creatorName && referralCode.data.afreecaName
+                      ? `${referralCode.data.creatorName}(${referralCode.data.afreecaName})`
+                      : referralCode.data.creatorName ||
+                        referralCode.data.afreecaName ||
+                        referralCode.data.loginId
                   }`}
                 </Typography>
 
                 <Typography variant="body2">
-                  {dayjs(referralCodeReq.data.calculatedAt).format('YYYY년 MM월 DD일 HH:mm:ss')}
+                  {dayjs(referralCode.data.calculatedAt).format('YYYY년 MM월 DD일 HH:mm:ss')}
                 </Typography>
               </div>
             )}
@@ -150,15 +152,6 @@ export default function ReferralCodeManage(): JSX.Element {
       <Hidden xsDown>
         <ReferralCodeEventDialog open={eventDialog.open} onClose={eventDialog.handleClose} />
       </Hidden>
-
-      {copySnack.open && (
-        <Snackbar
-          color="success"
-          open={copySnack.open}
-          onClose={copySnack.handleClose}
-          message="추천인 코드가 복사되었습니다."
-        />
-      )}
     </div>
   );
 }

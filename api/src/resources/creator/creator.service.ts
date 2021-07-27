@@ -215,7 +215,6 @@ export class CreatorService {
   public async findPassword(creatorId: string, requestedPassword: string): Promise<boolean> {
     const creator = await this.creatorInfoRepo.findOne({
       where: { creatorId },
-      select: ['password', 'passwordSalt'],
     });
     const isSuccess = encrypto.check(requestedPassword, creator.password, creator.passwordSalt);
     if (isSuccess) return true;
@@ -235,20 +234,43 @@ export class CreatorService {
    */
   public async findOne({ creatorId, loginId }: FindCreatorDto): Promise<CreatorInfo> {
     if (loginId) {
-      return this.creatorInfoRepo.findOne({
-        where: { loginId },
-      });
+      return this.creatorInfoRepo
+        .createQueryBuilder()
+        .select(
+          'creatorId, loginId, creatorIp, creatorTwitchOriginalId, afreecaId, creatorTwitchRefreshToken, password, passwordSalt',
+        )
+        .where({ loginId })
+        .getRawOne();
     }
-    return this.creatorInfoRepo.findOne({
-      where: [{ creatorId }],
-    });
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select(
+        'creatorId, loginId, creatorIp, creatorTwitchOriginalId, afreecaId, creatorTwitchRefreshToken, password, passwordSalt',
+      )
+      .where({ creatorId })
+      .getRawOne();
   }
 
   /**
    * * twitchOriginalId를 기준으로 creatorInfo 정보를 찾습니다.
    */
   public async findOneByTwitchOriginalId(twitchOriginalId: string): Promise<CreatorInfo> {
-    return this.creatorInfoRepo.findOne({ where: { creatorTwitchOriginalId: twitchOriginalId } });
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select('creatorTwitchOriginalId, loginId')
+      .where({ creatorTwitchOriginalId: twitchOriginalId })
+      .getRawOne();
+  }
+
+  /**
+   * * loginId를 기준으로 creatorInfo 정보를 찾습니다.
+   */
+  public async findOneByLoginId(loginId: string): Promise<CreatorInfo> {
+    return this.creatorInfoRepo
+      .createQueryBuilder()
+      .select('creatorTwitchOriginalId, loginId')
+      .where({ loginId })
+      .getRawOne();
   }
 
   /**
@@ -265,10 +287,8 @@ export class CreatorService {
     const previousRefreshToken = user.creatorTwitchRefreshToken;
 
     // refresh token으로 access token 생성
-    const {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    } = await this.twitchApiService.getAccessToken(previousRefreshToken);
+    const { access_token: accessToken, refresh_token: refreshToken } =
+      await this.twitchApiService.getAccessToken(previousRefreshToken);
 
     // refresh token으로 user profile 요청
     const userProfile = await this.twitchApiService.getUserProfile(
@@ -324,6 +344,11 @@ export class CreatorService {
     refreshToken: string,
   ): Promise<boolean> {
     return this.creatorInfoRepo._replaceTwitchRefreshToken(creatorId, refreshToken);
+  }
+
+  public async creatorSignOut(creatorId: string): Promise<boolean> {
+    // 개인정보 지우는 등 update 처리
+    return this.creatorInfoRepo._signOut(creatorId);
   }
 
   // ***************************************

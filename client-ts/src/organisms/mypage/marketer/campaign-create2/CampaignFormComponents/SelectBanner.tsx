@@ -1,25 +1,27 @@
+import { CircularProgress, Grid, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { Grid, CircularProgress, Typography } from '@material-ui/core';
-import StyledItemText from '../../../../../atoms/StyledItemText';
 import BannerCarousel from '../../../../../atoms/BannerCarousel';
 import Button from '../../../../../atoms/CustomButtons/Button';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import Dialog from '../../../../../atoms/Dialog/Dialog';
+import StyledItemText from '../../../../../atoms/StyledItemText';
+import { useMarketerBannerListActive } from '../../../../../utils/hooks/query/useMarketerBannerListActive';
 import useDialog from '../../../../../utils/hooks/useDialog';
 import Inquire from '../../../../main/main/Inquiry/Inquiry';
-import Dialog from '../../../../../atoms/Dialog/Dialog';
-import useStyles from './SelectBanner.style';
 import { CampaignCreateAction } from '../reducers/campaignCreate.reducer';
+import useStyles from './SelectBanner.style';
 
 interface SelectBannerProps {
   step: number;
   dispatch: React.Dispatch<CampaignCreateAction>;
   handleDialogOpen: () => void;
-  bannerData: UseGetRequestObject<{ bannerId: string; bannerSrc: string }[]>;
 }
 
 const SelectBanner = (props: SelectBannerProps): JSX.Element => {
-  const { dispatch, handleDialogOpen, bannerData, step } = props;
+  const { dispatch, handleDialogOpen, step } = props;
   const classes = useStyles();
+
+  const bannerData = useMarketerBannerListActive();
+
   const InquireDialog = useDialog();
   const handleBannerSelect = (bannerId: string): void => {
     dispatch({ type: 'SET_BANNER', value: bannerId });
@@ -40,12 +42,12 @@ const SelectBanner = (props: SelectBannerProps): JSX.Element => {
           />
         </Grid>
         <Grid item>
-          {bannerData.loading && (
+          {bannerData.isLoading && (
             <div className={classes.loading}>
               <CircularProgress />
             </div>
           )}
-          {!bannerData.loading && bannerData.data && bannerData.data.length > 0 ? (
+          {!bannerData.isLoading && bannerData.data && bannerData.data.length > 0 ? (
             <BannerCarousel
               steps={bannerData.data}
               handleBannerId={handleBannerSelect}

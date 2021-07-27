@@ -73,9 +73,20 @@ export class BannerService {
     const creatorCampaign = await this.creatorCampaignRepo.findOne({ where: { creatorId } });
     const banList = JSON.parse(creatorCampaign.banList) as { campaignList: string[] };
     // 배너 목록 조회
-    const banners = await this.__findBannerList(creatorId, startNum, realOffset);
-
-    return this.__findIncomePerCampaign(banners, banList.campaignList);
+    // realOffset + 1 만큼의 배너를 찾는 이유는 다음 페이지가 있는지 없는지 확인하기 위해. by hwasurr
+    const banners = await this.__findBannerList(creatorId, startNum, realOffset + 1);
+    let hasNextPage = false;
+    if (banners.length === realOffset + 1) {
+      hasNextPage = true;
+    }
+    return {
+      hasNextPage,
+      nextPage: hasNextPage ? Number(dto.page) + 1 : false,
+      banners: await this.__findIncomePerCampaign(
+        banners.slice(0, realOffset),
+        banList.campaignList,
+      ),
+    };
   }
 
   // * 크리에이터 배너 오버레이 주소 조회
@@ -84,7 +95,9 @@ export class BannerService {
       where: { creatorId },
     });
     return {
-      advertiseUrl: !creator.advertiseUrl ? '' : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
+      advertiseUrl: !creator.advertiseUrl
+        ? ''
+        : join(this.BANNER_OVERLAY_DOMAIN, creator.advertiseUrl),
       creatorContractionAgreement: creator.creatorContractionAgreement,
     };
   }
@@ -157,7 +170,7 @@ export class BannerService {
   private async __findIncomePerCampaign(
     campaignList: FindBannerListResult[],
     banList: string[],
-  ): Promise<FindBannerListRes> {
+  ): Promise<FindBannerListResObj[]> {
     const newList = await Promise.all(
       campaignList.map(async campaign => {
         const newCampaignData: FindBannerListResObj = { ...campaign, CPC: 0, CPM: 0, cash: 0 };

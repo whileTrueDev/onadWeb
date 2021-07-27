@@ -8,16 +8,19 @@ import {
 } from '@material-ui/core';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import classnames from 'classnames';
-import { useContext, useMemo, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useContext, useMemo, useState } from 'react';
 import SwipeableTextMobileStepper from '../../../../../atoms/Carousel/Carousel';
 import OrderStatusChip from '../../../../../atoms/Chip/OrderStatusChip';
 import DataText from '../../../../../atoms/DataText/DataText';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
 import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 import { getReadableS3MerchandiseImagePath } from '../../../../../utils/aws/getS3Path';
-import { useDialog, useGetRequest, usePatchRequest } from '../../../../../utils/hooks';
+import { useDialog } from '../../../../../utils/hooks';
+import { useMarketerUpdateOrderMutation } from '../../../../../utils/hooks/mutation/useMarketerUpdateOrderMutation';
+import { useMarketerMerchandisesDetail } from '../../../../../utils/hooks/query/useMarketerMerchandisesDetail';
+import { MerchandiseOrder } from '../../../../../utils/hooks/query/useMarketerMerchandisesOrders';
 import {
   OrderStatus,
   주문상태_상품준비,
@@ -25,7 +28,6 @@ import {
   주문상태_출고완료,
   주문상태_출고준비,
 } from '../../../../../utils/render_funcs/renderOrderStatus';
-import { Merchandise, MerchandiseOrder } from '../../adManage/interface';
 import OrderStateChangeDialog, { OrderCourierDTO } from './OrderStateChangeDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -64,10 +66,9 @@ function MerchandiseOrderDialog({
 }: // onStatusChangeFail,
 MerchandiseDetailDialogProps): React.ReactElement {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const marketerInfo = useContext(MarketerInfoContext);
-  const merchandiseDetailGet = useGetRequest<null, Merchandise>(
-    `/marketer/merchandises/${merchandiseOrder.merchandiseId}`,
-  );
+  const merchandiseDetailGet = useMarketerMerchandisesDetail(merchandiseOrder.merchandiseId);
 
   // S3 상품 이미지 URL을 구하는 함수.
   function getMerchandiseS3Url(imageName: string, merchandiseId: number): string {
@@ -88,13 +89,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
   );
 
   // 상태 변경 요청 핸들링
-  const orderStatusPatch = usePatchRequest('/marketer/orders');
-  const snack = useDialog(); // 스낵바
-  // 스낵바 내용
-  const [snackMsg, setSnackMsg] = useState<{ msg: string; color: 'error' | 'success' }>();
-  function handleSnackMsg(msg: string, color: 'error' | 'success'): void {
-    setSnackMsg({ msg, color });
-  }
+  const orderStatusPatch = useMarketerUpdateOrderMutation();
 
   const confirmDialog = useDialog();
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>();
@@ -110,7 +105,7 @@ MerchandiseDetailDialogProps): React.ReactElement {
   type StatusChangeParams = { status: OrderStatus; dto?: OrderCourierDTO; denialReason?: string };
   function handleStatusChange({ status, dto, denialReason }: StatusChangeParams): void {
     orderStatusPatch
-      .doPatchRequest({
+      .mutateAsync({
         orderId: merchandiseOrder.id,
         status,
         denialReason,
@@ -118,30 +113,31 @@ MerchandiseDetailDialogProps): React.ReactElement {
         trackingNumber: dto ? dto.trackingNumber : null,
       })
       .then(() => {
-        handleSnackMsg('주문 상태를 변경이 완료되었습니다.', 'success');
-        snack.handleOpen();
+        enqueueSnackbar('주문 상태 변경 완료되었습니다.', {
+          variant: 'success',
+          preventDuplicate: false,
+        });
         confirmDialog.handleClose();
         if (onStatusChange) onStatusChange();
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error(err);
-        handleSnackMsg(
+        enqueueSnackbar(
           '주문 상태를 변경하는 도중 오류가 발생했습니다. 문제가 지속적으로 발견될 시 support@onad.io로 문의바랍니다.',
-          'error',
+          { variant: 'error' },
         );
-        snack.handleOpen();
       });
   }
 
   return (
     <>
       <CustomDialog open={open} onClose={onClose} maxWidth="xs" fullWidth title="주문 정보">
-        {merchandiseDetailGet.loading && (
+        {merchandiseDetailGet.isLoading && (
           <div style={{ textAlign: 'center', width: '100%' }}>
             <CircularProgress />
           </div>
         )}
-        {!merchandiseDetailGet.loading && (
+        {!merchandiseDetailGet.isLoading && (
           <>
             {merchandiseDetailGet.data && merchandiseDetailGet.data.imagesRes && (
               <SwipeableTextMobileStepper
@@ -269,15 +265,6 @@ MerchandiseDetailDialogProps): React.ReactElement {
           onClick={handleStatusChange}
           merchandiseOrder={merchandiseOrder}
           selectedStatus={selectedStatus}
-        />
-      )}
-
-      {snackMsg && (
-        <Snackbar
-          message={snackMsg.msg}
-          open={snack.open}
-          onClose={snack.handleClose}
-          color={snackMsg.color}
         />
       )}
     </>

@@ -1,20 +1,25 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
+import { Vpc } from '@aws-cdk/aws-ec2';
 import {
-  Vpc
-} from '@aws-cdk/aws-ec2';
-import {
-  AwsLogDriver, Cluster, ContainerImage, FargateService, FargateTaskDefinition
+  AwsLogDriver,
+  Cluster,
+  ContainerImage,
+  FargateService,
+  FargateTaskDefinition,
+  Secret,
 } from '@aws-cdk/aws-ecs';
 import {
   ApplicationListener,
   ApplicationLoadBalancer,
-  ApplicationProtocol, ApplicationTargetGroup
+  ApplicationProtocol,
+  ApplicationTargetGroup,
 } from '@aws-cdk/aws-elasticloadbalancingv2';
 import { Role } from '@aws-cdk/aws-iam';
 import { LogGroup } from '@aws-cdk/aws-logs';
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
 import { LoadBalancerTarget } from '@aws-cdk/aws-route53-targets';
 import * as cdk from '@aws-cdk/core';
+import getParams from './get-ssm-params/getParams';
 
 const DOMAIN = 'livecommerce.onad.io';
 const PORT = 3060;
@@ -28,9 +33,8 @@ export default class LiveCommerceStack extends cdk.Stack {
     this.checkEnvVariables();
 
     const onadVpc = Vpc.fromLookup(this, 'FindOnadVpc', {
-      vpcName: 'EC2 ONAD default'
+      vpcName: 'EC2 ONAD default',
     });
-
 
     // Find existing ECS Cluster "OnAD"
     const myCluster = Cluster.fromClusterAttributes(this, 'FindECSCluster', {
@@ -49,23 +53,34 @@ export default class LiveCommerceStack extends cdk.Stack {
     liveCommerceSG.connections.allowFromAnyIpv4(ec2.Port.tcp(PORT));
 
     // Find IAM Role for Fargate task
-    const taskRole = Role.fromRoleArn(
-      this, 'FindECSTaskRole', process.env.AWS_ONAD_TASKROLE_ARN!,
-    );
+    const taskRole = Role.fromRoleArn(this, 'FindECSTaskRole', process.env.AWS_ONAD_TASKROLE_ARN!);
 
     // Create TaskDefinition for LiveCommerce
     const taskDef = new FargateTaskDefinition(this, `${PREFIX}TaskDef`, {
       cpu: 256,
       memoryLimitMiB: 512,
       taskRole,
-      family: REPO_NAME // match with live-commerce/task-definition.json > "family"
+      family: REPO_NAME, // match with live-commerce/task-definition.json > "family"
     });
     const logGroup = new LogGroup(this, `${PREFIX}LogGroup`, {
-      logGroupName: `ecs/${PREFIX}`, removalPolicy: cdk.RemovalPolicy.DESTROY,
+      logGroupName: `ecs/${PREFIX}`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+
+    // Find ssm parameters
+    const ssmParameters = getParams(this);
+
     const container = taskDef.addContainer(PREFIX, {
       image: ContainerImage.fromRegistry(`hwasurr/${REPO_NAME}`),
       logging: new AwsLogDriver({ logGroup, streamPrefix: 'ecs' }),
+      secrets: {
+        DB_CHARSET: Secret.fromSsmParameter(ssmParameters.DB_CHARSET),
+        DB_HOST: Secret.fromSsmParameter(ssmParameters.DB_HOST),
+        DB_PASSWORD: Secret.fromSsmParameter(ssmParameters.DB_PASSWORD),
+        DB_PORT: Secret.fromSsmParameter(ssmParameters.DB_PORT),
+        DB_USER: Secret.fromSsmParameter(ssmParameters.DB_USER),
+        DB_DATABASE: Secret.fromSsmParameter(ssmParameters.DB_DATABASE),
+      },
     });
     container.addPortMappings({ containerPort: PORT });
 
@@ -76,16 +91,18 @@ export default class LiveCommerceStack extends cdk.Stack {
       taskDefinition: taskDef,
       assignPublicIp: true,
       desiredCount: 1,
-      securityGroups: [
-        liveCommerceSG
-      ],
+      securityGroups: [liveCommerceSG],
     });
 
     // Find OnAD ALB Listener
-    const myAlbHTTPSListener = ApplicationListener.fromApplicationListenerAttributes(this, 'FindALBListener', {
-      listenerArn: process.env.AWS_ONAD_ALB_LISTENER_ARN!,
-      securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
-    });
+    const myAlbHTTPSListener = ApplicationListener.fromApplicationListenerAttributes(
+      this,
+      'FindALBListener',
+      {
+        listenerArn: process.env.AWS_ONAD_ALB_LISTENER_ARN!,
+        securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
+      },
+    );
 
     // Attach Target groups to existing http listener
     myAlbHTTPSListener.addTargetGroups(`${PREFIX}TargetGroups`, {
@@ -98,8 +115,8 @@ export default class LiveCommerceStack extends cdk.Stack {
           port: PORT,
           protocol: ApplicationProtocol.HTTP,
           targets: [service],
-        })
-      ]
+        }),
+      ],
     });
 
     // Create Domain "livecommerce.onad.io"
@@ -108,18 +125,14 @@ export default class LiveCommerceStack extends cdk.Stack {
       zoneName: 'onad.io',
     });
 
-
     // Find Onad ALB
-    const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(
-      this,
-      'FindOnADALB', {
-        vpc: onadVpc,
-        securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
-        loadBalancerArn: process.env.AWS_ONAD_ALB_ARN!,
-        loadBalancerCanonicalHostedZoneId: process.env.AWS_ONAD_ALB_HOSTEDZONE_ID!,
-        loadBalancerDnsName: process.env.AWS_ONAD_ALB_DNS_NAME!,
-      }
-    );
+    const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'FindOnADALB', {
+      vpc: onadVpc,
+      securityGroupId: process.env.AWS_ONAD_ALB_SG_ID!,
+      loadBalancerArn: process.env.AWS_ONAD_ALB_ARN!,
+      loadBalancerCanonicalHostedZoneId: process.env.AWS_ONAD_ALB_HOSTEDZONE_ID!,
+      loadBalancerDnsName: process.env.AWS_ONAD_ALB_DNS_NAME!,
+    });
 
     const record = new ARecord(this, `${PREFIX}ARecord`, {
       target: RecordTarget.fromAlias(new LoadBalancerTarget(alb)),
@@ -142,7 +155,7 @@ export default class LiveCommerceStack extends cdk.Stack {
       'AWS_ONAD_ALB_HOSTEDZONE_ID',
     ];
 
-    required.forEach((key) => {
+    required.forEach(key => {
       if (!envKeys.includes(key)) throw new Error(`You need Environment variable - ${key}`);
     });
   }

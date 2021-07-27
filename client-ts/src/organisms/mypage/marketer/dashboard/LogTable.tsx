@@ -13,8 +13,7 @@ import {
 } from '@material-ui/core';
 import Refresh from '@material-ui/icons/Refresh';
 import { makeStyles } from '@material-ui/core/styles';
-import { ActionLogInterface } from './interfaces';
-import { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
+import { useMarketerActionLog } from '../../../../utils/hooks/query/useMarketerActionLog';
 
 const styles = makeStyles(() => ({
   loading: {
@@ -94,10 +93,8 @@ function makeContents(typeNumber: number, detail: string) {
   }
 }
 
-export default function issueTable(props: {
-  actionLogData: UseGetRequestObject<ActionLogInterface[] | null>;
-}): JSX.Element {
-  const { actionLogData } = props;
+export default function IssueTable(): JSX.Element {
+  const actionLog = useMarketerActionLog();
   const classes = styles();
 
   return (
@@ -110,7 +107,7 @@ export default function issueTable(props: {
         <IconButton
           size="small"
           onClick={() => {
-            actionLogData.doGetRequest();
+            actionLog.refetch();
           }}
         >
           <Tooltip title="활동내역 새로고침">
@@ -123,7 +120,7 @@ export default function issueTable(props: {
 
       <Grid container style={{ height: '430px', overflow: 'auto' }}>
         {/* 데이터 있는 경우 */}
-        {actionLogData.loading && (
+        {actionLog.isLoading && (
           <Grid item xs={12} className={classes.loading}>
             <Typography variant="body2">활동내역 데이터를 로드하고 있습니다.</Typography>
             <div style={{ textAlign: 'center' }}>
@@ -131,27 +128,22 @@ export default function issueTable(props: {
             </div>
           </Grid>
         )}
-        {!actionLogData.loading && actionLogData.data && actionLogData.data.length > 0 && (
+        {!actionLog.isLoading && actionLog.data && actionLog.data.length > 0 && (
           <List component="nav" style={{ width: '100%' }} aria-label="issue-table">
-            {actionLogData.data
+            {actionLog.data
               // eslint-disable-next-line no-nested-ternary
               .sort((a, b) => (a.date > b.date ? -1 : a.date < b.date ? 1 : 0))
               .map((r, index) => (
                 <div key={nanoid()}>
                   <ListItem style={{ justifyContent: 'space-between' }}>
-                    <ListItemText
-                      primary={makeContents(r.type, r.detail)}
-                      secondary={new Date(r.date).toLocaleString()}
-                    />
+                    <ListItemText primary={makeContents(r.type, r.detail)} secondary={r.date} />
                   </ListItem>
-                  {actionLogData.data && index !== actionLogData.data.length - 1 && (
-                    <Divider light />
-                  )}
+                  {actionLog.data && index !== actionLog.data.length - 1 && <Divider light />}
                 </div>
               ))}
           </List>
         )}
-        {!actionLogData.loading && actionLogData.data && actionLogData.data.length === 0 && (
+        {!actionLog.isLoading && actionLog.data && actionLog.data.length === 0 && (
           // 데이터 없는 경우
           <div
             style={{

@@ -1,10 +1,9 @@
 /* eslint-disable max-len */
-import { useCallback, useMemo, useState } from 'react';
-
-import * as React from 'react';
 import { Switch, SwitchProps, Tooltip } from '@material-ui/core';
+import * as React from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CampaignInterface } from '../../organisms/mypage/marketer/dashboard/interfaces';
-import handleCampaignOnOff from '../../utils/func/handleCampaignOnOff';
+import { useMarketerCampaignOnOffMutation } from '../../utils/hooks/mutation/useMarketerCampaignOnOffMutation';
 import {
   CONFIRM_STATE_REJECTED,
   CONFIRM_STATE_WAIT,
@@ -35,28 +34,16 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
 
   // **********************************************
   // 로딩 처리를 위해
-  const [loading, setLoading] = useState(false);
-  function handleLoadingStart(): void {
-    setLoading(true);
-  }
-  function handleLoadingEnd(): void {
-    setLoading(false);
-  }
+  const onOffMutation = useMarketerCampaignOnOffMutation();
   const handleSwitch = useCallback((): void => {
-    handleLoadingStart();
-    handleCampaignOnOff({
-      onoffState: !campaign.onOff,
-      campaignId: campaign.campaignId,
-      onSuccess: data => {
-        handleLoadingEnd();
-        return onSuccess(data);
-      },
-      onFail: err => {
-        handleLoadingEnd();
-        return onFail(err);
-      },
-    });
-  }, [campaign.campaignId, campaign.onOff, onFail, onSuccess]);
+    onOffMutation
+      .mutateAsync({
+        onoffState: !campaign.onOff,
+        campaignId: campaign.campaignId,
+      })
+      .then(({ data }) => onSuccess(data))
+      .catch(err => onFail(err));
+  }, [campaign.campaignId, campaign.onOff, onFail, onOffMutation, onSuccess]);
 
   // **********************************************
   // 캠페인 시작이 불가능할 때, 버튼 disable 처리
@@ -128,12 +115,21 @@ export default function CampaignOnOffSwitch(props: CampaignOnOffSwitchProps): Re
         size={size}
         id={id}
         color={color}
-        disabled={inventoryLoading || loading || onOffDisabled}
+        disabled={inventoryLoading || onOffMutation.isLoading || onOffDisabled}
         checked={Boolean(campaign.onOff)}
         onChange={handleSwitch}
       />
     ),
-    [campaign.onOff, color, handleSwitch, id, inventoryLoading, loading, onOffDisabled, size],
+    [
+      campaign.onOff,
+      color,
+      handleSwitch,
+      id,
+      inventoryLoading,
+      onOffMutation.isLoading,
+      onOffDisabled,
+      size,
+    ],
   );
 
   if (onOffDisabled) {

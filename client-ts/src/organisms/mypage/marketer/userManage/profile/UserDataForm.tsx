@@ -1,15 +1,15 @@
-import { useContext, useEffect } from 'react';
-import classnames from 'classnames';
 // @material-ui/core
 import { Grid, makeStyles, Paper } from '@material-ui/core';
+import classnames from 'classnames';
+import { useSnackbar } from 'notistack';
+import { useEffect } from 'react';
 import EditableTextField from '../../../../../atoms/EditableInput/EditableTextField';
-import EditablePhoneInput from './sub/EditablePhoneInput';
-import { MarketerInfo } from '../../office/interface';
-import { useDialog, useEventTargetValue, usePatchRequest } from '../../../../../utils/hooks';
+import { useEventTargetValue } from '../../../../../utils/hooks';
+import { useMarketerUpdateMarketerInfoMutation } from '../../../../../utils/hooks/mutation/useMarketerUpdateMarketerInfoMutation';
+import { MarketerInfo } from '../../../../../utils/hooks/query/useMarketerProfile';
 import EditablePasswordInput from './sub/EditablePasswordInput';
-import Snackbar from '../../../../../atoms/Snackbar/Snackbar';
+import EditablePhoneInput from './sub/EditablePhoneInput';
 import EditProfileImage from './sub/EditProfileImage';
-import MarketerInfoContext from '../../../../../context/MarketerInfo.context';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,9 +35,8 @@ export interface UserDataFormProps {
   userData: MarketerInfo;
 }
 const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const marketerInfo = useContext(MarketerInfoContext);
-
   const nameValue = useEventTargetValue(userData.marketerName);
   const passwordValue = useEventTargetValue();
   const mailValue = useEventTargetValue(userData.marketerMail);
@@ -51,14 +50,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.marketerMail, userData.marketerName, userData.marketerPhoneNum]);
 
-  const { loading, doPatchRequest } =
-    usePatchRequest<{ type: string; value: string | number }, any[]>('/marketer');
-
-  // **************************************************
-  // 성공, 실패 알림을 위한 상태값
-  const successSnack = useDialog();
-  const failSnack = useDialog();
-
+  const updateMarketermutation = useMarketerUpdateMarketerInfoMutation();
   /**
    * 내 정보 수정 핸들러
    * @param type 변경할 필드
@@ -68,15 +60,16 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
     type: 'name' | 'password' | 'mail' | 'phone' | 'profileImage',
     value: string,
   ): void {
-    doPatchRequest({ type, value })
+    updateMarketermutation
+      .mutateAsync({ type, value })
       .then(() => {
-        successSnack.handleOpen();
-        setTimeout(() => {
-          marketerInfo.doGetRequest();
-        }, 1000);
+        enqueueSnackbar('성공적으로 수정하였습니다.', {
+          variant: 'success',
+          preventDuplicate: false,
+        });
       })
       .catch(() => {
-        failSnack.handleOpen();
+        enqueueSnackbar('수정중 오류가 발생했습니다. 문의바랍니다.', { variant: 'error' });
       });
   }
 
@@ -85,7 +78,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
       <Grid container>
         <Grid item xs={12} className={classnames(classes.field, classes.first)}>
           <EditProfileImage
-            loading={loading}
+            loading={updateMarketermutation.isLoading}
             onSubmit={(image): void => {
               handlePatchSubmit('profileImage', image);
             }}
@@ -95,7 +88,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
         {/* 회사명/브랜드명/이름 */}
         <Grid item xs={12} className={classes.field}>
           <EditableTextField
-            loading={loading}
+            loading={updateMarketermutation.isLoading}
             label="이름(회사명or브랜드명)"
             displayValue={userData.marketerName}
             value={nameValue.value}
@@ -113,7 +106,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
 
         <Grid item xs={12} className={classes.field}>
           <EditablePasswordInput
-            loading={loading}
+            loading={updateMarketermutation.isLoading}
             label="비밀번호"
             displayValue="****"
             value={passwordValue.value}
@@ -129,7 +122,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
         {/* 이메일 */}
         <Grid item xs={12} className={classes.field}>
           <EditableTextField
-            loading={loading}
+            loading={updateMarketermutation.isLoading}
             label="이메일"
             displayValue={userData.marketerMail}
             value={mailValue.value}
@@ -148,7 +141,7 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
         {/* 휴대전화 */}
         <Grid item xs={12} className={classes.field}>
           <EditablePhoneInput
-            loading={loading}
+            loading={updateMarketermutation.isLoading}
             label="휴대전화"
             displayValue={userData.marketerPhoneNum}
             value={phoneValue.value}
@@ -161,23 +154,6 @@ const UserDataForm = ({ userData }: UserDataFormProps): JSX.Element => {
           />
         </Grid>
       </Grid>
-
-      {successSnack.open && (
-        <Snackbar
-          message="성공적으로 수정하였습니다."
-          color="success"
-          onClose={successSnack.handleClose}
-          open={successSnack.open}
-        />
-      )}
-      {failSnack.open && (
-        <Snackbar
-          message="수정중 오류가 발생했습니다. 문의바랍니다."
-          color="error"
-          onClose={failSnack.handleClose}
-          open={failSnack.open}
-        />
-      )}
     </Paper>
   );
 };

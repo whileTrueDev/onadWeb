@@ -1,15 +1,12 @@
 /* eslint-disable react/display-name */
-import dayjs from 'dayjs';
-import * as React from 'react';
-import { Grid, Typography, CircularProgress, Avatar } from '@material-ui/core';
+import { Avatar, CircularProgress, Grid, Typography } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // import Skeleton from '@material-ui/lab/Skeleton';
 import Error from '@material-ui/icons/Error';
-
-// usehook
-import useGetRequest from '../../../../utils/hooks/useGetRequest';
-import { CreatorDataPerMarketerInterface } from '../dashboard/interfaces';
+import dayjs from 'dayjs';
+import * as React from 'react';
 import CustomDataGrid from '../../../../atoms/Table/CustomDataGrid';
+import { useMarketerCampaignAnalysisCreatorDataWithoutCampaignId } from '../../../../utils/hooks/query/useMarketerCampaignAnalysisCreatorDataWithoutCampaignId';
 
 const useStyles = makeStyles(theme => ({
   chip: {
@@ -39,13 +36,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function CustomPieChart(): JSX.Element {
   const classes = useStyles();
-  const creatorsData = useGetRequest<null, CreatorDataPerMarketerInterface[]>(
-    '/marketer/campaign/analysis/creator-data',
-  );
+  const creatorsData = useMarketerCampaignAnalysisCreatorDataWithoutCampaignId();
 
   return (
     <Grid container>
-      {creatorsData.loading && (
+      {creatorsData.isLoading && (
         <Grid item xs={12} className={classes.loading}>
           <Typography className={classes.statement}>
             송출 방송인 데이터를 로드하고 있습니다.
@@ -60,7 +55,7 @@ export default function CustomPieChart(): JSX.Element {
       )}
 
       {/* 광고 송출하지 않은 경우 */}
-      {!creatorsData.loading && creatorsData.data && creatorsData.data.length === 0 && (
+      {!creatorsData.isLoading && creatorsData.data && creatorsData.data.length === 0 && (
         <Grid
           item
           xs={12}
@@ -87,13 +82,13 @@ export default function CustomPieChart(): JSX.Element {
         </Grid>
       )}
 
-      {!creatorsData.loading && creatorsData.data && creatorsData.data.length > 0 && (
+      {!creatorsData.isLoading && creatorsData.data && creatorsData.data.length > 0 && (
         <>
           <Grid item xs={12} style={{ height: 350 }}>
             <CustomDataGrid
               hideFooter
               disableSelectionOnClick
-              loading={creatorsData.loading}
+              loading={creatorsData.isLoading}
               rows={creatorsData.data}
               columns={[
                 {

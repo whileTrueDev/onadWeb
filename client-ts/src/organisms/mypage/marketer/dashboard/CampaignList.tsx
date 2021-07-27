@@ -1,10 +1,10 @@
 import { Button, CircularProgress, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import { useSnackbar } from 'notistack';
 import CampaignOnOffSwitch from '../../../../atoms/Switch/CampaignOnOffSwitch';
 import history from '../../../../history';
-import { useGetRequest } from '../../../../utils/hooks';
-import useDialog from '../../../../utils/hooks/useDialog';
+import queryClient from '../../../../queryClient';
+import { useMarketerCampaignList } from '../../../../utils/hooks/query/useMarketerCampaignList';
 import { CONFIRM_STATE_REJECTED } from '../../../../utils/render_funcs/renderBannerConfirmState';
 import CampaignMetaInfoCard from '../adManage/campaign/sub/CampaignMetaInfoCard';
 import { CampaignInterface } from './interfaces';
@@ -30,22 +30,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function CampaignList(): JSX.Element {
-  const OFFSET = 4;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const campaignData = useGetRequest<{ page: number; offset: number }, CampaignInterface[]>(
-    '/marketer/campaign/list',
-    { page: 0, offset: OFFSET },
-  );
-
-  const snack = useDialog();
-  const failSnack = useDialog();
+  const OFFSET = 2;
+  const campaigns = useMarketerCampaignList({ page: 0, offset: OFFSET });
 
   return (
     <Paper style={{ minHeight: 400 }}>
       <div className={classes.title}>
         <Typography variant="h6">내 캠페인</Typography>
-        {campaignData.data && campaignData.data.length > 0 && (
+        {campaigns.data && campaigns.data.length > 0 && (
           <Button
             variant="outlined"
             size="small"
@@ -61,7 +56,7 @@ export default function CampaignList(): JSX.Element {
 
       <Divider />
 
-      {campaignData.loading && (
+      {campaigns.isLoading && (
         <Grid item xs={12} className={classes.loading}>
           <div style={{ textAlign: 'center' }}>
             <CircularProgress />
@@ -69,10 +64,10 @@ export default function CampaignList(): JSX.Element {
         </Grid>
       )}
 
-      {campaignData.data && (
+      {campaigns.data && (
         <div>
           <article className={classes.article}>
-            {campaignData.data
+            {campaigns.data
               .filter(cam => cam.confirmState !== CONFIRM_STATE_REJECTED)
               .slice(0, 2)
               .map((campaign: CampaignInterface) => (
@@ -83,11 +78,14 @@ export default function CampaignList(): JSX.Element {
                     <CampaignOnOffSwitch
                       campaign={campaign}
                       onSuccess={(): void => {
-                        campaignData.doGetRequest();
-                        snack.handleOpen();
+                        queryClient.invalidateQueries('marketerCampaignList');
+                        enqueueSnackbar('캠페인 On/Off 상태 변경 완료', { variant: 'success' });
                       }}
                       onFail={(): void => {
-                        failSnack.handleOpen();
+                        enqueueSnackbar(
+                          '캠페인 On/Off 상태 변경에 실패했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견될 시 support@onad.io로 문의바랍니다.',
+                          { variant: 'error' },
+                        );
                       }}
                     />
                   }
@@ -110,7 +108,7 @@ export default function CampaignList(): JSX.Element {
         </div>
       )}
 
-      {!campaignData.loading && campaignData.data && campaignData.data.length === 0 && (
+      {!campaigns.isLoading && campaigns.data && campaigns.data.length === 0 && (
         <Grid
           container
           justify="center"
@@ -125,20 +123,6 @@ export default function CampaignList(): JSX.Element {
           </Grid>
         </Grid>
       )}
-
-      <Snackbar
-        open={snack.open}
-        onClose={snack.handleClose}
-        color="success"
-        message="캠페인 On/Off 상태 변경 완료"
-      />
-
-      <Snackbar
-        open={failSnack.open}
-        onClose={failSnack.handleClose}
-        color="error"
-        message="캠페인 On/Off 상태 변경에 실패했습니다. 잠시 후 다시 시도해주세요. 지속적으로 문제가 발견될 시 support@onad.io로 문의바랍니다."
-      />
     </Paper>
   );
 }

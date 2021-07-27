@@ -1,31 +1,52 @@
 <html>
-  <head>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-    <script src='/lib/bundle.js'></script>
-    <link href='/public/layout.css' rel='stylesheet'>
 
-    <script>
-      const exports = {};
-    </script>
-  </head>
+<head>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <script src='/lib/bundle.js'></script>
+  <link href='/public/layout.css' rel='stylesheet'>
 
-  <body>
+  <script>
+    const exports = {};
+  </script>
+</head>
+
+<body>
+  <div class="live-commerce">
     <div class="left-section">
       <!--랭킹-->
       <div class="ranking-area">
+        <p class="ranking-text-area" id="title">
+          TOP 구매자
+        </p>
         <div class="ranking-area-inner">
           <p class="ranking-text-area" id="rank-0">
-            <span class="ranking-text-area-id">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/crown.png" id="ranking-icon" />
+              <span class="ranking-text-area-id" id="rank-0">
+              </span>
+            </span>
+            <span class="quantity" id="rank-0">
             </span>
           </p>
+
           <p class="ranking-text-area" id="rank-1">
-            <span class="ranking-text-area-id">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/second.png" id="ranking-icon" />
+              <span class="ranking-text-area-id" id="rank-1">
+              </span>
+            </span>
+            <span class="quantity" id="rank-1">
             </span>
           </p>
           <p class="ranking-text-area" id="rank-2">
-            <span class="ranking-text-area-id">
+            <span class="ranking-id-wrapper">
+              <img src="/public/images/third.png" id="ranking-icon" />
+              <span class="ranking-text-area-id" id="rank-2">
+              </span>
+            </span>
+            <span class="quantity" id="rank-2">
             </span>
           </p>
         </div>
@@ -40,13 +61,40 @@
     </div>
     <!--가상광고 영역-->
     <div class="virtual-ad">
+      <img id="virtual-ad-img" src="/public/images/invisible.png" />
     </div>
     <!--하단 영역-->
     <div class="bottom-area-wrapper">
+      <div class="bottom-left">
+        <div class="bottom-object">
+          <img src="/public/images/object.png" class="bottom-left-icon" />
+          <div class="bottom-object-quantity">
+            <span id="current-quantity">
+              0
+            </span>
+            <span>
+              /
+            </span>
+            <span id="quantity-object">
+              100
+            </span>
+          </div>
+        </div>
+        <div class="bottom-timer">
+          <img src="/public/images/clock.png" class="bottom-left-icon" id="clock" />
+          <span id="time-hour"></span>
+          <span id="hour-min-separator"> : </span>
+          <span id="time-min"></span>
+          <span id="min-sec-separator"> : </span>
+          <span id="time-sec"></span>
+        </div>
+      </div>
       <div class="bottom-area">
         <p class="bottom-area-text">
         </p>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

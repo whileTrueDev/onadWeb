@@ -1,24 +1,33 @@
-import { useState } from 'react';
-import * as React from 'react';
-import { Grid, TextField, Avatar, Typography, Paper } from '@material-ui/core';
+import { Avatar, Button, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
-import Button from '../../../../atoms/CustomButtons/Button';
-import Snackbar from '../../../../atoms/Snackbar/Snackbar';
+import React, { useState, ReactNode } from 'react';
+import { useSnackbar } from 'notistack';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 
-import Contract from './Contract/Contract';
-import { ProfileDataType } from './ProfileData.type';
-import PasswordDialog from './ProfileChangeDIalog/PasswordDialog';
 import { useDialog } from '../../../../utils/hooks';
+import { useCreatorProfile } from '../../../../utils/hooks/query/useCreatorProfile';
+import Contract from './Contract/Contract';
+import PasswordDialog from './ProfileChangeDIalog/PasswordDialog';
+import SignoutConfirmDialog from './SignoutConfirmDialog/SignoutConfirmDialog';
 
-interface ProfileCardProps {
-  profileData: ProfileDataType;
-}
-function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
+const useStyles = makeStyles(() => ({
+  linkText: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+}));
+function ProfileCard(): React.ReactElement {
+  // 프로필 유저 데이터
+  const profile = useCreatorProfile();
+
+  const classes = useStyles();
   // ***************************************************
   // 계약서 보기
   const [ContractionOpen, setContractionOpen] = useState(false);
   function handleContractionOpen(): void {
-    if (profileData.creatorContractionAgreement === 1) {
+    if (profile.data?.creatorContractionAgreement === 1) {
       setContractionOpen(true);
     }
   }
@@ -30,7 +39,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
   // 텍스트필드 컴포넌트
   interface TextFieldWithLabelProps {
     title: string;
-    children: React.ReactNode;
+    children: ReactNode;
   }
   const TextFieldWithLabel = ({ title, children }: TextFieldWithLabelProps): JSX.Element => (
     <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', minHeight: 40 }}>
@@ -45,7 +54,14 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
   // ***************************************************
   // 비밀번호 변경 성공 알림 스낵바
-  const successSnack = useDialog();
+  const { enqueueSnackbar } = useSnackbar();
+
+  // ***************************************************
+  // 회원 탈퇴 확인 다이얼로그
+  const signoutConfirmDialog = useDialog();
+
+  if (profile.isLoading) return <CenterLoading />;
+  if (!profile.data) return <div />;
 
   return (
     <>
@@ -55,7 +71,7 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="프로필사진">
             <Avatar
-              src={profileData.creatorLogo || profileData.afreecaLogo || ''}
+              src={profile.data.creatorLogo || profile.data.afreecaLogo || ''}
               style={{ width: 45, height: 45 }}
             />
           </TextFieldWithLabel>
@@ -63,14 +79,19 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
           <TextFieldWithLabel title="아이디">
             <TextField
               InputProps={{ style: { padding: 0 } }}
-              value={profileData.loginId}
+              value={profile.data.loginId}
               disabled
             />
           </TextFieldWithLabel>
 
           <TextFieldWithLabel title="비밀번호">
             <TextField InputProps={{ style: { padding: 0 } }} value="****" disabled />
-            <Button size="small" style={{ marginLeft: 16 }} onClick={passwordDialog.handleOpen}>
+            <Button
+              variant="outlined"
+              size="small"
+              style={{ marginLeft: 16 }}
+              onClick={passwordDialog.handleOpen}
+            >
               <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
               변경하기
             </Button>
@@ -78,18 +99,32 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
 
           <TextFieldWithLabel title="이용동의상태">
             <TextField
-              value={profileData.creatorContractionAgreement === 1 ? '이용동의완료✔️' : '미동의'}
+              value={profile.data.creatorContractionAgreement === 1 ? '이용동의완료✔️' : '미동의'}
               margin="normal"
               disabled
               InputProps={{ readOnly: true, style: { padding: 0 } }}
             />
-            {profileData.creatorContractionAgreement === 1 && (
-              <Button size="small" style={{ marginLeft: 16 }} onClick={handleContractionOpen}>
+            {profile.data.creatorContractionAgreement === 1 && (
+              <Button
+                variant="outlined"
+                size="small"
+                style={{ marginLeft: 16 }}
+                onClick={handleContractionOpen}
+              >
                 <OpenInNew fontSize="small" style={{ verticalAlign: 'middle' }} />
                 이용약관 보기
               </Button>
             )}
           </TextFieldWithLabel>
+
+          <Typography
+            className={classes.linkText}
+            color="textSecondary"
+            variant="caption"
+            onClick={() => signoutConfirmDialog.handleOpen()}
+          >
+            회원 탈퇴
+          </Typography>
         </Grid>
       </Paper>
 
@@ -97,18 +132,18 @@ function ProfileCard({ profileData }: ProfileCardProps): JSX.Element {
       <PasswordDialog
         open={passwordDialog.open}
         onClose={passwordDialog.handleClose}
-        handleSnackOpen={successSnack.handleOpen}
-      />
-      {/* 비밀번호 변경 성공 스낵바 */}
-      <Snackbar
-        message="성공적으로 비밀번호를 변경했습니다."
-        color="success"
-        open={successSnack.open}
-        onClose={successSnack.handleClose}
+        handleSnackOpen={() =>
+          enqueueSnackbar('성공적으로 비밀번호를 변경했습니다.', { variant: 'success' })
+        }
       />
 
       {/* 계약서 다이얼로그 */}
       <Contract open={ContractionOpen} handleClose={handleContractionClose} />
+
+      <SignoutConfirmDialog
+        open={signoutConfirmDialog.open}
+        onClose={signoutConfirmDialog.handleClose}
+      />
     </>
   );
 }

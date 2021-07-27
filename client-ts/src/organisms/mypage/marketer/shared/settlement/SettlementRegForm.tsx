@@ -10,17 +10,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { useEffect, useState } from 'react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 import CustomDialog from '../../../../../atoms/Dialog/Dialog';
 import banks, { Bank } from '../../../../../constants/banks';
 import { useDialog } from '../../../../../utils/hooks';
-import { UseGetRequestObject } from '../../../../../utils/hooks/useGetRequest';
+import { SettlementRegDTO } from '../../../../../utils/hooks/mutation/useMarketerCreateSettlementMutation';
+import { useMarketerSettlement } from '../../../../../utils/hooks/query/useMarketerSettlement';
 import { OnadUploadedImageData } from '../../../../../utils/hooks/useImageListUpload';
 import ImageUploadAccount from '../../../shared/settlement/ImageUploadAccount';
 import ImageUploadIdentity from '../../../shared/settlement/ImageUploadIdentity';
-import { MarketerSettlement } from '../../office/interface';
 
 const useStyles = makeStyles(theme => ({
   field: { margin: theme.spacing(2, 0) },
@@ -39,30 +39,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export interface SettlementRegDTO {
-  name: string;
-  identificationNumber: string;
-  bankName: string;
-  bankAccountOwner: string;
-  bankAccountNumber: string;
-  businessmanFlag: string;
-  identificationImgSrc: string;
-  bankAccountImgSrc: string;
-}
-
 export interface SettlementRegFormProps {
   onSubmit: (dto: Partial<SettlementRegDTO>, reqType?: 'post' | 'patch') => void;
   onCancle?: () => void;
   loading?: boolean;
-  settlementData?: UseGetRequestObject<MarketerSettlement>;
 }
 export default function SettlementRegForm({
   onSubmit,
   onCancle,
   loading,
-  settlementData,
 }: SettlementRegFormProps): JSX.Element {
   const classes = useStyles();
+
+  // 판매대금 출금정산을 위한 정산 등록 정보 조회
+  const settlement = useMarketerSettlement();
 
   const [dialogType, setDialogType] = useState<'account' | 'identificaiton'>();
   function handleDialogType(type: 'account' | 'identificaiton'): void {
@@ -84,11 +74,11 @@ export default function SettlementRegForm({
   const [requestType, setRequestType] = useState<'post' | 'patch'>('post');
   // 수정의 경우
   useEffect(() => {
-    if (settlementData && settlementData.data) {
+    if (settlement && settlement.data) {
       setDto({
-        ...settlementData.data,
-        bank: { bankCode: 'unknown', bankName: settlementData.data.bankName },
-        businessmanFlag: settlementData.data.businessmanFlag ? 'true' : 'false',
+        ...settlement.data,
+        bank: { bankCode: 'unknown', bankName: settlement.data.bankName },
+        businessmanFlag: settlement.data.businessmanFlag ? 'true' : 'false',
       });
       setRequestType('patch');
     }

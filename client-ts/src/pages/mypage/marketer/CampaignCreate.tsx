@@ -1,24 +1,25 @@
-import { useReducer, MouseEvent } from 'react';
-import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Button, Collapse, Grid, Paper, useMediaQuery } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Paper, Collapse, useMediaQuery, Button } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { MouseEvent, useReducer } from 'react';
+import { useQueryClient } from 'react-query';
+import { Link, useLocation } from 'react-router-dom';
+import history from '../../../history';
+import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 // organisms
 import ProrityPaper from '../../../organisms/mypage/marketer/campaign-create2/AdPriorityPaper';
-import OptionPaper from '../../../organisms/mypage/marketer/campaign-create2/AdOptionPaper';
 import CampaignFormPaper from '../../../organisms/mypage/marketer/campaign-create2/CampaignFormPaper';
 import {
   CampaignCreateReducer,
   defaultState as step3DefaultState,
 } from '../../../organisms/mypage/marketer/campaign-create2/reducers/campaignCreate.reducer';
-// others
-import HOST from '../../../config';
-import axios from '../../../utils/axios';
-import history from '../../../history';
-import Snackbar from '../../../atoms/Snackbar/Snackbar';
-import { useDialog } from '../../../utils/hooks';
-import parseParams from '../../../utils/parseParams';
+import {
+  MarketerCreateCampaignMutationDto,
+  useMarketerCreateCampaignMutation,
+} from '../../../utils/hooks/mutation/useMarketerCreateCampaignMutation';
 import useMypageScrollToTop from '../../../utils/hooks/useMypageScrollToTop';
+import parseParams from '../../../utils/parseParams';
 
 const useStyles = makeStyles((_theme: Theme) => ({
   root: {
@@ -41,6 +42,7 @@ const useStyles = makeStyles((_theme: Theme) => ({
 
 const CampaignCreate = (): JSX.Element => {
   const classes = useStyles();
+  const queryClient = useQueryClient();
 
   // *****************************************************
   // url search parameter를 토대로 캠페인 생성 이후 보낼 redirect uri를 가져온다.
@@ -80,7 +82,8 @@ const CampaignCreate = (): JSX.Element => {
   };
 
   // *****************************************************
-  const errorSnack = useDialog();
+  // 스낵바
+  const { enqueueSnackbar } = useSnackbar();
 
   // *****************************************************
   // 캠페인정보 - 이름, 홍보문구, 예산 ref
@@ -89,6 +92,7 @@ const CampaignCreate = (): JSX.Element => {
   const budgetInputRef = React.useRef<HTMLInputElement>();
 
   // *****************************************************
+  const createCampaignMutation = useMarketerCreateCampaignMutation();
   // 캠페인 생성 요청 핸들러
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -123,7 +127,7 @@ const CampaignCreate = (): JSX.Element => {
       const NUM = type.replace(/[^0-9]/g, '');
       return NUM;
     }
-    const campaignCreateDTO: any = {
+    const campaignCreateDTO: Partial<MarketerCreateCampaignMutationDto> = {
       optionType: typeToNum(campaignCreateState.selectedOption),
       // 아프리카 카테고리 선택형의 경우 type1-1이므로 11이 됨.
       // 하지만 "카테고리 선택형" 이라는 동일한 유형이므로 동일하게 처리되어야 함. => 1로 수정함.
@@ -188,36 +192,34 @@ const CampaignCreate = (): JSX.Element => {
     }
     campaignCreateDTO.keyword = ['', '', '']; // keyword추가후 수정
 
-    campaignCreateDispatch({ type: 'LOADING_START', value: '' });
-    axios
-      .post(`${HOST}/marketer/campaign`, campaignCreateDTO)
+    createCampaignMutation
+      .mutateAsync(campaignCreateDTO as MarketerCreateCampaignMutationDto)
       .then(res => {
-        campaignCreateDispatch({ type: 'LOADING_DONE', value: '' });
         if (res.data[0]) {
-          alert(res.data[1]);
+          queryClient.invalidateQueries('marketerCampaignLength');
+          queryClient.invalidateQueries('marketerCampaignList');
+          queryClient.invalidateQueries('marketerCampaignActive');
+          queryClient.invalidateQueries('marketerCampaignNames');
+          enqueueSnackbar('캠페인 생성 완료', { variant: 'success' });
           if (urlParams && urlParams.to) history.push(`/mypage/marketer/${urlParams.to}`);
           else history.push('/mypage/marketer/main');
         } else {
-          alert(res.data[1]);
+          enqueueSnackbar('캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+            variant: 'error',
+          });
         }
       })
       .catch(err => {
         console.error(err);
-        errorSnack.handleOpen();
+        enqueueSnackbar('캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   };
 
   useMypageScrollToTop();
   return (
     <Grid container direction="row" spacing={2} wrap="wrap">
-      {/* 요청 실패 스낵바 */}
-      <Snackbar
-        open={errorSnack.open}
-        onClose={errorSnack.handleClose}
-        color="error"
-        message="캠페인 생성 과정에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-      />
-
       {isDesktop ? (
         <Grid item xs={12}>
           <Paper>

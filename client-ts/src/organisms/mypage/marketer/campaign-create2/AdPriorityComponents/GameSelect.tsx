@@ -1,21 +1,20 @@
-import { useEffect } from 'react';
-import * as React from 'react';
-import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import {
-  Grid,
+  Chip,
   CircularProgress,
-  Typography,
   Divider,
   FormControl,
+  Grid,
+  Input,
   InputLabel,
   Select,
-  Input,
-  Chip,
+  Typography,
 } from '@material-ui/core';
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { useCreatorsAnalysisGames } from '../../../../../utils/hooks/query/useCreatorsAnalysisGames';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
 import GameCard from './GameSelectCard';
-import { CampaignCreateInterface, CampaignCreateAction } from '../reducers/campaignCreate.reducer';
-
-import useGetRequest from '../../../../../utils/hooks/useGetRequest';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -29,14 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   formControl: { margin: theme.spacing(1), minWidth: 120, maxWidth: 300 },
 }));
 
-interface GameDataInterface {
-  count: number;
-  content: string;
-  gameId: string;
-  gameName: string;
-  gameNameKr: string;
-  boxArt: string;
-}
 interface GameSelectProps {
   state: CampaignCreateInterface;
   dispatch: React.Dispatch<CampaignCreateAction>;
@@ -51,7 +42,7 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
 
   // **********************************************************
   // 게임데이터 로딩 및 클릭 핸들러
-  const gamesData = useGetRequest('/creators/analysis/games');
+  const games = useCreatorsAnalysisGames();
   function handleGameClick(game: string): void {
     if (state.selectedGames.includes(game)) {
       dispatch({ type: 'DELETE_SELECTED_GAMES', value: game });
@@ -88,14 +79,14 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
       </Grid>
 
       <Grid item xs={12}>
-        {gamesData.loading && (
+        {games.isLoading && (
           <div style={{ padding: 72, textAlign: 'center' }}>
             <CircularProgress size={100} disableShrink />
           </div>
         )}
-        {!gamesData.loading && gamesData.data && (
+        {!games.isLoading && games.data && (
           <Grid container spacing={2} style={{ flexWrap: 'wrap' }}>
-            {gamesData.data.slice(0, 12).map((game: GameDataInterface) => (
+            {games.data.slice(0, 12).map(game => (
               <Grid key={game.gameId} item xs={4} md={3} xl={2}>
                 <GameCard
                   gameName={game.gameName}
@@ -140,13 +131,11 @@ const GameSelect = (props: GameSelectProps): JSX.Element => {
                     }
                   }}
                 >
-                  {gamesData.data
-                    .slice(12, gamesData.data.length)
-                    .map((game: GameDataInterface) => (
-                      <option key={game.gameId} value={game.gameName}>
-                        {game.gameNameKr || game.gameName}
-                      </option>
-                    ))}
+                  {games.data.slice(12, games.data.length).map(game => (
+                    <option key={game.gameId} value={game.gameName}>
+                      {game.gameNameKr || game.gameName}
+                    </option>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>

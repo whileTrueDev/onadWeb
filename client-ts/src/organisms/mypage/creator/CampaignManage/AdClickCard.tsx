@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import classnames from 'classnames';
 import {
   Button,
   Chip,
@@ -13,9 +10,13 @@ import {
   Popover,
   Typography,
 } from '@material-ui/core';
+import classnames from 'classnames';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { useState } from 'react';
-import useGetRequest, { UseGetRequestObject } from '../../../../utils/hooks/useGetRequest';
 import { useAnchorEl } from '../../../../utils/hooks';
+import { useCreatorClicks } from '../../../../utils/hooks/query/useCreatorClicks';
+import { useCreatorClicksCurrent } from '../../../../utils/hooks/query/useCreatorClicksCurrent';
 
 dayjs.extend(relativeTime);
 
@@ -41,15 +42,6 @@ const useStyles = makeStyles(theme => ({
   buttonText: { cursor: 'pointer', '&:hover': { textDecoration: 'underline' } },
 }));
 
-interface LevelRes {
-  creatorId: string;
-  level: number;
-  exp: number;
-}
-interface ClicksRes {
-  adpanel: number;
-  adchat: number;
-}
 export interface CurrentClickRes {
   id: string;
   clickedTime: string;
@@ -67,11 +59,9 @@ export interface CurrentClickRes {
   merchandiseId?: number;
   itemSiteUrl?: string;
 }
-export interface AdClickCardProps {
-  clicksSummaryData: UseGetRequestObject<ClicksRes>;
-}
-export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JSX.Element {
+export default function AdClickCard(): JSX.Element {
   const classes = useStyles();
+  const clicks = useCreatorClicks();
 
   const [currentClicksPage, setCurrentClicksPage] = useState(0);
   function handleNext(): void {
@@ -82,12 +72,12 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
       setCurrentClicksPage(prev => prev - 1);
     }
   }
-  // 최근 클릭 로그 조회
   const CURRENT_CLICK_OFFSET = 3;
-  const currentClickGet = useGetRequest<{ offset: number; page: number }, CurrentClickRes[]>(
-    '/creator/clicks/current',
-    { offset: CURRENT_CLICK_OFFSET, page: 0 },
-  );
+  // 최근 클릭 로그 조회
+  const currentClicks = useCreatorClicksCurrent({
+    offset: CURRENT_CLICK_OFFSET,
+    page: currentClicksPage,
+  });
 
   const renderClickChannel = (type: string): string => {
     if (type === 'adchat') return '채팅광고';
@@ -125,38 +115,19 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
           <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>광고 클릭 정보</Typography>
 
           <Grid container spacing={2} justify="center">
-            {/* 레벨 / 경험치 정보 */}
-            {/* 삭제요청 from scott 2021.02.08 */}
-            {/* {!levelData.loading && levelData.data && (
-            <Grid item>
-              <div style={{ marginBottom: 8, }}>
-                <Typography>광고 레벨</Typography>
-                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                  {`Lv. ${levelData.data.level}`}
-                </Typography>
-              </div>
-              <div style={{ marginTop: 8 }}>
-                <Typography>광고 경험치</Typography>
-                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                  {levelData.data.exp || 0}
-                </Typography>
-              </div>
-            </Grid>
-            )} */}
-
             {/* 클릭 수 정보 */}
-            {!clicksSummaryData.loading && clicksSummaryData.data && (
+            {!clicks.isLoading && clicks.data && (
               <Grid item>
                 <div style={{ marginBottom: 8 }}>
                   <Typography>클릭광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicksSummaryData.data.adpanel || 0} 회
+                    {clicks.data.adpanel || 0} 회
                   </Typography>
                 </div>
                 <div style={{ marginTop: 8 }}>
                   <Typography>채팅광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicksSummaryData.data.adchat || 0} 회
+                    {clicks.data.adchat || 0} 회
                   </Typography>
                 </div>
               </Grid>
@@ -172,15 +143,15 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
           </Hidden>
 
           <Typography style={{ fontWeight: 'bold', marginBottom: 16 }}>최근 광고 클릭</Typography>
-          {currentClickGet.loading && <CircularProgress style={{ marginTop: 16 }} />}
-          {!currentClickGet.loading && currentClickGet.data && currentClickGet.data.length === 0 && (
+          {currentClicks.isLoading && <CircularProgress style={{ marginTop: 16 }} />}
+          {!currentClicks.isLoading && currentClicks.data && currentClicks.data.length === 0 && (
             <Typography variant="body2" style={{ marginTop: 16 }}>
               최근 광고 클릭 내역이 없어요..
             </Typography>
           )}
-          {!currentClickGet.loading &&
-            currentClickGet.data &&
-            currentClickGet.data.map(click => (
+          {!currentClicks.isLoading &&
+            currentClicks.data &&
+            currentClicks.data.map(click => (
               <div key={click.id} style={{ maxWidth: 270 }}>
                 <Typography
                   className={classnames(classes.buttonText, classes.line)}
@@ -201,7 +172,7 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
               </div>
             ))}
           {/* 이전/다음 버튼 */}
-          {currentClickGet.data && currentClickGet.data.length > 0 && (
+          {currentClicks.data && currentClicks.data.length > 0 && (
             <div style={{ display: 'flex' }}>
               <Button
                 variant="outlined"
@@ -211,10 +182,6 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
                 onClick={(): void => {
                   if (currentClicksPage > 0) {
                     handleBack();
-                    currentClickGet.doGetRequest({
-                      offset: CURRENT_CLICK_OFFSET,
-                      page: currentClicksPage - 1,
-                    });
                   }
                 }}
               >
@@ -224,14 +191,10 @@ export default function AdClickCard({ clicksSummaryData }: AdClickCardProps): JS
                 variant="outlined"
                 size="small"
                 style={{ maxWidth: 16 }}
-                disabled={!(currentClickGet.data && currentClickGet.data.length > 2)}
+                disabled={!(currentClicks.data && currentClicks.data.length > 2)}
                 onClick={(): void => {
-                  if (currentClickGet.data && currentClickGet.data.length > 2) {
+                  if (currentClicks.data && currentClicks.data.length > 2) {
                     handleNext();
-                    currentClickGet.doGetRequest({
-                      offset: CURRENT_CLICK_OFFSET,
-                      page: currentClicksPage + 1,
-                    });
                   }
                 }}
               >

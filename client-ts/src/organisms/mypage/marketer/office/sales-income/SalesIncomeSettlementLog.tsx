@@ -30,6 +30,7 @@ export default function SalesIncomeSettlementLog(): React.ReactElement {
   const history = useHistory();
 
   const [value, setValue] = React.useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (e: React.ChangeEvent<{}>, newValue: number): void => {
     setValue(newValue);
     if (newValue === 0) {

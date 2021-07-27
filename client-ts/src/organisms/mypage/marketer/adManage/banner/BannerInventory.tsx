@@ -1,36 +1,38 @@
 /* eslint-disable react/display-name */
-import * as React from 'react';
-import dayjs from 'dayjs';
-import { Typography, Tooltip, IconButton } from '@material-ui/core';
+import { IconButton, Tooltip, Typography } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import { BannerDataInterface } from '../interface';
-import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
-import DeleteDialog from './DeleteDialog';
-import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
-import { UsePaginatedGetRequestObject } from '../../../../../utils/hooks/usePaginatedGetRequest';
-import BannerInfoPopover from '../campaign/BannerInfoPopover';
+import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { useState } from 'react';
 import OnadBanner from '../../../../../atoms/Banner/OnadBanner';
+import CustomDataGrid from '../../../../../atoms/Table/CustomDataGrid';
+import { useAnchorEl, useDialog } from '../../../../../utils/hooks';
+import { useMarketerBannerLength } from '../../../../../utils/hooks/query/useMarketerBannerLength';
+import {
+  MarketerBanner,
+  useMarketerBannerList,
+} from '../../../../../utils/hooks/query/useMarketerBannerList';
 import renderBannerConfirmState, {
   CONFIRM_STATE_REJECTED,
 } from '../../../../../utils/render_funcs/renderBannerConfirmState';
+import BannerInfoPopover from '../campaign/BannerInfoPopover';
+import DeleteDialog from './DeleteDialog';
 
-interface BannerInventoryProps {
-  pageOffset: number;
-  totalPageLength: number;
-  bannerData: UsePaginatedGetRequestObject<BannerDataInterface>;
-}
-
-export default function BannerInventory({
-  totalPageLength,
-  pageOffset,
-  bannerData,
-}: BannerInventoryProps): JSX.Element {
+export default function BannerInventory(): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
+  // 배너 데이터 조회
+  const bannerPageLength = useMarketerBannerLength();
+  const FETCH_PAGE_OFFSET = 5;
+  const [page, setPage] = useState(0);
+  const handlePage = (targetPage: number) => setPage(targetPage);
+  const banners = useMarketerBannerList({ page, offset: FETCH_PAGE_OFFSET });
   // 배너 삭제 다이얼로그
   const deleteDialog = useDialog();
   const anchor = useAnchorEl(); // 배너 자세하 보기 앵커
   // 배너 선택
-  const [selectedBanner, setBanner] = React.useState<BannerDataInterface | null>(null);
-  function handleBannerSelect(banner: BannerDataInterface): void {
+  const [selectedBanner, setBanner] = React.useState<MarketerBanner | null>(null);
+  function handleBannerSelect(banner: MarketerBanner): void {
     setBanner(banner);
   }
 
@@ -44,13 +46,13 @@ export default function BannerInventory({
           onPageChange={(param): void => {
             // 페이지 수정 => 해당 페이지 데이터 로드
             // page 가 1부터 시작되므로 1 줄인다.
-            bannerData.handlePage(param.page);
+            handlePage(param.page);
           }}
-          pageSize={pageOffset}
-          rowCount={totalPageLength}
+          pageSize={FETCH_PAGE_OFFSET}
+          rowCount={bannerPageLength.data}
           disableSelectionOnClick
-          loading={bannerData.loading}
-          rows={bannerData.data || []}
+          loading={banners.isLoading}
+          rows={banners.data || []}
           columns={[
             {
               headerName: '배너',
@@ -75,7 +77,7 @@ export default function BannerInventory({
                   height="30"
                   style={{ cursor: 'zoom-in' }}
                   onClick={(e): void => {
-                    handleBannerSelect(rowData.row as BannerDataInterface);
+                    handleBannerSelect(rowData.row as MarketerBanner);
                     anchor.handleAnchorOpen(e);
                   }}
                 />
@@ -120,8 +122,8 @@ export default function BannerInventory({
               disableColumnMenu: true,
               renderCell: (data): React.ReactElement => (
                 <IconButton
-                  onClick={(e): void => {
-                    handleBannerSelect(data.row as BannerDataInterface);
+                  onClick={(): void => {
+                    handleBannerSelect(data.row as MarketerBanner);
                     deleteDialog.handleOpen();
                   }}
                 >
@@ -139,7 +141,6 @@ export default function BannerInventory({
           open={deleteDialog.open}
           selectedBanner={selectedBanner}
           handleClose={deleteDialog.handleClose}
-          recallRequest={bannerData.requestWithoutConcat}
         />
       )}
 

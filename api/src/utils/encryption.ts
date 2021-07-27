@@ -25,10 +25,7 @@ const makeDecipherText = (account: string): string => {
     throw Error('CIPHER_KEY is not defined in envfile');
   }
   const secret = process.env.CIPHER_KEY;
-  const cryptkey = crypto
-    .createHash('sha256')
-    .update(secret)
-    .digest();
+  const cryptkey = crypto.createHash('sha256').update(secret).digest();
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
 
   const decipher = crypto.createDecipheriv('aes-256-cbc', cryptkey, iv);
@@ -43,10 +40,7 @@ const makeCipherText = (account: string): string => {
   }
   const secret = process.env.CIPHER_KEY;
   const iv = Buffer.alloc(16, process.env.CIPHER_IV, 'base64');
-  const cryptkey = crypto
-    .createHash('sha256')
-    .update(secret)
-    .digest();
+  const cryptkey = crypto.createHash('sha256').update(secret).digest();
   const encipher = crypto.createCipheriv('aes-256-cbc', cryptkey, iv);
   const buffer = Buffer.concat([encipher.update(account), encipher.final()]);
 

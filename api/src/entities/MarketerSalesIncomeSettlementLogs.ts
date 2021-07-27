@@ -71,10 +71,7 @@ export class MarketerSalesIncomeSettlementLogs {
   })
   doneDate: Date;
 
-  @OneToOne(
-    () => MerchandiseOrdersDetail,
-    mod => mod.settlementLog,
-  )
+  @OneToOne(() => MerchandiseOrdersDetail, mod => mod.settlementLog)
   orderDetail: number;
 
   @Column('tinyint', {
