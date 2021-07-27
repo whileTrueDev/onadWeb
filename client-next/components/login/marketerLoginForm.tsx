@@ -179,22 +179,18 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         <div style={{ marginTop: 16 }}>
           <Typography variant="body2" color="textSecondary">
             계정이 없으신가요?&nbsp;
-            <Typography
-              display="inline"
-              variant="body2"
+            <span
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
-              onClick={() => router.push('/regist')}
+              onClick={() => router.push('/regist/main')}
 
             >
               회원가입하기
-            </Typography>
+            </span>
           </Typography>
 
           <Typography variant="body2" color="textSecondary">
             아이디가 기억나지 않나요?&nbsp;
-            <Typography
-              component="span"
-              variant="body2"
+            <span
               onClick={() => {
                 setDialogType('ID');
                 setFindDialogOpen(true);
@@ -202,13 +198,11 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
               아이디 찾기
-            </Typography>
+            </span>
           </Typography>
           <Typography variant="body2" color="textSecondary">
             비밀번호가 기억나지 않나요?&nbsp;
-            <Typography
-              component="span"
-              variant="body2"
+            <span
               onClick={() => {
                 setDialogType('PASSWORD');
                 setFindDialogOpen(true);
@@ -216,7 +210,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
               비밀번호 찾기
-            </Typography>
+            </span>
           </Typography>
         </div>
       </DialogContent>

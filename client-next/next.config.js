@@ -1,3 +1,6 @@
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
+  images: {
+    domains: ['static-cdn.jtvnw.net'],
+  },
 }

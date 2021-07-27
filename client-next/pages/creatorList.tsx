@@ -11,6 +11,7 @@ import NavTop from '../components/layout/navTop';
 import AppFooter from '../components/layout/appFooter';
 import RePasswordDialog from '../components/login/rePassword';
 import Table from '../atoms/table/materialTable';
+import Image from 'next/image'
 // util 계열
 import axios from '../utils/axios'
 import HOST from '../config'
@@ -73,13 +74,16 @@ export default function CreatorList({
             key={nanoid()}
             style={{ backgroundImage: `${getRandomColors(COLORS)}` }}
           >
-            <img
-              src={rowData.creatorLogo}
-              alt="creatorLogo"
+            <Image
               className={classes.creatorLogo}
-              onError={e => {
-                e.currentTarget.src = '/logo/noBgIconLogo.png';
+              src={rowData.creatorLogo}
+              alt=""
+              id={rowData.creatorName}
+              onError={(e) => {
+                e.currentTarget.srcset='/logo/noBgIconLogo.png'
               }}
+              width={50}
+              height={50}
             />
           </div>
           <Typography variant="subtitle1" className={classes.columnText}>
@@ -130,7 +134,7 @@ export default function CreatorList({
           </Typography>
           {/* 라이브 스트리밍 리스트 */}
           <div className={classes.liveContainer}>
-              {LiveCreator?.map(row => (
+              {LiveCreator?.map((row, index: number) => (
                 <div
                   className={classes.liveCreatorWrapper}
                   key={nanoid()}
@@ -138,16 +142,20 @@ export default function CreatorList({
                 >
                   <a
                     href={`https://www.twitch.tv/${row.creatorTwitchId}`}
-                    className={classes.liveCreator}
+                    className={classes.liveCreatorAtag}
                   >
-                    <img
-                      src={row.creatorLogo}
-                      alt="creatorLogo"
-                      className={classes.liveCreator}
-                      onError={e => {
-                        e.currentTarget.src = '/logo/noBgIconLogo.png';
-                      }}
-                    />
+                    <div >
+                      <Image
+                        className={classes.liveCreator}
+                        src={row.creatorLogo}
+                        id={`icon-${index}`}
+                        alt=""
+                        layout="fill"
+                        onError={(e) => {
+                          e.currentTarget.srcset='/logo/noBgIconLogo.png'
+                        }}
+                      />
+                    </div>
                   </a>
                 </div>
               ))

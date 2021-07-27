@@ -4,10 +4,6 @@ export default function HeadCompo(): JSX.Element {
   return (
     <Head>
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="ONAD" />
-        <meta property="og:url" content="https://onad.io" />
-        <meta property="og:description"
-          content="ONAD는 1인 미디어 실시간 방송에 배너광고를 송출하는 플랫폼입니다. 방송인은 ONAD를 통해 추가 수익을, 광고주는 온애드를 통해 효율적인 광고 채널을 확보할 수 있습니다." />
         <meta property="og:image"
           content="https://onad-static-files.s3.ap-northeast-2.amazonaws.com/open-graph/logo_opengraph.png" />
 
@@ -50,7 +46,6 @@ export default function HeadCompo(): JSX.Element {
         
 
         {/* 메타데이터 및 검색 엔진 크롤러를 위한 데이터 */}
-        <title>온애드 | 1인 미디어 실시간 광고 플랫폼</title>
       </Head>
   )
 }

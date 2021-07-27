@@ -145,14 +145,12 @@ export default function CreatorLoginForm({
         <div style={{ marginTop: 16, marginBottom: 16 }}>
           <Typography variant="body2">
             온애드 계정이 없으신가요?&nbsp;
-            <Typography
-              component="span"
-              variant="body2"
-              onClick={(): Promise<boolean> => router.push('/creator/signup')}
+            <span
+              onClick={(): Promise<boolean> => router.push('/regist/cre-signup')}
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
             >
               가입하기
-            </Typography>
+            </span>
           </Typography>
           <Typography variant="body2">
             트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
@@ -162,14 +160,12 @@ export default function CreatorLoginForm({
               interactive
               title={<Typography variant="body2">기존회원은여기</Typography>}
             >
-              <Typography
-                component="span"
-                variant="body2"
-                onClick={(): Promise<boolean> => router.push('/creator/signup/pre-user')}
+              <span
+                onClick={(): Promise<boolean> => router.push('/regist/pre-user')}
                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
               >
                 기존계정로그인
-              </Typography>
+              </span>
             </StyledTooltip>
           </Typography>
         </div>

@@ -52,6 +52,7 @@ export default function IndentityVerification({
         {
           merchant_uid: 'ORD20180131-0000011',
           min_age: '19',
+          popup: true
         },
         (rsp: any) => {
           // callback

@@ -16,6 +16,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Check, HowToReg, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 // 내부 소스
+import twitchLogoWhite from '../../public/logo/twitch/TwitchGlitchWhite.png'
 // 프로젝트 내부 모듈
 import classnames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
@@ -24,6 +25,7 @@ import { useRouter } from 'next/router'
 // 컴포넌트
 import IndentityVerificationDialog from './identityVerification';
 import Snackbar from '../../atoms/snackbar/snackbar';
+import Image from 'next/image';
 // util 계열
 import axiosInstance from '../../utils/axios';
 import HOST from '../../config';
@@ -69,6 +71,10 @@ const useStyles = makeStyles((theme: OnadTheme) => ({
   },
 }));
 
+interface SignupCreatorProps {
+  pathname: string;
+  queryIn: string;
+}
 export interface CreatorSignupInfo {
   userid: string;
   passwd: string;
@@ -77,10 +83,11 @@ export interface CreatorSignupInfo {
   repwdVisibility: boolean;
   referralCode: string;
 }
-export default function SignupCreator(): JSX.Element {
+export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): JSX.Element {
   const classes = useStyles();
   const router = useRouter();
-
+  console.log(pathname, '---> params in SignupCreator')
+  console.log(queryIn, '---> queryIn in SignupCreator')
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '',
@@ -150,7 +157,12 @@ export default function SignupCreator(): JSX.Element {
         referralCode: signupInfo.referralCode,
       })
       .then(() => {
-        router.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
+        router.push(
+          {
+            pathname: `/regist/[regist]`,
+            query: {regist: 'cre-complete', queryIn: `?userId=${signupInfo.userid}`,}
+          }
+        );
       })
       .catch(() => {
         setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
@@ -166,11 +178,16 @@ export default function SignupCreator(): JSX.Element {
       .post(`${HOST}/creator/pre-user`, {
         userid: signupInfo.userid,
         passwd: signupInfo.passwd,
-        creatorId: parseParams(location.search).creatorId,
-        accessToken: parseParams(location.search).accessToken,
+        creatorId: parseParams(queryIn).creatorId,
+        accessToken: parseParams(queryIn).accessToken,
       })
       .then(() => {
-        router.push(`/creator/signup/complete?userId=${signupInfo.userid}`);
+        router.push(
+          {
+            pathname: `/regist/[regist]`,
+            query: {regist: 'cre-complete', userId: `?userId=${signupInfo.userid}`,}
+          }
+        );
       })
       .catch(() => {
         setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
@@ -293,10 +310,10 @@ export default function SignupCreator(): JSX.Element {
 
   // 기존 계정 로그인 성공 여부
   const isLogedIn = !!(
-    location.search &&
-    parseParams(location.search).accessToken &&
-    parseParams(location.search).creatorId &&
-    parseParams(location.search).creatorName
+    queryIn &&
+    parseParams(queryIn).accessToken &&
+    parseParams(queryIn).creatorId &&
+    parseParams(queryIn).creatorName
   );
 
   // form 작성 오류 검사 -> 통과시 본인인증 다이얼로그 오픈
@@ -307,7 +324,7 @@ export default function SignupCreator(): JSX.Element {
       const allow = await duplicateCheck();
       if (allow) {
         if (passwdErrorCheck()) {
-          if (location.pathname === '/creator/signup/pre-user') {
+          if (pathname === 'pre-user') {
             // 기존 회원 트위치로 로그인
             handleSignupPreCreator();
           } else if (signupInfo.referralCode) {
@@ -329,7 +346,7 @@ export default function SignupCreator(): JSX.Element {
   const [alreadySignedId, setAlreadySignedId] = useState('');
   useEffect(() => {
     if (isLogedIn) {
-      const { creatorId } = parseParams(location.search);
+      const { creatorId } = parseParams(queryIn);
       axiosInstance
         .get(`${HOST}/creator`, { params: { creatorId } })
         .then(res => {
@@ -442,7 +459,7 @@ export default function SignupCreator(): JSX.Element {
         }}
       />
 
-      {location.pathname !== '/creator/signup/pre-user' && (
+      {pathname !== 'pre-user' && (
         <TextField
           style={{ marginBottom: 16 }}
           variant="outlined"
@@ -500,7 +517,7 @@ export default function SignupCreator(): JSX.Element {
         </Alert>
       )}
 
-      {location.pathname === '/creator/signup/pre-user' ? (
+      {pathname === 'pre-user' ? (
         <Button
           type="submit"
           color="primary"
@@ -573,7 +590,7 @@ export default function SignupCreator(): JSX.Element {
           ) : (
             <>
               {/* 기존 유저 회원 가입 안내 */}
-              {location.pathname === '/creator/signup/pre-user' && (
+              {pathname === 'pre-user' && (
                 <>
                   <Alert
                     severity="info"
@@ -599,7 +616,7 @@ export default function SignupCreator(): JSX.Element {
                   </Alert>
 
                   {/* 기존 유저가 아닌 경우 */}
-                  {parseParams(location.search).error === 'no-pre-creator' ? (
+                  {parseParams(queryIn).error === 'no-pre-creator' ? (
                     <div style={{ marginTop: 16 }}>
                       <Typography variant="body1">기존 유저가 아닙니다.</Typography>
                       <Typography variant="body1" style={{ marginBottom: 16 }}>
@@ -628,7 +645,7 @@ export default function SignupCreator(): JSX.Element {
                     <Button
                       onClick={(e): void => {
                         e.preventDefault();
-                        if (!isLogedIn) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                        if (!isLogedIn && (typeof window !== undefined)) window.location.href = `${HOST}/login/twitch/pre-creator`;
                       }}
                       className={classnames(classes.socialLoginButton, classes.twitch, {
                         [classes.success]: !!isLogedIn,
@@ -639,16 +656,19 @@ export default function SignupCreator(): JSX.Element {
                         <>
                           <Check />
                           <Typography variant="body1">
-                            {`${parseParams(location.search).creatorName} 기존계정인증 완료`}
+                            {`${parseParams(queryIn).creatorName} 기존계정인증 완료`}
                           </Typography>
                         </>
                       ) : (
                         <>
-                          <img
-                            src="/pngs/logo/twitch/TwitchGlitchWhite.png"
-                            alt=""
-                            className={classes.socialLogo}
-                          />
+                          <div className={classes.socialLogo}>
+                            <Image
+                              src={twitchLogoWhite}
+                              alt="twitchLogoWhite"
+                              layout="fill"
+                            />
+                          </div>
+
                           <Typography variant="body1">기존 트위치 계정 인증</Typography>
                         </>
                       )}
@@ -670,36 +690,36 @@ export default function SignupCreator(): JSX.Element {
 
               {/* 회원정보 받기 */}
               {/* 완료화면이 아니며, no-pre-creator에러가 아닌 경우 */}
-              {!(location.pathname === '/creator/signup/complete') &&
+              {!(pathname === 'cre-complete') &&
                 activeStep === 0 &&
-                !(parseParams(location.search).error === 'no-pre-creator') && (
+                !(parseParams(queryIn).error === 'no-pre-creator') && (
                   <div>{signupForm}</div>
                 )}
             </>
           )}
 
           {/* 본인인증 진행 */}
-          {!(location.pathname === '/creator/signup/pre-user') &&
-            !(location.pathname === '/creator/signup/complete') &&
+          {!(pathname === 'pre-user') &&
+            !(pathname === 'cre-complete') &&
             activeStep === 1 && (
               <IndentityVerificationDialog onSuccess={handleSignup} onBackClick={handleBack} />
             )}
 
           {/* 회원가입 완료 페이지 */}
-          {location.pathname === '/creator/signup/complete' && (
+          {pathname === 'cre-complete' && (
             <div className={classes.finished}>
               <Typography>회원가입이 성공적으로 완료되었습니다.</Typography>
               {completeButtonSet}
             </div>
           )}
 
-          {location.pathname === '/creator/signup' && (
+          {pathname === 'cre-signup' && (
             <>
               <Divider />
               <div style={{ margin: 16 }}>
                 <Typography
                   variant="body2"
-                  onClick={() => router.push('/creator/signup/pre-user')}
+                  onClick={() => router.push('/regist/pre-user')}
                 >
                   트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
                   <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>

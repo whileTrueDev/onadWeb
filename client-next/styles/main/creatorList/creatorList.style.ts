@@ -82,6 +82,25 @@ const useStyles = makeStyles(theme => ({
       height: 60,
     },
   },
+  liveCreatorAtag: {
+    position: 'relative',
+    margin: theme.spacing(2, 0.8),
+    width: 150,
+    height: 150,
+    borderRadius: '50%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      width: 90,
+      height: 90,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: 50,
+      height: 50,
+    },
+  },
   liveCreator: {
     margin: theme.spacing(2, 2),
     width: 150,
@@ -113,6 +132,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   creatorLogo: {
+    position: 'relative',
     width: 50,
     height: 50,
     borderRadius: '50%',
