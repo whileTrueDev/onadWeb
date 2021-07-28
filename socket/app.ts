@@ -9,8 +9,8 @@ import http from 'http';
 import socketio, { Socket } from 'socket.io';
 import nodeSchedule from 'node-schedule';
 import doQuery from './models/doQuery';
-import callImg from './lib/callImg';
-import { BannerRequest } from './@types/bannerRequest';
+import requestBanner from './lib/requestBannerV2';
+import { CreatorStatus } from './@types/shared';
 import query from './models/query';
 
 const app = express();
@@ -64,7 +64,7 @@ interface SocketInfo {
   io.on('connection', (socket: Socket) => {
     let SOCKET_ID: string = socket.id;
     const urlArray: Array<string> = Object.values(socketInfo);
-    const requestMessage: BannerRequest = {
+    const requestMessage: CreatorStatus = {
       url: '',
       previousBannerName: '',
       programType: '',
@@ -82,7 +82,7 @@ interface SocketInfo {
 
     // ***********************************************************
     // 첫 입장시 발생되는 이벤트인 "new client" 이벤트 핸들러
-    socket.on('new client', (msg: [string, number, string]) => {
+    socket.on('new client', async (msg: [string, number, string]) => {
       const clientUrl = msg[0];
       const HISTORY = msg[1];
       const programType = msg[2];
@@ -95,7 +95,7 @@ interface SocketInfo {
         console.log('SOCKET ON');
         socket.emit('host pass', SOCKET_HOST);
 
-        callImg(socket, requestMessage);
+        await requestBanner(socket, requestMessage);
       } else if (
         // 트위치 스튜디오 또는 아프리카 프릭샷으로 접속하지 않았으면서
         !['afreeca-freecshot', 'twitch-studio'].includes(programType) &&
@@ -112,7 +112,7 @@ interface SocketInfo {
       } else {
         socketInfo[SOCKET_ID] = clientUrl;
         socket.emit('host pass', SOCKET_HOST);
-        callImg(socket, requestMessage);
+        await requestBanner(socket, requestMessage);
       }
     });
 
@@ -126,7 +126,7 @@ interface SocketInfo {
 
     // ***********************************************************
     // 송출될 광고 재요청 이벤트 : "re-render" 이벤트 핸들러
-    socket.on('re-render', (msg: [string, string, string]) => {
+    socket.on('re-render', async (msg: [string, string, string]) => {
       const clientUrl = msg[0];
       const previousBannerName = msg[1];
       const programType = msg[2];
@@ -134,18 +134,18 @@ interface SocketInfo {
       requestMessage.url = clientUrl;
       requestMessage.previousBannerName = previousBannerName;
       requestMessage.programType = programType;
-      callImg(socket, requestMessage);
+      await requestBanner(socket, requestMessage);
     });
 
     // ***********************************************************
     //
-    socket.on('pageOn', (msg: [string, string]) => {
+    socket.on('pageOn', async (msg: [string, string]) => {
       const clientUrl = msg[0];
       const programType = msg[1];
       requestMessage.url = clientUrl;
       requestMessage.previousBannerName = '';
       requestMessage.programType = programType;
-      callImg(socket, requestMessage);
+      await requestBanner(socket, requestMessage);
     });
 
     // 배너 더블 클릭을 통해 ON/OFF 조절

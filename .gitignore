@@ -69,3 +69,5 @@ sleepAccount/
 # python
 __pycache__
 __pypackages__/
+
+connectionPool.ts

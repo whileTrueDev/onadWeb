@@ -1,26 +1,25 @@
+/* eslint-disable no-console */
+/* eslint-disable import/first */
+
 import { Socket } from 'socket.io';
 import doQuery from '../models/doQuery';
 import {
   CampaignIdOptionType,
-  TimeData,
+  Campaign,
   ReturnDate,
   LinkJson,
   CreatorIds,
+  BanPausedCampaign,
 } from '../@types/bannerRequest';
+import { CreatorStatus } from '../@types/shared';
 import query from '../models/query';
 
-interface Request {
-  url: string;
-  previousBannerName: string;
-  programType: string;
-}
-
-function callImg(socket: Socket, request: Request): void {
+function requestBanner(socket: Socket, request: CreatorStatus): void {
   const fullUrl: string = request.url;
   const cutUrl = `/${fullUrl.split('/')[4]}`;
   const { previousBannerName } = request;
   const { programType } = request;
-  const getTime: string = new Date().toLocaleString();
+  const timestamp: string = new Date().toLocaleString();
 
   const campaignObject: CampaignIdOptionType = {};
 
@@ -28,28 +27,23 @@ function callImg(socket: Socket, request: Request): void {
   let myGameId: string;
   // creatorId를 전달받아 creatorCampaign과 onff List를 도출.
   const getCreatorCampaignList = (creatorId: string): Promise<string[]> => {
-    console.log(`${creatorId} / 특정 방송인 송출 광고 조회 / ${getTime}`);
+    console.log(`${creatorId} / 특정 방송인 송출 광고 조회 / ${timestamp}`);
 
     const { creatorCampaign } = query;
-
     return new Promise((resolve, reject) => {
       doQuery(creatorCampaign, [creatorId])
         .then(row => {
           if (row.result[0].length !== 0) {
-            const jsonData = JSON.parse(row.result[0].campaignList);
-            resolve(jsonData.campaignList);
+            const creatorCampaignList = JSON.parse(row.result[0].campaignList);
+            resolve(creatorCampaignList.campaignList);
           }
         })
         .catch(errorData => {
-          errorData.point = 'getCreatorCampaignList()';
-          errorData.description =
-            'creatorCampaign table에서 creator에게 계약된 campaignList 가져오는 과정.';
           reject(errorData);
         });
     });
   };
 
-  // 켜져있는 광고
   const getOnCampaignList = (): Promise<string[]> => {
     // 광고주 상태가 켜져있고, 캠페인이 켜져있으며 일일예산을 소진하지 않은 LIVE생방송배너광고(CPM+CPC) 이거나,
     // 광고주 상태가 켜져있고, 캠페인이 켜져있는 판매형광고(CPS)만 가져온다.
@@ -61,7 +55,7 @@ function callImg(socket: Socket, request: Request): void {
           const filteredDate: ReturnDate = {};
           const campaignIdList: string[] = [];
           const nowDate = new Date();
-          row.result.map((data: TimeData) => {
+          row.result.map((data: Campaign) => {
             if (
               data.startDate &&
               data.startDate < nowDate &&
@@ -84,8 +78,6 @@ function callImg(socket: Socket, request: Request): void {
           resolve(campaignIdList);
         })
         .catch(errorData => {
-          errorData.point = 'getOnCampaignList()';
-          errorData.description = 'campaign table에서 현재 ON 되어있는 campaignList 가져오는 과정.';
           reject(errorData);
         });
     });
@@ -103,21 +95,19 @@ function callImg(socket: Socket, request: Request): void {
           resolve([]);
         })
         .catch(errorData => {
-          errorData.point = 'getCategoryCampaignList()';
-          errorData.description = '하나의 categoryId를 통하여 계약된 campaignList 가져오는 과정.';
           reject(errorData);
         });
     });
   };
 
   const getGameId = async (creatorId: string): Promise<string> => {
-    console.log(`${creatorId} / get gameid / ${getTime}`);
-    const { twitchGameIdForCreator } = query;
-    const { afreecaGameIdForCreator } = query;
+    console.log(`${creatorId} / get gameid / ${timestamp}`);
+    const { assignedTwitchGameId } = query;
+    const { assignedAfreecaGameId } = query;
     try {
       const [{ result: twitchGameIdResult }, { result: afreecaGameIdResult }] = await Promise.all([
-        doQuery(twitchGameIdForCreator, [creatorId]),
-        doQuery(afreecaGameIdForCreator, [creatorId]),
+        doQuery(assignedTwitchGameId, [creatorId]),
+        doQuery(assignedAfreecaGameId, [creatorId]),
       ]);
 
       // 트위치 방송 중인 경우, 트위치 현재 진행 중 카테고리
@@ -139,37 +129,29 @@ function callImg(socket: Socket, request: Request): void {
     }
   };
 
-  /**
-   * @deprecated 2021.01.11 by hwasurr
-   * store uncehcked game
-   * @param gameId gameId
-   * @param creatorId creatorId
-   */
-
   // "하나의 gameId" + "카테고리무관" 에 해당하는 모든 캠페인 리스트를 반환하는 Promise
   const getGameCampaignList = async (gameId: string, isDefault = false): Promise<string[]> => {
     // ************************************************************
     // 트위치 카테고리의 경우
     const CATEGORY_WHATEVER = '14';
 
-    let returnList: string[] = [];
+    let campaigns: string[] = [];
     if (isDefault) {
-      returnList = await getCategoryCampaignList(gameId);
-      return returnList;
+      campaigns = await getCategoryCampaignList(gameId);
+      return campaigns;
     }
     await Promise.all([getCategoryCampaignList(gameId), getCategoryCampaignList(CATEGORY_WHATEVER)])
       .then(([campaignList1, campaignList2]) => {
-        returnList = campaignList1.concat(campaignList2);
+        campaigns = campaignList1.concat(campaignList2);
       })
       .catch(errorData => {
-        errorData.point = 'getGameCampaignList()';
-        errorData.description = 'categoryCampaign에서 각각의 categoryId에 따른 캠페인 가져오기';
+        console.log(errorData);
       });
 
-    return Array.from(new Set(returnList));
+    return Array.from(new Set(campaigns));
   };
 
-  const getBanList = (creatorId: string): Promise<any> => {
+  const getBanList = (creatorId: string): Promise<BanPausedCampaign> => {
     const { banAndPausedCampaign } = query;
 
     return new Promise((resolve, reject) => {
@@ -180,8 +162,6 @@ function callImg(socket: Socket, request: Request): void {
           resolve({ banList, pausedList });
         })
         .catch(errorData => {
-          errorData.point = 'getBanList()';
-          errorData.description = '해당 creator의 banList를 가져오는 과정';
           reject(errorData);
         });
     });
@@ -192,12 +172,9 @@ function callImg(socket: Socket, request: Request): void {
     return new Promise((resolve, reject) => {
       doQuery(bannerSrc, [campaignId])
         .then(row => {
-          console.log(row.result[0].bannerSrc);
           resolve(row.result[0].bannerSrc);
         })
         .catch(errorData => {
-          errorData.point = 'getBannerSrc()';
-          errorData.description = '하나의 campaignId를 통해 bannerSrc를 가져오는 과정';
           reject(errorData);
         });
     });
@@ -218,8 +195,6 @@ function callImg(socket: Socket, request: Request): void {
           resolve(linkName);
         })
         .catch(errorData => {
-          errorData.point = 'getLinkName()';
-          errorData.description = '하나의 campaignId를 통해 linkName 가져오는 과정';
           reject(errorData);
         });
     });
@@ -245,7 +220,9 @@ function callImg(socket: Socket, request: Request): void {
   async function getBanner([creatorId, gameId]: string[]): Promise<
     [string | boolean, string | boolean, string | boolean]
   > {
-    console.log(`-----------------------Id : ${creatorId} / ${getTime}---------------------------`);
+    console.log(
+      `-----------------------Id : ${creatorId} / ${timestamp}---------------------------`,
+    );
     let linkToChatBot;
     const [creatorCampaignList, onCampaignList, checkList] = await Promise.all([
       getCreatorCampaignList(creatorId),
@@ -254,17 +231,17 @@ function callImg(socket: Socket, request: Request): void {
     ]);
     // *********************************************************
     // 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 -> ON 상태 필터링
-    const onCreatorcampaignList = creatorCampaignList.filter((campaignId: any) =>
+    const onCreatorcampaignList = creatorCampaignList.filter((campaignId: string) =>
       onCampaignList.includes(campaignId),
     );
 
     // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 목록이 있는 경우
     if (onCreatorcampaignList.length !== 0) {
       const extractPausedCampaignList = onCreatorcampaignList.filter(
-        (campaignId: any) => !checkList.pausedList.includes(campaignId),
+        (campaignId: string) => !checkList.pausedList.includes(campaignId),
       ); // 일시정지 배너 거르기.
       const extractBanCampaignList = extractPausedCampaignList.filter(
-        (campaignId: any) => !checkList.banList.includes(campaignId),
+        (campaignId: string) => !checkList.banList.includes(campaignId),
       ); // 마지막에 banList를 통해 거르기.
       if (extractBanCampaignList) {
         const returnCampaignId =
@@ -277,7 +254,7 @@ function callImg(socket: Socket, request: Request): void {
       // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인이 없는 경우
       const categoryCampaignList = await getGameCampaignList(gameId);
       console.log(
-        `${creatorId} 방송인에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${getTime}`,
+        `${creatorId} 방송인에게만 송출될 광고 없음. 카테고리 선택형 및 노출우선형 광고 검색 / ${timestamp}`,
       );
       const onCategorycampaignList = categoryCampaignList.filter(campaignId =>
         onCampaignList.includes(campaignId),
@@ -299,16 +276,16 @@ function callImg(socket: Socket, request: Request): void {
 
     if (myCampaignId && campaignObject[myCampaignId][0] === OPTION_TYPE_LIVE_BANNER_CAMPAIGN) {
       // 송출될 캠페인의 link 를 가져와 트위치 챗봇에 챗봇광고 이벤트를 에밋하기 위한 정보를 가져온다.
-      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
+      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${timestamp}`);
       linkToChatBot = await getLinkName(myCampaignId);
     } else if (myCampaignId && campaignObject[myCampaignId][0] === OPTION_TYPE_CPS_CAMPAIGN) {
-      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${getTime}`);
+      console.log(`${creatorId} / 광고될 캠페인은 ${myCampaignId} / ${timestamp}`);
       linkToChatBot = await getMerchandiseSiteUrl(myCampaignId);
     } else {
       // 송출할 광고 없다.
       // 기본배너 검색
       const categoryCampaignList = await getGameCampaignList('-1', true);
-      console.log(`${creatorId} 기본 배너 검색 / ${getTime}`);
+      console.log(`${creatorId} 기본 배너 검색 / ${timestamp}`);
       const onCategorycampaignList = categoryCampaignList.filter(campaignId =>
         onCampaignList.includes(campaignId),
       );
@@ -322,12 +299,12 @@ function callImg(socket: Socket, request: Request): void {
       myCampaignId = returnCampaignId;
       if (myCampaignId) {
         // 기본 배너 송출
-        console.log(`${creatorId} 기본 배너 송출 / ${getTime}`);
+        console.log(`${creatorId} 기본 배너 송출 / ${timestamp}`);
         linkToChatBot = await getLinkName(myCampaignId);
       } else {
         // 기본 배너도 꺼둔 경우
         socket.emit('img clear', []);
-        console.log(`${creatorId} / 켜져있는 광고 없음 / ${getTime}`);
+        console.log(`${creatorId} / 켜져있는 광고 없음 / ${timestamp}`);
         return [false, false, false];
       }
     }
@@ -352,8 +329,6 @@ function callImg(socket: Socket, request: Request): void {
           }
         })
         .catch(errorData => {
-          errorData.point = 'getCreatorData()';
-          errorData.description = 'getCreatorData 불러오는 과정';
           reject(errorData);
         });
     });
@@ -393,7 +368,7 @@ function callImg(socket: Socket, request: Request): void {
           // 챗봇은 트위치 한정. 트위치 아이디가 없는 경우 에미팅 하지 않도록 추가
           // @by hwasurr 21.01.08
           console.log(
-            `${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${getTime}`,
+            `${CREATOR_DATA.creatorId} / next-campaigns-twitch-chatbot Emitting ${myCreatorTwitchId} / ${timestamp}`,
           );
           socket.broadcast.emit('next-campaigns-twitch-chatbot', {
             campaignId: myCampaignId,
@@ -415,7 +390,7 @@ function callImg(socket: Socket, request: Request): void {
           writeToDb(myCampaignId, CREATOR_DATA.creatorId, programType);
         }
         console.log(
-          `${CREATOR_DATA.creatorId} / 같은 캠페인 송출 중이어서 재호출 안함 / ${getTime}`,
+          `${CREATOR_DATA.creatorId} / 같은 캠페인 송출 중이어서 재호출 안함 / ${timestamp}`,
         );
       }
     }
@@ -424,4 +399,4 @@ function callImg(socket: Socket, request: Request): void {
   init();
 }
 
-export default callImg;
+export default requestBanner;

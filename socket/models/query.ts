@@ -14,7 +14,7 @@ const query: Query = {
         OR (marketerInfo.marketerContraction = 1 AND campaign.onOff = 1 AND campaign.optionType = 3)
     `,
   categoryCampaign: 'SELECT campaignList FROM categoryCampaign WHERE categoryId = ?',
-  twitchGameIdForCreator: `
+  assignedTwitchGameId: `
   SELECT gameId FROM twitchStreamDetail AS tsd 
   WHERE streamId = (
     SELECT streamId FROM twitchStream
@@ -23,7 +23,7 @@ const query: Query = {
     ORDER BY startedAt DESC LIMIT 1
   ) AND time > DATE_SUB(NOW(), INTERVAL 10 MINUTE)
   ORDER BY tsd.time DESC LIMIT 1;`,
-  afreecaGameIdForCreator: `
+  assignedAfreecaGameId: `
   SELECT broadCategory AS gameId FROM AfreecaBroadDetail AS ABD
   WHERE broadId = (
     SELECT broadId FROM AfreecaBroad JOIN creatorInfo ON afreecaId = userId

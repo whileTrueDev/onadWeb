@@ -2,7 +2,7 @@ export interface CampaignIdOptionType {
   [_: string]: [number, string, string];
 }
 
-export interface TimeData {
+export interface Campaign {
   startDate: Date;
   finDate: Date;
   campaignId: string;
@@ -29,8 +29,6 @@ export interface CreatorIds {
   adChatAgreement: number;
 }
 
-export interface BannerRequest {
-  url: string;
-  previousBannerName: string;
-  programType: string;
+export interface BanPausedCampaign {
+  [key: string]: string[];
 }
