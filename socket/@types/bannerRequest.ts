@@ -32,3 +32,12 @@ export interface CreatorIds {
 export interface BanPausedCampaign {
   [key: string]: string[];
 }
+
+export interface CampaignObjectValue {
+  campaignName: string;
+  optionType: number;
+  campaignDescription: string;
+}
+export interface CampaignObject {
+  [key: string]: CampaignObjectValue;
+}

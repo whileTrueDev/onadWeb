@@ -1,19 +1,17 @@
 /* eslint-disable no-console */
-/* eslint-disable import/first */
-
 import { Socket } from 'socket.io';
 import BannerSelection from './bannerSelection';
-import { CreatorStatus, Banner } from '../@types/shared';
+import { CreatorStatus } from '../@types/shared';
 
 const requestBanner = async (socket: Socket, requestMessage: CreatorStatus): Promise<void> => {
   const bannerSelection = new BannerSelection(requestMessage);
   const creatorIdAndChatAgreement = await bannerSelection.getCreatorIdAndChatAgreement();
   const { creatorId } = creatorIdAndChatAgreement;
 
-  let creatorGameId;
   if (creatorId) {
-    creatorGameId = await bannerSelection.getGameId();
-    const bannerInfo: Banner = await bannerSelection.getBanner([creatorId, creatorGameId]);
+    const creatorGameId = await bannerSelection.getGameId();
+    const selectedCampaign = await bannerSelection.getCampaign([creatorId, creatorGameId]);
+    const bannerInfo = await bannerSelection.getBanner(selectedCampaign);
     const checkOptionType = bannerInfo.campaignId
       ? bannerSelection.campaignObject[bannerInfo.campaignId].optionType
       : null;

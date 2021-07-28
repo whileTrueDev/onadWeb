@@ -12,6 +12,7 @@ import {
   LinkJson,
   CreatorIds,
   BanPausedCampaign,
+  CampaignObject,
 } from '../@types/bannerRequest';
 import { CreatorStatus, Banner } from '../@types/shared';
 import query from '../models/query';
@@ -22,18 +23,18 @@ class BannerSelection {
   previousBannerName: string;
   programType: string;
   timestamp: string;
-  campaignObject: any;
-  creatorGameId: string;
+  campaignObject: CampaignObject;
   creatorId: string;
-  constructor(request: CreatorStatus) {
-    this.fullUrl = request.url;
+  banOrPausedCampaigns: BanPausedCampaign;
+  constructor(requestMessage: CreatorStatus) {
+    this.fullUrl = requestMessage.url;
     this.cutUrl = `/${this.fullUrl.split('/')[4]}`;
-    this.previousBannerName = request.previousBannerName;
-    this.programType = request.programType;
+    this.previousBannerName = requestMessage.previousBannerName;
+    this.programType = requestMessage.programType;
     this.timestamp = new Date().toLocaleString();
     this.campaignObject = {};
-    this.creatorGameId = '';
     this.creatorId = '';
+    this.banOrPausedCampaigns = {};
   }
 
   getCreatorIdAndChatAgreement = async (): Promise<CreatorIds> => {
@@ -68,14 +69,15 @@ class BannerSelection {
 
       // 트위치 방송 중인 경우, 트위치 현재 진행 중 카테고리
       if (twitchGameIdResult.length > 0) {
-        this.creatorGameId = twitchGameIdResult[0].gameId;
+        const creatorGameId = twitchGameIdResult[0].gameId;
+        return creatorGameId;
       }
 
       // 트위치 방송중이 아니며, 아프리카티비 방송 중 -> 아프리카 tv 카테고리
       // 즉, 동시 송출 중이라면, twitch 카테고리를 우선시 함. @by hwasurr
       if (!(twitchGameIdResult.length > 0) && afreecaGameIdResult.length > 0) {
-        this.creatorGameId = afreecaGameIdResult[0].gameId;
-        return this.creatorGameId;
+        const creatorGameId = afreecaGameIdResult[0].gameId;
+        return creatorGameId;
       }
       return '';
     } catch (errorData) {
@@ -270,21 +272,20 @@ class BannerSelection {
     );
 
     const filteredCampaigns = this.filterCampaign(onCategorycampaignList, banOrPausedCampaigns);
-    const selectedCampaign = filteredCampaigns.length !== 0 ? filteredCampaigns[0] : '';
-    return selectedCampaign;
+    const selectedActiveCampaign = filteredCampaigns.length !== 0 ? filteredCampaigns[0] : '';
+    return selectedActiveCampaign;
   };
 
-  getBanner = async ([creatorId, gameId]: string[]): Promise<Banner> => {
+  getCampaign = async ([creatorId, gameId]: string[]): Promise<string> => {
     console.log(
       `-----------------------Id : ${creatorId} / ${this.timestamp}---------------------------`,
     );
-    let selectedCampaign;
-    let linkToChatBot;
-    const [creatorCampaigns, activeCampaigns, banOrPausedCampaigns] = await Promise.all([
+    let selectedActiveCampaign = '';
+    const [creatorCampaigns, activeCampaigns] = await Promise.all([
       this.getCreatorCampaignList(),
       this.getActiveCampaigns(),
-      this.getBanOrPausedCampaignsByCreator(),
     ]);
+    this.banOrPausedCampaigns = await this.getBanOrPausedCampaignsByCreator();
     // *********************************************************
     // 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 -> ON 상태 필터링
     const activeCreatorCampaigns = creatorCampaigns.filter((campaignId: string) =>
@@ -293,10 +294,13 @@ class BannerSelection {
 
     // 현재 ON상태인 크리에이터 개인에게 할당된(크리에이터 에게 송출) 캠페인 목록이 있는 경우
     if (activeCreatorCampaigns.length !== 0) {
-      const filteredCampaigns = this.filterCampaign(activeCreatorCampaigns, banOrPausedCampaigns);
+      const filteredCampaigns = this.filterCampaign(
+        activeCreatorCampaigns,
+        this.banOrPausedCampaigns,
+      );
       if (filteredCampaigns) {
-        selectedCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
-        console.log('방송인 에게만 송출될 캠페인 : ', selectedCampaign);
+        selectedActiveCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
+        console.log('방송인 에게만 송출될 캠페인 : ', selectedActiveCampaign);
       }
     } else {
       // *********************************************************
@@ -308,12 +312,16 @@ class BannerSelection {
       const onCategorycampaignList = categoryCampaignList.filter(campaignId =>
         activeCampaigns.includes(campaignId),
       );
-      const filteredCampaigns = this.filterCampaign(onCategorycampaignList, banOrPausedCampaigns);
-
-      selectedCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
+      const filteredCampaigns = this.filterCampaign(
+        onCategorycampaignList,
+        this.banOrPausedCampaigns,
+      );
+      selectedActiveCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
     }
+    return selectedActiveCampaign;
+  };
 
-    // *********************************************************
+  getBanner = async (selectedActiveCampaign: string): Promise<Banner> => {
     // RETRUN 섹션
     const OPTION_TYPE_LIVE_BANNER_CAMPAIGN = 1; // 생방송 라이브 배너광고 캠페인의 경우
     const OPTION_TYPE_CPS_CAMPAIGN = 3; // 판매형광고(CPS) 캠페인의 경우
@@ -322,40 +330,50 @@ class BannerSelection {
       campaignId: '',
       linkToChatBot: '',
     };
+    let linkToChatBot;
+    let onadDefaultBanner = '';
     if (
-      selectedCampaign &&
-      this.campaignObject[selectedCampaign].optionType === OPTION_TYPE_LIVE_BANNER_CAMPAIGN
+      selectedActiveCampaign &&
+      this.campaignObject[selectedActiveCampaign].optionType === OPTION_TYPE_LIVE_BANNER_CAMPAIGN
     ) {
       // 송출될 캠페인의 link 를 가져와 트위치 챗봇에 챗봇광고 이벤트를 에밋하기 위한 정보를 가져온다.
-      console.log(`${creatorId} / 광고될 캠페인은 ${selectedCampaign} / ${this.timestamp}`);
-      linkToChatBot = await this.getLinkName(selectedCampaign);
+      console.log(
+        `${this.creatorId} / 광고될 캠페인은 ${selectedActiveCampaign} / ${this.timestamp}`,
+      );
+      linkToChatBot = await this.getLinkName(selectedActiveCampaign);
     } else if (
-      selectedCampaign &&
-      this.campaignObject[selectedCampaign].optionType === OPTION_TYPE_CPS_CAMPAIGN
+      selectedActiveCampaign &&
+      this.campaignObject[selectedActiveCampaign].optionType === OPTION_TYPE_CPS_CAMPAIGN
     ) {
-      console.log(`${creatorId} / 광고될 캠페인은 ${selectedCampaign} / ${this.timestamp}`);
-      linkToChatBot = await this.getMerchandiseSiteUrl(selectedCampaign);
+      console.log(
+        `${this.creatorId} / 광고될 캠페인은 ${selectedActiveCampaign} / ${this.timestamp}`,
+      );
+      linkToChatBot = await this.getMerchandiseSiteUrl(selectedActiveCampaign);
     } else {
       // 송출할 배너가 없어서 기본 배너 검색
-      selectedCampaign = await this.getDefaultBanner(banOrPausedCampaigns);
-      if (selectedCampaign) {
+      onadDefaultBanner = await this.getDefaultBanner(this.banOrPausedCampaigns);
+      if (onadDefaultBanner) {
         // 기본 배너 송출
-        console.log(`${creatorId} 기본 배너 송출 / ${this.timestamp}`);
-        linkToChatBot = await this.getLinkName(selectedCampaign);
+        console.log(`${this.creatorId} 기본 배너 송출 / ${this.timestamp}`);
+        linkToChatBot = await this.getLinkName(onadDefaultBanner);
       } else {
-        console.log(`${creatorId} / 켜져있는 광고 없음 / ${this.timestamp}`);
+        console.log(`${this.creatorId} / 켜져있는 광고 없음 / ${this.timestamp}`);
         return campaignToStream;
       }
     }
 
-    if (this.previousBannerName && selectedCampaign === this.previousBannerName.split(',')[0]) {
-      campaignToStream.campaignId = selectedCampaign;
+    if (
+      this.previousBannerName &&
+      selectedActiveCampaign === this.previousBannerName.split(',')[0]
+    ) {
+      campaignToStream.campaignId = selectedActiveCampaign;
       campaignToStream.linkToChatBot = linkToChatBot;
       return campaignToStream;
     }
-    const bannerSrc = await this.getBannerSrc(selectedCampaign);
+    const bannerSrc = await this.getBannerSrc(selectedActiveCampaign || onadDefaultBanner);
+
     campaignToStream.bannerSrc = bannerSrc;
-    campaignToStream.campaignId = selectedCampaign;
+    campaignToStream.campaignId = selectedActiveCampaign || onadDefaultBanner;
     campaignToStream.linkToChatBot = linkToChatBot;
     return campaignToStream;
   };

@@ -92,11 +92,13 @@ interface SocketInfo {
       requestMessage.programType = programType;
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('SOCKET ON');
+        console.log('NEW CLIENT');
         socket.emit('host pass', SOCKET_HOST);
 
         await requestBanner(socket, requestMessage);
-      } else if (
+        return;
+      }
+      if (
         // 트위치 스튜디오 또는 아프리카 프릭샷으로 접속하지 않았으면서
         !['afreeca-freecshot', 'twitch-studio'].includes(programType) &&
         // history.length가 1이 아닌 경우에 잘못된 접속 처리
