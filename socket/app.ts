@@ -9,7 +9,7 @@ import http from 'http';
 import socketio, { Socket } from 'socket.io';
 import nodeSchedule from 'node-schedule';
 import doQuery from './models/doQuery';
-import requestBanner from './lib/requestBannerV2';
+import requestBanner from './lib/requestBanner';
 import { CreatorStatus } from './@types/shared';
 import query from './models/query';
 

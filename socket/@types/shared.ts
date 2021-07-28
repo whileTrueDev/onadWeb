@@ -3,3 +3,7 @@ export interface CreatorStatus {
   previousBannerName: string;
   programType: string;
 }
+
+export interface Banner {
+  [key: string]: string;
+}

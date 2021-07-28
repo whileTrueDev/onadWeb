@@ -1,5 +1,5 @@
 import socketio, { Socket } from 'socket.io';
-import RequestBanner from './requestBanner copy';
+import BannerSelection from './bannerSelection';
 import { CreatorStatus } from '../@types/shared';
 
 const requestMessage: CreatorStatus = {
@@ -8,7 +8,7 @@ const requestMessage: CreatorStatus = {
   programType: '',
 };
 
-const test = new RequestBanner(requestMessage);
+const test = new BannerSelection(requestMessage);
 
 const getCreatorIdAndChatAgreementTest = async () => {
   const creatorId = await test.getCreatorIdAndChatAgreement();

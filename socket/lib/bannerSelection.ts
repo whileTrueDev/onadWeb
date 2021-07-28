@@ -13,17 +13,16 @@ import {
   CreatorIds,
   BanPausedCampaign,
 } from '../@types/bannerRequest';
-import { CreatorStatus } from '../@types/shared';
+import { CreatorStatus, Banner } from '../@types/shared';
 import query from '../models/query';
 
-class RequestBanner {
+class BannerSelection {
   fullUrl: string;
   cutUrl: string;
   previousBannerName: string;
   programType: string;
   timestamp: string;
   campaignObject: any;
-  myCampaignId: string;
   creatorGameId: string;
   creatorId: string;
   constructor(request: CreatorStatus) {
@@ -33,7 +32,6 @@ class RequestBanner {
     this.programType = request.programType;
     this.timestamp = new Date().toLocaleString();
     this.campaignObject = {};
-    this.myCampaignId = '';
     this.creatorGameId = '';
     this.creatorId = '';
   }
@@ -272,13 +270,11 @@ class RequestBanner {
     );
 
     const filteredCampaigns = this.filterCampaign(onCategorycampaignList, banOrPausedCampaigns);
-
-    const selectedCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
-    // this.myCampaignId = selectedCampaign;
+    const selectedCampaign = filteredCampaigns.length !== 0 ? filteredCampaigns[0] : '';
     return selectedCampaign;
   };
 
-  getBanner = async ([creatorId, gameId]: string[]): Promise<any> => {
+  getBanner = async ([creatorId, gameId]: string[]): Promise<Banner> => {
     console.log(
       `-----------------------Id : ${creatorId} / ${this.timestamp}---------------------------`,
     );
@@ -300,8 +296,7 @@ class RequestBanner {
       const filteredCampaigns = this.filterCampaign(activeCreatorCampaigns, banOrPausedCampaigns);
       if (filteredCampaigns) {
         selectedCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
-        // this.myCampaignId = selectedCampaign;
-        console.log('방송인 에게만 송출될 캠페인 : ', this.myCampaignId);
+        console.log('방송인 에게만 송출될 캠페인 : ', selectedCampaign);
       }
     } else {
       // *********************************************************
@@ -316,7 +311,6 @@ class RequestBanner {
       const filteredCampaigns = this.filterCampaign(onCategorycampaignList, banOrPausedCampaigns);
 
       selectedCampaign = filteredCampaigns[this.getRandomInt(filteredCampaigns.length)];
-      // this.myCampaignId = selectedCampaign;
     }
 
     // *********************************************************
@@ -329,45 +323,42 @@ class RequestBanner {
       linkToChatBot: '',
     };
     if (
-      this.myCampaignId &&
-      this.campaignObject[this.myCampaignId].optionType === OPTION_TYPE_LIVE_BANNER_CAMPAIGN
+      selectedCampaign &&
+      this.campaignObject[selectedCampaign].optionType === OPTION_TYPE_LIVE_BANNER_CAMPAIGN
     ) {
       // 송출될 캠페인의 link 를 가져와 트위치 챗봇에 챗봇광고 이벤트를 에밋하기 위한 정보를 가져온다.
-      console.log(`${creatorId} / 광고될 캠페인은 ${this.myCampaignId} / ${this.timestamp}`);
-      linkToChatBot = await this.getLinkName(this.myCampaignId);
+      console.log(`${creatorId} / 광고될 캠페인은 ${selectedCampaign} / ${this.timestamp}`);
+      linkToChatBot = await this.getLinkName(selectedCampaign);
     } else if (
-      this.myCampaignId &&
-      this.campaignObject[this.myCampaignId].optionType === OPTION_TYPE_CPS_CAMPAIGN
+      selectedCampaign &&
+      this.campaignObject[selectedCampaign].optionType === OPTION_TYPE_CPS_CAMPAIGN
     ) {
-      console.log(`${creatorId} / 광고될 캠페인은 ${this.myCampaignId} / ${this.timestamp}`);
-      linkToChatBot = await this.getMerchandiseSiteUrl(this.myCampaignId);
+      console.log(`${creatorId} / 광고될 캠페인은 ${selectedCampaign} / ${this.timestamp}`);
+      linkToChatBot = await this.getMerchandiseSiteUrl(selectedCampaign);
     } else {
       // 송출할 배너가 없어서 기본 배너 검색
-      const defaultBanner = await this.getDefaultBanner(banOrPausedCampaigns);
-      if (defaultBanner) {
+      selectedCampaign = await this.getDefaultBanner(banOrPausedCampaigns);
+      if (selectedCampaign) {
         // 기본 배너 송출
         console.log(`${creatorId} 기본 배너 송출 / ${this.timestamp}`);
-        linkToChatBot = await this.getLinkName(this.myCampaignId);
+        linkToChatBot = await this.getLinkName(selectedCampaign);
       } else {
-        // 기본 배너도 꺼둔 경우
-        // socket.emit('img clear', []);
         console.log(`${creatorId} / 켜져있는 광고 없음 / ${this.timestamp}`);
         return campaignToStream;
       }
     }
 
-    // 이전 송출하던 배너와 현재 배너가 같은 경우
-    if (this.previousBannerName && this.myCampaignId === this.previousBannerName.split(',')[0]) {
-      campaignToStream.campaignId = this.myCampaignId;
+    if (this.previousBannerName && selectedCampaign === this.previousBannerName.split(',')[0]) {
+      campaignToStream.campaignId = selectedCampaign;
       campaignToStream.linkToChatBot = linkToChatBot;
       return campaignToStream;
     }
-    const bannerSrc = await this.getBannerSrc(this.myCampaignId);
+    const bannerSrc = await this.getBannerSrc(selectedCampaign);
     campaignToStream.bannerSrc = bannerSrc;
-    campaignToStream.campaignId = this.myCampaignId;
+    campaignToStream.campaignId = selectedCampaign;
     campaignToStream.linkToChatBot = linkToChatBot;
     return campaignToStream;
   };
 }
 
-export default RequestBanner;
+export default BannerSelection;
