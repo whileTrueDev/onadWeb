@@ -6,9 +6,14 @@ import { CreatorStatus } from '../@types/shared';
 const requestBanner = async (socket: Socket, requestMessage: CreatorStatus): Promise<void> => {
   const bannerSelection = new BannerSelection(requestMessage);
   const creatorIdAndChatAgreement = await bannerSelection.getCreatorIdAndChatAgreement();
-  const { creatorId } = creatorIdAndChatAgreement;
 
-  if (creatorId) {
+  if (!creatorIdAndChatAgreement) {
+    socket.emit('url warning');
+    return;
+  }
+
+  if (typeof creatorIdAndChatAgreement !== 'boolean') {
+    const { creatorId } = creatorIdAndChatAgreement;
     const creatorGameId = await bannerSelection.getGameId();
     const selectedCampaign = await bannerSelection.getCampaign([creatorId, creatorGameId]);
     const bannerInfo = await bannerSelection.getBanner(selectedCampaign);

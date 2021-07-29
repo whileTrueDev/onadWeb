@@ -37,7 +37,7 @@ class BannerSelection {
     this.banOrPausedCampaigns = {};
   }
 
-  getCreatorIdAndChatAgreement = async (): Promise<CreatorIds> => {
+  getCreatorIdAndChatAgreement = async (): Promise<CreatorIds | boolean> => {
     const { creatorByUrl } = query;
     return new Promise((resolve, reject) => {
       doQuery(creatorByUrl, [this.cutUrl])
@@ -46,9 +46,8 @@ class BannerSelection {
             const creator = row.result[0];
             this.creatorId = creator.creatorId;
             resolve(row.result[0]);
-          } else {
-            // socket.emit('url warning', []);
           }
+          resolve(false);
         })
         .catch(errorData => {
           console.log(errorData);
