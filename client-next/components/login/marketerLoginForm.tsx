@@ -1,4 +1,3 @@
-// material-UI
 import {
   Dialog,
   DialogContent,
@@ -11,24 +10,24 @@ import {
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 // 내부 소스
-import googleLogo from '../../public/logo/google/google.png'
-import naverLogo from '../../public/logo/naver/naver_icon_green.png'
-import kakaoLogo from '../../public/logo/kakao/kakaolink_btn_small.png'
 // 프로젝트 내부 모듈
 import classnames from 'classnames';
-import Image from 'next/image'
+import Image from 'next/image';
 import { useState } from 'react';
 import * as React from 'react';
 import { useRouter } from 'next/router';
+import kakaoLogo from '../../public/logo/kakao/kakaolink_btn_small.png';
+import naverLogo from '../../public/logo/naver/naver_icon_green.png';
+import googleLogo from '../../public/logo/google/google.png';
 // 컴포넌트
 import FindDialog from './findDialog';
-import OnadLogo from '../shared/onadLogo'
+import OnadLogo from '../shared/onadLogo';
 // util 계열
-import axios from '../../utils/axios';
+import { useLoginMutation } from '../../utils/hooks/mutation/useLoginMutation';
+import { MarketerInfo } from '../../utils/hooks/query/useMarketerProfile';
 import HOST from '../../config';
 // 스타일
 import useStyles from '../../styles/login/loginForm.style';
-
 
 interface Props {
   open: boolean;
@@ -56,39 +55,43 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
 
   const [loading, setLoading] = useState(false);
 
+  const loginMutation = useLoginMutation();
   const login = (event: React.SyntheticEvent) => {
     if (event) {
       event.preventDefault();
     }
     setLoading(true);
-    axios
-      .post(`${HOST}/login`, { userid, passwd, type: 'marketer' })
-      .then(res => {
-        setLoading(false);
-        if (res.data[0]) {
-          setPasswd('');
-          alert(res.data[1]);
-          if (res.data[1] === '이메일 본인인증을 해야합니다.') {
-            handleClose();
-          }
-        } else {
-          const userData = res.data[1];
-          if (userData.temporaryLogin) {
-            handleClose();
-            router.push('/');
+    const login = (event: React.SyntheticEvent) => {
+      if (event) {
+        event.preventDefault();
+      }
+      loginMutation
+        .mutateAsync({ userid, passwd, type: 'marketer' })
+        .then(res => {
+          if (res.data[0]) {
+            setPasswd('');
+            alert(res.data[1]);
+            if (res.data[1] === '이메일 본인인증을 해야합니다.') {
+              handleClose();
+            }
           } else {
-            // dispatch({ type: 'session', data: userData });
-            handleClose();
-            router.push('/mypage/marketer/main');
-            // 이 부분 호스트 바꿔서 연결해야할 듯
+            const userData = res.data[1] as MarketerInfo;
+            if (userData.temporaryLogin) {
+              handleClose();
+              router.push('/');
+            } else {
+              // dispatch({ type: 'session', data: userData });
+              handleClose();
+              router.push('/mypage/marketer/main');
+            }
           }
-        }
-      })
-      .catch(reason => {
-        setLoading(false);
-        setPasswd(''); // 비밀번호 초기화
-        alert('회원이 아닙니다.');
-      });
+        })
+        .catch(reason => {
+          console.log(reason);
+          setPasswd(''); // 비밀번호 초기화
+          alert('회원이 아닙니다.');
+        });
+    };
   };
 
   const dialog = (
@@ -147,16 +150,16 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
         <Button
-          onClick={ () => router.push(`${HOST}/login/google`)}
+          onClick={() => router.push(`${HOST}/login/google`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)}
           style={{ alignItems: 'center' }}
         >
-          <Image src={googleLogo} alt="googleLogo" width={30} height={30}/>
+          <Image src={googleLogo} alt="googleLogo" width={30} height={30} />
           구글 아이디로 로그인
         </Button>
         <Button
-          onClick={ () => router.push(`${HOST}/login/naver`)}
+          onClick={() => router.push(`${HOST}/login/naver`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)}
           style={{ alignItems: 'center' }}
@@ -165,12 +168,12 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           네이버 아이디로 로그인
         </Button>
         <Button
-          onClick={ () => router.push(`${HOST}/login/kakao`)}
+          onClick={() => router.push(`${HOST}/login/kakao`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)}
           style={{ alignItems: 'center' }}
         >
-          <Image src={kakaoLogo} alt="kakaoLogo" width={30} height={30}/>
+          <Image src={kakaoLogo} alt="kakaoLogo" width={30} height={30} />
           카카오 아이디로 로그인
         </Button>
 
@@ -182,7 +185,6 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
             <span
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
               onClick={() => router.push('/regist/main')}
-
             >
               회원가입하기
             </span>

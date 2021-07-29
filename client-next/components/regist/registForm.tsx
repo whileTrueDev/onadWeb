@@ -21,14 +21,13 @@ import Done from '@material-ui/icons/Done';
 // 프로젝트 내부 모듈
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
-import {useState} from 'react';
+import { useState } from 'react';
 // 컴포넌트
 import SuccessTypo from '../../atoms/typography/success';
 import StaticInput from '../../atoms/input/staticInput';
 import { Props } from './platformRegistForm';
 // util 계열
-import axios from '../../utils/axios';
-import HOST from '../../config';
+import { useCheckMarketerIdMutation } from '../../utils/hooks/mutation/useCheckMarketerIdMutation';
 import domains from '../../utils/inputs/email-domains';
 import areaCodes, { MenuProps } from '../../utils/inputs/area-codes';
 // 스타일
@@ -38,7 +37,7 @@ export const initialIdState = {
   idCheck: false,
   idValue: '',
   checkDuplication: true,
-}
+};
 
 function RegistForm({
   handleBack,
@@ -53,7 +52,7 @@ function RegistForm({
   const [areaCode, setAreaCode] = useState('');
   const [numberType, setNumberType] = useState(true);
 
-  const [idState, setIdState] = useState(initialIdState)
+  const [idState, setIdState] = useState(initialIdState);
 
   const handleTypeChange = () => {
     // numberType이 변경될 때, 데이터도 리셋.
@@ -74,19 +73,19 @@ function RegistForm({
       dispatch({ type: name, value: event.target.value });
     } else {
       const userIdRegex = /^[a-z]+[a-z0-9]{5,14}$/g;
-      const regexTest = userIdRegex.test(event.target.value)
+      const regexTest = userIdRegex.test(event.target.value);
       if (regexTest) {
         setIdState({
           checkDuplication: true,
           idValue: event.target.value,
           idCheck: false,
-        })
+        });
       } else {
         setIdState({
           checkDuplication: true,
           idValue: event.target.value,
           idCheck: true,
-        })
+        });
       }
     }
   };
@@ -102,7 +101,7 @@ function RegistForm({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     const { password, repasswd, phoneNumValidationCheck } = formState;
-    const {idCheck, checkDuplication, idValue} = idState
+    const { idCheck, checkDuplication, idValue } = idState;
 
     if (checkDuplication) {
       alert('ID 중복 조회를 해야합니다.');
@@ -135,7 +134,8 @@ function RegistForm({
         }
       }
       const marketerRawPasswd = formState.passwordValue;
-      const marketerDomain = formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
+      const marketerDomain =
+        formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
       const user = {
         marketerId,
         marketerRawPasswd,
@@ -150,23 +150,21 @@ function RegistForm({
     }
   }
 
-  // const checkBusinessRegNum = () => {
-  //   alert('준비 중입니다. 회원가입을 진행해 주세요.');
-  // };
+  const checkDuplicateIDMutation = useCheckMarketerIdMutation();
 
   function checkDuplicateID(): void {
     // const id = document.getElementById('id')!.value;
-    const {idCheck, idValue } = idState;
+    const { idCheck, idValue } = idState;
     if (idCheck || idValue === '') {
       alert('ID을 올바르게 입력해주세요.');
-      setIdState({...idState, checkDuplication: true})
+      setIdState({ ...idState, checkDuplication: true });
     } else {
-      axios.post(`${HOST}/marketer/checkId`, { idValue }).then(res => {
+      checkDuplicateIDMutation.mutateAsync({ idValue }).then(res => {
         if (res.data) {
           alert('ID가 중복되었습니다. 다른 ID를 사용해주세요.');
-          setIdState({...idState, checkDuplication: true})
+          setIdState({ ...idState, checkDuplication: true });
         } else {
-          setIdState({...idState, checkDuplication: false})
+          setIdState({ ...idState, checkDuplication: false });
         }
       });
     }
@@ -200,6 +198,7 @@ function RegistForm({
                 InputLabelProps={{
                   shrink: true,
                 }}
+                // eslint-disable-next-line react/jsx-no-duplicate-props
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

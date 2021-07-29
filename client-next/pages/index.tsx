@@ -1,17 +1,16 @@
 // material-UI
 import { Typography, Button } from '@material-ui/core';
 // 내부 소스
-import source from '../source/doorSource';
-import textLogo from '../public/logo/textLogo.png';
-import mainCharacter from '../public/door/mainCharacter.png';
-import iconLogo from '../public/logo/iconLogo.png';
 // 프로젝트 내부 모듈
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
 // 컴포넌트
-import Head from 'next/head'
-import Image from 'next/image'
-import Router from 'next/router'
+import Image from 'next/image';
+import Router from 'next/router';
+import iconLogo from '../public/logo/iconLogo.png';
+import mainCharacter from '../public/door/mainCharacter.png';
+import textLogo from '../public/logo/textLogo.png';
+import source from '../source/doorSource';
 // 스타일
 import useStyles from '../styles/main/door.style';
 
@@ -26,7 +25,9 @@ export default function Door(): JSX.Element {
 
   return (
     <div className={classNames(css.root, css.rowCenterAlign)}>
-      <div className={css.logo}><Image src={textLogo} alt="textlogo" /></div>
+      <div className={css.logo}>
+        <Image src={textLogo} alt="textlogo" />
+      </div>
       <div className={css.contentWrapper}>
         <div className={css.content}>
           <div className={css.leftContent}>
@@ -47,7 +48,9 @@ export default function Door(): JSX.Element {
               {source.buttonTitle.map(title => (
                 <Button
                   className={css.button}
-                  onClick={() => title === '광고주' ? Router.push('/marketer') : Router.push('/creator')}
+                  onClick={() =>
+                    title === '광고주' ? Router.push('/marketer') : Router.push('/creator')
+                  }
                   key={nanoid()}
                 >
                   <Typography variant="h6" className={css.buttonText}>
@@ -61,10 +64,7 @@ export default function Door(): JSX.Element {
             <div>
               <div className={css.InnerLeft}>
                 <div className={css.mainCharacter}>
-                  <Image
-                    src={mainCharacter}
-                    alt="mainCharacter"
-                  />
+                  <Image src={mainCharacter} alt="mainCharacter" />
                 </div>
                 <div className={css.banner}>
                   <Typography variant="subtitle1" style={{ fontWeight: 600 }}>
@@ -73,7 +73,9 @@ export default function Door(): JSX.Element {
                 </div>
               </div>
               <div className={css.InnerLeftBottom}>
-                <div className={css.onadLogo}><Image src={iconLogo} alt="iconlogo"/></div>
+                <div className={css.onadLogo}>
+                  <Image src={iconLogo} alt="iconlogo" />
+                </div>
                 <div className={css.bottomText}>
                   <Typography variant="body2" style={{ fontWeight: 600 }}>
                     {source.capationTitle}
@@ -137,7 +139,6 @@ export default function Door(): JSX.Element {
         </defs>
         <use xlinkHref="#waveMotion" />
       </svg>
-      
     </div>
-  )
+  );
 }

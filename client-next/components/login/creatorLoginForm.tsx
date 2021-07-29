@@ -1,4 +1,3 @@
-// material-UI
 import {
   Dialog,
   DialogContent,
@@ -17,16 +16,14 @@ import { Close } from '@material-ui/icons';
 import classnames from 'classnames';
 import { useState } from 'react';
 // 컴포넌트
+import { useRouter } from 'next/router';
 import StyledTooltip from '../../atoms/tooltip/styledTooltip';
 import OnadLogo from '../shared/onadLogo';
 // util 계열
-import axios from '../../utils/axios';
-import HOST from '../../config';
-import { useRouter } from 'next/router'
 import useEventTargetValue from '../../utils/hooks/useEventTargetValue';
+import { useLoginMutation } from '../../utils/hooks/mutation/useLoginMutation';
 // 스타일
 import useStyles from '../../styles/login/loginForm.style';
-
 
 interface CreatorLoginFormProps {
   open: boolean;
@@ -44,27 +41,25 @@ export default function CreatorLoginForm({
   const userid = useEventTargetValue();
   const passwd = useEventTargetValue();
   const [error, setError] = useState<string>();
+
+  const loginMutation = useLoginMutation();
+
   const handleLogin = (): void => {
-    setLoading(true);
-    axios
-      .post(`${HOST}/login`, { type: 'creator', userid: userid.value, passwd: passwd.value })
+    loginMutation
+      .mutateAsync({ type: 'creator', userid: userid.value, passwd: passwd.value })
       .then(res => {
-        setLoading(false);
         passwd.handleReset();
         setTimeout(() => {
           // 15초 간의 timeout을 두고, 로딩 컴포넌트를 없앤다
-          setLoading(false);
           setError('로그인에 일시적인 문제가 발생했습니다.\n잠시후 다시 시도해주세요.');
         }, 1000 * 10); // 15초
 
         if (res.data[0]) {
-          if (res.data[1]) setError(res.data[1]);
+          if (res.data[1]) setError(res.data[1] as string);
         }
         if (res.data === 'success') router.push('/mypage/creator/main');
-        // 이 부분 호스트 바뀌어서 들어가야 할 듯
       })
       .catch(err => {
-        setLoading(false);
         setError(err.response.data.message);
       });
   };
@@ -90,7 +85,7 @@ export default function CreatorLoginForm({
         </IconButton>
 
         <div style={{ marginBottom: 8, marginTop: 8 }}>
-          <OnadLogo width={80} height={30}/>
+          <OnadLogo width={80} height={30} />
         </div>
         <Typography variant="h6">온애드 방송인 로그인</Typography>
 

@@ -7,19 +7,17 @@ import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { GetServerSideProps } from 'next';
 // 컴포넌트
+import Image from 'next/image';
 import NavTop from '../components/layout/navTop';
 import AppFooter from '../components/layout/appFooter';
 import RePasswordDialog from '../components/login/rePassword';
 import Table from '../atoms/table/materialTable';
-import Image from 'next/image'
 // util 계열
-import axios from '../utils/axios'
-import HOST from '../config'
+import axios from '../utils/axios';
+import HOST from '../config';
 import useLoginValue from '../utils/hooks/useLoginValue';
 // 스타일
 import useStyles from '../styles/main/creatorList/creatorList.style';
-
-
 
 export interface ContractedCreatorListData<T> {
   creatorId: T;
@@ -31,7 +29,6 @@ export interface ContractedCreatorListData<T> {
   creatorTwitchId: T;
 }
 
-
 const COLORS = [
   ['#00b9fd', '#4459fc', '#0f7cfc'],
   ['#00ddcc', '#00ad93', '#00d57b'],
@@ -40,8 +37,8 @@ const COLORS = [
 ];
 
 interface CreatorListProps {
-  contracedCreatorData: ContractedCreatorListData<string>[]
-  liveCreatorData: string[]
+  contractedCreatorData: ContractedCreatorListData<string>[];
+  liveCreatorData: string[];
 }
 
 function getRandomColors(array: any): string {
@@ -50,8 +47,8 @@ function getRandomColors(array: any): string {
 }
 
 export default function CreatorList({
-  contracedCreatorData,
-  liveCreatorData
+  contractedCreatorData,
+  liveCreatorData,
 }: CreatorListProps): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
@@ -60,8 +57,8 @@ export default function CreatorList({
   const isXsWidth = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
-    setLiveCreator(contracedCreatorData.filter(row => liveCreatorData.includes(row.creatorId)))
-  }, []);
+    setLiveCreator(contractedCreatorData.filter(row => liveCreatorData.includes(row.creatorId)));
+  }, [contractedCreatorData, liveCreatorData]);
 
   const Columns = [
     {
@@ -79,8 +76,8 @@ export default function CreatorList({
               src={rowData.creatorLogo}
               alt=""
               id={rowData.creatorName}
-              onError={(e) => {
-                e.currentTarget.srcset='/logo/noBgIconLogo.png'
+              onError={e => {
+                e.currentTarget.srcset = '/logo/noBgIconLogo.png';
               }}
               width={50}
               height={50}
@@ -134,32 +131,31 @@ export default function CreatorList({
           </Typography>
           {/* 라이브 스트리밍 리스트 */}
           <div className={classes.liveContainer}>
-              {LiveCreator?.map((row, index: number) => (
-                <div
-                  className={classes.liveCreatorWrapper}
-                  key={nanoid()}
-                  style={{ backgroundImage: `${getRandomColors(COLORS)}` }}
+            {LiveCreator?.map((row, index: number) => (
+              <div
+                className={classes.liveCreatorWrapper}
+                key={nanoid()}
+                style={{ backgroundImage: `${getRandomColors(COLORS)}` }}
+              >
+                <a
+                  href={`https://www.twitch.tv/${row.creatorTwitchId}`}
+                  className={classes.liveCreatorAtag}
                 >
-                  <a
-                    href={`https://www.twitch.tv/${row.creatorTwitchId}`}
-                    className={classes.liveCreatorAtag}
-                  >
-                    <div >
-                      <Image
-                        className={classes.liveCreator}
-                        src={row.creatorLogo}
-                        id={`icon-${index}`}
-                        alt=""
-                        layout="fill"
-                        onError={(e) => {
-                          e.currentTarget.srcset='/logo/noBgIconLogo.png'
-                        }}
-                      />
-                    </div>
-                  </a>
-                </div>
-              ))
-              }
+                  <div>
+                    <Image
+                      className={classes.liveCreator}
+                      src={row.creatorLogo}
+                      id={`icon-${index}`}
+                      alt=""
+                      layout="fill"
+                      onError={e => {
+                        e.currentTarget.srcset = '/logo/noBgIconLogo.png';
+                      }}
+                    />
+                  </div>
+                </a>
+              </div>
+            ))}
             <div />
           </div>
 
@@ -170,7 +166,7 @@ export default function CreatorList({
                 // eslint-disable-next-line no-nested-ternary
                 !isSmWidth ? Columns : !isXsWidth ? Columns.slice(0, 3) : Columns.slice(0, 1)
               }
-              data={contracedCreatorData|| []}
+              data={contractedCreatorData || []}
               components={{
                 Pagination: props => <TablePagination {...props} />,
               }}
@@ -205,16 +201,15 @@ export default function CreatorList({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const contracedCreator = await axios.get(`${HOST}/creators`)
-  const liveCreator = await axios.get(`${HOST}/creators/live`)
-  
-  const contracedCreatorData = await contracedCreator.data
-  const liveCreatorData = await liveCreator.data
+  const contractedCreator = await axios.get(`${HOST}/creators`);
+  const liveCreator = await axios.get(`${HOST}/creators/live`);
+  const contractedCreatorData = await contractedCreator.data;
+  const liveCreatorData = await liveCreator.data;
 
   return {
     props: {
-      contracedCreatorData,
-      liveCreatorData
-    }
-  }
-}
+      contractedCreatorData,
+      liveCreatorData,
+    },
+  };
+};

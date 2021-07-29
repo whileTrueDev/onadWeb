@@ -19,6 +19,7 @@ import Dialog from '../../../atoms/dialog/dialog';
 import HOST from '../../../config';
 import axios from '../../../utils/axios';
 import useDialog from '../../../utils/hooks/useDialog';
+import { useCreateCreatorInquiryMutation } from '../../../utils/hooks/mutation/useCreateCreatorInquiryMutation';
 // 스타일
 import useStyles from '../../../styles/main/inquiry/inquiry.style';
 
@@ -64,6 +65,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
   // 문의 요청 중 로딩에 대한 상태
   const [loading, setLoading] = React.useState(false);
 
+  const createInquiry = useCreateCreatorInquiryMutation();
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const AnonymousUser = inquiryContent;
@@ -74,8 +77,8 @@ function Inquire({ confirmClose }: Props): JSX.Element {
       alert('개인정보수집 및 이용안내에 동의해주세요');
     } else {
       AnonymousUser.privacyAgreement = true;
-      axios
-        .post(`${HOST}/inquiry/creator`, AnonymousUser)
+      createInquiry
+        .mutateAsync(AnonymousUser)
         .then(() => {
           confirmDialog.handleOpen();
           setInquiryContent(initialContent);

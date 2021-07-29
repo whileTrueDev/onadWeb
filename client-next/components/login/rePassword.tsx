@@ -1,4 +1,3 @@
-// material-UI
 import {
   Dialog,
   DialogActions,
@@ -13,12 +12,11 @@ import {
 // 프로젝트 내부 모듈
 import { useReducer } from 'react';
 import * as React from 'react';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 // 컴포넌트
 // util 계열
-import HOST from '../../config';
-import axios from '../../utils/axios';
 import passwordRegex from '../../utils/inputs/regex/password.regex';
+import { useMarketerUpdateMarketerInfoMutation } from '../../utils/hooks/mutation/useMarketerUpdateMarketerInfoMutation';
 // 스타일
 import useStyles from '../../styles/login/rePassword.style';
 
@@ -81,6 +79,8 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
     dispatch({ type: 'repasswd', value: event.target.value });
   };
 
+  const updateMarketerMutation = useMarketerUpdateMarketerInfoMutation();
+
   const handleSubmit = (event: FormType) => {
     event.preventDefault();
     if (state.password || state.repasswd) {
@@ -92,8 +92,11 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
       value: state.value,
     };
 
-    axios
-      .patch(`${HOST}/marketer`, user)
+    updateMarketerMutation
+      .mutateAsync({
+        type: 'password',
+        value: state.value,
+      })
       .then(() => {
         alert('비밀번호 변경이 완료되었습니다. 다시 로그인 해주세요');
         setRepassword(false);

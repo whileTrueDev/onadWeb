@@ -16,17 +16,20 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Check, HowToReg, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 // 내부 소스
-import twitchLogoWhite from '../../public/logo/twitch/TwitchGlitchWhite.png'
 // 프로젝트 내부 모듈
 import classnames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 // 컴포넌트
+import Image from 'next/image';
 import IndentityVerificationDialog from './identityVerification';
 import Snackbar from '../../atoms/snackbar/snackbar';
-import Image from 'next/image';
+import twitchLogoWhite from '../../public/logo/twitch/TwitchGlitchWhite.png';
 // util 계열
+import { useCreatorSignUpMutation } from '../../utils/hooks/mutation/useCreatorSignUpMutation';
+import { useCreatorSignupPreCreatorMutation } from '../../utils/hooks/mutation/useCreatorSignupPreCreatorMutation';
 import axiosInstance from '../../utils/axios';
 import HOST from '../../config';
 import { useDialog } from '../../utils/hooks';
@@ -83,11 +86,9 @@ export interface CreatorSignupInfo {
   repwdVisibility: boolean;
   referralCode: string;
 }
-export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): JSX.Element {
+export default function SignupCreator({ pathname, queryIn }: SignupCreatorProps): JSX.Element {
   const classes = useStyles();
   const router = useRouter();
-  console.log(pathname, '---> params in SignupCreator')
-  console.log(queryIn, '---> queryIn in SignupCreator')
   // 회원가입 정보
   const [signupInfo, setSignupInfo] = useState<CreatorSignupInfo>({
     userid: '',
@@ -125,6 +126,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
   }
 
   // 스낵바
+  const { enqueueSnackbar } = useSnackbar();
   const failSnack = useDialog();
   const [snackErrMsg, setSnackErrMsg] = useState<string>();
 
@@ -148,50 +150,52 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
     return result;
   }
 
+  const signUpMutation = useCreatorSignUpMutation();
+
   // 본인인증 완료 이후 -> 회원가입 요청
   function handleSignup(): void {
-    axiosInstance
-      .post(`${HOST}/creator`, {
+    signUpMutation
+      .mutateAsync({
         userid: signupInfo.userid,
         passwd: signupInfo.passwd,
         referralCode: signupInfo.referralCode,
       })
       .then(() => {
-        router.push(
-          {
-            pathname: `/regist/[regist]`,
-            query: {regist: 'cre-complete', queryIn: `?userId=${signupInfo.userid}`,}
-          }
-        );
+        router.push({
+          pathname: `/regist/[regist]`,
+          query: { regist: 'cre-complete', queryIn: `?userId=${signupInfo.userid}` },
+        });
       })
       .catch(() => {
-        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
-        failSnack.handleOpen();
+        enqueueSnackbar('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   }
 
   /**
    * 기존 유저 새로운 로그인 방식으로 회원가입 및 기존 onad 계정과 연동 핸들러
    * */
+  const preUserSignUpMutation = useCreatorSignupPreCreatorMutation();
+
   function handleSignupPreCreator(): void {
-    axiosInstance
-      .post(`${HOST}/creator/pre-user`, {
+    preUserSignUpMutation
+      .mutateAsync({
         userid: signupInfo.userid,
         passwd: signupInfo.passwd,
         creatorId: parseParams(queryIn).creatorId,
         accessToken: parseParams(queryIn).accessToken,
       })
       .then(() => {
-        router.push(
-          {
-            pathname: `/regist/[regist]`,
-            query: {regist: 'cre-complete', userId: `?userId=${signupInfo.userid}`,}
-          }
-        );
+        router.push({
+          pathname: `/regist/[regist]`,
+          query: { regist: 'cre-complete', userId: `?userId=${signupInfo.userid}` },
+        });
       })
       .catch(() => {
-        setSnackErrMsg('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
-        failSnack.handleOpen();
+        enqueueSnackbar('회원가입 과정에서 오류가 발생했습니다. 잠시후 다시 시도해주세요.', {
+          variant: 'error',
+        });
       });
   }
 
@@ -330,7 +334,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
           } else if (signupInfo.referralCode) {
             if (!referredCreator || !!referredCreatorError) {
               // 추천인 확인 필요하다는 문구 처리
-              needReferredCreatorSnack.handleOpen();
+              enqueueSnackbar('추천인 확인이 올바르게 끝나지 않았어요!', { variant: 'error' });
             } else handleNext();
           } else {
             handleNext();
@@ -359,7 +363,6 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
           console.error(err);
         });
     }
-
   });
 
   // 회원가입 입력 폼
@@ -547,7 +550,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
     <div>
       <Button
         className={classes.socialLoginButton}
-        onClick={() => router.push('/mypage/creator/main')}
+        onClick={(): Promise<boolean> => router.push('/mypage/creator/main')}
         color="primary"
         variant="contained"
         fullWidth
@@ -556,7 +559,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
       </Button>
       <Button
         className={classes.socialLoginButton}
-        onClick={() => router.push('/creator')}
+        onClick={(): Promise<boolean> => router.push('/creator')}
         color="default"
         variant="contained"
         fullWidth
@@ -624,7 +627,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
                       </Typography>
                       <Button
                         className={classes.socialLoginButton}
-                        onClick={() => router.push('/regist/cre-signup')}
+                        onClick={(): Promise<boolean> => router.push('/regist/cre-signup')}
                         color="primary"
                         variant="contained"
                         fullWidth
@@ -633,7 +636,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
                       </Button>
                       <Button
                         className={classes.socialLoginButton}
-                        onClick={() => router.push('/creator')}
+                        onClick={(): Promise<boolean> => router.push('/creator')}
                         color="default"
                         variant="contained"
                         fullWidth
@@ -645,7 +648,8 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
                     <Button
                       onClick={(e): void => {
                         e.preventDefault();
-                        if (!isLogedIn && (typeof window !== undefined)) window.location.href = `${HOST}/login/twitch/pre-creator`;
+                        if (!isLogedIn && typeof window !== undefined)
+                          window.location.href = `${HOST}/login/twitch/pre-creator`;
                       }}
                       className={classnames(classes.socialLoginButton, classes.twitch, {
                         [classes.success]: !!isLogedIn,
@@ -662,11 +666,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
                       ) : (
                         <>
                           <div className={classes.socialLogo}>
-                            <Image
-                              src={twitchLogoWhite}
-                              alt="twitchLogoWhite"
-                              layout="fill"
-                            />
+                            <Image src={twitchLogoWhite} alt="twitchLogoWhite" layout="fill" />
                           </div>
 
                           <Typography variant="body1">기존 트위치 계정 인증</Typography>
@@ -692,18 +692,14 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
               {/* 완료화면이 아니며, no-pre-creator에러가 아닌 경우 */}
               {!(pathname === 'cre-complete') &&
                 activeStep === 0 &&
-                !(parseParams(queryIn).error === 'no-pre-creator') && (
-                  <div>{signupForm}</div>
-                )}
+                !(parseParams(queryIn).error === 'no-pre-creator') && <div>{signupForm}</div>}
             </>
           )}
 
           {/* 본인인증 진행 */}
-          {!(pathname === 'pre-user') &&
-            !(pathname === 'cre-complete') &&
-            activeStep === 1 && (
-              <IndentityVerificationDialog onSuccess={handleSignup} onBackClick={handleBack} />
-            )}
+          {!(pathname === 'pre-user') && !(pathname === 'cre-complete') && activeStep === 1 && (
+            <IndentityVerificationDialog onSuccess={handleSignup} onBackClick={handleBack} />
+          )}
 
           {/* 회원가입 완료 페이지 */}
           {pathname === 'cre-complete' && (
@@ -719,7 +715,7 @@ export default function SignupCreator({pathname, queryIn}: SignupCreatorProps): 
               <div style={{ margin: 16 }}>
                 <Typography
                   variant="body2"
-                  onClick={() => router.push('/regist/pre-user')}
+                  onClick={(): Promise<boolean> => router.push('/regist/pre-user')}
                 >
                   트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
                   <span style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>

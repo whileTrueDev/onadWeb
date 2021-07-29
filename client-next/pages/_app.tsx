@@ -1,16 +1,19 @@
-import {useEffect} from 'react';
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import theme, {OnadTheme} from '../theme';
+import { useEffect } from 'react';
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
 import {
   createMuiTheme,
   MuiThemeProvider as ThemeProvider,
   responsiveFontSizes,
 } from '@material-ui/core/styles';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { SnackbarProvider } from 'notistack';
+import queryClient from '../utils/queryClient';
+import theme, { OnadTheme } from '../theme';
 import HeadCompo from '../components/layout/head';
 
 function OnadNextApp({ Component, pageProps }: AppProps) {
-
   const THEME = responsiveFontSizes(
     createMuiTheme({
       ...theme.rawTheme,
@@ -29,21 +32,31 @@ function OnadNextApp({ Component, pageProps }: AppProps) {
       platform: { ...theme.platformOverrides },
     },
   };
-  
+
   useEffect(() => {
-    const jssStyles = document.querySelector('#jss-server-side')
+    const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles && jssStyles.parentElement) {
-      jssStyles.parentElement.removeChild(jssStyles)
+      jssStyles.parentElement.removeChild(jssStyles);
     }
-  }, [])
+  }, []);
 
   return (
     <>
       <HeadCompo />
-      <ThemeProvider<OnadTheme> theme={onadTheme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider<OnadTheme> theme={onadTheme}>
+          <SnackbarProvider
+            maxSnack={2}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            preventDuplicate
+          >
+            <Component {...pageProps} />
+            {/* 빌드시 자동으로 제거됨 */}
+            <ReactQueryDevtools />
+          </SnackbarProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
-  )
+  );
 }
-export default OnadNextApp
+export default OnadNextApp;

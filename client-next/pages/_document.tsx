@@ -1,7 +1,7 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
-import Script from 'next/script'
+import Script from 'next/script';
 
 export default class RootDocument extends Document {
   render() {
@@ -29,9 +29,15 @@ export default class RootDocument extends Document {
           {/*  이 부분 아마도 헤드로 옮겨서 script로 대체 해야할 듯....? */}
           <meta name="theme-color" />
           {/* google adsense */}
-          <Script data-ad-client="ca-pub-4320356355619389" async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap" />
+          <Script
+            data-ad-client="ca-pub-4320356355619389"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700&display=swap"
+          />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,500,700&display=swap"
@@ -46,13 +52,13 @@ export default class RootDocument extends Document {
   }
 }
 
-RootDocument.getInitialProps = async (ctx) => {
+RootDocument.getInitialProps = async ctx => {
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+      enhanceApp: App => props => sheets.collect(<App {...props} />),
     });
 
   const initialProps = await Document.getInitialProps(ctx);

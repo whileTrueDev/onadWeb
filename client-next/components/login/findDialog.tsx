@@ -11,6 +11,7 @@ import {
 import style from '../../styles/login/findDialog.style';
 import axios from '../../utils/axios';
 import HOST from '../../config';
+import { useMarketerUpdateTmpPassword } from '../../utils/hooks/mutation/useMarketerUpdateTmpPassword';
 
 interface Props {
   dialogType: string;
@@ -74,16 +75,16 @@ function FindDialog({
     }
   };
 
+  const tmpPwMutation = useMarketerUpdateTmpPassword();
+
   const CheckPasswd = (event: FormType) => {
     event.preventDefault();
     const emailReg =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*[.]+[a-zA-Z]{2,3}$/i;
     if (emailReg.test(findContent.marketerMail)) {
-      axios.patch(`${HOST}/marketer/tmp-password`, findContent).then(res => {
-        console.log(res.data);
-        const ans = JSON.parse(res.data);
-        if (ans.error) {
-          alert(ans.message);
+      tmpPwMutation.mutateAsync(findContent).then(res => {
+        if (res.data.error) {
+          alert(res.data.message);
           setFindContent(initialState);
         } else {
           alert('가입시 등록한 이메일로 임시비밀번호가 발송되었습니다.');

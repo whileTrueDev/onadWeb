@@ -2,11 +2,11 @@
 import { Button } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 // 내부 소스
-import sources from '../source/clientMainSource';
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import { GetServerSideProps } from 'next';
+import sources from '../source/clientMainSource';
 // 컴포넌트
 import NavTop from '../components/layout/navTop';
 import RePasswordDialog from '../components/login/rePassword';
@@ -71,7 +71,7 @@ export default function Main({
   nowBroadcastData,
   bannerViewData,
   contractedCreatorData,
-  totoalFollowersData
+  totoalFollowersData,
 }: MainProps): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
@@ -99,98 +99,81 @@ export default function Main({
 
   return (
     <div className={classes.root}>
-        <div>
-          <NavTop isLogin={isLogin} logout={logout} MainUserType />
-          <ParallaxScroll
-            isLogin={isLogin}
-            setPsIndex={setPsIndex}
-            psIndex={psIndex}
-            bgfixedRange={[0, 3]}
-            renewalDialog={liveCommerceEventDialog.open}
-          >
-            <div className={classes.parallax} data-parallax="0">
-              {psIndex === 0 && (
-                <ProductHero
-                  source={sources.hero}
-                  isLogin={isLogin}
-                  MainUserType
-                  logout={logout}
-                />
-              )}
-            </div>
+      <div>
+        <NavTop isLogin={isLogin} logout={logout} MainUserType />
+        <ParallaxScroll
+          isLogin={isLogin}
+          setPsIndex={setPsIndex}
+          psIndex={psIndex}
+          bgfixedRange={[0, 3]}
+          renewalDialog={liveCommerceEventDialog.open}
+        >
+          <div className={classes.parallax} data-parallax="0">
+            {psIndex === 0 && (
+              <ProductHero source={sources.hero} isLogin={isLogin} MainUserType logout={logout} />
+            )}
+          </div>
 
-            <div className={classes.parallax} data-parallax="1">
-              {psIndex === 1 && (
-                <Indicator 
-                  nowBroadcast={nowBroadcastData}
-                  bannerView={bannerViewData}
-                  contractedCreator={contractedCreatorData}
-                  totalFollower={totoalFollowersData}
+          <div className={classes.parallax} data-parallax="1">
+            {psIndex === 1 && (
+              <Indicator
+                nowBroadcast={nowBroadcastData}
+                bannerView={bannerViewData}
+                contractedCreator={contractedCreatorData}
+                totalFollower={totoalFollowersData}
               />
-              )}
-            </div>
+            )}
+          </div>
 
-            <div className={classes.parallax} data-parallax="2">
-              {psIndex === 2 && (
-                <HowToUse
-                  source={sources.howTo}
-                  MainUserType
-                />
-              )}
-            </div>
+          <div className={classes.parallax} data-parallax="2">
+            {psIndex === 2 && <HowToUse source={sources.howTo} MainUserType />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="3">
-              {psIndex === 3 && (
-                <Advantage source={sources.advantage} MainUserType />
-              )}
-            </div>
+          <div className={classes.parallax} data-parallax="3">
+            {psIndex === 3 && <Advantage source={sources.advantage} MainUserType />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="4">
-              {psIndex === 4 && <Reference />}
-            </div>
+          <div className={classes.parallax} data-parallax="4">
+            {psIndex === 4 && <Reference />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="5">
-              {psIndex === 5 && (
-                <Contact
-                  source={sources.howitworks}
-                  MainUserType
-                  isLogin={isLogin}
-                  logout={logout}
-                />
-              )}
-            </div>
-          </ParallaxScroll>
-          <RePasswordDialog
-            repasswordOpen={repasswordOpen}
-            setRepassword={setRepassword}
-            logout={logout}
-          />
-        </div>
+          <div className={classes.parallax} data-parallax="5">
+            {psIndex === 5 && (
+              <Contact source={sources.howitworks} MainUserType isLogin={isLogin} logout={logout} />
+            )}
+          </div>
+        </ParallaxScroll>
+        <RePasswordDialog
+          repasswordOpen={repasswordOpen}
+          setRepassword={setRepassword}
+          logout={logout}
+        />
+      </div>
       <Button className={classes.kakaoContact} onClick={openKakaoChat} />
     </div>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const nowBroadcast = await axios.get(`${HOST}/creators/broadcast`)
+  const nowBroadcast = await axios.get(`${HOST}/creators/broadcast`);
+
   // 데이터 요청 시간이 길어서 일단 주석 처리
   // const bannerView = await axios.get(`${HOST}/banners/impression`)
   // const contractedCreator = await axios.get(`${HOST}/creators/contracted`)
   // const totoalFollowers = await axios.get(`${HOST}/creators/detail`)
 
-  const nowBroadcastData = await nowBroadcast.data[0].nowBroadcast
+  const nowBroadcastData = await nowBroadcast.data[0].nowBroadcast;
   // 데이터 요청 시간이 길어서 일단 주석 처리
   // const bannerViewData = await bannerView.data[0].bannerView
   // const contractedCreatorData = await contractedCreator.data[0].contractedCreator
   // const totoalFollowersData = await totoalFollowers.data[0].totalFollowers
 
-
   return {
     props: {
       nowBroadcastData,
-      bannerViewData : 26654256,
+      bannerViewData: 26654256,
       contractedCreatorData: 1476,
-      totoalFollowersData : 265083,
-    }
-  }
-}
+      totoalFollowersData: 265083,
+    },
+  };
+};

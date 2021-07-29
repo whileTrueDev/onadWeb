@@ -1,18 +1,17 @@
-// material-UI
 import { Stepper, Step, StepLabel, StepContent } from '@material-ui/core';
 // 내부 소스
-import { myReducer, initialState } from './stepper.reducer';
 // 프로젝트 내부 모듈
 import { useState, useEffect, useReducer } from 'react';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { myReducer, initialState } from './stepper.reducer';
 // 컴포넌트
 import PlatformRegistForm from './platformRegistForm';
 import RegistForm from './registForm';
 import PaperSheet from './paper';
 import IdentityVerification from './identityVerification';
 // util 계열
-import HOST from '../../config';
-import axios from '../../utils/axios';
+import { useMarketerSignupMutation } from '../../utils/hooks/mutation/useMarketerSignupMutation';
+import { useMarketerSignupWithPlatformMutation } from '../../utils/hooks/mutation/useMarketerSignupWithPlatformMutation';
 // 스타일
 import useStyles from '../../styles/regist/stepper.style';
 
@@ -45,6 +44,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
     setStep(0);
   }
 
+  const signupMutation = useMarketerSignupMutation();
+  const signupPlatformMutation = useMarketerSignupWithPlatformMutation();
   function handleUserSubmit(user: any): void {
     const platformType = platformList.indexOf(platform);
     const returnUser = {
@@ -52,8 +53,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
       platformType,
     };
     if (platform === 'main') {
-      axios
-        .post(`${HOST}/marketer`, user)
+      signupMutation
+        .mutateAsync(user)
         .then(res => {
           const { error } = res.data;
           if (!error) {
@@ -72,8 +73,8 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
           router.push('/');
         });
     } else {
-      axios
-        .post(`${HOST}/marketer/platform`, returnUser)
+      signupPlatformMutation
+        .mutateAsync(returnUser)
         .then(res => {
           const { error } = res.data;
           if (!error) {
@@ -116,28 +117,29 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
         </Step>
         <Step key="2">
           <StepLabel>개인정보 입력</StepLabel>
-          { platform === 'main' 
-            ? <StepContent>
-                <RegistForm
-                  handleUserSubmit={handleUserSubmit}
-                  handleBack={handleBack}
-                  formState={state}
-                  dispatch={dispatch}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </StepContent>
-            : <StepContent>
-                <PlatformRegistForm
-                  handleUserSubmit={handleUserSubmit}
-                  handleBack={handleBack}
-                  formState={state}
-                  dispatch={dispatch}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </StepContent>
-          }
+          {platform === 'main' ? (
+            <StepContent>
+              <RegistForm
+                handleUserSubmit={handleUserSubmit}
+                handleBack={handleBack}
+                formState={state}
+                dispatch={dispatch}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </StepContent>
+          ) : (
+            <StepContent>
+              <PlatformRegistForm
+                handleUserSubmit={handleUserSubmit}
+                handleBack={handleBack}
+                formState={state}
+                dispatch={dispatch}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </StepContent>
+          )}
         </Step>
       </Stepper>
     </div>

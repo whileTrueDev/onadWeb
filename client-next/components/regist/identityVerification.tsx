@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-// material-UI
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import { Grid, Button, Typography } from '@material-ui/core';
 // 내부 소스
@@ -9,8 +8,7 @@ import { useEffect, useCallback } from 'react';
 import CustomCard from '../../atoms/card/customCard';
 import StyledItemText from '../../atoms/styledItemText';
 // util 계열
-import axios from '../../utils/axios';
-import HOST from '../../config';
+import { useCertificationMutation } from '../../utils/hooks/mutation/useCertificationMutation';
 // 스타일
 import useStyles from '../../styles/regist/identityVerification.style';
 
@@ -26,10 +24,11 @@ interface Props {
 function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props): JSX.Element {
   const classes = useStyles();
 
+  const certificatinoMutation = useCertificationMutation();
   const submitImpUid = useCallback(
     ({ impUid }) => {
-      axios
-        .post(`${HOST}/certification`, { imp_uid: impUid })
+      certificatinoMutation
+        .mutateAsync({ imp_uid: impUid })
         .then(res => {
           const { error, data } = res.data;
           if (error) {
@@ -54,7 +53,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
   useEffect(() => {
     if (open) {
       const globalParams: any = window;
-      
+
       const { IMP } = globalParams;
       IMP.init('imp00026649');
 
@@ -63,7 +62,7 @@ function IndentityVerification({ handleBack, handleNext, open, setOpen }: Props)
           // param
           merchant_uid: 'ORD20180131-0000011',
           min_age: '19',
-          popup: true
+          popup: true,
         },
         (rsp: any) => {
           // callback
