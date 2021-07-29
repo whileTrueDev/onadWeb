@@ -45,29 +45,29 @@ body {
   justify-content: center;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-left {
+.bottom-area-left {
   width: 22.5%;
   height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-left-icon {
+.bottom-area-left-icon {
   width: 18%;
   margin-left: 10%;
 }
 
-.bottom-left-icon#clock {
+.bottom-area-left-icon#clock {
   width: 17%;
   margin-right: 8%;
 }
 
-.bottom-left-icon.urgent#clock {
+.bottom-area-left-icon.urgent#clock {
   /* Start the shake animation and make the animation last for 0.5 seconds */
   animation: shake 0.5s;
 
@@ -113,11 +113,10 @@ body {
 
 .bottom-object {
   width: 50%;
-  display: none;
+  display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  opacity: 0;
 }
 
 .bottom-object span {
@@ -165,16 +164,17 @@ body {
   justify-content: space-around;
 }
 
-.bottom-area {
+.bottom-area-right {
   width: 77.5%;
   height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-area p:after {
+.bottom-area-right p:after {
   content: '';
   white-space: nowrap;
   padding-right: 100%;
@@ -194,7 +194,7 @@ body {
   font-size: 23px;
 }
 
-.bottom-area p {
+.bottom-area-right p {
   padding-left: 3%;
   display: inline-block;
   white-space: nowrap;

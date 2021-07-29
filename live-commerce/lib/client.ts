@@ -5,7 +5,7 @@ let idArray: Array<null | string> = [];
 // let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-07-16T13:00:00+0900');
+let setDate = new Date('2021-08-07T16:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -149,7 +149,7 @@ function dailyMissionTimer() {
         $('.bottom-timer').removeClass('warning');
       } else {
         $('.bottom-timer').removeClass('urgent');
-        $('.bottom-left-icon#clock').removeClass('urgent');
+        $('.bottom-area-left-icon#clock').removeClass('urgent');
       }
     }
 
@@ -160,7 +160,7 @@ function dailyMissionTimer() {
       !$('.bottom-timer').attr('class')?.includes('urgent')
     ) {
       $('.bottom-timer').addClass('urgent');
-      $('.bottom-left-icon#clock').addClass('urgent');
+      $('.bottom-area-left-icon#clock').addClass('urgent');
     } else if (
       hours === '00' &&
       Number(minutes) < 10 &&
@@ -170,19 +170,19 @@ function dailyMissionTimer() {
       $('.bottom-timer').addClass('warning');
     } else if (
       hours === '00' &&
-      $('.bottom-left-icon#clock').attr('class')?.includes('urgent') &&
+      $('.bottom-area-left-icon#clock').attr('class')?.includes('urgent') &&
       Number(minutes) > 5 &&
       Number(minutes) < 10
     ) {
       $('.urgent').toggleClass('warning');
-      $('.bottom-left-icon#clock').removeClass('warning');
+      $('.bottom-area-left-icon#clock').removeClass('warning');
     } else if (
       hours === '00' &&
-      $('.bottom-left-icon#clock').attr('class')?.includes('urgent') &&
+      $('.bottom-area-left-icon#clock').attr('class')?.includes('urgent') &&
       Number(minutes) > 10
     ) {
       $('.bottom-timer').removeClass('urgent');
-      $('.bottom-left-icon#clock').removeClass('urgent');
+      $('.bottom-area-left-icon#clock').removeClass('urgent');
     }
   }, 1000);
 }
@@ -216,7 +216,7 @@ socket.on('get live commerce image', (data: ImageData) => {
     `);
       break;
     case 'bottom':
-      $('.bottom-area').empty().append(`
+      $('.bottom-area-right').empty().append(`
       <img src=${data.imgUrl} class="bottom-live-commerce" width="100%" height="100%">
     `);
       break;
@@ -239,42 +239,44 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
     });
   } else {
     $('.ranking-text-area#title').css({ display: 'none' });
-    $('.ranking-area-inner').html(` <p class="ranking-text-area" id="rank-0">
-    <span class="ranking-id-wrapper">
-      <img src="/public/images/crown.png" id="ranking-icon" />
-      <span class="ranking-text-area-id" id="rank-0">
-      </span>
-    </span>
-    <span class="quantity" id="rank-0">
-    </span>
-  </p>
+    $('.ranking-area-inner').html(
+      `<p class="ranking-text-area" id="rank-0">
+        <span class="ranking-id-wrapper">
+          <img src="/public/images/crown.png" id="ranking-icon" />
+          <span class="ranking-text-area-id" id="rank-0">
+          </span>
+        </span>
+        <span class="quantity" id="rank-0">
+        </span>
+      </p>
 
-  <p class="ranking-text-area" id="rank-1">
-    <span class="ranking-id-wrapper">
-      <img src="/public/images/first.png" id="ranking-icon" />
-      <span class="ranking-text-area-id" id="rank-1">
-      </span>
-    </span>
-    <span class="quantity" id="rank-1">
-    </span>
-  </p>
-  <p class="ranking-text-area" id="rank-2">
-    <span class="ranking-id-wrapper">
-      <img src="/public/images/second.png" id="ranking-icon" />
-      <span class="ranking-text-area-id" id="rank-2">
-      </span>
-    </span>
-    <span class="quantity" id="rank-2">
-    </span>
-    <p class="ranking-text-area" id="rank-3">
-    <span class="ranking-id-wrapper">
-      <img src="/public/images/third.png" id="ranking-icon" />
-      <span class="ranking-text-area-id" id="rank-3">
-      </span>
-    </span>
-    <span class="quantity" id="rank-3">
-    </span>
-  </p>`);
+      <p class="ranking-text-area" id="rank-1">
+        <span class="ranking-id-wrapper">
+          <img src="/public/images/first.png" id="ranking-icon" />
+          <span class="ranking-text-area-id" id="rank-1">
+          </span>
+        </span>
+        <span class="quantity" id="rank-1">
+        </span>
+      </p>
+      <p class="ranking-text-area" id="rank-2">
+        <span class="ranking-id-wrapper">
+          <img src="/public/images/second.png" id="ranking-icon" />
+          <span class="ranking-text-area-id" id="rank-2">
+          </span>
+        </span>
+        <span class="quantity" id="rank-2">
+        </span>
+        <p class="ranking-text-area" id="rank-3">
+        <span class="ranking-id-wrapper">
+          <img src="/public/images/third.png" id="ranking-icon" />
+          <span class="ranking-text-area-id" id="rank-3">
+          </span>
+        </span>
+        <span class="quantity" id="rank-3">
+        </span>
+      </p>`,
+    );
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
       $(`.quantity#rank-${index}`).text(`${value.total}개`);
@@ -351,7 +353,7 @@ socket.on('get right-top purchase message', async (data: any) => {
 
 // 하단 메세지 (단순 답변)
 socket.on('get bottom area message', (data: string) => {
-  $('.bottom-area')
+  $('.bottom-area-right')
     .prepend(
       `
     <p class="bottom-admin">
@@ -375,8 +377,7 @@ socket.on('get bottom purchase message', (data: string[]) => {
 
 // 하단 비우기
 socket.on('clear bottom area to client', () => {
-  $('.bottom-area-wrapper').empty();
-  $('.bottom-area-wrapper').fadeOut(1000);
+  $('.bottom-area-right').css({ opacity: 0 });
   idArray.length = 0;
 });
 
@@ -419,40 +420,7 @@ socket.on('clear ranking area', () => {
 
 // 하단 다시 띄우기
 socket.on('show bottom area to client', () => {
-  $('.bottom-area-wrapper')
-    .html(
-      `
-  <div class="bottom-left">
-    <div class="bottom-object">
-      <img src="/public/images/object.png" class="bottom-left-icon" />
-      <div class="bottom-object-quantity">
-        <span id="current-quantity">
-          0
-        </span>
-        <span>
-          /
-        </span>
-        <span id="quantity-object">
-          100
-        </span>
-      </div>
-    </div>
-    <div class="bottom-timer">
-      <img src="/public/images/clock.png" class="bottom-left-icon" id="clock" />
-      <span id="time-hour"></span>
-      <span id="hour-min-separator"> : </span>
-      <span id="time-min"></span>
-      <span id="min-sec-separator"> : </span>
-      <span id="time-sec"></span>
-    </div>
-  </div>
-  <div class="bottom-area">
-    <p class="bottom-area-text">
-    </p>
-</div>
-`,
-    )
-    .fadeIn(2000);
+  $('.bottom-area-right').css({ opacity: 1 }).fadeIn(2000);
 });
 
 socket.on('show screen', () => {
