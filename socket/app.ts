@@ -51,9 +51,9 @@ app.get('/banner/:id', (req, res, next) => {
 
 // nodemon --expose-gc file_dir
 // 20초에 한 번마다 garbage collector
-// setInterval(function(){
-//   global.gc();
-// }, 20000);
+setInterval(function () {
+  global.gc();
+}, 20000);
 
 interface SocketInfo {
   [key: string]: string;
@@ -88,8 +88,6 @@ interface SocketInfo {
       const programType = msg[2];
 
       requestMessage.url = clientUrl;
-      requestMessage.previousBannerName = '';
-      requestMessage.programType = programType;
 
       if (process.env.NODE_ENV === 'development') {
         console.log('NEW CLIENT');
