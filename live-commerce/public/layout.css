@@ -335,14 +335,14 @@ body {
   display: flex;
   align-items: center;
   width: 70%;
-  font-size: 30px;
+  margin-left: 3%;
 }
 
 .ranking-text-area-id {
   width: 85%;
   display: block;
   margin-left: 2%;
-  font-size: 30px;
+  font-size: 35px;
   color: #27b9ac;
   -webkit-text-stroke: 1.5px black;
   overflow: hidden;

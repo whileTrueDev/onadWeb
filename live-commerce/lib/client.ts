@@ -1,11 +1,11 @@
 import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
 
 const socket: any = io({ transports: ['websocket'] });
-let idArray: Array<null|string> = [];
-const rankingArray: Array<SinglePurchase> = [];
+let idArray: Array<null | string> = [];
+// let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date("2021-07-16T13:00:00+0900");
+let setDate = new Date('2021-07-16T13:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -26,69 +26,71 @@ let bottomTextIndex = 0;
 //   idx += 1;}
 // }, 10000);
 
-async function switchBottomText(){
-
+async function switchBottomText() {
   if (bottomTextIndex >= idArray.length) {
-    bottomTextIndex = 0
+    bottomTextIndex = 0;
   }
-  if (idArray.length !== 0){
+  if (idArray.length !== 0) {
     await setTimeout(() => {
-      $('.bottom-area-text').text(`${idArray[bottomTextIndex]}`).fadeIn(500)
-      bottomTextIndex += 1
-    }, 1000)
+      $('.bottom-area-text').text(`${idArray[bottomTextIndex]}`).fadeIn(500);
+      bottomTextIndex += 1;
+    }, 1000);
     await setTimeout(() => {
-      $('.bottom-area-text').fadeOut(500)
-      switchBottomText()
-    }, 10000)
+      $('.bottom-area-text').fadeOut(500);
+      switchBottomText();
+    }, 10000);
   } else {
     await setTimeout(() => {
-      switchBottomText()
-    }, 10000)
+      switchBottomText();
+    }, 10000);
   }
 }
 
 // 우측상단 응원문구 이벤트
 setInterval(async () => {
   if (messageArray.length !== 0 && $('.top-right').css('display') === 'none') {
-    $('.top-right').css({ display: 'flex' })
-    $('.top-right').html(messageArray[0].messageHtml)  
+    $('.top-right').css({ display: 'flex' });
+    $('.top-right').html(messageArray[0].messageHtml);
     await setTimeout(() => {
-      $('.top-right').append(messageArray[0].alarmSoundTag)
+      $('.top-right').append(messageArray[0].alarmSoundTag);
       messageArray.splice(0, 1);
-    }, 3000)
+    }, 3000);
     await setTimeout(() => {
-      $('.top-right').fadeOut(800)
-      $('.donation-image').attr('src','/public/images/invisible.png');
-    }, 10000);  
-    
+      $('.top-right').fadeOut(800);
+      $('.donation-image').attr('src', '/public/images/invisible.png');
+    }, 10000);
   }
 }, 2000);
 
-async function switchImage(){
-  if (!$('.vertical-banner').attr('src')?.includes('gif')){
-    bannerId += 1
-    if (bannerId === 7) {
-      bannerId = 1
+async function switchImage() {
+  if (!$('.vertical-banner').attr('src')?.includes('gif')) {
+    bannerId += 1;
+    if (bannerId === 12) {
+      bannerId = 1;
     }
     await setTimeout(() => {
-      $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeIn(1000)
-    }, 1000)
-    
+      $('.vertical-banner')
+        .attr('src', `/public/images/vertical-banner-${bannerId}.png`)
+        .fadeIn(1000);
+    }, 1000);
+
     await setTimeout(() => {
-      $('.vertical-banner').attr('src', `/public/images/vertical-banner-${bannerId}.png`).fadeOut(1000)
-      switchImage()
-    }, 10000)
+      $('.vertical-banner')
+        .attr('src', `/public/images/vertical-banner-${bannerId}.png`)
+        .fadeOut(1000);
+      switchImage();
+    }, 10000);
   } else {
     await setTimeout(() => {
-      switchImage()
-    }, 10000)
+      switchImage();
+    }, 10000);
   }
 }
 
-switchBottomText()
-switchImage()
+switchBottomText();
+switchImage();
 
-function getOS(): string|null {
+function getOS(): string | null {
   const { userAgent } = window.navigator;
   const { platform } = window.navigator;
   const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
@@ -111,79 +113,84 @@ function getOS(): string|null {
   return os;
 }
 
-function dailyMissionTimer (){ 
-  setInterval(function(){
+function dailyMissionTimer() {
+  setInterval(function () {
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
     const now = new Date();
     let distance = setDate.getTime() - now.getTime();
-    if(distance < 0) { 
-      distance = 0
+    if (distance < 0) {
+      distance = 0;
     }
-    let hours: string|number = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
-    let minutes: string|number = Math.floor((distance % (1000*60*60))/(1000*60));
-    let seconds: string|number = Math.floor((distance % (1000*60))/1000);
+    let hours: string | number = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes: string | number = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds: string | number = Math.floor((distance % (1000 * 60)) / 1000);
 
-    hours 	= hours < 10 ? "0" + String(hours) : String(hours);
-    minutes = minutes < 10 ? "0" + String(minutes) : String(minutes);
-    seconds = seconds < 10 ? "0" + String(seconds) : String(seconds);
+    hours = hours < 10 ? `0${String(hours)}` : String(hours);
+    minutes = minutes < 10 ? `0${String(minutes)}` : String(minutes);
+    seconds = seconds < 10 ? `0${String(seconds)}` : String(seconds);
 
-    if(hours !== '00'){
-      $('#time-hour').show()
-      $('#hour-min-separator').show()
+    if (hours !== '00') {
+      $('#time-hour').show();
+      $('#hour-min-separator').show();
       $('#time-hour').text(hours);
     } else {
-      $('#time-hour').css({display:'none'})
-      $('#hour-min-separator').css({display:'none'})
+      $('#time-hour').css({ display: 'none' });
+      $('#hour-min-separator').css({ display: 'none' });
     }
     $('#time-min').text(minutes);
     $('#time-sec').text(seconds);
 
-    if (hours !== '00' && ($('.bottom-timer').attr('class')?.includes('warning') || $('.bottom-timer').attr('class')?.includes('urgent'))) {
-      if($('.bottom-timer').attr('class')?.includes('warning')) {
-        $('.bottom-timer').removeClass('warning')
+    if (
+      hours !== '00' &&
+      ($('.bottom-timer').attr('class')?.includes('warning') ||
+        $('.bottom-timer').attr('class')?.includes('urgent'))
+    ) {
+      if ($('.bottom-timer').attr('class')?.includes('warning')) {
+        $('.bottom-timer').removeClass('warning');
       } else {
-        $('.bottom-timer').removeClass('urgent')
-        $('.bottom-left-icon#clock').removeClass('urgent')
+        $('.bottom-timer').removeClass('urgent');
+        $('.bottom-left-icon#clock').removeClass('urgent');
       }
     }
 
-    if (hours === '00'
-          && Number(minutes) < 5
-          && Number(minutes) !== 0
-          && !$('.bottom-timer').attr('class')?.includes('urgent')
-      ) {
-        $('.bottom-timer').addClass('urgent')
-        $('.bottom-left-icon#clock').addClass('urgent')
-      } else if (hours === '00'
-          && Number(minutes) < 10
-          && Number(minutes) !== 0
-          && !$('.bottom-timer').attr('class')?.includes('warning')
-      ) {
-        $('.bottom-timer').addClass('warning')
-      } else if (
-          hours === '00' 
-          && $('.bottom-left-icon#clock').attr('class')?.includes('urgent')
-          && Number(minutes) > 5
-          && Number(minutes) < 10
-        ) {
-        $('.urgent').toggleClass('warning')
-        $('.bottom-left-icon#clock').removeClass('warning')
-      } else if (
-        hours === '00' 
-        && $('.bottom-left-icon#clock').attr('class')?.includes('urgent')
-        && Number(minutes) > 10
-      ) {
-        $('.bottom-timer').removeClass('urgent')
-        $('.bottom-left-icon#clock').removeClass('urgent')
+    if (
+      hours === '00' &&
+      Number(minutes) < 5 &&
+      Number(minutes) !== 0 &&
+      !$('.bottom-timer').attr('class')?.includes('urgent')
+    ) {
+      $('.bottom-timer').addClass('urgent');
+      $('.bottom-left-icon#clock').addClass('urgent');
+    } else if (
+      hours === '00' &&
+      Number(minutes) < 10 &&
+      Number(minutes) !== 0 &&
+      !$('.bottom-timer').attr('class')?.includes('warning')
+    ) {
+      $('.bottom-timer').addClass('warning');
+    } else if (
+      hours === '00' &&
+      $('.bottom-left-icon#clock').attr('class')?.includes('urgent') &&
+      Number(minutes) > 5 &&
+      Number(minutes) < 10
+    ) {
+      $('.urgent').toggleClass('warning');
+      $('.bottom-left-icon#clock').removeClass('warning');
+    } else if (
+      hours === '00' &&
+      $('.bottom-left-icon#clock').attr('class')?.includes('urgent') &&
+      Number(minutes) > 10
+    ) {
+      $('.bottom-timer').removeClass('urgent');
+      $('.bottom-left-icon#clock').removeClass('urgent');
     }
-    }, 1000)
-    
-  }
+  }, 1000);
+}
 
 // ------------------------------------- 타이머 실행 --------------------------
 dailyMissionTimer();
 // ---------------------------------------- 소켓 ------------------------------------
-const device: string|null = getOS();
+const device: string | null = getOS();
 
 socket.emit('new client', { THIS_URL, device });
 
@@ -218,16 +225,61 @@ socket.on('get live commerce image', (data: ImageData) => {
           <img src=${data.imgUrl} class="logo-live-commerce" width="100%" height="100%">
       `);
       break;
-    default: break;
+    default:
+      break;
   }
 });
 
 socket.on('get top-left ranking', (data: RankingData[]) => {
   const rankingArray = data;
-  rankingArray.map((value, index) => {
-    $(`.ranking-text-area-id#rank-${index}`).text(value.nickname)
-    $(`.quantity#rank-${index}`).text(`${value.total}개`)
-  })
+  if ($('.ranking-text-area#title').css('display') === 'none') {
+    rankingArray.map((value, index) => {
+      $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
+      $(`.quantity#rank-${index}`).text(`${value.total}개`);
+    });
+  } else {
+    $('.ranking-text-area#title').css({ display: 'none' });
+    $('.ranking-area-inner').html(` <p class="ranking-text-area" id="rank-0">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/crown.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-0">
+      </span>
+    </span>
+    <span class="quantity" id="rank-0">
+    </span>
+  </p>
+
+  <p class="ranking-text-area" id="rank-1">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/first.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-1">
+      </span>
+    </span>
+    <span class="quantity" id="rank-1">
+    </span>
+  </p>
+  <p class="ranking-text-area" id="rank-2">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/second.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-2">
+      </span>
+    </span>
+    <span class="quantity" id="rank-2">
+    </span>
+    <p class="ranking-text-area" id="rank-3">
+    <span class="ranking-id-wrapper">
+      <img src="/public/images/third.png" id="ranking-icon" />
+      <span class="ranking-text-area-id" id="rank-3">
+      </span>
+    </span>
+    <span class="quantity" id="rank-3">
+    </span>
+  </p>`);
+    rankingArray.map((value, index) => {
+      $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
+      $(`.quantity#rank-${index}`).text(`${value.total}개`);
+    });
+  }
 });
 
 // 우측 상단 응원 문구
@@ -240,22 +292,22 @@ socket.on('get right-top purchase message', async (data: any) => {
   let url;
 
   if (data) {
-    const blob = new Blob([data[1]], { type: "audio/mp3" });
+    const blob = new Blob([data[1]], { type: 'audio/mp3' });
     url = window.URL.createObjectURL(blob);
   }
 
+  const alarmSoundTag = `<iframe src="${url}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>`;
 
-  const alarmSoundTag = `
-  <iframe src="${url}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
-
-                        `
-  
   messageHtml = `
   <div class="donation-wrapper">
-    <iframe src="/public/audio/${alarmType === '2' ? 'alarm-type-2.wav' : 'alarm-type-1.wav'}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+    <iframe src="/public/audio/${
+      alarmType === '2' ? 'alarm-type-2.wav' : 'alarm-type-1.wav'
+    }" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
     <div class="item">
       <div class="centered">
-      <img src="/public/images/${alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'}" class="donation-image"/>
+      <img src="/public/images/${
+        alarmType === '2' ? 'donation-2.gif' : 'donation-1.gif'
+      }" class="donation-image"/>
         <div class ="animated heartbeat" id="donation-top">
           <span id="nickname">
             <span class="animated heartbeat" id="donation-user-id">${userId}</span>
@@ -273,7 +325,7 @@ socket.on('get right-top purchase message', async (data: any) => {
     </div>
   </div>
   `;
-  messageArray.push({alarmSoundTag, messageHtml});
+  messageArray.push({ alarmSoundTag, messageHtml });
 });
 
 // ---------------------------- 추후 삽입 가능 --------------------------
@@ -288,7 +340,7 @@ socket.on('get right-top purchase message', async (data: any) => {
 //     $('.top-right').css({display:'flex'})
 //     $('.top-right').html(messageArray[0]);
 
-//     messageArray.splice(0, 1) 
+//     messageArray.splice(0, 1)
 //     await setTimeout(() => {
 //         $('.top-right').fadeOut(1000)
 //       }, 10000)
@@ -299,15 +351,19 @@ socket.on('get right-top purchase message', async (data: any) => {
 
 // 하단 메세지 (단순 답변)
 socket.on('get bottom area message', (data: string) => {
-  $('.bottom-area').prepend(`
+  $('.bottom-area')
+    .prepend(
+      `
     <p class="bottom-admin">
       ${data}
     </p>
-  `).fadeIn(1000)
-  $('.bottom-area-text').fadeOut(1000)
+  `,
+    )
+    .fadeIn(1000);
+  $('.bottom-area-text').fadeOut(1000);
   setTimeout(() => {
-    $('.bottom-admin').remove()
-    $('.bottom-area-text').fadeIn(5000)
+    $('.bottom-admin').remove();
+    $('.bottom-area-text').fadeIn(5000);
   }, 10000);
 });
 
@@ -356,14 +412,16 @@ socket.on('clear ranking area', () => {
     <span class="quantity" id="rank-2">
     </span>
   </p>
-  `
+  `,
   );
-  rankingArray.length = 0;
+  // rankingArray.length = 0;
 });
 
 // 하단 다시 띄우기
 socket.on('show bottom area to client', () => {
-  $('.bottom-area-wrapper').html(`
+  $('.bottom-area-wrapper')
+    .html(
+      `
   <div class="bottom-left">
     <div class="bottom-object">
       <img src="/public/images/object.png" class="bottom-left-icon" />
@@ -392,7 +450,9 @@ socket.on('show bottom area to client', () => {
     <p class="bottom-area-text">
     </p>
 </div>
-`).fadeIn(2000);
+`,
+    )
+    .fadeIn(2000);
 });
 
 socket.on('show screen', () => {
@@ -404,29 +464,29 @@ socket.on('clear screen', () => {
 });
 
 socket.on('show virtual ad to client', () => {
-  $('#virtual-ad-img').attr('src', "/public/images/yori-virtual-ad.gif")
+  $('#virtual-ad-img').attr('src', '/public/images/yori-virtual-ad.gif');
   setTimeout(() => {
-    $('#virtual-ad-img').attr('src', "/public/images/invisible.png")
+    $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
   }, 8980);
 });
 
-socket.on('quantity object from server', (quantityObject:string) => {
-  $('#quantity-object').text(quantityObject)
+socket.on('quantity object from server', (quantityObject: string) => {
+  $('#quantity-object').text(quantityObject);
   $('.bottom-object').css({
-    'opacity':1
-  })
+    opacity: 1,
+  });
 });
 
-socket.on('get current quantity', (currentQuantity:number) => {
-  $('#current-quantity').text(currentQuantity)
+socket.on('get current quantity', (currentQuantity: number) => {
+  $('#current-quantity').text(currentQuantity);
 });
 
-socket.on('d-day from server', (date:string) => {
+socket.on('d-day from server', (date: string) => {
   setDate = new Date(date);
-})
+});
 
 socket.on('refresh signal', () => {
   location.reload();
-})
+});
 
-export { };
+export {};
