@@ -41,9 +41,17 @@
     </div>
     <!--하단 영역-->
     <div class="bottom-area-wrapper">
-      <div class="bottom-left">
+      <div class="bottom-area-left">
+        <div class="bottom-timer">
+          <img src="/public/images/clock.png" class="bottom-area-left-icon" id="clock" />
+          <span id="time-hour"></span>
+          <span id="hour-min-separator"> : </span>
+          <span id="time-min"></span>
+          <span id="min-sec-separator"> : </span>
+          <span id="time-sec"></span>
+        </div>
         <div class="bottom-object">
-          <img src="/public/images/object.png" class="bottom-left-icon" />
+          <img src="/public/images/object.png" class="bottom-area-left-icon" />
           <div class="bottom-object-quantity">
             <span id="current-quantity">
               0
@@ -56,16 +64,8 @@
             </span>
           </div>
         </div>
-        <div class="bottom-timer">
-          <img src="/public/images/clock.png" class="bottom-left-icon" id="clock" />
-          <span id="time-hour"></span>
-          <span id="hour-min-separator"> : </span>
-          <span id="time-min"></span>
-          <span id="min-sec-separator"> : </span>
-          <span id="time-sec"></span>
-        </div>
       </div>
-      <div class="bottom-area">
+      <div class="bottom-area-right">
         <p class="bottom-area-text">
         </p>
       </div>
