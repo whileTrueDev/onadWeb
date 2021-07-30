@@ -353,6 +353,7 @@ socket.on('get right-top purchase message', async (data: any) => {
 
 // 하단 메세지 (단순 답변)
 socket.on('get bottom area message', (data: string) => {
+  $('.bottom-area-text').css({ opacity: 0 });
   $('.bottom-area-right')
     .prepend(
       `
@@ -362,10 +363,9 @@ socket.on('get bottom area message', (data: string) => {
   `,
     )
     .fadeIn(1000);
-  $('.bottom-area-text').fadeOut(1000);
   setTimeout(() => {
     $('.bottom-admin').remove();
-    $('.bottom-area-text').fadeIn(5000);
+    $('.bottom-area-text').css({ opacity: 1 });
   }, 10000);
 });
 

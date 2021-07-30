@@ -117,6 +117,7 @@ body {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  opacity: 0;
 }
 
 .bottom-object span {
