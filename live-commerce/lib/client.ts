@@ -1,7 +1,7 @@
 import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
 
 const socket: any = io({ transports: ['websocket'] });
-let idArray: Array<null | string> = [];
+let bottomMessages: Array<null | string> = [];
 // let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
@@ -17,22 +17,22 @@ let bottomTextIndex = 0;
 //   if($('.bottom-area').css({ display: 'none' })) {
 //     $('.bottom-area').css({ display: 'flex' })
 //   }
-//   if (idx >= idArray.length) {
+//   if (idx >= bottomMessages.length) {
 //       idx = 0;
 //     }
-//   if (idArray.length){
-//   $('.bottom-area-text').text(`${idArray[idx]}`)
+//   if (bottomMessages.length){
+//   $('.bottom-area-text').text(`${bottomMessages[idx]}`)
 //   $('.bottom-area-text').css({ display: 'flex' });
 //   idx += 1;}
 // }, 10000);
 
 async function switchBottomText() {
-  if (bottomTextIndex >= idArray.length) {
+  if (bottomTextIndex >= bottomMessages.length) {
     bottomTextIndex = 0;
   }
-  if (idArray.length !== 0) {
+  if (bottomMessages.length !== 0) {
     await setTimeout(() => {
-      $('.bottom-area-text').text(`${idArray[bottomTextIndex]}`).fadeIn(500);
+      $('.bottom-area-text').text(`${bottomMessages[bottomTextIndex]}`).fadeIn(500);
       bottomTextIndex += 1;
     }, 1000);
     await setTimeout(() => {
@@ -65,7 +65,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 12) {
+    if (bannerId === 13) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -371,14 +371,12 @@ socket.on('get bottom area message', (data: string) => {
 
 // 응원메세지 marquee
 socket.on('get bottom purchase message', (data: string[]) => {
-  // idArray.push(data);
-  idArray = data;
+  bottomMessages = data;
 });
 
 // 하단 비우기
 socket.on('clear bottom area to client', () => {
   $('.bottom-area-right').css({ opacity: 0 });
-  idArray.length = 0;
 });
 
 // 랭킹 비우기
@@ -432,10 +430,10 @@ socket.on('clear screen', () => {
 });
 
 socket.on('show virtual ad to client', () => {
-  $('#virtual-ad-img').attr('src', '/public/images/yori-virtual-ad.gif');
+  $('#virtual-ad-img').attr('src', '/public/images/virtual-ad.gif');
   setTimeout(() => {
     $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
-  }, 8980);
+  }, 9000);
 });
 
 socket.on('quantity object from server', (quantityObject: string) => {
