@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 // 컴포넌트
+import Head from 'next/head';
 import NavTop from '../../components/layout/navTop';
 import RegistStepper from '../../components/regist/stepper';
 import SignupCreator from '../../components/signup-creator/signupCreator';
@@ -50,6 +51,12 @@ export default function Regist({ params }: Props): JSX.Element {
 
   return (
     <div className={classes.rootMarketer}>
+      <Head>
+        {/* 결제모듈('iamport'서비스 이용) */}
+        {/* jQuery */}
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js" />
+        <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.6.js" />
+      </Head>
       {params === ('main' || 'twitch' || 'google' || 'kakao') ? (
         <>
           <NavTop MainUserType logout={logout} />

@@ -57,7 +57,7 @@ function Indicator({
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3} justify="center" alignItems="center">
+      <Grid container spacing={3} justifyContent="center" alignItems="center">
         <Grid item>
           <div className={classes.contentWrapper}>
             <div className={classNames(classes.content, classes.box1)}>
@@ -66,7 +66,7 @@ function Indicator({
               </Typography>
               <>
                 <Typography variant="h4" align="center" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(totalFollower)} />
+                  <Countup duration={2} end={Number(indicatorDecorate(totalFollower))} />
                   {indicatorUnit(totalFollower)}
                 </Typography>
               </>
@@ -82,7 +82,7 @@ function Indicator({
               </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(contractedCreator)} />
+                  <Countup duration={2} end={Number(indicatorDecorate(contractedCreator))} />
                   {indicatorUnit(contractedCreator)}
                 </Typography>
               </>
@@ -97,7 +97,7 @@ function Indicator({
                 {sources.indicator.text.nowBroadcast}
               </Typography>
               <Typography variant="h4" align="center" display="inline" className={classes.count}>
-                <Countup duration={2} end={indicatorDecorate(nowBroadcast)} />
+                <Countup duration={2} end={Number(indicatorDecorate(nowBroadcast))} />
               </Typography>
               <Typography variant="h4" align="center" display="inline" className={classes.count}>
                 {indicatorUnit(nowBroadcast)}
@@ -114,7 +114,7 @@ function Indicator({
               </Typography>
               <>
                 <Typography variant="h4" align="center" display="inline" className={classes.count}>
-                  <Countup duration={2} end={indicatorDecorate(bannerView)} />
+                  <Countup duration={2} end={Number(indicatorDecorate(bannerView))} />
                   {indicatorUnit(bannerView)}
                 </Typography>
               </>

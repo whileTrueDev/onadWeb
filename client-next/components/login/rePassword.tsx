@@ -87,10 +87,6 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
       alert('입력이 올바르지 않습니다.');
       return;
     }
-    const user = {
-      type: 'password',
-      value: state.value,
-    };
 
     updateMarketerMutation
       .mutateAsync({
@@ -109,7 +105,7 @@ function RePasswordDialog({ setRepassword, logout, repasswordOpen }: Props): JSX
   };
 
   return (
-    <Dialog open={repasswordOpen} maxWidth="xl" disableBackdropClick={false}>
+    <Dialog open={repasswordOpen} maxWidth="xl">
       <DialogTitle>CHANGE PW</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.contents}>

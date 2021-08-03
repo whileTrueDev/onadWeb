@@ -68,16 +68,18 @@ export default function CreatorLoginForm({
     // 크리에이터 로그인 창
     <Dialog
       open={open}
-      onClose={(): void => {
+      onClose={(event, reason): void => {
         handleClose();
         userid.handleReset();
         passwd.handleReset();
         setLoading(false);
+        if (reason !== 'backdropClick') {
+          Close(event);
+        }
       }}
       maxWidth="xs"
       fullWidth
       disableScrollLock
-      disableBackdropClick
     >
       <DialogContent className={classes.dialog}>
         <IconButton onClick={handleClose} style={{ position: 'absolute', top: 10, right: 10 }}>

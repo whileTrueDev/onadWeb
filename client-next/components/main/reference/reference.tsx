@@ -19,7 +19,7 @@ function Reference(): JSX.Element {
         container
         spacing={4}
         direction="row"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         className={classes.wrapper}
       >

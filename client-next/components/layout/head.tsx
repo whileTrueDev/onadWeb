@@ -4,11 +4,6 @@ export default function HeadCompo(): JSX.Element {
   const MainURL = 'https://onad.io';
   return (
     <Head>
-      {/* 결제모듈('iamport'서비스 이용) */}
-      {/* jQuery */}
-      <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" />
-      <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.6.js" />
-      {/* font */}
       <link rel="preconnect" href="https://fonts.gstatic.com" />
       <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
       <link
@@ -39,6 +34,7 @@ export default function HeadCompo(): JSX.Element {
       <meta property="og:url" content="https://onad.io" />
       <meta name="canonical" ref={MainURL} />
       <link rel="manifest" href="/manifest.json" />
+      <title>온애드 | 1인 미디어 실시간 광고 플랫폼</title>
       <meta
         property="og:description"
         content="ONAD는 1인 미디어 실시간 방송에 배너광고를 송출하는 플랫폼입니다. 방송인은 ONAD를 통해 추가 수익을, 광고주는 온애드를 통해 효율적인 광고 채널을 확보할 수 있습니다."

@@ -45,7 +45,13 @@ const DialogTitle = withStyles((theme: Theme) => ({
     onClose: () => void;
   }) => (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={1}
+      >
         <Grid item>
           <Typography className={classes.title}>{children}</Typography>
         </Grid>

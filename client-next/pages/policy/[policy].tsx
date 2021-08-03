@@ -31,7 +31,7 @@ export default function Policy({ params }: PolicyProps): JSX.Element {
       </a>
       <div className={classes.root}>
         <div className={classes.contentBox}>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
+          <Grid container direction="row" alignItems="center" justifyContent="flex-start">
             <Grid item>
               <Button
                 className={classNames({

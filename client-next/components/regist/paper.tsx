@@ -91,7 +91,13 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
         </Typography>
         {terms.map((term: { title: string; state: string; text: string }) => (
           <Paper className={classes.container} elevation={1} key={term.state}>
-            <Grid container direction="row" justify="space-between" alignItems="center" spacing={1}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              spacing={1}
+            >
               <Grid item>
                 <Typography component="p" style={{ flex: 8, fontSize: 13 }}>
                   {term.title}
@@ -161,14 +167,14 @@ function PaperSheet({ handleBack, handleNext }: Props): JSX.Element {
             </p>
           ))}
           <Divider />
-          <Grid container direction="row" alignContent="center" justify="center">
+          <Grid container direction="row" alignContent="center" justifyContent="center">
             <Grid item>
               <p className={classes.names}>
                 위의 내용을 올바르게 이해하셨습니까? 아래 버튼을 클릭하여 약관에 동의해주세요.
               </p>
             </Grid>
           </Grid>
-          <Grid container direction="row" alignContent="center" justify="center">
+          <Grid container direction="row" alignContent="center" justifyContent="center">
             <Grid item>
               <Button
                 variant="contained"

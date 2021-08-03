@@ -20,7 +20,7 @@ export default function ReferralCodeEventDialog({
       noShowKey="renewal-popup-no-show"
       onClose={onClose}
       open={open}
-      backgroundImg="/pngs/main-popup/popup_background.png"
+      backgroundImg="/popup/popup_background.png"
     >
       <div
         style={{
@@ -29,13 +29,13 @@ export default function ReferralCodeEventDialog({
           top: 40,
         }}
       >
-        <img src="/pngs/main-popup/1.svg" alt="" width={90} />
+        <img src="/popup/1.svg" alt="" width={90} />
       </div>
       <div style={{ position: 'absolute', left: -20, bottom: 230 }}>
-        <img src="/pngs/main-popup/2.svg" alt="" width={90} />
+        <img src="/popup/2.svg" alt="" width={90} />
       </div>
       <div style={{ position: 'absolute', right: 100, bottom: 30 }}>
-        <img src="/pngs/main-popup/3.svg" alt="" width={90} />
+        <img src="/popup/3.svg" alt="" width={90} />
       </div>
 
       <div style={{ padding: '0px 32px 32px' }}>
@@ -48,7 +48,7 @@ export default function ReferralCodeEventDialog({
             color: 'black',
           }}
         >
-          <img src="/pngs/main-popup/event_logo.png" alt="" height={35} />
+          <img src="/popup/event_logo.png" alt="" height={35} />
           <Typography variant="h6" style={{ fontWeight: 900 }}>
             온애드{' '}
             <Typography
@@ -70,7 +70,7 @@ export default function ReferralCodeEventDialog({
             온애드를 주변 BJ분들에게 추천하여 많은 혜택을 받으세요!
           </Typography>
 
-          <img src="/pngs/main-popup/event_description.png" alt="" width="100%" />
+          <img src="/popup/event_description.png" alt="" width="100%" />
 
           <hr
             style={{

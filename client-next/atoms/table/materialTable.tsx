@@ -29,7 +29,6 @@ const tableIcons = {
 };
 const localization = {
   body: {
-    deleteTooltip: '캠페인 삭제',
     emptyDataSourceMessage: '잠시만 기다려주세요',
   },
   pagination: {
