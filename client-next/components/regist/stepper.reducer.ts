@@ -1,7 +1,6 @@
 import passwordRegex from '../../utils/inputs/regex/password.regex';
 import phoneNumRegex from '../../utils/inputs/regex/phoneNum.regex';
 import companyNumRegex from '../../utils/inputs/regex/companyNum.regex';
-import userIdRegex from '../../utils/inputs/regex/userId.regex';
 
 export const initialState = {
   passwordValue: '',

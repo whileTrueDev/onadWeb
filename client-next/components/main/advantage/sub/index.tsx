@@ -51,7 +51,7 @@ function Slider({
 
     const sliderRefCurrent = sliderRef.current;
 
-    return () => {
+    return (): void => {
       if (sliderRefCurrent) {
         resizeObserver.unobserve(sliderRefCurrent);
       }
@@ -128,7 +128,7 @@ function Slider({
           <button
             type="button"
             className={MainUserType ? 'button back' : 'button2 back'}
-            onClick={() => handleSlideMove(false)}
+            onClick={(): void => handleSlideMove(false)}
           >
             <ArrowLeft className="buttonArrow" />
           </button>
@@ -139,7 +139,7 @@ function Slider({
           <button
             type="button"
             className={MainUserType ? 'button forward' : 'button2 forward'}
-            onClick={() => handleSlideMove(true)}
+            onClick={(): void => handleSlideMove(true)}
           >
             <ArrowRight className="buttonArrow" />
           </button>

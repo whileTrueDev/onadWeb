@@ -16,11 +16,11 @@ import {
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // 내부 소스
-import { StepAction, StepState } from './stepper.reducer';
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
+import { StepAction, StepState } from './stepper.reducer';
 // 컴포넌트
 import StaticInput from '../../atoms/input/staticInput';
 // util 계열
@@ -124,7 +124,8 @@ function PlatformRegistForm({
         )} - ${formState.phoneNum.slice(4)}`;
       }
     }
-    const marketerDomain = formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
+    const marketerDomain =
+      formState.domain === '직접입력' ? marketerCustomDomain : formState.domain;
     const user = {
       marketerId,
       marketerName,

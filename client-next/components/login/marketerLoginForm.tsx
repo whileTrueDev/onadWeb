@@ -61,37 +61,32 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
       event.preventDefault();
     }
     setLoading(true);
-    const login = (event: React.SyntheticEvent) => {
-      if (event) {
-        event.preventDefault();
-      }
-      loginMutation
-        .mutateAsync({ userid, passwd, type: 'marketer' })
-        .then(res => {
-          if (res.data[0]) {
-            setPasswd('');
-            alert(res.data[1]);
-            if (res.data[1] === '이메일 본인인증을 해야합니다.') {
-              handleClose();
-            }
-          } else {
-            const userData = res.data[1] as MarketerInfo;
-            if (userData.temporaryLogin) {
-              handleClose();
-              router.push('/');
-            } else {
-              // dispatch({ type: 'session', data: userData });
-              handleClose();
-              router.push('/mypage/marketer/main');
-            }
+    loginMutation
+      .mutateAsync({ userid, passwd, type: 'marketer' })
+      .then(res => {
+        if (res.data[0]) {
+          setPasswd('');
+          alert(res.data[1]);
+          if (res.data[1] === '이메일 본인인증을 해야합니다.') {
+            handleClose();
           }
-        })
-        .catch(reason => {
-          console.log(reason);
-          setPasswd(''); // 비밀번호 초기화
-          alert('회원이 아닙니다.');
-        });
-    };
+        } else {
+          const userData = res.data[1] as MarketerInfo;
+          if (userData.temporaryLogin) {
+            handleClose();
+            router.push('/');
+          } else {
+            // dispatch({ type: 'session', data: userData });
+            handleClose();
+            router.push('/mypage/marketer/main');
+          }
+        }
+      })
+      .catch(reason => {
+        console.log(reason);
+        setPasswd(''); // 비밀번호 초기화
+        alert('회원이 아닙니다.');
+      });
   };
 
   const dialog = (
@@ -150,7 +145,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
         <Button
-          onClick={() => router.push(`${HOST}/login/google`)}
+          onClick={(): Promise<boolean> => router.push(`${HOST}/login/google`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.google)}
           style={{ alignItems: 'center' }}
@@ -159,7 +154,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           구글 아이디로 로그인
         </Button>
         <Button
-          onClick={() => router.push(`${HOST}/login/naver`)}
+          onClick={(): Promise<boolean> => router.push(`${HOST}/login/naver`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.naver)}
           style={{ alignItems: 'center' }}
@@ -168,7 +163,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           네이버 아이디로 로그인
         </Button>
         <Button
-          onClick={() => router.push(`${HOST}/login/kakao`)}
+          onClick={(): Promise<boolean> => router.push(`${HOST}/login/kakao`)}
           fullWidth
           className={classnames(classes.loginButton, classes.socialLoginButton, classes.kakao)}
           style={{ alignItems: 'center' }}
@@ -182,9 +177,10 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         <div style={{ marginTop: 16 }}>
           <Typography variant="body2" color="textSecondary">
             계정이 없으신가요?&nbsp;
+            {/* eslint-disable-next-line */}
             <span
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
-              onClick={() => router.push('/regist/main')}
+              onClick={(): Promise<boolean> => router.push('/regist/main')}
             >
               회원가입하기
             </span>
@@ -192,8 +188,9 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
 
           <Typography variant="body2" color="textSecondary">
             아이디가 기억나지 않나요?&nbsp;
+            {/* eslint-disable-next-line */}
             <span
-              onClick={() => {
+              onClick={(): void => {
                 setDialogType('ID');
                 setFindDialogOpen(true);
               }}
@@ -204,8 +201,9 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
           </Typography>
           <Typography variant="body2" color="textSecondary">
             비밀번호가 기억나지 않나요?&nbsp;
+            {/* eslint-disable-next-line */}
             <span
-              onClick={() => {
+              onClick={(): void => {
                 setDialogType('PASSWORD');
                 setFindDialogOpen(true);
               }}
@@ -231,7 +229,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
       <FindDialog
         dialogType={dialogType}
         findDialogOpen={findDialogOpen}
-        handleFindDialogClose={() => {
+        handleFindDialogClose={(): void => {
           setFindDialogOpen(false);
         }}
         handleClose={handleClose}

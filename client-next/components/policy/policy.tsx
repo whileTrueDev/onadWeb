@@ -10,8 +10,6 @@ import PolicyCreator from './policyCreator';
 // 스타일
 import useStyles from '../../styles/policy/policy.style';
 
-
-
 function Policy(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);

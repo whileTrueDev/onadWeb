@@ -3,15 +3,13 @@ import { Button } from '@material-ui/core';
 // 프로젝트 내부 모듈
 import { useState } from 'react';
 // 컴포넌트
+import Link from 'next/link';
 import MarketerLoginForm from './marketerLoginForm';
 import CreatorLoginForm from './creatorLoginForm';
 import RegistDialog from '../regist/registDialog';
-import Link from 'next/link'
 // util 계열
 // 스타일
 import useStyles from '../../styles/login/loginPopover.style';
-
-
 
 interface LoginPopoverProps {
   type?: string;
@@ -22,11 +20,7 @@ interface LoginPopoverProps {
 // login
 // regist가 다르게 렌더링 되어야함.
 // RegistDialog 열기
-function LoginPopover({
-  type,
-  MainUserType,
-  logout,
-}: LoginPopoverProps): JSX.Element {
+function LoginPopover({ type, MainUserType, logout }: LoginPopoverProps): JSX.Element {
   const [loginValue, setLoginValue] = useState('');
   const [registOpen, setRegistOpen] = useState(false);
 
@@ -53,7 +47,7 @@ function LoginPopover({
         <>
           <Button
             className={MainUserType ? classes.str_rightLink : classes.str_rightLink2}
-            onClick={() => {
+            onClick={(): void => {
               if (MainUserType) {
                 handleDialogOpenClick('marketer');
               } else {
@@ -81,12 +75,9 @@ function LoginPopover({
             </div>
           ) : (
             <div>
-              <Link
-                href='/regist/cre-signup'
-              >
-                <a className={classes.rightLink}>
-                  회원가입
-                </a>
+              <Link href="/regist/cre-signup">
+                {/* eslint-disable-next-line */}
+                <a className={classes.rightLink}>회원가입</a>
               </Link>
             </div>
           )}

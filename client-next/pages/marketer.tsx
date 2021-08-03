@@ -4,7 +4,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 // 내부 소스
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
-import * as React from 'react';
 import { GetServerSideProps } from 'next';
 import sources from '../source/clientMainSource';
 // 컴포넌트

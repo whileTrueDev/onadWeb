@@ -1,10 +1,10 @@
 // material-UI
 import { useTheme } from '@material-ui/core';
 // 내부 소스
-import onadLogo_x from '../../public/logo/renewal/logo_onad_x.png'
-import onadLogo_x_w from '../../public/logo/renewal/logo_onad_x_w.png'
+import Image from 'next/image';
+import onadLogoX from '../../public/logo/renewal/logo_onad_x.png';
+import onadLogoXW from '../../public/logo/renewal/logo_onad_x_w.png';
 // 프로젝트 내부 모듈
-import Image from 'next/image'
 
 export interface OnadLogoProps {
   width?: number;
@@ -16,7 +16,7 @@ export default function OnadLogo({ width, height, ...props }: OnadLogoProps): JS
     <div>
       {theme.palette.type === 'light' ? (
         <Image
-          src={onadLogo_x}
+          src={onadLogoX}
           alt="onadLogo"
           width={width}
           height={height}
@@ -25,7 +25,7 @@ export default function OnadLogo({ width, height, ...props }: OnadLogoProps): JS
         />
       ) : (
         <Image
-          src={onadLogo_x_w}
+          src={onadLogoXW}
           alt="onadLogo"
           width={width}
           height={height}

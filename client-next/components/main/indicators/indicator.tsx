@@ -1,16 +1,14 @@
 // material-UI
 import { Grid, Typography } from '@material-ui/core';
 // 내부 소스
-import sources from '../../../source/clientMainSource';
 // 프로젝트 내부 모듈
 import Countup from 'react-countup';
 import classNames from 'classnames';
+import sources from '../../../source/clientMainSource';
 // 컴포넌트
 // util 계열
 // 스타일
 import useStyles from '../../../styles/main/indicator/indicator.style';
-
-
 
 interface IndicatorProps {
   nowBroadcast: number;
@@ -20,7 +18,7 @@ interface IndicatorProps {
 }
 
 function indicatorDecorate(indicator: number): number {
-  const indicatorScore = Math.round(indicator)
+  const indicatorScore = Math.round(indicator);
   const indicatorLength = String(indicatorScore).length;
   if (indicatorLength < 4) {
     return indicator;
@@ -35,7 +33,7 @@ function indicatorDecorate(indicator: number): number {
 }
 
 function indicatorUnit(indicator: number): string {
-  const indicatorScore = Math.round(indicator)
+  const indicatorScore = Math.round(indicator);
   const indicatorLength = String(indicatorScore).length;
   if (indicatorLength < 4) {
     return '';

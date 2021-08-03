@@ -10,7 +10,6 @@ import useDialog from '../../utils/hooks/useDialog';
 // 스타일
 import useStyles from '../../styles/introduction/howToUseCreator.style';
 
-
 interface Source {
   source: {
     firstContent: string;
@@ -43,7 +42,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('creator_manual_1');
               UseStep.handleOpen();
             }}
@@ -67,7 +66,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('creator_manual_2');
               UseStep.handleOpen();
             }}
@@ -90,7 +89,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('creator_manual_3');
               UseStep.handleOpen();
             }}
@@ -113,7 +112,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('creator_manual_4');
               UseStep.handleOpen();
             }}
@@ -124,11 +123,7 @@ function HowToUseCreator({ source }: Source): JSX.Element {
       </Grid>
 
       <Dialog open={Boolean(UseStep.open)} onClose={UseStep.handleClose} fullWidth maxWidth="md">
-        <img
-          src={`/introduction/${imgStep}.png`}
-          alt="sample"
-          className={classes.contentImg}
-        />
+        <img src={`/introduction/${imgStep}.png`} alt="sample" className={classes.contentImg} />
       </Dialog>
     </div>
   );

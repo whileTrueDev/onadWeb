@@ -1,4 +1,4 @@
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 import { blueGrey } from '@material-ui/core/colors';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import { Palette } from '@material-ui/core/styles/createPalette';
@@ -21,7 +21,7 @@ export interface OnadTheme extends Theme {
   palette: OnadPalette;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const rawTheme = {
   palette: {
     primary: {

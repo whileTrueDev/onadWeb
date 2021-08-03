@@ -8,7 +8,6 @@ import * as React from 'react';
 // 스타일
 import useStyles from '../../styles/policy/tabBar.style';
 
-
 interface Props {
   tabValue: number;
   handleTabChange: React.Dispatch<React.SetStateAction<number>>;

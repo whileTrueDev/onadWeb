@@ -47,7 +47,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           <Typography
             variant="body2"
             className={classes.inquiryLink}
-            onClick={() => {
+            onClick={(): void => {
               InquireDialog.handleOpen();
             }}
           >
@@ -55,7 +55,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </Typography>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('marketer_manual_1');
               UseStep.handleOpen();
             }}
@@ -65,7 +65,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           <CustomButtons
             load
             className={classes.guideButton}
-            onClick={() =>
+            onClick={(): Window | null =>
               window.open(
                 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/pdfs/bannerGuide.pdf',
                 '_blank',
@@ -90,7 +90,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('marketer_manual_2');
               UseStep.handleOpen();
             }}
@@ -113,7 +113,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('marketer_manual_3');
               UseStep.handleOpen();
             }}
@@ -136,7 +136,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
           </div>
           <Button
             className={classes.sampleLink}
-            onClick={() => {
+            onClick={(): void => {
               setImgStep('marketer_manual_4');
               UseStep.handleOpen();
             }}
@@ -160,11 +160,7 @@ function HowToUsemarketer({ source }: Props): JSX.Element {
         <Inquire confirmClose={InquireDialog.handleClose} />
       </Dialog>
       <Dialog open={Boolean(UseStep.open)} onClose={UseStep.handleClose} fullWidth maxWidth="md">
-        <img
-          src={`/introduction/${imgStep}.png`}
-          alt="sample"
-          className={classes.contentImg}
-        />
+        <img src={`/introduction/${imgStep}.png`} alt="sample" className={classes.contentImg} />
       </Dialog>
     </div>
   );

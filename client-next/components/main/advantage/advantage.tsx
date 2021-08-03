@@ -8,7 +8,7 @@ import { Divider, Typography } from '@material-ui/core';
 import { useState } from 'react';
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
-import Image from 'next/image'
+import Image from 'next/image';
 // 컴포넌트
 import Slider from './sub/index';
 // util 계열
@@ -65,8 +65,8 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <div className={classes.advImg} >
-                  <Image src={content.imageUrl} alt="advantage" layout="fill"/>
+                <div className={classes.advImg}>
+                  <Image src={content.imageUrl} alt="advantage" layout="fill" />
                 </div>
                 <Typography variant="h4" className={classes.title}>
                   {content.title}
@@ -99,7 +99,7 @@ function Advantage({ source, MainUserType }: Props): JSX.Element {
                   [classes.flipFront]: itemClicked[`contentWrap${i}`],
                 })}
               >
-                <div className={classes.advImg} >
+                <div className={classes.advImg}>
                   <Image src={content.imageUrl} alt="advantage" layout="fill" />
                 </div>
                 <Typography variant="h4" className={classes.title}>

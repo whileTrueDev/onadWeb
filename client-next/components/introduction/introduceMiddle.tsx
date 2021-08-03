@@ -9,7 +9,6 @@ import classNames from 'classnames';
 // 스타일
 import useStyles from '../../styles/introduction/introduceMiddle.style';
 
-
 export default function IntroduceTop({ userType }: { userType: string | boolean }): JSX.Element {
   const classes = useStyles();
 
@@ -30,7 +29,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
         <div>
           <div className={classes.platformWrapper}>
             <Button
-              onClick={() => handlePlatform('twitch')}
+              onClick={(): void => handlePlatform('twitch')}
               className={classNames({
                 [classes.selected]: platform,
                 [classes.notSelected]: !platform,
@@ -40,7 +39,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
             </Button>
 
             <Button
-              onClick={() => handlePlatform('afreecatv')}
+              onClick={(): void => handlePlatform('afreecatv')}
               className={classNames({
                 [classes.selected]: !platform,
                 [classes.notSelected]: platform,
@@ -190,7 +189,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
         <div>
           <div className={classes.platformWrapper}>
             <Button
-              onClick={() => handlePlatform('twitch')}
+              onClick={(): void => handlePlatform('twitch')}
               className={classNames({
                 [classes.selected2]: platform,
                 [classes.notSelected2]: !platform,
@@ -200,7 +199,7 @@ export default function IntroduceTop({ userType }: { userType: string | boolean 
             </Button>
 
             <Button
-              onClick={() => handlePlatform('afreecatv')}
+              onClick={(): void => handlePlatform('afreecatv')}
               className={classNames({
                 [classes.selected2]: !platform,
                 [classes.notSelected2]: platform,

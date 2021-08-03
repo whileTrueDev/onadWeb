@@ -3,7 +3,7 @@ import { Grid, Button } from '@material-ui/core';
 // 내부 소스
 // 프로젝트 내부 모듈
 import classNames from 'classnames';
-import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
 import Router from 'next/router';
 // 컴포넌트
 import AppFooter from '../../components/layout/appFooter';
@@ -16,7 +16,7 @@ import useLoginValue from '../../utils/hooks/useLoginValue';
 import useStyles from '../../styles/policy/policy.style';
 
 interface PolicyProps {
-  params: string
+  params: string;
 }
 
 export default function Policy({ params }: PolicyProps): JSX.Element {
@@ -69,36 +69,26 @@ export default function Policy({ params }: PolicyProps): JSX.Element {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-
-  const paths = [
-    {params: {policy: 'main'}},
-    {params: {policy: 'privacy'}}
-  ]
+  const paths = [{ params: { policy: 'main' } }, { params: { policy: 'privacy' } }];
 
   return {
     paths,
-    fallback: true
-  }
-}
+    fallback: true,
+  };
+};
 
-
-export const getStaticProps: GetStaticProps = async (
-  ctx: GetStaticPropsContext
-) => {
-
+export const getStaticProps: GetStaticProps = async (ctx: GetStaticPropsContext) => {
   if (ctx.params?.policy === 'main') {
     return {
       props: {
-        params: ''
-      }
-    }
+        params: '',
+      },
+    };
   }
 
   return {
     props: {
-      params: 'privacy'
-    }
-  }
-}
-
-
+      params: 'privacy',
+    },
+  };
+};

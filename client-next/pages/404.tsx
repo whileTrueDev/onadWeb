@@ -1,10 +1,9 @@
-
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import OnadLogo from '../components/shared/onadLogo'
-import Router from 'next/router'
+import Router from 'next/router';
+import OnadLogo from '../components/shared/onadLogo';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,7 +37,7 @@ export default function NotFound(): JSX.Element {
   return (
     <Grid container className={classes.root}>
       <Grid className={classes.container} item xs={12}>
-        <OnadLogo width={150} height={55}/>
+        <OnadLogo width={150} height={55} />
 
         <Typography color="textPrimary" variant="h6">
           페이지를 찾을 수 없습니다.
@@ -59,7 +58,7 @@ export default function NotFound(): JSX.Element {
           color="primary"
           variant="contained"
           size="small"
-          onClick={()=> Router.push('/')}
+          onClick={() => Router.push('/')}
         >
           OnAD 메인으로 이동
         </Button>

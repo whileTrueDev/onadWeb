@@ -1,13 +1,13 @@
 // material-UI
 import { Typography, Button } from '@material-ui/core';
 // 내부 소스
-import textSource from '../../source/introductionSource';
-import marketerIntro from '../../public/introduction/marketerIntro.svg'
-import creatorIntro from '../../public/introduction/creatorIntro.svg'
-// 프로젝트 내부 모듈
 import { nanoid } from 'nanoid';
-import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next'
-import Image from 'next/image'
+import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
+import Image from 'next/image';
+import textSource from '../../source/introductionSource';
+import marketerIntro from '../../public/introduction/marketerIntro.svg';
+import creatorIntro from '../../public/introduction/creatorIntro.svg';
+// 프로젝트 내부 모듈
 // 컴포넌트
 import NavTop from '../../components/layout/navTop';
 import HowToUseCreator from '../../components/introduction/howToUseCreator';
@@ -23,13 +23,13 @@ import openKakaoChat from '../../utils/openKakaoChat';
 import styles from '../../styles/introduction/introduction.style';
 
 export interface Props {
-  params: string
+  params: string;
 }
 
 export default function Introduction({ params }: Props): JSX.Element {
   const { isLogin, logout } = useLoginValue();
   const classes = styles();
-  const userType = params
+  const userType = params;
 
   return (
     <div>
@@ -49,12 +49,8 @@ export default function Introduction({ params }: Props): JSX.Element {
                   {textSource.heroSector.marketer.text.content}
                 </Typography>
                 <div className={classes.imageWrapper}>
-                  <div className={classes.glassEffect}/>
-                  <Image
-                    src={marketerIntro}
-                    className={classes.topImage}
-                    alt="Intro"
-                  />
+                  <div className={classes.glassEffect} />
+                  <Image src={marketerIntro} className={classes.topImage} alt="Intro" />
                 </div>
               </div>
 
@@ -82,12 +78,8 @@ export default function Introduction({ params }: Props): JSX.Element {
                 <div className={classes.middleLine2} />
                 <Typography variant="h5">{textSource.heroSector.marketer.text.content}</Typography>
                 <div className={classes.imageWrapper}>
-                  <div className={classes.glassEffect}/>
-                  <Image
-                    src={creatorIntro}
-                    className={classes.topImage}
-                    alt="Intro"
-                  />
+                  <div className={classes.glassEffect} />
+                  <Image src={creatorIntro} className={classes.topImage} alt="Intro" />
                 </div>
               </div>
 
@@ -107,37 +99,27 @@ export default function Introduction({ params }: Props): JSX.Element {
   );
 }
 
-
-
 export const getStaticPaths: GetStaticPaths = async () => {
-
-  const paths = [
-    {params: {introduction: 'marketer'}},
-    {params: {introduction: 'creator'}}
-  ]
+  const paths = [{ params: { introduction: 'marketer' } }, { params: { introduction: 'creator' } }];
 
   return {
     paths,
-    fallback: true
-  }
-}
+    fallback: true,
+  };
+};
 
-
-export const getStaticProps: GetStaticProps = async (
-  ctx: GetStaticPropsContext
-) => {
-
+export const getStaticProps: GetStaticProps = async (ctx: GetStaticPropsContext) => {
   if (ctx.params?.introduction === 'marketer') {
     return {
       props: {
-        params: 'marketer'
-      }
-    }
+        params: 'marketer',
+      },
+    };
   }
 
   return {
     props: {
-      params: 'creator'
-    }
-  }
-}
+      params: 'creator',
+    },
+  };
+};

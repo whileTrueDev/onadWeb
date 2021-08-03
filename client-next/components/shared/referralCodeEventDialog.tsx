@@ -7,7 +7,6 @@ import EventPopup from '../../atoms/dialog/eventPopup';
 // util 계열
 // 스타일
 
-
 export interface ReferralCodeEventDialogProps {
   open: boolean;
   onClose: () => void;

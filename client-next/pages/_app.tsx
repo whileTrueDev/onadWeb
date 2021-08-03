@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import {
-  createMuiTheme,
+  createTheme,
   MuiThemeProvider as ThemeProvider,
   responsiveFontSizes,
 } from '@material-ui/core/styles';
@@ -13,9 +13,9 @@ import queryClient from '../utils/queryClient';
 import theme, { OnadTheme } from '../theme';
 import HeadCompo from '../components/layout/head';
 
-function OnadNextApp({ Component, pageProps }: AppProps) {
+function OnadNextApp({ Component, pageProps }: AppProps): JSX.Element {
   const THEME = responsiveFontSizes(
-    createMuiTheme({
+    createTheme({
       ...theme.rawTheme,
       palette: { ...theme.rawTheme.palette, type: 'light' },
       props: {

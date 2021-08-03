@@ -13,6 +13,7 @@ import Background from './background';
 // util 계열
 // 스타일
 import style from '../../styles/main/parallaxScroll.style';
+
 interface ParallaxScrollProps {
   children: React.ReactNode[];
   setPsIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -29,8 +30,7 @@ function ParallaxScroll({
   isLogin,
   bgfixedRange,
   renewalDialog,
-}:
-ParallaxScrollProps): JSX.Element {
+}: ParallaxScrollProps): JSX.Element {
   const classes = style();
   const [lastTime, setLastTime] = useState(new Date().getTime());
 

@@ -140,6 +140,7 @@ export default function CreatorLoginForm({
         <div style={{ marginTop: 16, marginBottom: 16 }}>
           <Typography variant="body2">
             온애드 계정이 없으신가요?&nbsp;
+            {/* eslint-disable-next-line */}
             <span
               onClick={(): Promise<boolean> => router.push('/regist/cre-signup')}
               style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
@@ -155,6 +156,7 @@ export default function CreatorLoginForm({
               interactive
               title={<Typography variant="body2">기존회원은여기</Typography>}
             >
+              {/* eslint-disable-next-line */}
               <span
                 onClick={(): Promise<boolean> => router.push('/regist/pre-user')}
                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}

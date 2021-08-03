@@ -4,15 +4,14 @@ import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 // 내부 소스
-import textSource from '../../source/introductionSource';
 // 프로젝트 내부 모듈
 import * as React from 'react';
 import { nanoid } from 'nanoid';
+import textSource from '../../source/introductionSource';
 // 컴포넌트
 // util 계열
 // 스타일
 import Styles from '../../styles/introduction/question.style';
-
 
 function Question({ MainUserType }: { MainUserType: string }): JSX.Element {
   const classes = Styles();

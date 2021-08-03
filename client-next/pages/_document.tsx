@@ -4,7 +4,7 @@ import { ServerStyleSheets } from '@material-ui/core/styles';
 import Script from 'next/script';
 
 export default class RootDocument extends Document {
-  render() {
+  render(): JSX.Element {
     return (
       <Html lang="en">
         <Head>
@@ -25,9 +25,6 @@ export default class RootDocument extends Document {
           `,
             }}
           />
-
-          {/*  이 부분 아마도 헤드로 옮겨서 script로 대체 해야할 듯....? */}
-          <meta name="theme-color" />
           {/* google adsense */}
           <Script
             data-ad-client="ca-pub-4320356355619389"

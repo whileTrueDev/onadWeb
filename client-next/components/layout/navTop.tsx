@@ -10,14 +10,14 @@ import {
   Toolbar,
 } from '@material-ui/core';
 // 내부 소스
-import textLogo from "../../public/logo/textLogo.png"
 // 프로젝트 내부 모듈
 import { useState, useCallback } from 'react';
 import * as React from 'react';
 import classNames from 'classnames';
-import Link from 'next/link'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import textLogo from '../../public/logo/textLogo.png';
 // 컴포넌트
 import LoginPopover from '../login/loginPopover'; // 현재 여기 작업
 // util 계열
@@ -25,8 +25,6 @@ import HOST from '../../config';
 import axios from '../../utils/axios';
 // 스타일
 import useStyles from '../../styles/layout/navTop.style';
-
-
 
 interface NavTopProps {
   MainUserType?: boolean;
@@ -61,14 +59,14 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
   }, []);
 
   // 회원가입 버튼
-  const RegButton = () => {
+  const RegButton = (): JSX.Element => {
     if (isLogin) {
       return (
         <Button
           className={classNames(classes.tabButton, classes.coloredLink)}
           onClick={handleClick}
         >
-          <a>마이페이지</a>
+          마이페이지
         </Button>
       );
     }
@@ -76,7 +74,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
   };
 
   // 로그인 버튼
-  const LoginButton = () => {
+  const LoginButton = (): JSX.Element => {
     if (isLogin) {
       return (
         <Button className={classes.tabButton} color="inherit" onClick={logout}>
@@ -111,21 +109,17 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
     >
       <div>
         <MenuItem className={classes.buttonWraper}>
-          <Link
-            href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}
-          >
-            <a className={classes.mobileButton}>
-              이용 방법
-            </a>
+          <Link href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}>
+            {/* eslint-disable-next-line */}
+            <a className={classes.mobileButton}>이용 방법</a>
           </Link>
         </MenuItem>
 
         {MainUserType ? (
           <MenuItem className={classes.buttonWraper}>
             <Link href="/creatorList">
-              <a className={classes.mobileButton}>
-                방송인 목록
-              </a>
+              {/* eslint-disable-next-line */}
+              <a className={classes.mobileButton}>방송인 목록</a>
             </Link>
           </MenuItem>
         ) : null}
@@ -139,11 +133,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
               마이페이지
             </Button>
           ) : (
-            <LoginPopover
-              type="회원가입"
-              MainUserType={MainUserType}
-              logout={logout}
-            />
+            <LoginPopover type="회원가입" MainUserType={MainUserType} logout={logout} />
           )}
         </MenuItem>
 
@@ -176,12 +166,9 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
           <div className={classes.tabButtonWrap}>
             {/* 이용방법 버튼 */}
             <div>
-              <Link
-                href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}
-              >
-                <a className={classes.tabButton}>
-                  이용방법
-                </a>
+              <Link href={MainUserType ? '/introduction/marketer' : '/introduction/creator'}>
+                {/* eslint-disable-next-line */}
+                <a className={classes.tabButton}>이용방법</a>
               </Link>
             </div>
 
@@ -189,9 +176,8 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             {MainUserType ? (
               <div>
                 <Link href="/creatorList">
-                  <a className={classes.creatorList}>
-                    방송인 목록
-                  </a>
+                  {/* eslint-disable-next-line */}
+                  <a className={classes.creatorList}>방송인 목록</a>
                 </Link>
               </div>
             ) : null}

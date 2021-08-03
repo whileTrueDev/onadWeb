@@ -5,6 +5,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 // 프로젝트 내부 모듈
 import { useState, useEffect } from 'react';
 import * as React from 'react';
+import { GetServerSideProps } from 'next';
 // 컴포넌트
 import NavTop from '../components/layout/navTop';
 import RePasswordDialog from '../components/login/rePassword';
@@ -60,21 +61,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Main(): JSX.Element {
+interface MainProps {
+  nowBroadcastData: number;
+  bannerViewData: number;
+  contractedCreatorData: number;
+  totoalFollowersData: number;
+}
+
+export default function Main({
+  nowBroadcastData,
+  bannerViewData,
+  contractedCreatorData,
+  totoalFollowersData,
+}: MainProps): JSX.Element {
   const { isLogin, repasswordOpen, logout, setRepassword } = useLoginValue();
   const classes = useStyles();
   const [psIndex, setPsIndex] = useState(0);
-  const [nowBroadcast, setNowBroadcast] = useState(50);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    axios.get(`${HOST}/creators/broadcast`).then(res => {
-      if (res.data) {
-        setNowBroadcast(res.data[0].nowBroadcast);
-        setLoading(true);
-      }
-    });
-  }, [psIndex]);
 
   // **************************************************
   // 라이브커머스 이벤트 팝업
@@ -98,80 +100,103 @@ export default function Main(): JSX.Element {
 
   return (
     <div className={classes.root}>
-        <div>
+      <div>
         <NavTop isLogin={isLogin} logout={logout} MainUserType={false} />
-          <ParallaxScroll
-            isLogin={isLogin}
-            setPsIndex={setPsIndex}
-            psIndex={psIndex}
-            loading={loading}
-            bgfixedRange={[0, 3]}
-            // timer={timer}
-            // setTimer={setTimer}
-            renewalDialog={liveCommerceEventDialog.open}
-          >
-            <div className={classes.parallax} data-parallax="0">
-              {psIndex === 0 && (
-                <ProductHero
-                  source={sources.hero}
-                  isLogin={isLogin}
-                  MainUserType={false}
-                  logout={logout}
-                />
-              )}
-            </div>
+        <ParallaxScroll
+          isLogin={isLogin}
+          setPsIndex={setPsIndex}
+          psIndex={psIndex}
+          bgfixedRange={[0, 3]}
+          // timer={timer}
+          // setTimer={setTimer}
+          renewalDialog={liveCommerceEventDialog.open}
+        >
+          <div className={classes.parallax} data-parallax="0">
+            {psIndex === 0 && (
+              <ProductHero
+                source={sources.hero}
+                isLogin={isLogin}
+                MainUserType={false}
+                logout={logout}
+              />
+            )}
+          </div>
 
-            <div className={classes.parallax} data-parallax="1">
-              {psIndex === 1 && loading && <Indicator nowBroadcast={nowBroadcast} />}
-            </div>
+          <div className={classes.parallax} data-parallax="1">
+            {psIndex === 1 && (
+              <Indicator
+                nowBroadcast={nowBroadcastData}
+                bannerView={bannerViewData}
+                contractedCreator={contractedCreatorData}
+                totalFollower={totoalFollowersData}
+              />
+            )}
+          </div>
 
-            <div className={classes.parallax} data-parallax="2">
-              {psIndex === 2 && (
-                <HowToUse
-                  source={sources.howTo}
-                  MainUserType={false}
-                />
-              )}
-            </div>
+          <div className={classes.parallax} data-parallax="2">
+            {psIndex === 2 && <HowToUse source={sources.howTo} MainUserType={false} />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="3">
-              {psIndex === 3 && (
-                <Advantage source={sources.advantage} MainUserType={false} />
-              )}
-            </div>
+          <div className={classes.parallax} data-parallax="3">
+            {psIndex === 3 && <Advantage source={sources.advantage} MainUserType={false} />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="4">
-              {psIndex === 4 && <Reference />}
-            </div>
+          <div className={classes.parallax} data-parallax="4">
+            {psIndex === 4 && <Reference />}
+          </div>
 
-            <div className={classes.parallax} data-parallax="5">
-              {psIndex === 5 && (
-                <Contact
-                  source={sources.howitworks}
-                  MainUserType={false}
-                  isLogin={isLogin}
-                  logout={logout}
-                />
-              )}
-            </div>
-          </ParallaxScroll>
-          <RePasswordDialog
-            repasswordOpen={repasswordOpen}
-            setRepassword={setRepassword}
-            logout={logout}
+          <div className={classes.parallax} data-parallax="5">
+            {psIndex === 5 && (
+              <Contact
+                source={sources.howitworks}
+                MainUserType={false}
+                isLogin={isLogin}
+                logout={logout}
+              />
+            )}
+          </div>
+        </ParallaxScroll>
+        <RePasswordDialog
+          repasswordOpen={repasswordOpen}
+          setRepassword={setRepassword}
+          logout={logout}
+        />
+
+        {/* CPS  관련 임시 팝업  */}
+        <Hidden xsDown>
+          <ReferralCodeEventDialog
+            open={liveCommerceEventDialog.open}
+            onClose={liveCommerceEventDialog.handleClose}
           />
-
-          {/* CPS  관련 임시 팝업  */}
-          <Hidden xsDown>
-            <ReferralCodeEventDialog
-              open={liveCommerceEventDialog.open}
-              onClose={liveCommerceEventDialog.handleClose}
-            />
-          </Hidden>
-          {/* 온애드 리뉴얼 관련 임시 팝업  */}
-          {/* *******************************  */}
-        </div>
+        </Hidden>
+        {/* 온애드 리뉴얼 관련 임시 팝업  */}
+        {/* *******************************  */}
+      </div>
       <Button className={classes.kakaoContact} onClick={openKakaoChat} />
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const nowBroadcast = await axios.get(`${HOST}/creators/broadcast`);
+
+  // 데이터 요청 시간이 길어서 일단 주석 처리
+  // const bannerView = await axios.get(`${HOST}/banners/impression`)
+  // const contractedCreator = await axios.get(`${HOST}/creators/contracted`)
+  // const totoalFollowers = await axios.get(`${HOST}/creators/detail`)
+
+  const nowBroadcastData = await nowBroadcast.data[0].nowBroadcast;
+  // 데이터 요청 시간이 길어서 일단 주석 처리
+  // const bannerViewData = await bannerView.data[0].bannerView
+  // const contractedCreatorData = await contractedCreator.data[0].contractedCreator
+  // const totoalFollowersData = await totoalFollowers.data[0].totalFollowers
+
+  return {
+    props: {
+      nowBroadcastData,
+      bannerViewData: 26654256,
+      contractedCreatorData: 1476,
+      totoalFollowersData: 265083,
+    },
+  };
+};

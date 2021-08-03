@@ -14,7 +14,6 @@ import MarketerLoginForm from '../../login/marketerLoginForm';
 // 스타일
 import styles from '../../../styles/main/contact/introContact.style';
 
-
 interface IntroContactProps {
   MainUserType: boolean;
   isLogin: boolean;
