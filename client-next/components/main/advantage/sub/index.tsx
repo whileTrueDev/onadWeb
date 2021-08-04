@@ -40,8 +40,6 @@ function Slider({
   const totalPages: number = Math.ceil(children.length / visibleSlides) - 1;
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     const resizeObserver = new ResizeObserver(entries => {
       setScrollSize(entries[0].contentRect.width);
     });

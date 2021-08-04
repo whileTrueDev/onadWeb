@@ -68,6 +68,8 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'warn',
     '@typescript-eslint/no-use-before-define': 2,
     '@typescript-eslint/no-shadow': 'error',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/camelcase': 'off',
   },
   ignorePatterns: ['generated/**/*.tsx'],
   settings: {

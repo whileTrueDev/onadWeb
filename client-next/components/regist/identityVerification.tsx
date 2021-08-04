@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import Fingerprint from '@material-ui/icons/Fingerprint';
 import { Grid, Button, Typography } from '@material-ui/core';
 // 내부 소스

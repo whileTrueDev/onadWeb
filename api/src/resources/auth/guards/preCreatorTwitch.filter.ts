@@ -16,7 +16,7 @@ export class PreCreatorTwitchExceptionFilter implements ExceptionFilter {
 
     console.log('[PreCreatorTwitchExceptionFilter] ERROR => ', err);
     if (err.message) {
-      res.redirect(`${this.HOST}/creator/signup/pre-user?${err.message}&platform=twitch`);
-    } else res.redirect(`${this.HOST}/creator/signup/pre-user?error=error&platform=twitch`);
+      res.redirect(`${this.HOST}/regist/pre-user?${err.message}&platform=twitch`);
+    } else res.redirect(`${this.HOST}/regist/pre-user?error=error&platform=twitch`);
   }
 }

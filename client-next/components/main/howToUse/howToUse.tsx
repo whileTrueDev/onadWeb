@@ -50,7 +50,7 @@ function HowToUse({ source, MainUserType }: HowToUseProps): JSX.Element {
         <div className={classes.iframeWrapper}>
           <iframe
             title="onadYouTube"
-            src="https://www.youtube.com/embed/E3HQlhMF-eg"
+            src="https://www.youtube-nocookie.com/embed/E3HQlhMF-eg"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

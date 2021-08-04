@@ -1,13 +1,12 @@
 // material-UI
 // 내부 소스
+import { nanoid } from 'nanoid';
 import terms from '../../source/policySource';
 // 프로젝트 내부 모듈
-import { nanoid } from 'nanoid';
 // 컴포넌트
 // util 계열
 // 스타일
-import useStyles from '../../styles/policy/policyCreator.style'
-
+import useStyles from '../../styles/policy/policyCreator.style';
 
 interface Terms {
   title: string;

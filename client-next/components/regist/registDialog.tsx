@@ -10,20 +10,18 @@ import {
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 // 내부 소스
-import googleLogo from '../../public/logo/google/google.png'
-import naverLogo from '../../public/logo/naver/naver2.png'
-import kakaoLogo from '../../public/logo/kakao/kakao.png'
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+import googleLogo from '../../public/logo/google/google.png';
+import naverLogo from '../../public/logo/naver/naver2.png';
+import kakaoLogo from '../../public/logo/kakao/kakao.png';
 // 프로젝트 내부 모듈
 // 컴포넌트
-import {useRouter} from 'next/router'
-import Image from 'next/image'
 import CustomButton from '../../atoms/button/customButton';
 // util 계열
 import HOST from '../../config';
 // 스타일
 import useStyles from '../../styles/regist/registDialog.style';
-
-
 
 interface Props {
   open: boolean;
@@ -48,11 +46,12 @@ const RegistDialog = ({ open, handleClose }: Props) => {
               color="primary"
               style={{ color: theme.palette.common.white }}
               size="large"
-              onClick={ () => {
+              onClick={() => {
                 router.push({
-                pathname: '/regist/[regist]',
-                query: { regist: 'main' },
-              })}}
+                  pathname: '/regist/[regist]',
+                  query: { regist: 'main' },
+                });
+              }}
             >
               온애드 가입하기
             </CustomButton>
@@ -72,18 +71,48 @@ const RegistDialog = ({ open, handleClose }: Props) => {
           <Grid item className={classes.buttons}>
             <Grid container direction="row">
               <Grid item>
-                <Button onClick={() => {router.push(`${HOST}/login/google`)}}>
-                  <Image src={googleLogo} alt="googleLogo" className={classes.image} height={50} width={50}/>
+                <Button
+                  onClick={() => {
+                    router.push(`${HOST}/login/google`);
+                  }}
+                >
+                  <Image
+                    src={googleLogo}
+                    alt="googleLogo"
+                    className={classes.image}
+                    height={50}
+                    width={50}
+                  />
                 </Button>
               </Grid>
               <Grid item>
-                <Button onClick={() => {router.push(`${HOST}/login/naver`)}}>
-                  <Image src={naverLogo} alt="naverLogo" className={classes.image} height={50} width={50}/>
+                <Button
+                  onClick={() => {
+                    router.push(`${HOST}/login/naver`);
+                  }}
+                >
+                  <Image
+                    src={naverLogo}
+                    alt="naverLogo"
+                    className={classes.image}
+                    height={50}
+                    width={50}
+                  />
                 </Button>
               </Grid>
               <Grid item>
-                <Button onClick={() => {router.push(`${HOST}/login/kakao`)}}>
-                  <Image src={kakaoLogo} alt="kakaoLogo" className={classes.image} height={50} width={50}/>
+                <Button
+                  onClick={() => {
+                    router.push(`${HOST}/login/kakao`);
+                  }}
+                >
+                  <Image
+                    src={kakaoLogo}
+                    alt="kakaoLogo"
+                    className={classes.image}
+                    height={50}
+                    width={50}
+                  />
                 </Button>
               </Grid>
             </Grid>

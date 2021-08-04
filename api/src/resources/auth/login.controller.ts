@@ -123,7 +123,7 @@ export class LoginController {
     const { creatorId, creatorName, accessToken } = req.user as any;
     res.redirect(
       [
-        `${this.HOST}/creator/signup/pre-user`,
+        `${this.HOST}/regist/pre-user`,
         `?creatorId=${creatorId}`,
         `&creatorName=${creatorName}`,
         `&accessToken=${accessToken}`,

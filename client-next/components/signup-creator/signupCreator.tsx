@@ -25,14 +25,12 @@ import { useSnackbar } from 'notistack';
 // 컴포넌트
 import Image from 'next/image';
 import IndentityVerificationDialog from './identityVerification';
-import Snackbar from '../../atoms/snackbar/snackbar';
 import twitchLogoWhite from '../../public/logo/twitch/TwitchGlitchWhite.png';
 // util 계열
 import { useCreatorSignUpMutation } from '../../utils/hooks/mutation/useCreatorSignUpMutation';
 import { useCreatorSignupPreCreatorMutation } from '../../utils/hooks/mutation/useCreatorSignupPreCreatorMutation';
 import axiosInstance from '../../utils/axios';
 import HOST from '../../config';
-import { useDialog } from '../../utils/hooks';
 import userIdRegex from '../../utils/inputs/regex/userId.regex';
 import passwordRegex from '../../utils/inputs/regex/password.regex';
 import { OnadTheme } from '../../theme';
@@ -127,8 +125,6 @@ export default function SignupCreator({ pathname, queryIn }: SignupCreatorProps)
 
   // 스낵바
   const { enqueueSnackbar } = useSnackbar();
-  const failSnack = useDialog();
-  const [snackErrMsg, setSnackErrMsg] = useState<string>();
 
   // Parse search parpameter
   function parseParams(params: string) {
@@ -205,7 +201,6 @@ export default function SignupCreator({ pathname, queryIn }: SignupCreatorProps)
   const [loadingCheckReferralCode, setLoadingCheckReferralCode] = useState(false);
   const [referredCreator, setReferredCreator] = useState('');
   const [referredCreatorError, setReferredCreatorError] = useState('');
-  const needReferredCreatorSnack = useDialog();
   // 추천인 확인 함수
   function checkReferralCode(): void {
     const errorMsg =
@@ -727,16 +722,6 @@ export default function SignupCreator({ pathname, queryIn }: SignupCreatorProps)
           )}
         </Paper>
       </Grid>
-
-      <Snackbar color="error" message={snackErrMsg} onClose={failSnack.handleClose} />
-      {needReferredCreatorSnack.open && (
-        <Snackbar
-          open={needReferredCreatorSnack.open}
-          color="error"
-          message="추천인 확인이 올바르게 끝나지 않았어요!"
-          onClose={needReferredCreatorSnack.handleClose}
-        />
-      )}
     </Grid>
   );
 }

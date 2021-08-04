@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { useCallback, useEffect, useState } from 'react';
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import { useCertificationMutation } from '../../utils/hooks/mutation/useCertificationMutation';
