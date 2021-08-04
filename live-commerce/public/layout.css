@@ -240,7 +240,7 @@ body {
 }
 
 .ranking-text-area {
-  width: 85%;
+  width: 90%;
   height: 29%;
   display: flex;
   align-items: center;
@@ -251,6 +251,10 @@ body {
   font-size: 25px;
   color: #ffffff;
   -webkit-text-stroke: 2px black;
+}
+
+.ranking-text-area span {
+  margin-right: 1%;
 }
 
 .ranking-text-area#title {
@@ -267,7 +271,7 @@ body {
 .ranking-id-wrapper {
   display: flex;
   align-items: center;
-  width: 70%;
+  width: 60%;
   margin-left: 3%;
 }
 
@@ -275,7 +279,7 @@ body {
   width: 85%;
   display: block;
   margin-left: 2%;
-  font-size: 35px;
+  font-size: 30px;
   color: #27b9ac;
   -webkit-text-stroke: 1.5px black;
   overflow: hidden;
@@ -284,7 +288,7 @@ body {
 
 #ranking-icon {
   width: 15%;
-  margin-right: 0.005%;
+  margin-right: 1%;
 }
 
 /* 좌측 배너영역 */

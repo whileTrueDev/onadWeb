@@ -235,7 +235,7 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
   if ($('.ranking-text-area#title').css('display') === 'none') {
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}개`);
+      $(`.quantity#rank-${index}`).text(`${value.total}원`);
     });
   } else {
     $('.ranking-text-area#title').css({ display: 'none' });
@@ -279,7 +279,7 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
     );
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}개`);
+      $(`.quantity#rank-${index}`).text(`${value.total}원`);
     });
   }
 });
@@ -315,7 +315,7 @@ socket.on('get right-top purchase message', async (data: any) => {
             <span class="animated heartbeat" id="donation-user-id">${userId}</span>
             <span class="donation-sub">님 ${productName}</span>
             <span class="animated heartbeat" id="donation-num">${num}</span>
-            <span class="donation-sub">개 구매!</span>
+            <span class="donation-sub">원 구매!</span>
           </span>
         </div>
         <div class="animated tada delay-1s" id="donation-message">
