@@ -21,34 +21,7 @@
           TOP 구매자
         </p>
         <div class="ranking-area-inner">
-          <p class="ranking-text-area" id="rank-0">
-            <span class="ranking-id-wrapper">
-              <img src="/public/images/crown.png" id="ranking-icon" />
-              <span class="ranking-text-area-id" id="rank-0">
-              </span>
-            </span>
-            <span class="quantity" id="rank-0">
-            </span>
-          </p>
-
-          <p class="ranking-text-area" id="rank-1">
-            <span class="ranking-id-wrapper">
-              <img src="/public/images/second.png" id="ranking-icon" />
-              <span class="ranking-text-area-id" id="rank-1">
-              </span>
-            </span>
-            <span class="quantity" id="rank-1">
-            </span>
-          </p>
-          <p class="ranking-text-area" id="rank-2">
-            <span class="ranking-id-wrapper">
-              <img src="/public/images/third.png" id="ranking-icon" />
-              <span class="ranking-text-area-id" id="rank-2">
-              </span>
-            </span>
-            <span class="quantity" id="rank-2">
-            </span>
-          </p>
+          <img src="/public/images/podium.png" id="podium" style="width:25%;"/>
         </div>
       </div>
       <!--세로 배너-->
@@ -68,9 +41,17 @@
     </div>
     <!--하단 영역-->
     <div class="bottom-area-wrapper">
-      <div class="bottom-left">
+      <div class="bottom-area-left">
+        <div class="bottom-timer">
+          <img src="/public/images/clock.png" class="bottom-area-left-icon" id="clock" />
+          <span id="time-hour"></span>
+          <span id="hour-min-separator"> : </span>
+          <span id="time-min"></span>
+          <span id="min-sec-separator"> : </span>
+          <span id="time-sec"></span>
+        </div>
         <div class="bottom-object">
-          <img src="/public/images/object.png" class="bottom-left-icon" />
+          <img src="/public/images/object.png" class="bottom-area-left-icon" />
           <div class="bottom-object-quantity">
             <span id="current-quantity">
               0
@@ -83,16 +64,8 @@
             </span>
           </div>
         </div>
-        <div class="bottom-timer">
-          <img src="/public/images/clock.png" class="bottom-left-icon" id="clock" />
-          <span id="time-hour"></span>
-          <span id="hour-min-separator"> : </span>
-          <span id="time-min"></span>
-          <span id="min-sec-separator"> : </span>
-          <span id="time-sec"></span>
-        </div>
       </div>
-      <div class="bottom-area">
+      <div class="bottom-area-right">
         <p class="bottom-area-text">
         </p>
       </div>

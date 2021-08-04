@@ -45,29 +45,29 @@ body {
   justify-content: center;
   bottom: 0px;
   right: 0px;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-left {
+.bottom-area-left {
   width: 22.5%;
   height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-left-icon {
+.bottom-area-left-icon {
   width: 18%;
   margin-left: 10%;
 }
 
-.bottom-left-icon#clock {
+.bottom-area-left-icon#clock {
   width: 17%;
   margin-right: 8%;
 }
 
-.bottom-left-icon.urgent#clock {
+.bottom-area-left-icon.urgent#clock {
   /* Start the shake animation and make the animation last for 0.5 seconds */
   animation: shake 0.5s;
 
@@ -113,9 +113,9 @@ body {
 
 .bottom-object {
   width: 50%;
-  display: none;
+  display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   opacity: 0;
 }
@@ -165,16 +165,17 @@ body {
   justify-content: space-around;
 }
 
-.bottom-area {
+.bottom-area-right {
   width: 77.5%;
   height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.bottom-area p:after {
+.bottom-area-right p:after {
   content: '';
   white-space: nowrap;
   padding-right: 100%;
@@ -189,86 +190,18 @@ body {
 }
 
 .bottom-admin {
+  font-family: 'JALNAN';
   z-index: 3;
-  color: yellow;
+  color: #27b9ac;
   font-size: 23px;
 }
 
-.bottom-area p {
+.bottom-area-right p {
   padding-left: 3%;
   display: inline-block;
   white-space: nowrap;
-  /* -webkit-animation-name: marquee;
-  -webkit-animation-timing-function: linear;
-  -webkit-animation-duration: 10s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-name: marquee;
-  -moz-animation-timing-function: linear;
-  -moz-animation-duration: 10s;
-  -moz-animation-iteration-count: infinite;
-  -ms-animation-name: marquee;
-  -ms-animation-timing-function: linear;
-  -ms-animation-duration: 10s;
-  -ms-animation-iteration-count: infinite;
-  -o-animation-name: marquee;
-  -o-animation-timing-function: linear;
-  -o-animation-duration: 10s;
-  -o-animation-iteration-count: infinite;
-  animation-name: marquee;
-  animation-timing-function: linear;
-  animation-duration: 10s;
-  animation-iteration-count: infinite; */
 }
 
-@-webkit-keyframes marquee {
-  from {
-    -webkit-transform: translate(0%);
-  }
-  99%,
-  to {
-    -webkit-transform: translate(-100%);
-  }
-}
-
-@-moz-keyframes marquee {
-  from {
-    -moz-transform: translate(0%);
-  }
-  99%,
-  to {
-    -moz-transform: translate(-100%);
-  }
-}
-
-@-ms-keyframes marquee {
-  from {
-    -ms-transform: translate(0%);
-  }
-  99%,
-  to {
-    -ms-transform: translate(-100%);
-  }
-}
-
-@-o-keyframes marquee {
-  from {
-    -o-transform: translate(0%);
-  }
-  99%,
-  to {
-    -o-transform: translate(-100%);
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translate(0%);
-  }
-  99%,
-  to {
-    transform: translate(-100%);
-  }
-}
 /* 좌측 영역 */
 .left-section {
   float: left;
@@ -307,7 +240,7 @@ body {
 }
 
 .ranking-text-area {
-  width: 85%;
+  width: 90%;
   height: 29%;
   display: flex;
   align-items: center;
@@ -318,6 +251,10 @@ body {
   font-size: 25px;
   color: #ffffff;
   -webkit-text-stroke: 2px black;
+}
+
+.ranking-text-area span {
+  margin-right: 1%;
 }
 
 .ranking-text-area#title {
@@ -334,8 +271,8 @@ body {
 .ranking-id-wrapper {
   display: flex;
   align-items: center;
-  width: 70%;
-  font-size: 30px;
+  width: 60%;
+  margin-left: 3%;
 }
 
 .ranking-text-area-id {
@@ -351,7 +288,7 @@ body {
 
 #ranking-icon {
   width: 15%;
-  margin-right: 0.005%;
+  margin-right: 1%;
 }
 
 /* 좌측 배너영역 */

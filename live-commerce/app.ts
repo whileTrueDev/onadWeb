@@ -1,18 +1,19 @@
 import socketio, { Socket } from 'socket.io';
 import express from 'express';
 import http from 'http';
-import {
-  UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData
-} from './@types/data';
+import { UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData } from './@types/data';
 import doQuery from './models/doQuery';
-import googleTextToSpeech from './lib/googleTextToSpeech'
+import googleTextToSpeech from './lib/googleTextToSpeech';
 
 const app = express();
 const httpServer = http.createServer(app);
 const io = socketio(httpServer);
 
 const PORT = 3060;
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() === 'production') ? 'production' : 'development';
+process.env.NODE_ENV =
+  process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() === 'production'
+    ? 'production'
+    : 'development';
 
 const socketInfo: SocketInfo = {};
 
@@ -30,11 +31,12 @@ app.get('/:id', (req, res) => {
 });
 
 io.on('connection', (socket: Socket) => {
-  socket.on('new client', (clientInfo) => { // 새로운 접속
+  socket.on('new client', clientInfo => {
+    // 새로운 접속
     const url = clientInfo.THIS_URL;
-    const roomName = url?.split('/').pop()
-    if (roomName){
-      socket.join(roomName)
+    const roomName = url?.split('/').pop();
+    if (roomName) {
+      socket.join(roomName);
     }
     const { device } = clientInfo;
     if (socketInfo[url]) {
@@ -47,10 +49,11 @@ io.on('connection', (socket: Socket) => {
     }
   });
 
-  socket.on('disconnect', () => { // 접속종료시
+  socket.on('disconnect', () => {
+    // 접속종료시
     const SOCKET_ID: string = socket.id;
     if (Object.values(socketInfo)) {
-      const itemToFind = Object.values(socketInfo)[0]?.find((item) => item.socketId === SOCKET_ID);
+      const itemToFind = Object.values(socketInfo)[0]?.find(item => item.socketId === SOCKET_ID);
       const idx = Object.values(socketInfo)[0]?.indexOf(itemToFind);
       if (idx > -1) {
         return Object.values(socketInfo)[0]?.splice(idx, 1);
@@ -59,19 +62,28 @@ io.on('connection', (socket: Socket) => {
     return null;
   });
 
-  socket.on('request creator list', (data) => { // 소켓 접속 크리에이터 리스트를 관리자로 전송
+  socket.on('request creator list', data => {
+    // 소켓 접속 크리에이터 리스트를 관리자로 전송
     // data.url에는 /가 포함되어 있다
     const advertiseUrl = data && data.url ? data.url.split('/')[1] : null;
-    const fullUrl: (string|undefined)[] = Object.keys(socketInfo).map((url: string) => {
-      if (advertiseUrl && url && url.split('/').indexOf(advertiseUrl) !== -1) {
-        return url;
-      }
-      return '';
-    }).filter((url: string | undefined) => url !== undefined && url !== '');
+    const fullUrl: (string | undefined)[] = Object.keys(socketInfo)
+      .map((url: string) => {
+        if (advertiseUrl && url && url.split('/').indexOf(advertiseUrl) !== -1) {
+          return url;
+        }
+        return '';
+      })
+      .filter((url: string | undefined) => url !== undefined && url !== '');
     if (process.env.NODE_ENV === 'development') {
-      io.to(data.clientId).emit('creator list from server', fullUrl[0] ? socketInfo[fullUrl[0]] : null);
+      io.to(data.clientId).emit(
+        'creator list from server',
+        fullUrl[0] ? socketInfo[fullUrl[0]] : null,
+      );
     } else if (process.env.NODE_ENV === 'production') {
-      io.to(data.clientId).emit('creator list from server', fullUrl[0] ? socketInfo[fullUrl[0]] : null);
+      io.to(data.clientId).emit(
+        'creator list from server',
+        fullUrl[0] ? socketInfo[fullUrl[0]] : null,
+      );
     }
   });
 
@@ -98,29 +110,29 @@ io.on('connection', (socket: Socket) => {
   socket.on('right-top-purchase-message', async (data: PurchaseMessage) => {
     const { roomName } = data;
 
-    const bottomTextArray:string[] = []
+    const bottomTextArray: string[] = [];
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
                           GROUP BY nickname 
                           ORDER BY total desc,
                           id
-                          LIMIT 3`
-    
-    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
-    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
+                          LIMIT 4`;
+
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`;
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`;
 
     const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
       doQuery(selectQuery),
       doQuery(selectTotalQuery),
-      doQuery(textSelectQuery)
-    ])
-    bottomText.result.map((data:{nickname:string; text:string}) => {
-      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
-    })
+      doQuery(textSelectQuery),
+    ]);
+    bottomText.result.map((d: { nickname: string; text: string }) => {
+      bottomTextArray.push(`${d.text} - [${d.nickname}]`);
+    });
 
-    const audioBuffer = await googleTextToSpeech(data)
-    
+    const audioBuffer = await googleTextToSpeech(data);
+
     io.to(roomName).emit('get right-top purchase message', [data, audioBuffer]);
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
@@ -156,14 +168,14 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('show virtual ad to client');
   });
 
-  socket.on('quantity object', (data:any) => {
-    const {roomName} = data;
-    const {quantityObject} = data;
-    io.to(roomName).emit('quantity object from server', quantityObject)
-  })
+  socket.on('quantity object', (data: any) => {
+    const { roomName } = data;
+    const { quantityObject } = data;
+    io.to(roomName).emit('quantity object from server', quantityObject);
+  });
 
-  socket.on('get all data', async (roomName:string) => {
-    const bottomTextArray:string[] = []
+  socket.on('get all data', async (roomName: string) => {
+    const bottomTextArray: string[] = [];
 
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
@@ -171,43 +183,44 @@ io.on('connection', (socket: Socket) => {
                           GROUP BY nickname 
                           ORDER BY total desc,
                           id
-                          LIMIT 3`
-    
-    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`
-    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`
+                          LIMIT 4`;
+
+    const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`;
+    const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`;
 
     const [orderedRanking, totalQuantity, bottomText] = await Promise.all([
       doQuery(selectQuery),
       doQuery(selectTotalQuery),
-      doQuery(textSelectQuery)
-    ])
+      doQuery(textSelectQuery),
+    ]);
 
-    bottomText.result.map((data:{nickname:string; text:string}) => {
-      bottomTextArray.push(`${data.text} - [${data.nickname}]`)
-    })
-    
+    bottomText.result.map((data: { nickname: string; text: string }) => {
+      bottomTextArray.push(`${data.text} - [${data.nickname}]`);
+    });
+
     io.to(roomName).emit('get top-left ranking', orderedRanking.result);
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
     io.to(roomName).emit('get bottom purchase message', bottomTextArray);
-  })
-  
-  interface DateData{
-    date:string;
-    roomName:string;
+  });
+
+  interface DateData {
+    date: string;
+    roomName: string;
   }
 
-  socket.on('get d-day', (dateData:DateData) => {
+  socket.on('get d-day', (dateData: DateData) => {
     const { date } = dateData;
     const { roomName } = dateData;
-    io.to(roomName).emit('d-day from server', date)
-  })
+    io.to(roomName).emit('d-day from server', date);
+  });
 
-  socket.on('refresh', (roomName:string) => {
-    io.to(roomName).emit('refresh signal', roomName)
-  })
+  socket.on('refresh', (roomName: string) => {
+    io.to(roomName).emit('refresh signal', roomName);
+  });
 });
-  
 
 httpServer.listen(PORT, () => {
-  console.log(`--LIVE COMMERCE SERVER Ver.210716-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`);
+  console.log(
+    `--LIVE COMMERCE SERVER Ver.210716-- \nMODE : [${process.env.NODE_ENV}] \nPORT : ${PORT}\n`,
+  );
 });
