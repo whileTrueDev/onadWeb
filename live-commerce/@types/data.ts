@@ -45,17 +45,17 @@ export interface QueryResult {
 }
 
 export interface RankingData {
-  nickname:string;
-  total:number;
+  nickname: string;
+  total: number;
 }
 
-export interface AudioEncoding {  
-  speakingRate:number;
-  audioEncoding: 'MP3' | undefined | null
+export interface AudioEncoding {
+  speakingRate: number;
+  audioEncoding: 'MP3' | undefined | null;
 }
 
 export interface Voice {
-  languageCode:string;
-  name:string;
-  ssmlGender : "FEMALE" | "SSML_VOICE_GENDER_UNSPECIFIED" | "MALE" | "NEUTRAL" | null | undefined
+  languageCode: string;
+  name: string;
+  ssmlGender: 'FEMALE' | 'SSML_VOICE_GENDER_UNSPECIFIED' | 'MALE' | 'NEUTRAL' | null | undefined;
 }
