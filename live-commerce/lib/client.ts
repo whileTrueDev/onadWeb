@@ -284,6 +284,14 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
   }
 });
 
+socket.on('toggle right-top onad logo from server', () => {
+  if ($('#onad-logo').attr('src')?.includes('black')) {
+    $('#onad-logo').attr('src', '/public/images/onadLogo.png');
+  } else {
+    $('#onad-logo').attr('src', '/public/images/onadLogo-black.png');
+  }
+});
+
 // 우측 상단 응원 문구
 socket.on('get right-top purchase message', async (data: any) => {
   const alarmType = data[0].icon;

@@ -217,6 +217,10 @@ io.on('connection', (socket: Socket) => {
   socket.on('refresh', (roomName: string) => {
     io.to(roomName).emit('refresh signal', roomName);
   });
+
+  socket.on('toggle right-top onad logo', (roomName: string) => {
+    io.to(roomName).emit('toggle right-top onad logo from server');
+  });
 });
 
 httpServer.listen(PORT, () => {
