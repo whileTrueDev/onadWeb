@@ -5,7 +5,7 @@ let bottomMessages: Array<null | string> = [];
 // let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-08-07T16:00:00+0900');
+let setDate = new Date('2021-08-15T14:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -65,7 +65,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 13) {
+    if (bannerId === 17) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -288,7 +288,7 @@ socket.on('toggle right-top onad logo from server', () => {
   if ($('#onad-logo').attr('src')?.includes('black')) {
     $('#onad-logo').attr('src', '/public/images/onadLogo.png');
   } else {
-    $('#onad-logo').attr('src', '/public/images/onadLogo-black.png');
+    $('#onad-logo').attr('src', '/public/images/onadLogo-gray.png');
   }
 });
 
@@ -311,7 +311,7 @@ socket.on('get right-top purchase message', async (data: any) => {
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${
-      alarmType === '2' ? 'alarm-type-2.wav' : 'alarm-type-1.wav'
+      alarmType === '2' ? 'ggangma-alarm-type-2.mp3' : 'ggangma-alarm-type-1.mp3'
     }" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
     <div class="item">
       <div class="centered">
