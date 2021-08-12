@@ -285,7 +285,7 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
 });
 
 socket.on('toggle right-top onad logo from server', () => {
-  if ($('#onad-logo').attr('src')?.includes('black')) {
+  if ($('#onad-logo').attr('src')?.includes('-')) {
     $('#onad-logo').attr('src', '/public/images/onadLogo.png');
   } else {
     $('#onad-logo').attr('src', '/public/images/onadLogo-gray.png');
