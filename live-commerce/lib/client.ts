@@ -311,7 +311,7 @@ socket.on('get right-top purchase message', async (data: any) => {
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${
-      alarmType === '2' ? 'ggangma-alarm-type-2.mp3' : 'ggangma-alarm-type-1.mp3'
+      alarmType === '2' ? 'alarm-type-2.wav' : 'alarm-type-1.wav'
     }" id="iframeAudio" allow="autoplay" style="display:none"></iframe>
     <div class="item">
       <div class="centered">

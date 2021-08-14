@@ -21,17 +21,24 @@ async function purchaseMessageTTS(purchaseData: PurchaseMessage) {
   const quantity = purchaseData.purchaseNum;
   const { text } = purchaseData;
 
-  const message = `
-  <speak>
-    ${userId}님 ${productName} ${quantity}원 구매 감사합니다 <break time="0.4s"/> ${text}
-  </speak>
-  `;
+  // 추후 선택기능 넣을 예정
+  // const messageWithAppreciate = `
+  // <speak>
+  //   ${userId}님 ${productName} ${quantity}원 구매 감사합니다 <break time="0.4s"/> ${text}
+  // </speak>
+  // `;
+
+  const messageOnlyMessage = `
+    <speak>
+      ${text}
+    </speak>
+  `
 
   const audioConfig: AudioEncoding = { speakingRate: 1.3, audioEncoding: 'MP3' };
   const voice: Voice = { languageCode: 'ko-KR', name: 'ko-KR-Standard-A', ssmlGender: 'FEMALE' };
   // Construct the request
   const params = {
-    input: { ssml: message },
+    input: { ssml: messageOnlyMessage },
     // Select the language and SSML voice gender (optional)
     voice, // , ssmlGender: 'NEUTRAL'
     // select the type of audio encoding
