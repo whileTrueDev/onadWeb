@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@google-cloud/text-to-speech": "^3.2.4",
+    "@types/greensock": "^1.15.32",
     "@types/http-errors": "^1.6.3",
     "@types/jquery": "^3.3.33",
     "@types/mysql": "^2.15.18",
@@ -27,7 +28,9 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "google-auth-library": "^7.3.0",
+    "greensock": "^1.20.2",
     "http": "^0.0.1-security",
+    "jquery-slotmachine": "^4.0.2",
     "mysql": "^2.18.1",
     "open": "^8.2.1",
     "request": "^2.88.2",

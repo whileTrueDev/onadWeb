@@ -1,8 +1,8 @@
-import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
+import { ImageData, RankingData } from '../@types/data';
+import roullette from './roullette2';
 
 const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
-// let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
 let setDate = new Date('2021-08-15T14:00:00+0900');
@@ -11,20 +11,6 @@ let messageHtml: string;
 const messageArray: any[] = [];
 let bannerId = 0;
 let bottomTextIndex = 0;
-
-// 하단 marquee 영역 이벤트
-// setInterval(() => {
-//   if($('.bottom-area').css({ display: 'none' })) {
-//     $('.bottom-area').css({ display: 'flex' })
-//   }
-//   if (idx >= bottomMessages.length) {
-//       idx = 0;
-//     }
-//   if (bottomMessages.length){
-//   $('.bottom-area-text').text(`${bottomMessages[idx]}`)
-//   $('.bottom-area-text').css({ display: 'flex' });
-//   idx += 1;}
-// }, 10000);
 
 async function switchBottomText() {
   if (bottomTextIndex >= bottomMessages.length) {
@@ -232,10 +218,13 @@ socket.on('get live commerce image', (data: ImageData) => {
 
 socket.on('get top-left ranking', (data: RankingData[]) => {
   const rankingArray = data;
+
   if ($('.ranking-text-area#title').css('display') === 'none') {
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}원`);
+      $(`.quantity#rank-${index}`).text(
+        `${value.total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}원`,
+      );
     });
   } else {
     $('.ranking-text-area#title').css({ display: 'none' });
@@ -279,7 +268,9 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
     );
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}원`);
+      $(`.quantity#rank-${index}`).text(
+        `${value.total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}원`,
+      );
     });
   }
 });
@@ -461,6 +452,10 @@ socket.on('d-day from server', (date: string) => {
 
 socket.on('refresh signal', () => {
   location.reload();
+});
+
+socket.on('show roullette', (targetCustomers: string[]) => {
+  roullette(socket, targetCustomers);
 });
 
 export {};

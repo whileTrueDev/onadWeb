@@ -221,6 +221,20 @@ io.on('connection', (socket: Socket) => {
   socket.on('toggle right-top onad logo', (roomName: string) => {
     io.to(roomName).emit('toggle right-top onad logo from server');
   });
+
+  socket.on('roullette start from server', (roomName: string) => {
+    io.to(roomName).emit('roullette start');
+  });
+
+  socket.on('get roullette data', async (roomName: string) => {
+    const customers: string[] = [];
+    const textSelectQuery = `SELECT nickname FROM liveCommerceRanking WHERE phoneCallEventFlag = 1`;
+    const phoneCallCustomers = await doQuery(textSelectQuery);
+    phoneCallCustomers.result.map((nicknames: any) => {
+      customers.push(nicknames.nickname);
+    });
+    io.to(roomName).emit('show roullette', customers);
+  });
 });
 
 httpServer.listen(PORT, () => {
