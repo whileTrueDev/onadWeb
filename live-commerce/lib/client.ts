@@ -1,11 +1,10 @@
-import { ImageData, PurchaseMessage, SinglePurchase, RankingData } from '../@types/data';
+import { ImageData, RankingData } from '../@types/data';
 
 const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
-// let rankingArray: Array<SinglePurchase> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-08-15T14:00:00+0900');
+let setDate = new Date('2021-08-23T13:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -52,7 +51,9 @@ setInterval(async () => {
     $('.top-right').css({ display: 'flex' });
     $('.top-right').html(messageArray[0].messageHtml);
     await setTimeout(() => {
-      $('.top-right').append(messageArray[0].alarmSoundTag);
+      // $('.top-right').append(messageArray[0].alarmSoundTag);
+      const sound = new Audio(messageArray[0].audioBlob)
+      sound.play()
       messageArray.splice(0, 1);
     }, 3000);
     await setTimeout(() => {
@@ -299,15 +300,13 @@ socket.on('get right-top purchase message', async (data: any) => {
   const { productName } = data[0];
   const { text } = data[0];
   const num = data[0].purchaseNum;
-  let url;
+  let audioBlob;
 
   if (data) {
     const blob = new Blob([data[1]], { type: 'audio/mp3' });
-    url = window.URL.createObjectURL(blob);
+    audioBlob = window.URL.createObjectURL(blob);
   }
-
-  const alarmSoundTag = `<iframe src="${url}" id="iframeAudio" allow="autoplay" style="display:none"></iframe>`;
-
+  
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${
@@ -335,7 +334,7 @@ socket.on('get right-top purchase message', async (data: any) => {
     </div>
   </div>
   `;
-  messageArray.push({ alarmSoundTag, messageHtml });
+  messageArray.push({ audioBlob, messageHtml });
 });
 
 // ---------------------------- 추후 삽입 가능 --------------------------
