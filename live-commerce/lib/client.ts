@@ -4,7 +4,7 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-08-23T13:00:00+0900');
+let setDate = new Date('2021-08-28T17:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -52,7 +52,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 13) {
+    if (bannerId === 9) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -428,10 +428,10 @@ socket.on('clear screen', () => {
 });
 
 socket.on('show virtual ad to client', () => {
-  $('#virtual-ad-img').attr('src', '/public/images/virtual-ad.gif');
+  $('#virtual-ad-img').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
   setTimeout(() => {
     $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
-  }, 9000);
+  }, 13500);
 });
 
 socket.on('quantity object from server', (quantityObject: string) => {
@@ -455,11 +455,11 @@ socket.on('refresh signal', () => {
 
 socket.on('show full virtual ad from server', () => {
   $('.virtual-ad-full').css({ opacity: 1 });
-  $('#virtual-ad-img-full').attr('src', '/public/images/virtual-ad.gif');
+  $('#virtual-ad-img-full').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
   setTimeout(() => {
     $('.virtual-ad-full').css({ opacity: 0 });
     $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
-  }, 14000);
+  }, 13500);
 });
 
 export {};
