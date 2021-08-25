@@ -30,7 +30,6 @@
     "google-auth-library": "^7.3.0",
     "greensock": "^1.20.2",
     "http": "^0.0.1-security",
-    "jquery-slotmachine": "^4.0.2",
     "mysql": "^2.18.1",
     "open": "^8.2.1",
     "request": "^2.88.2",
