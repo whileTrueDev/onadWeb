@@ -1,5 +1,4 @@
 import { ImageData, RankingData } from '../@types/data';
-import roullette from './roullette2';
 
 const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
@@ -454,8 +453,13 @@ socket.on('refresh signal', () => {
   location.reload();
 });
 
-socket.on('show roullette', (targetCustomers: string[]) => {
-  roullette(socket, targetCustomers);
+socket.on('show full virtual ad from server', () => {
+  $('.virtual-ad-full').css({ opacity: 1 });
+  $('#virtual-ad-img-full').attr('src', '/public/images/virtual-ad.gif');
+  setTimeout(() => {
+    $('.virtual-ad-full').css({ opacity: 0 });
+    $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
+  }, 14000);
 });
 
 export {};

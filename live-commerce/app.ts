@@ -235,6 +235,10 @@ io.on('connection', (socket: Socket) => {
     });
     io.to(roomName).emit('show roullette', customers);
   });
+
+  socket.on('show full virtual ad', roomName => {
+    io.to(roomName).emit('show full virtual ad from server');
+  });
 });
 
 httpServer.listen(PORT, () => {

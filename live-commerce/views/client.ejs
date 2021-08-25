@@ -5,7 +5,6 @@
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
-  <script src="/node_modules/jquery-slotmachine/dist/slotmachine.min.js"></script>
   <script src='/lib/bundle.js'></script>
   <link href='/public/layout.css' rel='stylesheet'>
 
@@ -21,7 +20,7 @@
       <div class="ranking-area">
         <p class="ranking-text-area" id="title">
           TOP 구매자
-        </p>
+        </p> 
         <div class="ranking-area-inner">
           <img src="/public/images/podium.png" id="podium" style="width:25%;"/>
         </div>
@@ -33,11 +32,8 @@
     </div>
 
     <!-- 룰렛 -->
-    <div class="roullette-area">
-      <div class="roullette-container">	
-        <div class="board-start"></div>
-        <div class="board-on customerId"></div>         
-      </div>
+    <div class="virtual-ad-full">
+      <img id="virtual-ad-img-full" src="/public/images/invisible.png" />
     </div>
 
     <!--우측상단 응원메세지-->
@@ -53,6 +49,8 @@
     <!--하단 영역-->
     <div class="bottom-area-wrapper">
       <div class="bottom-area-left">
+        <div style="width:5%">
+        </div>
         <div class="bottom-timer">
           <img src="/public/images/clock.png" class="bottom-area-left-icon" id="clock" />
           <span id="time-hour"></span>
