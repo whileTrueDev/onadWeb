@@ -4,26 +4,12 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-08-23T13:00:00+0900');
+let setDate = new Date('2021-08-28T17:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
 let bannerId = 0;
 let bottomTextIndex = 0;
-
-// 하단 marquee 영역 이벤트
-// setInterval(() => {
-//   if($('.bottom-area').css({ display: 'none' })) {
-//     $('.bottom-area').css({ display: 'flex' })
-//   }
-//   if (idx >= bottomMessages.length) {
-//       idx = 0;
-//     }
-//   if (bottomMessages.length){
-//   $('.bottom-area-text').text(`${bottomMessages[idx]}`)
-//   $('.bottom-area-text').css({ display: 'flex' });
-//   idx += 1;}
-// }, 10000);
 
 async function switchBottomText() {
   if (bottomTextIndex >= bottomMessages.length) {
@@ -66,7 +52,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 13) {
+    if (bannerId === 9) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -233,10 +219,13 @@ socket.on('get live commerce image', (data: ImageData) => {
 
 socket.on('get top-left ranking', (data: RankingData[]) => {
   const rankingArray = data;
+
   if ($('.ranking-text-area#title').css('display') === 'none') {
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}원`);
+      $(`.quantity#rank-${index}`).text(
+        `${value.total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}원`,
+      );
     });
   } else {
     $('.ranking-text-area#title').css({ display: 'none' });
@@ -280,7 +269,9 @@ socket.on('get top-left ranking', (data: RankingData[]) => {
     );
     rankingArray.map((value, index) => {
       $(`.ranking-text-area-id#rank-${index}`).text(value.nickname);
-      $(`.quantity#rank-${index}`).text(`${value.total}원`);
+      $(`.quantity#rank-${index}`).text(
+        `${value.total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}원`,
+      );
     });
   }
 });
@@ -437,10 +428,10 @@ socket.on('clear screen', () => {
 });
 
 socket.on('show virtual ad to client', () => {
-  $('#virtual-ad-img').attr('src', '/public/images/virtual-ad.gif');
+  $('#virtual-ad-img').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
   setTimeout(() => {
     $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
-  }, 9000);
+  }, 13500);
 });
 
 socket.on('quantity object from server', (quantityObject: string) => {
@@ -460,6 +451,15 @@ socket.on('d-day from server', (date: string) => {
 
 socket.on('refresh signal', () => {
   location.reload();
+});
+
+socket.on('show full virtual ad from server', () => {
+  $('.virtual-ad-full').css({ opacity: 1 });
+  $('#virtual-ad-img-full').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
+  setTimeout(() => {
+    $('.virtual-ad-full').css({ opacity: 0 });
+    $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
+  }, 13500);
 });
 
 export {};

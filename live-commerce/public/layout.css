@@ -144,7 +144,7 @@ body {
   margin-right: 8%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-family: 'DIGITAL';
   font-size: 30px;
@@ -384,3 +384,162 @@ body {
   width: 100%;
   height: 100%;
 }
+
+.virtual-ad-full {
+  position: fixed;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 13;
+}
+
+.virtual-ad-full img {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+}
+
+/* 룰렛 */
+@font-face {
+  font-family: 'GmarketSansMedium';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.roullette-area {
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.roullette-container {
+  width: 508px;
+  height: 671px;
+  text-align: center;
+  position: relative;
+  margin: 0px auto;
+}
+
+.customerId {
+  position: absolute;
+}
+
+.board-start.done {
+  padding: 10px;
+  background: #f00;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 150px;
+  border: 1px solid #000;
+  color: #fff;
+  background: #f00;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  position: absolute;
+  left: 165px;
+  top: 210px;
+  z-index: 9;
+  width: 150px;
+  border-radius: 100px;
+}
+
+.board-start p {
+  width: 100%;
+}
+.board_bg {
+  width: 508px;
+  height: 508px;
+  top: 40px;
+  left: 0px;
+  z-index: 2;
+}
+.board_bg p {
+  width: 100%;
+}
+.board-on {
+  width: 508px;
+  height: 508px;
+  top: 40px;
+  left: 0px;
+  z-index: 3;
+  background-image: url('//img.babathe.com/upload/specialDisplay/htmlImage/2019/test/roulette_circle_bg.png');
+  background-size: 508px;
+}
+.board-on p {
+  position: absolute;
+  width: 100px;
+  top: 115px;
+  height: 100px;
+}
+
+.board-on p:nth-child(1) {
+  left: 55px;
+  transform: rotate(-60deg);
+  top: 120px;
+}
+.board-on p:nth-child(2) {
+  left: 62px;
+  transform: rotate(-113deg);
+  top: 286px;
+}
+.board-on p:nth-child(3) {
+  left: 208px;
+  top: 372px;
+  transform: rotate(-180deg);
+}
+.board-on p:nth-child(4) {
+  left: 351px;
+  top: 286px;
+  transform: rotate(-245deg);
+}
+.board-on p:nth-child(5) {
+  left: 351px;
+  top: 125px;
+  transform: rotate(-292deg);
+}
+.board-on p:nth-child(6) {
+  left: 205px;
+  top: 42px;
+  transform: rotate(5deg);
+}
+/* 
+.customerId.board_arrow {
+  width: 90px;
+  height: 105px;
+  top: 0px;
+  left: 195px;
+  z-index: 5;
+}
+.roullette-area .roullette-container .char1 {
+  width: 259px;
+  height: 246px;
+  top: 400px;
+  left: 90px;
+  z-index: 1;
+}
+.roullette-area .roullette-container .char2 {
+  width: 175px;
+  height: 198px;
+  top: 449px;
+  left: 600px;
+  z-index: 1;
+}
+.roullette-area .roullette-container .char3 {
+  width: 112px;
+  height: 108px;
+  top: 540px;
+  left: 550px;
+  z-index: 3;
+}
+.roullette-area .roullette-container .txt1 {
+  width: 420px;
+  height: 30px;
+  bottom: 20px;
+  left: 260px;
+  z-index: 3;
+} */
