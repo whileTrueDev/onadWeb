@@ -8,7 +8,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useEffect, useState } from 'react';
 import CenterLoading from '../../../../../atoms/loading/centerLoading';
 import Table from '../../../../../atoms/table/table';
-import { REACT_HOST } from '../../../../../config';
 import { useMarketerAccount } from '../../../../../utils/hooks/query/useMarketerAccount';
 import { useMarketerAd } from '../../../../../utils/hooks/query/useMarketerAd';
 import { useMarketerCash } from '../../../../../utils/hooks/query/useMarketerCash';
@@ -88,7 +87,7 @@ function MyCash(): JSX.Element {
               className={classes.button}
               onClick={(): void => {
                 window.open(
-                  `${REACT_HOST}/marketer/charge`,
+                  `/mypage/marketer/charge`,
                   '_blank',
                   `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`,
                 );

@@ -179,7 +179,7 @@ const TestChargeSolution = (props: TestChargeSolutionProps): JSX.Element => {
               <Grid item className={classes.valueContainer}>
                 {chargeType && (
                   <img
-                    src={`/pngs/Charge/${chargeType}.png`}
+                    src={`/mypage/charge/${chargeType}.png`}
                     alt={`${chargeType}`}
                     width="164"
                     height="64"

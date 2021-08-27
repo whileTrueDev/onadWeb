@@ -9,7 +9,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CreditCard from '@material-ui/icons/CreditCard';
 import Input from '@material-ui/icons/Input';
-import { REACT_HOST } from '../../../../config';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -80,7 +79,7 @@ export default function CashPopper(props: CashPopperProps): JSX.Element {
                 <MenuItem
                   onClick={(): void => {
                     window.open(
-                      `${REACT_HOST}/marketer/charge`,
+                      `/mypage/marketer/charge`,
                       '_blank',
                       `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${POPUP_X}, top=${POPUP_Y}`,
                     );
