@@ -8,16 +8,16 @@ import { nanoid } from 'nanoid';
 import { GetServerSideProps } from 'next';
 // 컴포넌트
 import Image from 'next/image';
-import NavTop from '../components/layout/navTop';
-import AppFooter from '../components/layout/appFooter';
-import RePasswordDialog from '../components/login/rePassword';
+import NavTop from '../components/mainpage/layout/navTop';
+import AppFooter from '../components/mainpage/layout/appFooter';
+import RePasswordDialog from '../components/mainpage/login/rePassword';
 import Table from '../atoms/table/materialTable';
 // util 계열
 import axios from '../utils/axios';
 import HOST from '../config';
 import useLoginValue from '../utils/hooks/useLoginValue';
 // 스타일
-import useStyles from '../styles/main/creatorList/creatorList.style';
+import useStyles from '../styles/mainpage/main/creatorList/creatorList.style';
 
 export interface ContractedCreatorListData<T> {
   creatorId: T;

@@ -6,9 +6,9 @@ import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 // 컴포넌트
 import Head from 'next/head';
-import NavTop from '../../components/layout/navTop';
-import RegistStepper from '../../components/regist/stepper';
-import SignupCreator from '../../components/signup-creator/signupCreator';
+import NavTop from '../../components/mainpage/layout/navTop';
+import RegistStepper from '../../components/mainpage/regist/stepper';
+import SignupCreator from '../../components/mainpage/signup-creator/signupCreator';
 // util 계열
 import useLoginValue from '../../utils/hooks/useLoginValue';
 // 스타일

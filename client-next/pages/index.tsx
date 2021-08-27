@@ -12,7 +12,7 @@ import mainCharacter from '../public/door/mainCharacter.png';
 import textLogo from '../public/logo/textLogo.png';
 import source from '../source/doorSource';
 // 스타일
-import useStyles from '../styles/main/door.style';
+import useStyles from '../styles/mainpage/main/door.style';
 
 const wavePathMd = `
   M 0 66.6 c 0 0 184.7 -66.6 480 -66.6 s 480 66.6 480 66.6 s 203.3 66.6 480 66.6 s 480 -66.6 480 -66.6;

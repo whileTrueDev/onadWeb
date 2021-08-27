@@ -41,6 +41,7 @@ export default class RootDocument extends Document {
           />
         </Head>
         <body>
+          <div id="page-transition" />
           <Main />
           <NextScript />
         </body>

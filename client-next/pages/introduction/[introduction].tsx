@@ -9,18 +9,18 @@ import marketerIntro from '../../public/introduction/marketerIntro.svg';
 import creatorIntro from '../../public/introduction/creatorIntro.svg';
 // 프로젝트 내부 모듈
 // 컴포넌트
-import NavTop from '../../components/layout/navTop';
-import HowToUseCreator from '../../components/introduction/howToUseCreator';
-import HowToUseMarketer from '../../components/introduction/howToUseMarketer';
-import IntroduceMiddle from '../../components/introduction/introduceMiddle';
-import IntroContact from '../../components/main/contact/introContact';
-import Question from '../../components/introduction/question';
-import AppFooter from '../../components/layout/appFooter';
+import NavTop from '../../components/mainpage/layout/navTop';
+import HowToUseCreator from '../../components/mainpage/introduction/howToUseCreator';
+import HowToUseMarketer from '../../components/mainpage/introduction/howToUseMarketer';
+import IntroduceMiddle from '../../components/mainpage/introduction/introduceMiddle';
+import IntroContact from '../../components/mainpage/main/contact/introContact';
+import Question from '../../components/mainpage/introduction/question';
+import AppFooter from '../../components/mainpage/layout/appFooter';
 // util 계열
 import useLoginValue from '../../utils/hooks/useLoginValue';
 import openKakaoChat from '../../utils/openKakaoChat';
 // 스타일
-import styles from '../../styles/introduction/introduction.style';
+import styles from '../../styles/mainpage/introduction/introduction.style';
 
 export interface Props {
   params: string;

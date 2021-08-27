@@ -6,14 +6,14 @@ import classNames from 'classnames';
 import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from 'next';
 import Router from 'next/router';
 // 컴포넌트
-import AppFooter from '../../components/layout/appFooter';
-import RePasswordDialog from '../../components/login/rePassword';
-import DefaultPolicy from '../../components/policy/policy';
-import PolicyPrivacy from '../../components/policy/policyPrivacy';
+import AppFooter from '../../components/mainpage/layout/appFooter';
+import RePasswordDialog from '../../components/mainpage/login/rePassword';
+import DefaultPolicy from '../../components/mainpage/policy/policy';
+import PolicyPrivacy from '../../components/mainpage/policy/policyPrivacy';
 // util 계열
 import useLoginValue from '../../utils/hooks/useLoginValue';
 // 스타일
-import useStyles from '../../styles/policy/policy.style';
+import useStyles from '../../styles/mainpage/policy/policy.style';
 
 interface PolicyProps {
   params: string;

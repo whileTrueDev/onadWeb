@@ -7,17 +7,17 @@ import { useState, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import sources from '../source/clientMainSource';
 // 컴포넌트
-import NavTop from '../components/layout/navTop';
-import RePasswordDialog from '../components/login/rePassword';
-import ProductHero from '../components/main/hero/productHero';
-import Contact from '../components/main/contact/contact';
-import Indicator from '../components/main/indicators/indicator';
-import HowToUse from '../components/main/howToUse/howToUse';
-import Advantage from '../components/main/advantage/advantage';
-import Reference from '../components/main/reference/reference';
+import NavTop from '../components/mainpage/layout/navTop';
+import RePasswordDialog from '../components/mainpage/login/rePassword';
+import ProductHero from '../components/mainpage/main/hero/productHero';
+import Contact from '../components/mainpage/main/contact/contact';
+import Indicator from '../components/mainpage/main/indicators/indicator';
+import HowToUse from '../components/mainpage/main/howToUse/howToUse';
+import Advantage from '../components/mainpage/main/advantage/advantage';
+import Reference from '../components/mainpage/main/reference/reference';
 // util 계열
 // 컴포넌트
-import ParallaxScroll from '../components/main/parallaxScroll';
+import ParallaxScroll from '../components/mainpage/main/parallaxScroll';
 // 스타일
 // utill 계열
 import useLoginValue from '../utils/hooks/useLoginValue';
