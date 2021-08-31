@@ -4,7 +4,7 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-08-28T17:00:00+0900');
+let setDate = new Date('2021-09-04T15:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -38,8 +38,8 @@ setInterval(async () => {
     $('.top-right').html(messageArray[0].messageHtml);
     await setTimeout(() => {
       // $('.top-right').append(messageArray[0].alarmSoundTag);
-      const sound = new Audio(messageArray[0].audioBlob)
-      sound.play()
+      const sound = new Audio(messageArray[0].audioBlob);
+      sound.play();
       messageArray.splice(0, 1);
     }, 3000);
     await setTimeout(() => {
@@ -52,7 +52,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 9) {
+    if (bannerId === 12) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -297,7 +297,7 @@ socket.on('get right-top purchase message', async (data: any) => {
     const blob = new Blob([data[1]], { type: 'audio/mp3' });
     audioBlob = window.URL.createObjectURL(blob);
   }
-  
+
   messageHtml = `
   <div class="donation-wrapper">
     <iframe src="/public/audio/${
@@ -427,12 +427,15 @@ socket.on('clear screen', () => {
   $(document.body).fadeOut(1000);
 });
 
-socket.on('show virtual ad to client', () => {
-  $('#virtual-ad-img').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
-  setTimeout(() => {
-    $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
-  }, 13500);
-});
+// socket.on('show virtual ad to client', () => {
+//   $('#virtual-ad-img').attr(
+//     'src',
+//     'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif',
+//   );
+//   setTimeout(() => {
+//     $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
+//   }, 13500);
+// });
 
 socket.on('quantity object from server', (quantityObject: string) => {
   $('#quantity-object').text(quantityObject);
@@ -441,9 +444,9 @@ socket.on('quantity object from server', (quantityObject: string) => {
   });
 });
 
-socket.on('get current quantity', (currentQuantity: number) => {
-  $('#current-quantity').text(currentQuantity);
-});
+// socket.on('get current quantity', (currentQuantity: number) => {
+//   $('#current-quantity').text(currentQuantity);
+// });
 
 socket.on('d-day from server', (date: string) => {
   setDate = new Date(date);
@@ -453,13 +456,16 @@ socket.on('refresh signal', () => {
   location.reload();
 });
 
-socket.on('show full virtual ad from server', () => {
-  $('.virtual-ad-full').css({ opacity: 1 });
-  $('#virtual-ad-img-full').attr('src', 'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif');
-  setTimeout(() => {
-    $('.virtual-ad-full').css({ opacity: 0 });
-    $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
-  }, 13500);
-});
+// socket.on('show full virtual ad from server', () => {
+//   $('.virtual-ad-full').css({ opacity: 1 });
+//   $('#virtual-ad-img-full').attr(
+//     'src',
+//     'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif',
+//   );
+//   setTimeout(() => {
+//     $('.virtual-ad-full').css({ opacity: 0 });
+//     $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
+//   }, 13500);
+// });
 
 export {};
