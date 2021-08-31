@@ -65,7 +65,7 @@ export class MarketerController {
   // * 광고주 생성 ( 소셜 플랫폼 로그인 시 )
   @Post('/platform')
   createMarketerWithSocialLogin(
-    dto: CreateNewMarketerWithSocialLoginDto,
+    @Body() dto: CreateNewMarketerWithSocialLoginDto,
   ): Promise<CreateNewMarketerRes> {
     return this.marketerService.createNewMarketerWithSocialLogin(dto);
   }
