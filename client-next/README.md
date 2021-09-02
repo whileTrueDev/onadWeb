@@ -1,34 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# client-ts > client-next rewriting
 
-## Getting Started
+기존 client-ts에 client side 코드들을
+next.js를 기반으로 재구축
 
-First, run the development server:
+next에 cra migration을 하지 않고 초기 빌딩부터 CNA로 빌딩
 
+연동서버는 api, 프론트는 client-next로
+
+서버 시동은 기존과 동일,
+프론트 시동도 기존과 동일
+
+~~~bash
+./client-next
+
+# 개발환경
+> yarn dev
+
+# 빌드
+> yarn build
+
+# 빌드 실행
+> yarn start
+~~~
+
+## Client-next 구조
 ```bash
-npm run dev
-# or
-yarn dev
-```
+├── assets                  : 외부 자원 - 다운로드 폰트
+│   ├── fonts               
+├── atoms                   : Material-UI 기반 커스텀 컴포넌트
+│   ├── table
+│   ├── avatar
+│   └── ...
+├── components              : 각 page 하위 구성 컴포넌트들
+│   ├── mainpage            
+│   ├── mypage
+│   ├── shared
+│   └── temp
+├── config                  : 설정값
+├── constants               : 공유 상수값
+├── context                 : 마케터 컨텍스트
+├── pages                   : 라우팅 페이지
+│   ├── introduction
+│   ├── mypage
+│   ├── policy
+│   └── ...
+├── public                  : 이미지 및 manifest 등 구성자원
+│   ├── creatorList
+│   ├── door
+│   └── ...
+├── source                  : 메인페이지 사용 텍스트
+├── store                   : zustand-store
+├── style                   : 글로벌 CSS 및 메인페이지 CSS
+│   ├── mainpage
+│   └── ...
+├── utils                   : utils 관련 파일
+│   ├── aws
+│   ├── hooks
+│   └── ...
+├── next.config.js          : next.js 환경설정
+├── theme.tsx               : 공유 테마 파일
+└── tsconifg.json           : 프로젝트 typescript 설정
+``` 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.tsx`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
