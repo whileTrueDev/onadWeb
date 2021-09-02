@@ -66,11 +66,6 @@ const RemotePageBannerTable = ({ pageUrl }: RemotePageBannerTableProps): JSX.Ele
   const remoteCampaigns = useCreatorRemoteCampaigns({
     remoteControllerUrl: pageUrl,
   });
-  if (pageUrl) {
-    if (remoteCampaigns.isLoadingError) {
-      remoteCampaigns.refetch();
-    }
-  }
 
   const onOffUpdate = useCreatorUpdateRemoteOnOffMutation();
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
