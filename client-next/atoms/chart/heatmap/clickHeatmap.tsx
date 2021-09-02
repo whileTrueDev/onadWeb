@@ -5,7 +5,6 @@ import ReactTooltip from 'react-tooltip';
 import { useMarketerCampaignAnalysisHeatmap } from '../../../utils/hooks/query/useMarketerCampaignAnalysisHeatmap';
 import CenterLoading from '../../loading/centerLoading';
 import getMeanStd from './getMeanStd';
-import './heatmap.module.css';
 
 type ClickData = { count: number; date: string };
 interface ClickHeatmap {

@@ -59,11 +59,18 @@ interface RemotePageBannerTableProps {
   pageUrl: string;
 }
 
-const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element => {
-  const { pageUrl } = props;
+const RemotePageBannerTable = ({ pageUrl }: RemotePageBannerTableProps): JSX.Element => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const remoteCampaigns = useCreatorRemoteCampaigns({ remoteControllerUrl: pageUrl });
+
+  const remoteCampaigns = useCreatorRemoteCampaigns({
+    remoteControllerUrl: pageUrl,
+  });
+  if (pageUrl) {
+    if (remoteCampaigns.isLoadingError) {
+      remoteCampaigns.refetch();
+    }
+  }
 
   const onOffUpdate = useCreatorUpdateRemoteOnOffMutation();
   const handleSwitch = (campaignId: string, state: number, url: string): void => {
@@ -134,6 +141,7 @@ const RemotePageBannerTable = (props: RemotePageBannerTableProps): JSX.Element =
         );
     }
   };
+
   return (
     <div>
       <Table>

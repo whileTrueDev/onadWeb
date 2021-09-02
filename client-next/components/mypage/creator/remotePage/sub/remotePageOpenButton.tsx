@@ -1,7 +1,6 @@
 import { Button, Typography } from '@material-ui/core';
 import { OpenInNew } from '@material-ui/icons';
 import StyledTooltip from '../../../../../atoms/tooltip/styledTooltip';
-import { REACT_HOST } from '../../../../../config';
 import { useCreatorRemotePageUrl } from '../../../../../utils/hooks/query/useCreatorRemotePageUrl';
 
 const RemotePageOpenButton = (): JSX.Element => {
@@ -22,7 +21,7 @@ const RemotePageOpenButton = (): JSX.Element => {
       onClick={(): void => {
         if (remotePageUrl.data) {
           window.open(
-            `/mypage/creator/remote/${getCorrectUrl(remotePageUrl.data)}`,
+            `/mypage/creator/remote?creatorId=${getCorrectUrl(remotePageUrl.data)}&type=remote`,
             '_blank',
             `width=${POPUP_WIDTH}, height=${POPUP_HEIGHT}, left=${0}, top=${0}, title="온애드 리모컨"`,
           );

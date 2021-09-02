@@ -15,7 +15,7 @@ export const defaultValue: MarketerInfoContextValue = {
 
 // *******************************************************
 // 네비바 프로필 사진 동시 변경을 위한 컨텍스트
-const MarketerInfoContext = createContext<MarketerInfoContextValue>(defaultValue);
+export const MarketerInfoContext = createContext<MarketerInfoContextValue>(defaultValue);
 
 export function MarketerInfoContextProvider(props: any): JSX.Element {
   const { children } = props;

@@ -19,9 +19,9 @@ export interface PriorityInterface {
   id: string;
   primaryText: string;
   secondaryText: string;
-  defaultChildren?: Function;
-  completeChildren?: Function;
-  customHandleSelect?: Function;
+  defaultChildren?: any;
+  completeChildren?: any;
+  customHandleSelect?: any;
   disabled?: boolean;
 }
 

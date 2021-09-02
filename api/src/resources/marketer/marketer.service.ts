@@ -113,7 +113,6 @@ export class MarketerService {
     const data = await this.marketerInfoRepo.findOne({
       where: { marketerMail: dto.marketerMail, marketerName: dto.marketerName },
     });
-
     return { marketerId: data.marketerId };
   }
 

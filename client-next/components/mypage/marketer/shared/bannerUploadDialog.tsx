@@ -10,7 +10,7 @@ import BannerUpload from './sub/bannerUpload';
 // import BannerDescForm from './BannerDescForm';
 import './upload.module.css';
 
-const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
+const DEFAULT_IMAGE_PATH = '/mypage/banner_upload_manual.png';
 
 const useQontoStepIconStyles = makeStyles((theme: Theme) => ({
   root: { color: theme.palette.background.paper, display: 'flex' },

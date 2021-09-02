@@ -49,19 +49,34 @@ export default function Regist({ params }: Props): JSX.Element {
     queryIn = `?creatorId=${creatorId}&creatorName=${creatorName}&accessToken=${accessToken}`;
   }
 
+  function marketerRegist(type: string): boolean {
+    switch (type) {
+      case 'main':
+        return true;
+      case 'naver':
+        return true;
+      case 'google':
+        return true;
+      case 'kakao':
+        return true;
+      default:
+        return false;
+    }
+  }
+
   return (
-    <div className={classes.rootMarketer}>
+    <div>
       <Head>
         {/* 결제모듈('iamport'서비스 이용) */}
         {/* jQuery */}
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js" />
         <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.6.js" />
       </Head>
-      {params === ('main' || 'twitch' || 'google' || 'kakao') ? (
-        <>
+      {marketerRegist(params) ? (
+        <div className={classes.rootMarketer}>
           <NavTop MainUserType logout={logout} />
           <RegistStepper platform={params} />
-        </>
+        </div>
       ) : (
         <div className={classes.rootCreator}>
           <NavTop logout={logout} />
@@ -76,7 +91,7 @@ export default function Regist({ params }: Props): JSX.Element {
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = [
     { params: { regist: 'main' } },
-    { params: { regist: 'twitch' } },
+    { params: { regist: 'naver' } },
     { params: { regist: 'google' } },
     { params: { regist: 'kakao' } },
     { params: { regist: 'cre-signup' } },
@@ -91,8 +106,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (ctx: GetStaticPropsContext) => {
   switch (ctx.params?.regist) {
-    case 'twitch':
-      return { props: { params: 'twitch' } };
+    case 'naver':
+      return { props: { params: 'naver' } };
     case 'google':
       return { props: { params: 'google' } };
     case 'kakao':

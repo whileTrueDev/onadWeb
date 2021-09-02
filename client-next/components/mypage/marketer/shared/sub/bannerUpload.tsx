@@ -32,11 +32,6 @@ interface ImageInterface {
   imageName?: string;
   imageUrl?: string;
 }
-interface ImageAction {
-  type: string;
-  imageName?: string;
-  imageUrl?: string | ArrayBuffer;
-}
 interface ImageUploadProps {
   image: ImageInterface;
   onSucess: (image: ImageInterface) => void;
@@ -46,7 +41,7 @@ interface ImageUploadProps {
   onLoadError?: () => void;
 }
 
-const DEFAULT_IMAGE_PATH = '/pngs/dashboard/banner_upload_manual.png';
+const DEFAULT_IMAGE_PATH = '/mypage/banner_upload_manual.png';
 
 const BannerUpload = (props: ImageUploadProps): JSX.Element => {
   const classes = useStyle();

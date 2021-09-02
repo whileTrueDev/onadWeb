@@ -40,7 +40,10 @@ export default function CampaignInformation({
 
   // 탭 설정
   const [selectedTabIndex, setSelectedTabIndex] = useState<string>('0');
-  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string): void => {
+  const handleTabChange = (
+    event: React.ChangeEvent<Record<string, never>>,
+    newValue: string,
+  ): void => {
     setSelectedTabIndex(newValue);
   };
 

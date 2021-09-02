@@ -47,9 +47,13 @@ function OnadNextApp({ Component, pageProps }: AppProps): JSX.Element {
   const [themeType, setTheme] = useState<THEME_TYPE>(THEME_TYPE.LIGHT);
 
   useEffect(() => {
+    if (!localStorage.getItem('themeType')) {
+      localStorage.setItem('themeType', THEME_TYPE.LIGHT);
+    }
     const currentTheme = localStorage.getItem('themeType') as THEME_TYPE;
     setTheme(currentTheme);
   }, [themeType]);
+  const layoutComponent = Component as any;
 
   const THEME = responsiveFontSizes(
     createTheme({
@@ -70,7 +74,6 @@ function OnadNextApp({ Component, pageProps }: AppProps): JSX.Element {
     },
   };
 
-  const layoutComponent = Component as any;
   const Layout = layoutComponent.layout || (({ children }: Element) => <>{children}</>);
 
   return (

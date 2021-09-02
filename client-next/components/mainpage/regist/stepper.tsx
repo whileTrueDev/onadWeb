@@ -87,7 +87,7 @@ function RegistStepper({ platform }: { platform: string }): JSX.Element {
             router.push('/');
           }
         })
-        .catch(() => {
+        .catch(err => {
           alert('등록중 오류가 발생 하였습니다. 잠시 후 다시 시도해주세요.');
           setLoading(0);
           router.push('/');

@@ -60,7 +60,6 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
     if (event) {
       event.preventDefault();
     }
-    setLoading(true);
     loginMutation
       .mutateAsync({ userid, passwd, type: 'marketer' })
       .then(res => {

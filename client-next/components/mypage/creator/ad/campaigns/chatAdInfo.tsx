@@ -139,7 +139,7 @@ export default function ChatAdInfo(): JSX.Element {
         >
           <div className={classnames(classes.popoverContents, classes.alignCenter)}>
             <div className={classes.alignCenter}>
-              <img src="/pngs/dashboard/bot_example.png" alt="bot_example" width="320px" />
+              <img src="/mypage/bot_example.png" alt="bot_example" width="320px" />
             </div>
             <Typography variant="body2">
               온애드의 광고채팅봇 onadbot은 주기적으로 광고에 대한 설명과 광고 링크를 채팅으로

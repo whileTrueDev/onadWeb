@@ -76,13 +76,13 @@ const OptionPaper = (props: OptionPaperProps): JSX.Element => {
               <img
                 height={22}
                 alt="a"
-                src="/pngs/logo/twitch/TwitchExtrudedWordmarkPurple.png"
+                src="/logo/twitch/TwitchExtrudedWordmarkPurple.png"
                 style={{ filter: 'grayscale(0%)', padding: 8 }}
               />
               <img
                 height={20}
                 alt="a"
-                src="/pngs/logo/afreeca/blue01.png"
+                src="/logo/afreeca/blue01.png"
                 style={{ filter: 'grayscale(0%)', padding: 8 }}
               />
             </div>

@@ -76,7 +76,7 @@ export default function CampaignDetail({ selectedCampaign }: CampaignDetailProps
           analysisToggle.toggle &&
           selectedCampaign.optionType === CPS_OPTION_TYPE && (
             <div className={classes.contents}>
-              {/* <CampaignAnalysisCPS campaignId={selectedCampaign.campaignId} /> */}
+              <CampaignAnalysisCPS campaignId={selectedCampaign.campaignId} />
             </div>
           )}
       </Paper>

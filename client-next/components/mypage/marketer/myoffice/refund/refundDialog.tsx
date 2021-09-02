@@ -111,7 +111,7 @@ function RefundDialog(props: RefundDialogProps): JSX.Element {
           alert(
             '환불 신청 금액은 1000원 이하에서는 불가하며 환불 신청 금액이 보유 캐시보다 클 수 없습니다.',
           );
-          router.push('/mypage/marketer/myoffice/cash');
+          router.reload();
         } else {
           setTimeout(() => {
             if (go) {

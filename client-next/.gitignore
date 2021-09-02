@@ -35,3 +35,6 @@ yarn-error.log*
 
 #lint
 .eslintrc
+
+# yarn
+yarn.lock

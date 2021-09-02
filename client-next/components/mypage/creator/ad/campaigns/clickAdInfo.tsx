@@ -146,7 +146,7 @@ export default function ClickAdInfo(): JSX.Element {
           <div className={classes.popoverContents}>
             <div className={classes.imageContainer}>
               <img
-                src="/pngs/dashboard/clickad_panel_example.png"
+                src="dashboard/clickad_panel_example.png"
                 alt="panel_example"
                 className={classes.popoverimg}
               />
@@ -189,12 +189,9 @@ export default function ClickAdInfo(): JSX.Element {
                     <div className={classes.imageContainer}>
                       {creatorProfile.data.creatorTwitchOriginalId && (
                         <>
-                          <a
-                            href="/pngs/landing/트위치_패널배너.png"
-                            download="온애드_트위치_패널배너"
-                          >
+                          <a href="/landing/트위치_패널배너.png" download="온애드_트위치_패널배너">
                             <img
-                              src="/pngs/landing/트위치_패널배너.png"
+                              src="/landing/트위치_패널배너.png"
                               alt="온애드_트위치_패널배너"
                               className={classnames(classes.bannerImg, classes.horizontal)}
                             />
@@ -207,11 +204,11 @@ export default function ClickAdInfo(): JSX.Element {
                         <>
                           <br />
                           <a
-                            href="/pngs/landing/아프리카_플로팅배너.png"
+                            href="/landing/아프리카_플로팅배너.png"
                             download="온애드_아프리카_플로팅"
                           >
                             <img
-                              src="/pngs/landing/아프리카_플로팅배너.png"
+                              src="/landing/아프리카_플로팅배너.png"
                               alt="온애드_아프리카_플로팅"
                               className={classnames(classes.bannerImg, classes.vertical)}
                             />
@@ -222,11 +219,11 @@ export default function ClickAdInfo(): JSX.Element {
 
                           <br />
                           <a
-                            href="/pngs/landing/아프리카_하단배너.png"
+                            href="/landing/아프리카_하단배너.png"
                             download="온애드_아프리카_하단배너"
                           >
                             <img
-                              src="/pngs/landing/아프리카_하단배너.png"
+                              src="/landing/아프리카_하단배너.png"
                               alt="온애드_아프리카_하단배너"
                               className={classnames(classes.bannerImg, classes.horizontal)}
                             />

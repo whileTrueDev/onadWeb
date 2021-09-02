@@ -36,7 +36,7 @@ interface BusinessRegiUploadDialogProps {
 const BusinessViewDialog = (props: BusinessRegiUploadDialogProps): JSX.Element => {
   const { open, handleClose, businessRegiImage } = props;
   const classes = useStyles();
-  let defaultImage = '/pngs/logo/renewal/2x/logo_onad_y_b_2.png';
+  let defaultImage = '/logo/renewal/2x/logo_onad_y_b_2.png';
   let isPdf = false;
   if (typeof businessRegiImage === 'string') {
     if (businessRegiImage.indexOf('data:application/pdf;') === -1) {
