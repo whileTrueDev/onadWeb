@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#패스_421_1_);}
+	.st1{fill:#FFFFFF;}
+	.st2{fill:url(#사각형_155_1_);}
+	.st3{fill:url(#사각형_156_1_);}
+	.st4{fill:url(#사각형_157_1_);}
+</style>
+<g id="그룹_688" transform="translate(-1582 -874)">
+	
+		<linearGradient id="패스_421_1_" gradientUnits="userSpaceOnUse" x1="682.09" y1="1459.6095" x2="683.09" y2="1459.6095" gradientTransform="matrix(100.0001 0 0 -99.9887 -66627.1016 146868.4844)">
+		<stop  offset="0" style="stop-color:#5B8CEA"/>
+		<stop  offset="1" style="stop-color:#6F7BEC"/>
+	</linearGradient>
+	<path id="패스_421" class="st0" d="M1682,922.1c-1.1-27.6-24.3-49.1-51.9-48s-49.1,24.3-48,51.9c1,26.8,23.1,48.1,50,48.1h50
+		L1682,922.1L1682,922.1z"/>
+	<g id="그룹_325" transform="translate(1582 752.468)">
+		<g id="그룹_212">
+			<path id="사각형_154" class="st1" d="M36.8,147.5h26.4c10.4,0,18.8,8.4,18.8,18.8v7.2c0,10.4-8.4,18.8-18.8,18.8H36.8
+				c-10.4,0-18.8-8.4-18.8-18.8v-7.2C18,155.9,26.4,147.5,36.8,147.5z"/>
+			<path id="패스_422" class="st1" d="M66.3,190H53.4l12.9,12.9L66.3,190z"/>
+		</g>
+		<g id="그룹_213">
+			
+				<linearGradient id="사각형_155_1_" gradientUnits="userSpaceOnUse" x1="-803.7673" y1="655.4223" x2="-802.7673" y2="655.4223" gradientTransform="matrix(8.638 0 0 -8.638 7005.8457 5831.3618)">
+				<stop  offset="0" style="stop-color:#5B8CEA"/>
+				<stop  offset="1" style="stop-color:#6F7BEC"/>
+			</linearGradient>
+			<path id="사각형_155" class="st2" d="M67.2,165.5L67.2,165.5c2.4,0,4.3,1.9,4.3,4.3l0,0c0,2.4-1.9,4.3-4.3,4.3l0,0
+				c-2.4,0-4.3-1.9-4.3-4.3l0,0C62.9,167.4,64.8,165.5,67.2,165.5z"/>
+			
+				<linearGradient id="사각형_156_1_" gradientUnits="userSpaceOnUse" x1="-803.7673" y1="655.4223" x2="-802.7673" y2="655.4223" gradientTransform="matrix(8.638 0 0 -8.638 6988.6226 5831.3618)">
+				<stop  offset="0" style="stop-color:#5B8CEA"/>
+				<stop  offset="1" style="stop-color:#6F7BEC"/>
+			</linearGradient>
+			<path id="사각형_156" class="st3" d="M50,165.5L50,165.5c2.4,0,4.3,1.9,4.3,4.3l0,0c0,2.4-1.9,4.3-4.3,4.3l0,0
+				c-2.4,0-4.3-1.9-4.3-4.3l0,0C45.7,167.4,47.6,165.5,50,165.5z"/>
+			
+				<linearGradient id="사각형_157_1_" gradientUnits="userSpaceOnUse" x1="-803.7673" y1="655.4223" x2="-802.7673" y2="655.4223" gradientTransform="matrix(8.638 0 0 -8.638 6971.3994 5831.3618)">
+				<stop  offset="0" style="stop-color:#5B8CEA"/>
+				<stop  offset="1" style="stop-color:#6F7BEC"/>
+			</linearGradient>
+			<path id="사각형_157" class="st4" d="M32.8,165.5L32.8,165.5c2.4,0,4.3,1.9,4.3,4.3l0,0c0,2.4-1.9,4.3-4.3,4.3l0,0
+				c-2.4,0-4.3-1.9-4.3-4.3l0,0C28.5,167.4,30.4,165.5,32.8,165.5z"/>
+		</g>
+	</g>
+</g>
+</svg>

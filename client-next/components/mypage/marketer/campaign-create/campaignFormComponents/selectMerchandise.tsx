@@ -1,0 +1,117 @@
+import {
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import dayjs from 'dayjs';
+import * as React from 'react';
+import Button from '../../../../../atoms/button/customButton';
+import GreenRadio from '../../../../../atoms/radio/greenRadio';
+import StyledItemText from '../../../../../atoms/styledItemText';
+import { useMarketerMerchandisesListOnlyNotConnected } from '../../../../../utils/hooks/query/useMarketerMerchandisesListOnlyNotConnected';
+import { CampaignCreateAction, CampaignCreateInterface } from '../reducers/campaignCreate.reducer';
+
+const useStyles = makeStyles(theme => ({
+  merchandiseList: {
+    width: '100%',
+    maxWidth: 600,
+    backgroundColor: theme.palette.background.paper,
+    maxHeight: 300,
+    overflow: 'auto',
+    marginBottom: theme.spacing(2),
+  },
+}));
+
+export interface SelectMerchandiseProps {
+  state: CampaignCreateInterface;
+  dispatch: React.Dispatch<CampaignCreateAction>;
+  handleDialogOpen: () => void;
+}
+
+export default function SelectMerchandise({
+  state,
+  dispatch,
+  handleDialogOpen,
+}: SelectMerchandiseProps): JSX.Element {
+  const classes = useStyles();
+  const merchandiseData = useMarketerMerchandisesListOnlyNotConnected();
+
+  return (
+    <div>
+      <StyledItemText
+        primary="판매 상품 선택하기"
+        secondary={
+          <div>
+            <Typography variant="body2" color="textSecondary">
+              선택된 상품은 온애드샵에서 판매됩니다.
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              다른 캠페인에 연결되지 않은 상품만 표시됩니다.
+              <Typography component="span" color="error" variant="body2">
+                {' (상품은 1개의 캠페인에만 연결될 수 있습니다.)'}
+              </Typography>
+            </Typography>
+          </div>
+        }
+        // className={classes.label}
+      />
+
+      <div>
+        {merchandiseData.isLoading && (
+          <div style={{ padding: 72 }}>
+            <CircularProgress />
+          </div>
+        )}
+        {!merchandiseData.isLoading && merchandiseData.data && merchandiseData.data.length > 0 && (
+          <List className={classes.merchandiseList}>
+            {merchandiseData.data.map(merchandise => (
+              <ListItem
+                key={merchandise.id}
+                button
+                selected={String(merchandise.id) === String(state.selectedMerchandiseId)}
+                onClick={(): void => {
+                  dispatch({ type: 'SET_MERCHANDISE', value: merchandise.id });
+                }}
+              >
+                <ListItemText
+                  primary={merchandise.name}
+                  secondary={`등록일: ${dayjs(merchandise.createDate).format(
+                    'YYYY년 MM월 DD일 HH:mm:ss',
+                  )}`}
+                />
+                <ListItemSecondaryAction>
+                  <GreenRadio
+                    edge="end"
+                    checked={String(merchandise.id) === String(state.selectedMerchandiseId)}
+                    onChange={(): void => {
+                      dispatch({ type: 'SET_MERCHANDISE', value: merchandise.id });
+                    }}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        )}
+        {!merchandiseData.isLoading && merchandiseData.data && merchandiseData.data.length === 0 && (
+          <Alert severity="warning">
+            <Typography variant="body2">선택할 수 있는 상품이 없어요..</Typography>
+            <Typography variant="body2">새로운 상품을 등록하세요!</Typography>
+          </Alert>
+        )}
+      </div>
+
+      <div>
+        <StyledItemText>새로운 상품을 등록하고 싶으신가요?</StyledItemText>
+        {/* 새 상품 등록 다이얼로그 오픈 */}
+        <Button onClick={handleDialogOpen} color="primary">
+          + 새 상품 등록하기
+        </Button>
+      </div>
+    </div>
+  );
+}

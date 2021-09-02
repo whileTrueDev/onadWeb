@@ -6,7 +6,8 @@ import analysisRouter from './analysis';
 const router = express.Router();
 
 router.use('/analysis', analysisRouter);
-router.route('/')
+router
+  .route('/')
   .get(
     // responseHelper.middleware.checkSessionExists,
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -24,17 +25,39 @@ router.route('/')
       ORDER BY cI.creatorId DESC
       `;
       doQuery(searchQuery, [])
-        .then((row) => {
+        .then(row => {
           responseHelper.send(row.result, 'get', res);
         })
-        .catch((errorData) => {
+        .catch(errorData => {
           throw new Error(`Error in /creators - ${errorData}`);
         });
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
-router.route('/live')
+router
+  .route('/contracted')
+  .get(
+    responseHelper.middleware.withErrorCatch(async (req, res, next) => {
+      const searchQuery = `
+    SELECT COUNT(creatorName) as contractedCreator
+    FROM creatorInfo
+    WHERE creatorContractionAgreement = 1 
+    ORDER BY date DESC
+    `;
+      doQuery(searchQuery, [])
+        .then(row => {
+          responseHelper.send(row.result, 'get', res);
+        })
+        .catch(errorData => {
+          throw new Error(`Error in /creators - ${errorData}`);
+        });
+    }),
+  )
+  .all(responseHelper.middleware.unusedMethod);
+
+router
+  .route('/live')
   .get(
     // 계약중이면서~ 방송중이면서~ 광고송출중인 크리에이터 리스트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -61,20 +84,19 @@ router.route('/live')
       ORDER BY viewer DESC`;
 
       doQuery(query, [date, date])
-        .then((row) => {
-          const resultList = row.result.map((creator: {
-            creatorId: string;
-          }) => creator.creatorId);
+        .then(row => {
+          const resultList = row.result.map((creator: { creatorId: string }) => creator.creatorId);
           responseHelper.send(resultList, 'get', res);
         })
-        .catch((errorData) => {
+        .catch(errorData => {
           throw new Error(`Error in /creators/live - ${errorData}`);
         });
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
-router.route('/broadcast')
+router
+  .route('/broadcast')
   .get(
     // 계약중이면서~ 방송중인 크리에이터 리스트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -92,18 +114,19 @@ router.route('/broadcast')
       WHERE creatorContractionAgreement = 1`;
 
       doQuery(query, [date, date])
-        .then((row) => {
+        .then(row => {
           const { result } = row;
           responseHelper.send(result, 'get', res);
         })
-        .catch((errorData) => {
+        .catch(errorData => {
           throw new Error(`Error in /creators/live - ${errorData}`);
         });
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 
-router.route('/detail')
+router
+  .route('/detail')
   .get(
     // 계약중이면서~ 방송중인 크리에이터 리스트
     responseHelper.middleware.withErrorCatch(async (req, res, next) => {
@@ -111,14 +134,14 @@ router.route('/detail')
       FROM creatorDetail`;
 
       doQuery(query)
-        .then((row) => {
+        .then(row => {
           const { result } = row;
           responseHelper.send(result, 'get', res);
         })
-        .catch((errorData) => {
+        .catch(errorData => {
           throw new Error(`Error in /creators/live - ${errorData}`);
         });
-    })
+    }),
   )
   .all(responseHelper.middleware.unusedMethod);
 

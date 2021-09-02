@@ -1,0 +1,284 @@
+
+
+@font-face {
+  font-family: 'S-CoreDream-8Heavy';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-8Heavy.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.body-page-transition {
+  overflow: hidden;
+}
+.body-page-transition #page-transition {
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.body-page-transition #page-transition > div:before {
+  content: "";
+  position: fixed;
+  z-index: 9998;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  background: white;
+}
+
+@font-face {
+  font-family: 'NotoSansKR-Black';
+  src: url(../assets/fonts/NotoSansKR-Black.otf) format('truetype');
+}
+
+@font-face {
+  font-family: 'NotoSansKR-Regular';
+  src: url(../assets/fonts/NotoSansKR-Regular.otf) format('truetype');
+}
+
+@font-face {
+  font-family: 'AppleSDGothicNeoB';
+  src: url(../assets/fonts/AppleSDGothicNeoB.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeoR';
+  src: url(../assets/fonts/AppleSDGothicNeoR.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'AppleSDGothicNeo';
+  src: url(../assets/fonts/AppleSDGothicNeoM.ttf) format('truetype');
+}
+
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  /* background-color: #fff; */
+  margin: 0;
+  font-family: Helvetica, 'Sunflower', sans-serif;
+  font-weight: 400;
+  line-height: 1.5em;
+}
+
+/* |<- 스크롤 바 스타일링  */
+/* width and height */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fff; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ddd; 
+  border: 2px solid transparent;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c0c0c0
+}
+/* 스크롤 바 스타일링 ->| */
+
+* {
+  font-family: "AppleSDGothicNeoR", "NotoSansKR-Regular", "Arial", "sans-serif" !important;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+*:focus {
+  outline: 0;
+}
+
+a:focus,
+a:active,
+button:active,
+button:focus,
+button:hover,
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+select::-moz-focus-inner,
+input[type="file"]>input[type="button"]::-moz-focus-inner {
+  outline: 0 !important;
+}
+
+h1 {
+  font-size: 3em;
+  line-height: 1.15em;
+}
+
+h2 {
+  font-size: 2.4em;
+}
+
+h3 {
+  font-size: 1.825em;
+  line-height: 1.4em;
+  margin: 20px 0 10px;
+}
+
+h4 {
+  font-size: 1.3em;
+  line-height: 1.4em;
+}
+
+h5 {
+  font-size: 1.25em;
+  line-height: 1.4em;
+  margin-bottom: 15px;
+}
+
+h6 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
+  line-height: 1.5em;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+/* material-table min width 설정을 위해 by hwasurr 21.01.15 */
+#creator-select-table table.MuiTable-root {
+  min-width: 1340px;
+}
+
+#creator-select-table table.MuiTable-root:nth-child(2) {
+  display: table-row;
+}
+
+#creator-select-table table.MuiTable-root tfoot {
+  float: left;
+}
+
+
+/* 데이터그리드 푸터 정렬 변경 by hwasurr 21.01.25 */
+div.MuiDataGrid-root .MuiDataGrid-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align:center;
+}
+
+/* 공지사항 및 이용약관 markdown 스타일링 */
+.react-markdown a {
+  color: rgb(53, 201, 220);
+  text-decoration: underline;
+}
+.react-markdown h1,h2,h3,h4,h5,h6 {
+  font-weight: bold;
+}
+@media (max-width: 990px) {
+  .react-markdown img {
+      width: 100%;
+  }
+}
+
+/* heatmap */
+
+/*
+ * react-calendar-heatmap styles
+ *
+ * All of the styles in this file are optional and configurable!
+ * The github and gitlab color scales are provided for reference.
+ */
+
+ .react-calendar-heatmap {
+  height: 95%;
+}
+
+.react-calendar-heatmap text {
+   font-size: 8px;
+   fill: #aaa;
+ }
+ 
+ .react-calendar-heatmap .react-calendar-heatmap-small-text {
+   font-size: 5px;
+ }
+ 
+ .react-calendar-heatmap rect:hover {
+   stroke: #555;
+   stroke-width: 1px;
+ }
+ 
+ /*
+  * Default color scale
+  */
+ 
+ .react-calendar-heatmap .color-empty {
+   fill: rgba(0, 0, 0, 0.12);
+ }
+ 
+ .react-calendar-heatmap .color-filled {
+   fill: #8cc665;
+ }
+ 
+ /*
+  * Github color scale
+  */
+ 
+ .react-calendar-heatmap .color-github-0 {
+   fill:rgba(0, 0, 0, 0.12);
+ }
+ .react-calendar-heatmap .color-github-1 {
+   fill: #d6e685;
+ }
+ .react-calendar-heatmap .color-github-2 {
+   fill: #8cc665;
+ }
+ .react-calendar-heatmap .color-github-3 {
+   fill: #44a340;
+ }
+ .react-calendar-heatmap .color-github-4 {
+   fill: #1e6823;
+ }
+ 
+ /*
+  * Gitlab color scale
+  */
+ 
+ .react-calendar-heatmap .color-gitlab-0 {
+   fill: #ededed;
+ }
+ .react-calendar-heatmap .color-gitlab-1 {
+   fill: #acd5f2;
+ }
+ .react-calendar-heatmap .color-gitlab-2 {
+   fill: #7fa8d1;
+ }
+ .react-calendar-heatmap .color-gitlab-3 {
+   fill: #49729b;
+ }
+ .react-calendar-heatmap .color-gitlab-4 {
+   fill: #254e77;
+ }
+

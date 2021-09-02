@@ -27,6 +27,6 @@ export class MarketerKakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     refreshToken: string,
     profile: KakaoProfile,
   ): Promise<MarketerSession> {
-    return this.authService.naverLogin(profile);
+    return this.authService.kakaoLogin(profile);
   }
 }
