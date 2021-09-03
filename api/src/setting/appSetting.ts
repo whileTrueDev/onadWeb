@@ -13,6 +13,7 @@ export class AppSetting {
   private corsOptions = {
     origin: [
       'https://onad.io',
+      'https://next.onad.io',
       'https://test.onad.io',
       'https://test-cpa.onad.io',
       'https://admin.onad.io',
