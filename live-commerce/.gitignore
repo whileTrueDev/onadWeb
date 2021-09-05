@@ -25,3 +25,5 @@ calculationLog/*
 ngrok.exe
 
 rare-*.json
+
+client_deprecated.ejs

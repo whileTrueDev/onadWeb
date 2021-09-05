@@ -8,6 +8,7 @@ let setDate = new Date('2021-09-04T15:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
+const topMessages: any[] = []
 let bannerId = 0;
 let bottomTextIndex = 0;
 
@@ -46,6 +47,17 @@ setInterval(async () => {
       $('.top-right').fadeOut(800);
       $('.donation-image').attr('src', '/public/images/invisible.png');
     }, 10000);
+  }
+}, 2000);
+
+setInterval(async () => {
+  if (topMessages.length !== 0 && $('.top-wrapper').css('display') === 'none') {
+    $('.top-wrapper').css({ display: 'flex' });
+    $('.top-wrapper').html(topMessages[0].messageHtml);
+    topMessages.splice(0, 1);
+    await setTimeout(() => {
+      $('.top-wrapper').fadeOut(800);
+    }, 5000);
   }
 }, 2000);
 
@@ -328,6 +340,29 @@ socket.on('get right-top purchase message', async (data: any) => {
   messageArray.push({ audioBlob, messageHtml });
 });
 
+socket.on('get top purchase message', async (data: any) => {
+  const { userId } = data;
+  const { productName } = data;
+  const price = data.purchaseNum;
+
+  messageHtml = `
+  <div class="donation-wrapper">
+    <iframe src="/public/audio/alarm-type-1.wav"
+    id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+    <div class="centered">
+      <div class ="animated heartbeat" id="donation-top">
+        <span id="nickname">
+          <span class="animated heartbeat" id="donation-user-id">${userId}</span>
+          <span class="donation-sub">님 ${productName}</span>
+          <span class="animated heartbeat" id="donation-num">${price}</span>
+          <span class="donation-sub">원 구매 감사합니다!</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  `;
+  topMessages.push({ messageHtml });
+});
 // ---------------------------- 추후 삽입 가능 --------------------------
 // if (messageArray.length === 0)  {
 //   messageArray.push(messageHtml)

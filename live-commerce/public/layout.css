@@ -28,12 +28,13 @@ body {
   justify-content: flex-end;
 }
 
-.live-commerce {
+.live-commerce{
   width: 96.9%;
   height: 94.5%;
   margin-top: 0.7%;
   position: relative;
 }
+
 
 /* 하단영역 */
 .bottom-area-wrapper {

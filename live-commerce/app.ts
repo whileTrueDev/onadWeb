@@ -114,6 +114,7 @@ io.on('connection', (socket: Socket) => {
     const selectQuery = `
                           SELECT nickname, sum(quantity) AS total 
                           FROM liveCommerceRanking 
+                          WHERE loginFlag=1
                           GROUP BY nickname 
                           ORDER BY total desc,
                           id
@@ -138,6 +139,11 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('get current quantity', totalQuantity.result[0].currentQuantity);
     io.to(roomName).emit('get bottom purchase message', bottomTextArray);
   });
+
+  socket.on('get top purchase message from admin', (data:PurchaseMessage) => {
+    const { roomName } = data;
+    io.to(roomName).emit('get top purchase message', data)
+  })
 
   socket.on('clear bottom area from admin', (data: TextData) => {
     const { roomName } = data;
@@ -178,12 +184,13 @@ io.on('connection', (socket: Socket) => {
     const bottomTextArray: string[] = [];
 
     const selectQuery = `
-                          SELECT nickname, sum(quantity) AS total 
-                          FROM liveCommerceRanking 
-                          GROUP BY nickname 
-                          ORDER BY total desc,
-                          id
-                          LIMIT 4`;
+    SELECT nickname, sum(quantity) AS total 
+    FROM liveCommerceRanking 
+    WHERE loginFlag=1
+    GROUP BY nickname 
+    ORDER BY total desc,
+    id
+    LIMIT 4`;
 
     const selectTotalQuery = `SELECT SUM(quantity) AS currentQuantity FROM liveCommerceRanking`;
     const textSelectQuery = `SELECT nickname, text FROM liveCommerceRanking`;
