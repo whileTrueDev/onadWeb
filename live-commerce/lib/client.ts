@@ -49,7 +49,7 @@ setInterval(async () => {
     }, 10000);
   }
 }, 2000);
-
+// 비회원 메세지
 setInterval(async () => {
   if (topMessages.length !== 0 && $('.top-wrapper').css('display') === 'none') {
     $('.top-wrapper').css({ display: 'flex' });
@@ -60,11 +60,11 @@ setInterval(async () => {
     }, 5000);
   }
 }, 2000);
-
+// 세로배너
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 12) {
+    if (bannerId === 13) {
       bannerId = 1;
     }
     await setTimeout(() => {
