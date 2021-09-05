@@ -243,9 +243,15 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('show roullette', customers);
   });
 
-  socket.on('show full virtual ad', roomName => {
-    io.to(roomName).emit('show full virtual ad from server');
+  socket.on('show video from admin', data => {
+    const {roomName} = data;
+    const {type} = data;
+    io.to(roomName).emit('show video from server', type);
   });
+
+  socket.on('clear full video', roomName => {
+    io.to(roomName).emit('clear full video from server')
+  })
 });
 
 httpServer.listen(PORT, () => {

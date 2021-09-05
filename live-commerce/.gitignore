@@ -27,3 +27,4 @@ ngrok.exe
 rare-*.json
 
 client_deprecated.ejs
+client_deprecated.ts
