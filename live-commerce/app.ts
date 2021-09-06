@@ -140,10 +140,10 @@ io.on('connection', (socket: Socket) => {
     io.to(roomName).emit('get bottom purchase message', bottomTextArray);
   });
 
-  socket.on('get top purchase message from admin', (data:PurchaseMessage) => {
+  socket.on('get top purchase message from admin', (data: PurchaseMessage) => {
     const { roomName } = data;
-    io.to(roomName).emit('get top purchase message', data)
-  })
+    io.to(roomName).emit('get top purchase message', data);
+  });
 
   socket.on('clear bottom area from admin', (data: TextData) => {
     const { roomName } = data;
@@ -244,14 +244,14 @@ io.on('connection', (socket: Socket) => {
   });
 
   socket.on('show video from admin', data => {
-    const {roomName} = data;
-    const {type} = data;
+    const { roomName } = data;
+    const { type } = data;
     io.to(roomName).emit('show video from server', type);
   });
 
   socket.on('clear full video', roomName => {
-    io.to(roomName).emit('clear full video from server')
-  })
+    io.to(roomName).emit('clear full video from server');
+  });
 });
 
 httpServer.listen(PORT, () => {

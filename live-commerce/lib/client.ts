@@ -8,7 +8,7 @@ let setDate = new Date('2021-09-04T15:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
-const topMessages: any[] = []
+const topMessages: any[] = [];
 let bannerId = 0;
 let bottomTextIndex = 0;
 
@@ -354,7 +354,9 @@ socket.on('get top purchase message', async (data: any) => {
         <span id="nickname">
           <span class="animated heartbeat" id="donation-user-id">${userId}</span>
           <span class="donation-sub">님 ${productName}</span>
-          <span class="animated heartbeat" id="donation-num">${price.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}</span>
+          <span class="animated heartbeat" id="donation-num">${price
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}</span>
           <span class="donation-sub">원 구매 감사합니다!</span>
         </span>
       </div>
@@ -477,26 +479,26 @@ socket.on('refresh signal', () => {
   location.reload();
 });
 
-socket.on('show video from server', (type:string) => {
-  if (type == 'intro') {
-  const introHtml = `
+socket.on('show video from server', (type: string) => {
+  if (type === 'intro') {
+    const introHtml = `
     <video class="inner-video-area" autoplay>
       <source src="/public/videos/intro.mp4" type="video/mp4">
     </video>
-      `
-    $('.full-video').html(introHtml)}
-  else {
+      `;
+    $('.full-video').html(introHtml);
+  } else {
     const outroHtml = `
     <video class="inner-video-area" autoplay>
       <source src="/public/videos/outro.mp4" type="video/mp4">
     </video>
-      `
-    $('.full-video').html(outroHtml)
+      `;
+    $('.full-video').html(outroHtml);
   }
 });
 
 socket.on('clear full video from server', () => {
-  $('.inner-video-area').fadeOut(800)
+  $('.inner-video-area').fadeOut(800);
 });
 
 export {};
