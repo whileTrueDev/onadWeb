@@ -8,6 +8,7 @@ let setDate = new Date('2021-09-04T15:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
+const topMessages: any[] = [];
 let bannerId = 0;
 let bottomTextIndex = 0;
 
@@ -48,11 +49,22 @@ setInterval(async () => {
     }, 10000);
   }
 }, 2000);
-
+// 비회원 메세지
+setInterval(async () => {
+  if (topMessages.length !== 0 && $('.top-wrapper').css('display') === 'none') {
+    $('.top-wrapper').css({ display: 'flex' });
+    $('.top-wrapper').html(topMessages[0].messageHtml);
+    topMessages.splice(0, 1);
+    await setTimeout(() => {
+      $('.top-wrapper').fadeOut(800);
+    }, 5000);
+  }
+}, 2000);
+// 세로배너
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 12) {
+    if (bannerId === 13) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -328,6 +340,32 @@ socket.on('get right-top purchase message', async (data: any) => {
   messageArray.push({ audioBlob, messageHtml });
 });
 
+socket.on('get top purchase message', async (data: any) => {
+  const { userId } = data;
+  const { productName } = data;
+  const price = data.purchaseNum;
+
+  messageHtml = `
+  <div class="donation-wrapper">
+    <iframe src="/public/audio/alarm-type-1.wav"
+    id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+    <div class="centered">
+      <div class ="animated heartbeat" id="donation-top">
+        <span id="nickname">
+          <span class="animated heartbeat" id="donation-user-id">${userId}</span>
+          <span class="donation-sub">님 ${productName}</span>
+          <span class="animated heartbeat" id="donation-num">${price
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}</span>
+          <span class="donation-sub">원 구매 감사합니다!</span>
+        </span>
+      </div>
+    </div>
+  </div>
+  
+  `;
+  topMessages.push({ messageHtml });
+});
 // ---------------------------- 추후 삽입 가능 --------------------------
 // if (messageArray.length === 0)  {
 //   messageArray.push(messageHtml)
@@ -411,7 +449,6 @@ socket.on('clear ranking area', () => {
   </p>
   `,
   );
-  // rankingArray.length = 0;
 });
 
 // 하단 다시 띄우기
@@ -427,26 +464,12 @@ socket.on('clear screen', () => {
   $(document.body).fadeOut(1000);
 });
 
-// socket.on('show virtual ad to client', () => {
-//   $('#virtual-ad-img').attr(
-//     'src',
-//     'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif',
-//   );
-//   setTimeout(() => {
-//     $('#virtual-ad-img').attr('src', '/public/images/invisible.png');
-//   }, 13500);
-// });
-
 socket.on('quantity object from server', (quantityObject: string) => {
   $('#quantity-object').text(quantityObject);
   $('.bottom-object').css({
     opacity: 1,
   });
 });
-
-// socket.on('get current quantity', (currentQuantity: number) => {
-//   $('#current-quantity').text(currentQuantity);
-// });
 
 socket.on('d-day from server', (date: string) => {
   setDate = new Date(date);
@@ -456,16 +479,26 @@ socket.on('refresh signal', () => {
   location.reload();
 });
 
-// socket.on('show full virtual ad from server', () => {
-//   $('.virtual-ad-full').css({ opacity: 1 });
-//   $('#virtual-ad-img-full').attr(
-//     'src',
-//     'https://onad-static-files.s3.ap-northeast-2.amazonaws.com/live-commerce/%ED%8F%AC%ED%86%A0%EC%83%B5-%EC%99%84%EC%84%B1.gif',
-//   );
-//   setTimeout(() => {
-//     $('.virtual-ad-full').css({ opacity: 0 });
-//     $('#virtual-ad-img-full').attr('src', '/public/images/invisible.png');
-//   }, 13500);
-// });
+socket.on('show video from server', (type: string) => {
+  if (type === 'intro') {
+    const introHtml = `
+    <video class="inner-video-area" autoplay>
+      <source src="/public/videos/intro.mp4" type="video/mp4">
+    </video>
+      `;
+    $('.full-video').html(introHtml);
+  } else {
+    const outroHtml = `
+    <video class="inner-video-area" autoplay>
+      <source src="/public/videos/outro.mp4" type="video/mp4">
+    </video>
+      `;
+    $('.full-video').html(outroHtml);
+  }
+});
+
+socket.on('clear full video from server', () => {
+  $('.inner-video-area').fadeOut(800);
+});
 
 export {};
