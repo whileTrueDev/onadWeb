@@ -64,7 +64,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 13) {
+    if (bannerId === 9) {
       bannerId = 1;
     }
     await setTimeout(() => {
