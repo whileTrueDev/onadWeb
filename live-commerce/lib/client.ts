@@ -4,7 +4,7 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-09-04T15:00:00+0900');
+let setDate = new Date('2021-09-11T21:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
