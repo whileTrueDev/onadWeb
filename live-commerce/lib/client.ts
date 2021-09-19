@@ -123,7 +123,6 @@ function dailyMissionTimer() {
     const extraHoursToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const extraMinutesToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60)) / (1000 * 60));
     const extraSecondsToStart = Math.floor((extraTimeToStart % (1000 * 60)) / 1000);
-    console.log(extraMinutesToStart, extraSecondsToStart)
     if (extraHoursToStart === 0 && extraMinutesToStart === 0){
     if (extraSecondsToStart === 11) {
       const roomName = THIS_URL.split('/').pop();
