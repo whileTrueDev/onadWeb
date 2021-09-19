@@ -4,6 +4,7 @@ import http from 'http';
 import { UserInfo, SocketInfo, TextData, PurchaseMessage, ImageData } from './@types/data';
 import doQuery from './models/doQuery';
 import googleTextToSpeech from './lib/googleTextToSpeech';
+import streamStartNotification from './lib/streamStartNotificationTTS';
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -252,6 +253,11 @@ io.on('connection', (socket: Socket) => {
   socket.on('clear full video', roomName => {
     io.to(roomName).emit('clear full video from server');
   });
+
+  socket.on('send notification signal', async (roomName) => {
+    const audioBuffer = await streamStartNotification();
+    io.to(roomName).emit('get stream start notification tts', audioBuffer);
+  })
 });
 
 httpServer.listen(PORT, () => {

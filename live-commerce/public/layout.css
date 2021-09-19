@@ -29,6 +29,7 @@ body {
 }
 
 .live-commerce{
+  display:none;
   width: 96.9%;
   height: 94.5%;
   margin-top: 0.7%;

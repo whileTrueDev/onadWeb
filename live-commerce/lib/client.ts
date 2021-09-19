@@ -4,7 +4,8 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-let setDate = new Date('2021-09-04T15:00:00+0900');
+const startDate = new Date('2021-09-19T23:22:00+0900');
+let setDate = new Date('2021-09-20T23:00:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -116,6 +117,29 @@ function dailyMissionTimer() {
   setInterval(function () {
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
     const now = new Date();
+    
+    const extraTimeToStart = startDate.getTime() - now.getTime();
+    const extraSecondsToStart = Math.floor((extraTimeToStart % (1000 * 60)) / 1000);
+
+    if (extraSecondsToStart === 11) {
+      const roomName = THIS_URL.split('/').pop();
+      socket.emit('send notification signal', roomName)
+      } else if (extraSecondsToStart === 5) {
+        //5sec-timer.MP3
+        $('body').append(`
+        <iframe src="/public/audio/5sec-timer.MP3" id="sec-timer" allow="autoplay" style="display:none"></iframe>
+        `)
+      }
+      else if (extraSecondsToStart === 0) {
+        $('body').remove('#sec-timer')
+        const introHtml = `
+          <video class="inner-video-area" autoplay>
+            <source src="/public/videos/intro.mp4" type="video/mp4">
+          </video>
+            `;
+          $('.full-video').html(introHtml);
+      }
+
     let distance = setDate.getTime() - now.getTime();
     if (distance < 0) {
       distance = 0;
@@ -457,11 +481,13 @@ socket.on('show bottom area to client', () => {
 });
 
 socket.on('show screen', () => {
-  $(document.body).fadeIn(1000);
+  // $(document.body).fadeIn(1000);
+  $('.live-commerce').fadeIn(500)
 });
 
 socket.on('clear screen', () => {
-  $(document.body).fadeOut(1000);
+  // $(document.body).fadeOut(1000);
+  $('.live-commerce').fadeOut(500)
 });
 
 socket.on('quantity object from server', (quantityObject: string) => {
@@ -500,5 +526,16 @@ socket.on('show video from server', (type: string) => {
 socket.on('clear full video from server', () => {
   $('.inner-video-area').fadeOut(800);
 });
+
+socket.once('get stream start notification tts', (audioBuffer:Buffer) => {
+  if (audioBuffer){
+    const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
+    const streamStartNotificationAudioBlob = window.URL.createObjectURL(blob);
+    const sound = new Audio(streamStartNotificationAudioBlob);
+    setTimeout(() => {
+      sound.play();
+    }, 1000)
+    
+}})
 
 export {};
