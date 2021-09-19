@@ -542,7 +542,9 @@ socket.once('get stream start notification tts', (audioBuffer:Buffer) => {
     setTimeout(() => {
       sound.play();
     }, 1000)
-    
 }})
 
+socket.on('connection check from server', () => {
+  $('.on-air').toggle()
+})
 export {};
