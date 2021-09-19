@@ -4,8 +4,8 @@ const socket: any = io({ transports: ['websocket'] });
 let bottomMessages: Array<null | string> = [];
 const THIS_URL: string = window.location.href;
 
-const startDate = new Date('2021-09-19T23:22:00+0900');
-let setDate = new Date('2021-09-20T23:00:00+0900');
+let startDate = new Date('2021-09-25T22:00:00+0900');
+let setDate = new Date('2021-09-25T23:30:00+0900');
 
 let messageHtml: string;
 const messageArray: any[] = [];
@@ -119,8 +119,12 @@ function dailyMissionTimer() {
     const now = new Date();
     
     const extraTimeToStart = startDate.getTime() - now.getTime();
-    const extraSecondsToStart = Math.floor((extraTimeToStart % (1000 * 60)) / 1000);
 
+    const extraHoursToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const extraMinutesToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60)) / (1000 * 60));
+    const extraSecondsToStart = Math.floor((extraTimeToStart % (1000 * 60)) / 1000);
+    console.log(extraMinutesToStart, extraSecondsToStart)
+    if (extraHoursToStart === 0 && extraMinutesToStart === 0){
     if (extraSecondsToStart === 11) {
       const roomName = THIS_URL.split('/').pop();
       socket.emit('send notification signal', roomName)
@@ -139,7 +143,7 @@ function dailyMissionTimer() {
             `;
           $('.full-video').html(introHtml);
       }
-
+}
     let distance = setDate.getTime() - now.getTime();
     if (distance < 0) {
       distance = 0;
@@ -526,6 +530,10 @@ socket.on('show video from server', (type: string) => {
 socket.on('clear full video from server', () => {
   $('.inner-video-area').fadeOut(800);
 });
+
+socket.on('get start time from server', (timeData:string) => {
+  startDate = new Date(timeData);
+})
 
 socket.once('get stream start notification tts', (audioBuffer:Buffer) => {
   if (audioBuffer){

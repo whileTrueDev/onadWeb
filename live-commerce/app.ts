@@ -258,6 +258,12 @@ io.on('connection', (socket: Socket) => {
     const audioBuffer = await streamStartNotification();
     io.to(roomName).emit('get stream start notification tts', audioBuffer);
   })
+
+  socket.on('get start time from admin', (dateData: DateData) => {
+    const { date } = dateData;
+    const { roomName } = dateData;
+    io.to(roomName).emit('get start time from server', date);
+  })
 });
 
 httpServer.listen(PORT, () => {
