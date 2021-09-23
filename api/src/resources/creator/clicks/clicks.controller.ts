@@ -2,7 +2,6 @@ import { Controller, Get, Query, UseGuards, ValidationPipe } from '@nestjs/commo
 import { Creator } from '../../../decorators/sessionData.decorator';
 import { PaginationDto } from '../../../dto/paginationDto.dto';
 import { CampaignLog } from '../../../entities/CampaignLog';
-import { OnadBannerClickPath } from '../../../interfaces/OnadBannerClickPath.interface';
 import { CreatorSession } from '../../../interfaces/Session.interface';
 import { IsAuthGuard } from '../../auth/guards/isAuth.guard';
 import { ClicksService } from './clicks.service';
@@ -14,9 +13,7 @@ export class ClicksController {
   constructor(private readonly clicksService: ClicksService) {}
 
   @Get()
-  findClicks(
-    @Creator() { creatorId }: CreatorSession,
-  ): Promise<Record<OnadBannerClickPath, number>> {
+  findClicks(@Creator() { creatorId }: CreatorSession): Promise<number> {
     return this.clicksService.findClicks(creatorId);
   }
 

@@ -118,18 +118,19 @@ export default function AdClickCard(): JSX.Element {
             {/* 클릭 수 정보 */}
             {!clicks.isLoading && clicks.data && (
               <Grid item>
-                <div style={{ marginBottom: 8 }}>
+                <div>
                   <Typography>클릭광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicks.data.adpanel || 0} 회
+                    {clicks.data || 0} 회
                   </Typography>
                 </div>
-                <div style={{ marginTop: 8 }}>
+                {/* 210923 온애드 채팅봇 차단으로 인한 제거 처리 by dan(hwasurr) */}
+                {/* <div style={{ marginTop: 8 }}>
                   <Typography>채팅광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                     {clicks.data.adchat || 0} 회
                   </Typography>
-                </div>
+                </div> */}
               </Grid>
             )}
           </Grid>
