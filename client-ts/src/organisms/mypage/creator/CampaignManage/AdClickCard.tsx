@@ -121,7 +121,7 @@ export default function AdClickCard(): JSX.Element {
                 <div>
                   <Typography>클릭광고 클릭 수</Typography>
                   <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                    {clicks.data.adpanel || 0} 회
+                    {clicks.data || 0} 회
                   </Typography>
                 </div>
                 {/* 210923 온애드 채팅봇 차단으로 인한 제거 처리 by dan(hwasurr) */}

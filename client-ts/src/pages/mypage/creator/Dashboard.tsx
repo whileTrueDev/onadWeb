@@ -8,7 +8,6 @@ import AlertCard from '../../../organisms/mypage/creator/Dashboard/AlertCard';
 import BannerCard from '../../../organisms/mypage/creator/Dashboard/BannerCard';
 import ClickAdCard from '../../../organisms/mypage/creator/Dashboard/ClickAdCard';
 import CustomerServiceCard from '../../../organisms/mypage/creator/Dashboard/CustomerServiceCard';
-import EventInfoCard from '../../../organisms/mypage/creator/Dashboard/EventInfoCard';
 import IncomeChart from '../../../organisms/mypage/creator/Dashboard/IncomeChart';
 import NoticeCard from '../../../organisms/mypage/creator/Dashboard/NoticeCard';
 import UserInfoCard from '../../../organisms/mypage/creator/Dashboard/UserInfoCard';

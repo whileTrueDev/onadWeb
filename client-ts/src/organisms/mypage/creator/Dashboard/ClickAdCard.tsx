@@ -82,7 +82,7 @@ const ClickAdCard = (): JSX.Element => {
                   variant="h5"
                   className={classnames(classes.text, classes.bold)}
                 >
-                  {`${numFormatter(clicks.data?.adpanel ? clicks.data.adpanel : 0)} 회`}
+                  {`${numFormatter(clicks.data || 0)} 회`}
                 </Typography>
               </div>
             </Grid>
