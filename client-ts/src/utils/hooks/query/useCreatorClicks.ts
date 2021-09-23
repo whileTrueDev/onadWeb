@@ -1,10 +1,7 @@
 import { useQuery } from 'react-query';
 import axios from '../../axios';
 
-export interface ClicksRes {
-  adpanel: number;
-  adchat: number;
-}
+export type ClicksRes = number;
 
 const getCreatorClicks = async () => {
   const res = await axios.get<ClicksRes>('/creator/clicks');

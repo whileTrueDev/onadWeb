@@ -5,7 +5,6 @@ import { Campaign } from '../../../entities/Campaign';
 import { CampaignLog } from '../../../entities/CampaignLog';
 import { LinkRegistered } from '../../../entities/LinkRegistered';
 import { MerchandiseMallItems } from '../../../entities/MerchandiseMallItems';
-import { OnadBannerClickPath } from '../../../interfaces/OnadBannerClickPath.interface';
 import { CampaignLogRepository } from '../../../repositories/CampaignLog.repository';
 import { TrackingRepository } from '../../../repositories/Tracking.repository';
 import {
@@ -22,19 +21,15 @@ export class ClicksService {
   ) {}
 
   // * 클릭 정보 조회
-  public async findClicks(creatorId: string): Promise<Record<OnadBannerClickPath, number>> {
+  public async findClicks(creatorId: string): Promise<number> {
     const clicks = await this.trackingRepo
       .createQueryBuilder()
-      .select('channel, count(*) AS count')
+      .select('count(*) AS count')
       .where('creatorId = :creatorId', { creatorId })
-      .groupBy('channel')
       .getRawMany();
 
-    const result: Record<OnadBannerClickPath, number> = { adpanel: 0, adchat: 0 };
-    clicks.forEach(click => {
-      result[click.channel] = click.count ? Number(click.count) : 0;
-    });
-    return result;
+    if (clicks.length === 0) return 0;
+    return clicks[0].count;
   }
 
   // * 최근 클릭 정보

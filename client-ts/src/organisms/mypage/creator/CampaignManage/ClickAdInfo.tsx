@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
   },
   overlayUrl: { marginTop: theme.spacing(2), textAlign: 'center' },
-  overlayUrlInput: { color: theme.palette.primary.main },
+  overlayUrlInput: { color: theme.palette.primary.main, cursor: 'pointer' },
   popoverContents: { padding: theme.spacing(4), maxWidth: 350, width: '100%' },
   popoverimg: { height: 350, maxWidth: '100%', textAlign: 'center' },
   alignCenter: { textAlign: 'center' },

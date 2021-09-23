@@ -110,7 +110,7 @@ export default function AdIncomeCard(): JSX.Element {
   // 수익 type 렌더링 함수
   const renderType = (type: 'CPM' | 'CPC' | 'CPA' | 'CPS'): string => {
     if (type === 'CPM') return '배너광고';
-    if (type === 'CPC') return '클릭/채팅광고';
+    if (type === 'CPC') return '클릭광고';
     if (type === 'CPA') return '참여형광고';
     if (type === 'CPS') return '판매형광고';
     return '';
