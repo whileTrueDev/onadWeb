@@ -130,14 +130,14 @@ const Dashboard = (): JSX.Element => {
             </GridItem>
 
             {/* 고객센터 카드 */}
-            <GridItem xs={12} sm={6} lg={3}>
+            <GridItem xs={12} sm={6}>
               <CustomerServiceCard />
             </GridItem>
 
             {/* 이벤트 알림 카드 */}
-            <GridItem xs={12} sm={6} lg={3}>
+            {/* <GridItem xs={12} sm={6} lg={3}>
               <EventInfoCard />
-            </GridItem>
+            </GridItem> */}
           </GridContainer>
         )}
       </div>

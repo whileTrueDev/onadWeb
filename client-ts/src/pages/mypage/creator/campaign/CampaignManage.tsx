@@ -2,7 +2,6 @@ import { Typography } from '@material-ui/core';
 import GridContainer from '../../../../atoms/Grid/GridContainer';
 import GridItem from '../../../../atoms/Grid/GridItem';
 import AdClickCard from '../../../../organisms/mypage/creator/CampaignManage/AdClickCard';
-import ChatAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ChatAdInfo';
 import ClickAdInfo from '../../../../organisms/mypage/creator/CampaignManage/ClickAdInfo';
 import NowBroadCard from '../../../../organisms/mypage/creator/CampaignManage/NowBroadCard';
 import IncomeChart from '../../../../organisms/mypage/creator/Dashboard/IncomeChart';
@@ -37,14 +36,15 @@ const CampaignManage = (): JSX.Element => {
         </GridItem>
 
         {/* 클릭광고 정보 */}
-        <GridItem xs={12} sm={6} lg={3}>
+        <GridItem xs={12} lg={6}>
           <ClickAdInfo />
         </GridItem>
 
         {/* 채팅광고 정보 */}
-        <GridItem xs={12} sm={6} lg={3}>
+        {/* 210923 온애드 채팅봇 차단으로 인한 제거 처리 by dan(hwasurr) */}
+        {/* <GridItem xs={12} sm={6}>
           <ChatAdInfo />
-        </GridItem>
+        </GridItem> */}
 
         <GridItem xs={12} lg={6}>
           <AdIncomeCard />
