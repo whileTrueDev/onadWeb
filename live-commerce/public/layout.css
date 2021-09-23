@@ -28,7 +28,17 @@ body {
   justify-content: flex-end;
 }
 
+.on-air {
+  background-color: green;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  position: fixed;
+}
+
 .live-commerce{
+  display:none;
   width: 96.9%;
   height: 94.5%;
   margin-top: 0.7%;
