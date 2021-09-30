@@ -18,7 +18,7 @@ async function streamStartNotification() {
   // 추후 선택기능 넣을 예정
   const message = `
   <speak>
-    잠시 후, 밍선하의 진국보감 라이브 커머스가 시작됩니다.
+    잠시 후, 유은님의 양품떡볶이 라이브 커머스가 시작됩니다.
   </speak>
   `;
 
