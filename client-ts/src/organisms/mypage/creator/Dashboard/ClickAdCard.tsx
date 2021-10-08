@@ -1,10 +1,10 @@
+import { Box, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import { Box, Grid, Typography, Divider, Paper, makeStyles } from '@material-ui/core';
-// utils
-import numFormatter from '../../../../utils/numFormatter';
+import CenterLoading from '../../../../atoms/Loading/CenterLoading';
 import history from '../../../../history';
 import { useCreatorClicks } from '../../../../utils/hooks/query/useCreatorClicks';
-import CenterLoading from '../../../../atoms/Loading/CenterLoading';
+// utils
+import numFormatter from '../../../../utils/numFormatter';
 
 const useStyles = makeStyles(theme => ({
   flex: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
@@ -46,7 +46,8 @@ const ClickAdCard = (): JSX.Element => {
           <CenterLoading />
         ) : (
           <>
-            <Grid item>
+            {/* 채팅광고 챗봇 정지로 인한 처리 210923 dan(hwasurr) */}
+            {/* <Grid item>
               <Box className={classes.flex} mt={2}>
                 <Typography gutterBottom variant="body1">
                   채팅광고 클릭
@@ -61,27 +62,27 @@ const ClickAdCard = (): JSX.Element => {
                   {`${numFormatter(clicks.data?.adchat ? clicks.data.adchat : 0)} 회`}
                 </Typography>
               </div>
-            </Grid>
+            </Grid> */}
 
             <Grid item>
               <Divider component="hr" orientation="vertical" />
             </Grid>
 
             <Grid item>
-              <div className={classes.flex}>
+              <Box className={classes.flex} mt={4}>
                 <Grid item>
                   <Typography gutterBottom variant="body1">
                     패널광고 클릭
                   </Typography>
                 </Grid>
-              </div>
+              </Box>
               <div className={classes.flex}>
                 <Typography
                   gutterBottom
                   variant="h5"
                   className={classnames(classes.text, classes.bold)}
                 >
-                  {`${numFormatter(clicks.data?.adpanel ? clicks.data.adpanel : 0)} 회`}
+                  {`${numFormatter(clicks.data || 0)} 회`}
                 </Typography>
               </div>
             </Grid>

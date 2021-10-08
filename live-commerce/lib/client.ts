@@ -117,32 +117,35 @@ function dailyMissionTimer() {
   setInterval(function () {
     // 현재 날짜를 new 연산자를 사용해서 Date 객체를 생성
     const now = new Date();
-    
+
     const extraTimeToStart = startDate.getTime() - now.getTime();
 
-    const extraHoursToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const extraMinutesToStart: string | number = Math.floor((extraTimeToStart % (1000 * 60 * 60)) / (1000 * 60));
+    const extraHoursToStart: string | number = Math.floor(
+      (extraTimeToStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const extraMinutesToStart: string | number = Math.floor(
+      (extraTimeToStart % (1000 * 60 * 60)) / (1000 * 60),
+    );
     const extraSecondsToStart = Math.floor((extraTimeToStart % (1000 * 60)) / 1000);
-    if (extraHoursToStart === 0 && extraMinutesToStart === 0){
-    if (extraSecondsToStart === 11) {
-      const roomName = THIS_URL.split('/').pop();
-      socket.emit('send notification signal', roomName)
+    if (extraHoursToStart === 0 && extraMinutesToStart === 0) {
+      if (extraSecondsToStart === 11) {
+        const roomName = THIS_URL.split('/').pop();
+        socket.emit('send notification signal', roomName);
       } else if (extraSecondsToStart === 5) {
-        //5sec-timer.MP3
+        // 5sec-timer.MP3
         $('body').append(`
         <iframe src="/public/audio/5sec-timer.MP3" id="sec-timer" allow="autoplay" style="display:none"></iframe>
-        `)
-      }
-      else if (extraSecondsToStart === 0) {
-        $('body').remove('#sec-timer')
+        `);
+      } else if (extraSecondsToStart === 0) {
+        $('body').remove('#sec-timer');
         const introHtml = `
           <video class="inner-video-area" autoplay>
             <source src="/public/videos/intro.mp4" type="video/mp4">
           </video>
             `;
-          $('.full-video').html(introHtml);
+        $('.full-video').html(introHtml);
       }
-}
+    }
     let distance = setDate.getTime() - now.getTime();
     if (distance < 0) {
       distance = 0;
@@ -485,12 +488,12 @@ socket.on('show bottom area to client', () => {
 
 socket.on('show screen', () => {
   // $(document.body).fadeIn(1000);
-  $('.live-commerce').fadeIn(500)
+  $('.live-commerce').fadeIn(500);
 });
 
 socket.on('clear screen', () => {
   // $(document.body).fadeOut(1000);
-  $('.live-commerce').fadeOut(500)
+  $('.live-commerce').fadeOut(500);
 });
 
 socket.on('quantity object from server', (quantityObject: string) => {
@@ -530,9 +533,9 @@ socket.on('clear full video from server', () => {
   $('.inner-video-area').fadeOut(800);
 });
 
-socket.on('get start time from server', (timeData:string) => {
+socket.on('get start time from server', (timeData: string) => {
   startDate = new Date(timeData);
-})
+});
 
 socket.on('get objective message', async (objective:number) => {
   messageHtml = `
@@ -563,10 +566,11 @@ socket.once('get stream start notification tts', (audioBuffer:Buffer) => {
     const sound = new Audio(streamStartNotificationAudioBlob);
     setTimeout(() => {
       sound.play();
-    }, 1000)
-}})
+    }, 1000);
+  }
+});
 
 socket.on('connection check from server', () => {
-  $('.on-air').toggle()
-})
+  $('.on-air').toggle();
+});
 export {};

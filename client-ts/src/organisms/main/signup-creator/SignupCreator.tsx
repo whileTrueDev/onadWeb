@@ -192,8 +192,8 @@ export default function SignupCreator(): JSX.Element {
       .get(`${HOST}/creator/referral-code`, { params: { referralCode: signupInfo.referralCode } })
       .then(res => {
         setLoadingCheckReferralCode(false);
-        if (res.data && res.data.length > 0) {
-          const { creatorName, afreecaName, loginId, calculateState } = res.data[0];
+        if (res.data) {
+          const { creatorName, afreecaName, loginId, calculateState } = res.data;
           if (calculateState === null) setReferredCreator(creatorName || afreecaName || loginId);
           else setReferredCreatorError('이미 다른 방송인에 의해 사용된 추천인 코드입니다.');
         } else {
