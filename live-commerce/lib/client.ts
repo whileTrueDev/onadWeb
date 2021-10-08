@@ -559,8 +559,8 @@ socket.on('get objective message', async (objective:number) => {
   topMessages.push({ messageHtml });
 });
 
-socket.once('get stream start notification tts', (audioBuffer:Buffer) => {
-  if (audioBuffer){
+socket.once('get stream start notification tts', (audioBuffer: Buffer) => {
+  if (audioBuffer) {
     const blob = new Blob([audioBuffer], { type: 'audio/mp3' });
     const streamStartNotificationAudioBlob = window.URL.createObjectURL(blob);
     const sound = new Audio(streamStartNotificationAudioBlob);
