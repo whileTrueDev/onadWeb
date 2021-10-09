@@ -65,7 +65,7 @@ setInterval(async () => {
 async function switchImage() {
   if (!$('.vertical-banner').attr('src')?.includes('gif')) {
     bannerId += 1;
-    if (bannerId === 14) {
+    if (bannerId === 13) {
       bannerId = 1;
     }
     await setTimeout(() => {
@@ -535,6 +535,28 @@ socket.on('clear full video from server', () => {
 
 socket.on('get start time from server', (timeData: string) => {
   startDate = new Date(timeData);
+});
+
+socket.on('get objective message', async (objective:number) => {
+  messageHtml = `
+  <div class="donation-wrapper">
+    <iframe src="/public/audio/alarm-type-2.wav"
+    id="iframeAudio" allow="autoplay" style="display:none"></iframe>
+    <div class="centered">
+      <div class ="animated heartbeat" id="donation-top">
+        <span id="nickname">
+          <span class="donation-sub">판매금액</span>
+          <span class="animated heartbeat" id="donation-num">${objective
+            .toString()
+            .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}</span>
+          <span class="donation-sub">원 돌파!!!</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  `;
+  topMessages.push({ messageHtml });
 });
 
 socket.once('get stream start notification tts', (audioBuffer: Buffer) => {

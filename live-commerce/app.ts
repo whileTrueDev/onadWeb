@@ -267,7 +267,13 @@ io.on('connection', (socket: Socket) => {
 
   socket.on('connection check from admin', (roomName: string) => {
     io.to(roomName).emit('connection check from server');
-  });
+  })
+
+  socket.on('get objective message from admin', (data: { roomName: string; objective: number }) => {
+    const { roomName } = data;
+    const { objective } = data
+    io.to(roomName).emit('get objective message', objective);
+  })
 });
 
 httpServer.listen(PORT, () => {

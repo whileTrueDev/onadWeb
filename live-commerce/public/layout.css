@@ -194,6 +194,7 @@ body {
   flex-direction: row;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
 }
 
 .bottom-area-right p:after {
