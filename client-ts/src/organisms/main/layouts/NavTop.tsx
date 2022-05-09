@@ -182,7 +182,7 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             ) : null}
 
             {/* 회원가입 버튼 */}
-            <RegButton />
+            {/* <RegButton /> */}
 
             {/* 로그인 버튼 */}
             <LoginButton />

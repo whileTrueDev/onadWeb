@@ -168,7 +168,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
         <Divider component="hr" orientation="horizontal" className={classes.divider} />
 
         <div style={{ marginTop: 16 }}>
-          <Typography variant="body2" color="textSecondary">
+          {/* <Typography variant="body2" color="textSecondary">
             계정이 없으신가요?&nbsp;
             <Typography
               variant="body2"
@@ -178,7 +178,7 @@ function LoginForm({ open, handleClose }: Props): JSX.Element {
             >
               회원가입하기
             </Typography>
-          </Typography>
+          </Typography> */}
 
           <Typography variant="body2" color="textSecondary">
             아이디가 기억나지 않나요?&nbsp;

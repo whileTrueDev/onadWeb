@@ -1,7 +1,6 @@
-import { makeStyles } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import NavTop from '../../organisms/main/layouts/NavTop';
 import { useLoginValue } from '../../utils/hooks';
-import SignupCreator from '../../organisms/main/signup-creator/SignupCreator';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,7 +20,19 @@ export default function RegistCreator(): JSX.Element {
 
       <div style={{ paddingTop: 90 }} />
 
-      <SignupCreator />
+      <Box
+        minHeight={400}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+        flexDirection="column"
+      >
+        <Typography>온애드는 더이상 회원가입이 불가능합니다.</Typography>
+        <Typography>이용해 주셔서 감사합니다.</Typography>
+      </Box>
+
+      {/* <SignupCreator /> */}
     </div>
   );
 }
