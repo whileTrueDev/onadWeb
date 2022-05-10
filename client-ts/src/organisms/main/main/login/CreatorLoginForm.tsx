@@ -129,7 +129,7 @@ export default function CreatorLoginForm({
         <Divider style={{ marginTop: 16, marginBottom: 16 }} />
 
         <div style={{ marginTop: 16, marginBottom: 16 }}>
-          <Typography variant="body2">
+          {/* <Typography variant="body2">
             온애드 계정이 없으신가요?&nbsp;
             <Typography
               component="span"
@@ -139,7 +139,7 @@ export default function CreatorLoginForm({
             >
               가입하기
             </Typography>
-          </Typography>
+          </Typography> */}
           <Typography variant="body2">
             트위치 계정 로그인 방식으로 온애드를 사용했었나요?&nbsp;
             <StyledTooltip

@@ -249,12 +249,12 @@ export default function Main(): JSX.Element {
           />
 
           {/* CPS  관련 임시 팝업  */}
-          <Hidden xsDown>
+          {/* <Hidden xsDown>
             <ReferralCodeEventDialog
               open={liveCommerceEventDialog.open}
               onClose={liveCommerceEventDialog.handleClose}
             />
-          </Hidden>
+          </Hidden> */}
           {/* 온애드 리뉴얼 관련 임시 팝업  */}
           {/* *******************************  */}
         </div>

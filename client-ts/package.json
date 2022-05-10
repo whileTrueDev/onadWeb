@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "material-table": "^1.69.3",
     "nanoid": "^3.1.23",
-    "node-sass": "4.14.1",
+    "node-sass": "^7.0.1",
     "notistack": "^1.0.9",
     "react": "^17.0.2",
     "react-calendar-heatmap": "^1.8.1",
