@@ -62,7 +62,8 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
         </Button>
       );
     }
-    return <LoginPopover type="회원가입" MainUserType={MainUserType} logout={logout} />;
+    // return <LoginPopover type="회원가입" MainUserType={MainUserType} logout={logout} />;
+    return null;
   };
 
   // 로그인 버튼
@@ -109,7 +110,6 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             이용 방법
           </Button>
         </MenuItem>
-
         {MainUserType ? (
           <MenuItem className={classes.buttonWraper}>
             <Button className={classes.mobileButton} component={Link} to="/creatorlist">
@@ -117,7 +117,6 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             </Button>
           </MenuItem>
         ) : null}
-
         <MenuItem className={classes.buttonWraper}>
           {isLogin ? (
             <Button
@@ -135,7 +134,6 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
             />
           )}
         </MenuItem>
-
         <MenuItem className={classes.buttonWraper}>
           {isLogin ? (
             <Button className={classes.mobileButton} onClick={logout}>
@@ -181,8 +179,8 @@ function NavTop({ MainUserType, logout, isLogin }: NavTopProps): JSX.Element {
               </div>
             ) : null}
 
-            {/* 회원가입 버튼 */}
-            {/* <RegButton /> */}
+            {/* 기존: 회원가입 버튼, 220511: 로그인 이후 마이페이지 버튼  */}
+            <RegButton />
 
             {/* 로그인 버튼 */}
             <LoginButton />

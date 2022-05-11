@@ -533,12 +533,12 @@ export default function SignupCreator(): JSX.Element {
       <Button
         component={Link}
         className={classes.socialLoginButton}
-        to="/creator"
+        to="/mypage/creator"
         color="primary"
         variant="contained"
         fullWidth
       >
-        메인화면으로 이동
+        마이페이지로 이동
       </Button>
     </div>
   );
@@ -596,7 +596,11 @@ export default function SignupCreator(): JSX.Element {
                   {parseParams(location.search).error === 'no-pre-creator' ? (
                     <div style={{ marginTop: 16 }}>
                       <Typography variant="body1">기존 유저가 아닙니다.</Typography>
-                      <Typography variant="body1" style={{ marginBottom: 16 }}>
+                      <Typography variant="body1">
+                        온애드는 더이상 새로운 회원가입이 불가능합니다.
+                      </Typography>
+                      <Typography variant="body1">이용해 주셔서 감사합니다.</Typography>
+                      {/* <Typography variant="body1" style={{ marginBottom: 16 }}>
                         온애드 회원가입을 진행해주세요.
                       </Typography>
                       <Button
@@ -608,7 +612,7 @@ export default function SignupCreator(): JSX.Element {
                         fullWidth
                       >
                         회원가입하기
-                      </Button>
+                      </Button> */}
                       <Button
                         component={Link}
                         className={classes.socialLoginButton}
