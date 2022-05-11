@@ -533,7 +533,7 @@ export default function SignupCreator(): JSX.Element {
       <Button
         component={Link}
         className={classes.socialLoginButton}
-        to="/mypage/creator"
+        to="/mypage/creator/main"
         color="primary"
         variant="contained"
         fullWidth
