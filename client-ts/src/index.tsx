@@ -21,7 +21,7 @@ import Door from './pages/main/Door';
 import Introduction from './pages/main/Introduction';
 import Main from './pages/main/Main';
 import RegistPage from './pages/main/Regist';
-import RegistCreator from './pages/main/RegistCreator';
+import RegistCreator, { RegistCreatorServiceDone } from './pages/main/RegistCreator';
 // import NotFound from './pages/others/NotFound';
 import RemotePage from './pages/mypage/creator/RemotePage';
 import LoadingPage from './pages/others/LoadingPage';
@@ -78,7 +78,7 @@ const OnadIndex = (): JSX.Element => {
               <Route exact path="/marketer" component={Main} />
               <Route exact path="/creator" component={Main} />
               <Route path="/creator/remote/:id" component={RemotePage} />
-              <Route exact path="/creator/signup" component={RegistCreator} />
+              <Route exact path="/creator/signup" component={RegistCreatorServiceDone} />
               <Route exact path="/creator/signup/complete" component={RegistCreator} />
               <Route exact path="/creator/signup/pre-user" component={RegistCreator} />
               <Route exact path="/creatorlist" component={CreatorList} />
