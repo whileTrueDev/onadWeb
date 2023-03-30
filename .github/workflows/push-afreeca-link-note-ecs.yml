@@ -23,7 +23,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Build, tag, and push image to Docker Hub
-        uses: elgohr/Publish-Docker-Github-Action@2.14
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           workdir: afreeca-link-note-crawl
           name: ${{ secrets.DOCKER_USERNAME }}/afreeca-link-note-crawl
